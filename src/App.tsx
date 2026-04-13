@@ -3,8 +3,18 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import Index from "./pages/Index";
+import Passport from "./pages/Passport";
+import Cadastro from "./pages/Cadastro";
+import Login from "./pages/Login";
+import PanelLayout from "./components/layout/PanelLayout";
+import Dashboard from "./pages/panel/Dashboard";
+import Praticantes from "./pages/panel/Praticantes";
+import NovoPraticante from "./pages/panel/NovoPraticante";
+import NovaConquista from "./pages/panel/NovaConquista";
+import Creditos from "./pages/panel/Creditos";
+import Configuracoes from "./pages/panel/Configuracoes";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +26,17 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/p/:id" element={<Passport />} />
+          <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/painel" element={<PanelLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="praticantes" element={<Praticantes />} />
+            <Route path="praticantes/novo" element={<NovoPraticante />} />
+            <Route path="conquistas/nova" element={<NovaConquista />} />
+            <Route path="creditos" element={<Creditos />} />
+            <Route path="configuracoes" element={<Configuracoes />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
