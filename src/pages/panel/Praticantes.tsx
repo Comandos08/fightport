@@ -7,9 +7,11 @@ import { getInitials } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { ImportPraticantesModal } from '@/components/ImportPraticantesModal';
 
 export default function PraticantesPage() {
   const [search, setSearch] = useState('');
+  const [importOpen, setImportOpen] = useState(false);
   const { user } = useAuth();
 
   const { data: practitioners = [], isLoading } = useQuery({
@@ -43,7 +45,7 @@ export default function PraticantesPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <h1 className="font-display font-bold text-2xl text-ink" style={{ letterSpacing: '0.02em' }}>Praticantes</h1>
         <div className="flex gap-2">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}>
             <Upload className="h-4 w-4" />
             Importar CSV/XLSX
           </Button>
