@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, CheckCircle, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,18 @@ import { AthleteCard } from '@/components/AthleteCard';
 import { mockAthletes, mockStats } from '@/lib/mock-data';
 import { beltColor, beltTextColor } from '@/lib/utils';
 
-// Intersection Observer hook for section reveals
-function useReveal() {
-  const ref = useState<HTMLElement | null>(null);
+function useRevealRef() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add('revealed'); obs.unobserve(el); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
   return ref;
 }
 
