@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Share2, QrCode } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import { NavbarPublic } from '@/components/layout/NavbarPublic';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
 import { BeltBadge } from '@/components/BeltBadge';
@@ -11,17 +12,13 @@ import { getInitials, formatDate, beltColor } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
-function QrModal({ onClose }: { onClose: () => void }) {
+function QrModal({ url, onClose }: { url: string; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-main rounded-xl p-8 shadow-card max-w-sm w-full text-center" onClick={e => e.stopPropagation()}>
         <h3 className="font-display font-bold text-lg text-ink mb-4" style={{ letterSpacing: '0.02em' }}>QR Code do Passaporte</h3>
-        <div className="w-48 h-48 mx-auto border-2 rounded-lg flex items-center justify-center mb-4" style={{ borderColor: 'var(--color-border)' }}>
-          <div className="grid grid-cols-5 gap-1">
-            {Array.from({ length: 25 }).map((_, i) => (
-              <div key={i} className={`w-6 h-6 rounded-sm ${Math.random() > 0.4 ? 'bg-ink' : 'bg-surface'}`} />
-            ))}
-          </div>
+        <div className="w-48 h-48 mx-auto flex items-center justify-center mb-4">
+          <QRCodeSVG value={url} size={192} />
         </div>
         <p className="font-body text-sm text-ink-muted mb-4">Escaneie para verificar</p>
         <Button variant="ghost" onClick={onClose}>Fechar</Button>
@@ -115,9 +112,13 @@ export default function PassportPage() {
           </div>
 
           <div className="text-center mb-8">
-            <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 font-display font-bold text-xl" style={{ backgroundColor: '#C9A84C', color: '#FFFFFF' }}>
-              {getInitials(practitioner.first_name, practitioner.last_name)}
-            </div>
+            {practitioner.photo_url ? (
+              <img src={practitioner.photo_url} alt={`${practitioner.first_name} ${practitioner.last_name}`} className="w-24 h-24 rounded-full object-cover mx-auto mb-4" />
+            ) : (
+              <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 font-display font-bold text-xl" style={{ backgroundColor: '#C9A84C', color: '#FFFFFF' }}>
+                {getInitials(practitioner.first_name, practitioner.last_name)}
+              </div>
+            )}
             <h1 className="font-display font-bold text-2xl md:text-3xl text-ink" style={{ letterSpacing: '0.02em' }}>
               {practitioner.first_name} {practitioner.last_name}
             </h1>
@@ -190,7 +191,7 @@ export default function PassportPage() {
         </div>
       </div>
 
-      {showQr && <QrModal onClose={() => setShowQr(false)} />}
+      {showQr && <QrModal url={window.location.href} onClose={() => setShowQr(false)} />}
     </div>
   );
 }
