@@ -260,9 +260,27 @@ export default function ConfiguracoesPage() {
               <input value={state} onChange={e => setState(e.target.value)} style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
             </div>
           </div>
-          <Button disabled={savingSchool} style={{ width: 'fit-content' }}>
+          <button
+            type="submit"
+            disabled={savingSchool}
+            style={{
+              width: 'fit-content',
+              background: savingSchool ? '#E8E8E5' : '#F5A623',
+              color: savingSchool ? '#9A9A9A' : '#1C1C1C',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 14,
+              fontWeight: 500,
+              padding: '10px 24px',
+              borderRadius: 6,
+              border: 'none',
+              cursor: savingSchool ? 'not-allowed' : 'pointer',
+              transition: 'var(--transition)',
+            }}
+            onMouseEnter={e => { if (!savingSchool) e.currentTarget.style.background = '#e09600'; }}
+            onMouseLeave={e => { if (!savingSchool) e.currentTarget.style.background = '#F5A623'; }}
+          >
             {savingSchool ? 'Salvando...' : 'Salvar alterações'}
-          </Button>
+          </button>
         </form>
       )}
 
@@ -276,9 +294,27 @@ export default function ConfiguracoesPage() {
             <label style={labelStyle}>Graduação</label>
             <input value={coachGraduation} onChange={e => setCoachGraduation(e.target.value)} placeholder="Ex: Faixa Preta 3° Grau" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
           </div>
-          <Button disabled={savingCoach} style={{ width: 'fit-content' }}>
+          <button
+            type="submit"
+            disabled={savingCoach}
+            style={{
+              width: 'fit-content',
+              background: savingCoach ? '#E8E8E5' : '#F5A623',
+              color: savingCoach ? '#9A9A9A' : '#1C1C1C',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 14,
+              fontWeight: 500,
+              padding: '10px 24px',
+              borderRadius: 6,
+              border: 'none',
+              cursor: savingCoach ? 'not-allowed' : 'pointer',
+              transition: 'var(--transition)',
+            }}
+            onMouseEnter={e => { if (!savingCoach) e.currentTarget.style.background = '#e09600'; }}
+            onMouseLeave={e => { if (!savingCoach) e.currentTarget.style.background = '#F5A623'; }}
+          >
             {savingCoach ? 'Salvando...' : 'Salvar alterações'}
-          </Button>
+          </button>
         </form>
       )}
 

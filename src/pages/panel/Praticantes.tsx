@@ -121,7 +121,29 @@ export default function PraticantesPage() {
         <div className="flex" style={{ gap: 8 }}>
           <Button variant="ghost" size="sm" onClick={handleExportCsv}><Download className="h-4 w-4" /> Exportar CSV</Button>
           <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}><Upload className="h-4 w-4" /> Importar CSV/XLSX</Button>
-          <Link to="/painel/praticantes/novo"><Button size="sm"><Plus className="h-4 w-4" /> Novo praticante</Button></Link>
+          <Link to="/painel/praticantes/novo">
+            <button
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                background: '#F5A623',
+                color: '#1C1C1C',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 14,
+                fontWeight: 500,
+                padding: '10px 20px',
+                borderRadius: 6,
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'var(--transition)',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#e09600')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#F5A623')}
+            >
+              <Plus className="h-4 w-4" /> Novo praticante
+            </button>
+          </Link>
         </div>
       </div>
 
