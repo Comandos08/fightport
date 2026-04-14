@@ -11,7 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getInitials, formatDate } from '@/lib/utils';
 import type { Tables } from '@/integrations/supabase/types';
 
-type Belt = 'Branca' | 'Azul' | 'Roxa' | 'Marrom' | 'Preta' | 'Vermelha';
+type Belt = 'Branca' | 'Cinza' | 'Amarela' | 'Laranja' | 'Verde' | 'Azul' | 'Roxa' | 'Marrom' | 'Preta' | 'Preta 1º Grau' | 'Preta 2º Grau' | 'Preta 3º Grau' | 'Preta 4º Grau' | 'Preta 5º Grau' | 'Preta 6º Grau' | 'Preta 7º Grau' | 'Preta 8º Grau' | 'Preta 9º Grau';
 
 const inputStyle: React.CSSProperties = {
   background: 'var(--color-bg-soft)',
@@ -257,7 +257,8 @@ export default function NovaConquistaPage() {
             <label style={labelStyle}>Faixa</label>
             <select value={belt} onChange={e => setBelt(e.target.value as Belt)} style={{ ...inputStyle, height: 44 }} onFocus={focusInput as any} onBlur={blurInput as any}>
               <option value="">Selecione a faixa</option>
-              <option>Branca</option><option>Azul</option><option>Roxa</option><option>Marrom</option><option>Preta</option><option>Vermelha</option>
+              <option>Branca</option><option>Cinza</option><option>Amarela</option><option>Laranja</option><option>Verde</option><option>Azul</option><option>Roxa</option><option>Marrom</option><option>Preta</option>
+              <option>Preta 1º Grau</option><option>Preta 2º Grau</option><option>Preta 3º Grau</option><option>Preta 4º Grau</option><option>Preta 5º Grau</option><option>Preta 6º Grau</option><option>Preta 7º Grau</option><option>Preta 8º Grau</option><option>Preta 9º Grau</option>
             </select>
           </div>
 
