@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Building2, Shield } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { Navbar } from '@/components/layout/Navbar';
 import { FooterSection } from '@/components/home/FooterSection';
 import { useSeo } from '@/hooks/useSeo';
