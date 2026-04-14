@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +19,7 @@ import EditarPraticante from "./pages/panel/EditarPraticante";
 import Creditos from "./pages/panel/Creditos";
 import Configuracoes from "./pages/panel/Configuracoes";
 import NotFound from "./pages/NotFound";
+import { VerificarRedirect } from "./components/VerificarRedirect";
 
 const queryClient = new QueryClient();
 

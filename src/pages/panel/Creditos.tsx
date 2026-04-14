@@ -129,7 +129,7 @@ export default function CreditosPage() {
             ) : (
               transactions.map((tx: any, i: number) => (
                 <tr key={tx.id} className={i !== transactions.length - 1 ? 'border-b' : ''} style={{ borderColor: 'var(--color-border)' }}>
-                  <td className="p-4 font-body text-sm text-ink">{formatDate(tx.created_at)}</td>
+                  <td className="p-4 font-body text-sm text-ink">{(() => { if (!tx.created_at) return '—'; const d = new Date(tx.created_at); if (isNaN(d.getTime())) return '—'; return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }); })()}</td>
                   <td className="p-4 font-body text-sm text-ink">{tx.package_name ?? tx.type}</td>
                   <td className="p-4 font-body text-sm text-ink">{tx.amount > 0 ? `+${tx.amount}` : tx.amount}</td>
                   <td className="p-4">
