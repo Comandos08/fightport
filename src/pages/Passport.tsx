@@ -110,6 +110,37 @@ export default function PassportPage() {
     jsonLd,
   });
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-main">
+        <NavbarPublic />
+        <div className="pt-28 flex justify-center">
+          <div className="animate-spin h-8 w-8 border-4 border-accent-brand border-t-transparent rounded-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!practitioner) {
+    return (
+      <div className="min-h-screen bg-main">
+        <NavbarPublic />
+        <div className="pt-28 text-center">
+          <h1 className="font-display font-bold text-2xl text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Atleta não encontrado</h1>
+          <p className="font-body text-ink-muted">Verifique o ID e tente novamente.</p>
+          <Link to="/" className="mt-4 inline-block">
+            <Button variant="default">Voltar ao início</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const share = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success('Link copiado para a área de transferência');
+  };
+
   return (
     <div className="min-h-screen bg-main">
       <NavbarPublic />
