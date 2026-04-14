@@ -139,32 +139,28 @@ export default function PassportPage() {
   // Header component
   const Header = () => (
     <header
-      className="flex items-center justify-between"
       style={{
         height: 60,
-        padding: '0 40px',
         background: '#FFFFFF',
         borderBottom: '1px solid var(--color-border)',
       }}
     >
-      <Link to="/" className="no-underline">
-        <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
-      </Link>
-      <Link
-        to="/#busca"
-        style={{
-          fontFamily: 'var(--font-sans)',
-          fontWeight: 400,
-          fontSize: 14,
-          color: 'var(--color-text-muted)',
-          textDecoration: 'none',
-          transition: 'var(--transition)',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
-        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
+      <div
+        className="fp-container flex items-center justify-between"
+        style={{ height: '100%' }}
       >
-        Verificar outro atleta
-      </Link>
+        <Link to="/" className="no-underline">
+          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
+        </Link>
+        <Link
+          to="/#busca"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text-muted)', textDecoration: 'none', transition: 'var(--transition)' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
+        >
+          Verificar outro atleta
+        </Link>
+      </div>
     </header>
   );
 
@@ -236,7 +232,7 @@ export default function PassportPage() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
       <Header />
 
-      <div style={{ maxWidth: 680, margin: '0 auto', padding: '64px 24px' }}>
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: '64px 24px 80px' }}>
         {/* Verified badge */}
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <span style={{
@@ -279,11 +275,12 @@ export default function PassportPage() {
           <h1 style={{
             fontFamily: 'var(--font-sans)',
             fontWeight: 500,
-            fontSize: 'clamp(32px, 4vw, 48px)',
+            fontSize: 'clamp(32px, 4vw, 52px)',
             letterSpacing: '-0.025em',
             color: 'var(--color-text)',
             marginTop: 20,
             marginBottom: 8,
+            textAlign: 'center',
           }}>
             {practitioner.first_name} {practitioner.last_name}
           </h1>
@@ -310,7 +307,7 @@ export default function PassportPage() {
           marginTop: 32,
         }}>
           <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>ID do praticante: </span>
-          <span style={{ fontFamily: 'var(--font-mono, ui-monospace, SFMono-Regular, monospace)', fontSize: 13, color: 'var(--color-text)' }}>{practitioner.fp_id}</span>
+          <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 13, color: 'var(--color-text)' }}>{practitioner.fp_id}</span>
         </div>
 
         {/* Action buttons */}
@@ -338,11 +335,11 @@ export default function PassportPage() {
         </div>
 
         {/* Timeline */}
-        <div style={{ marginTop: 56 }}>
+        <div style={{ paddingTop: 48 }}>
           <h2 style={{
             fontFamily: 'var(--font-sans)',
             fontWeight: 500,
-            fontSize: 18,
+            fontSize: 20,
             color: 'var(--color-text)',
             marginBottom: 32,
           }}>
@@ -356,9 +353,9 @@ export default function PassportPage() {
               return (
                 <div key={ach.id} style={{ display: 'flex', gap: 20, alignItems: 'flex-start', marginBottom: 24 }}>
                   {/* Dot + line */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 8, flexShrink: 0 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 10, flexShrink: 0 }}>
                     <div style={{
-                      width: 8, height: 8, borderRadius: '50%',
+                      width: 10, height: 10, borderRadius: '50%',
                       backgroundColor: beltColor(ach.belt),
                       border: ach.belt === 'Branca' ? '1px solid var(--color-border)' : 'none',
                       flexShrink: 0,
@@ -388,8 +385,8 @@ export default function PassportPage() {
                     </div>
                     <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 16, color: 'var(--color-text)', margin: '0 0 4px' }}>Faixa {ach.belt}</p>
                     <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>{schoolData?.name} · {ach.graduated_by}</p>
-                    <div style={{ marginTop: 6 }}>
-                      <span style={{ fontFamily: 'var(--font-mono, ui-monospace, SFMono-Regular, monospace)', fontSize: 11, color: 'var(--color-text-light)' }}>
+                    <div style={{ marginTop: 4 }}>
+                      <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: '#9A9A9A' }}>
                         {hashPartial}
                       </span>
                     </div>
@@ -405,13 +402,13 @@ export default function PassportPage() {
         </div>
 
         {/* Footer */}
-        <div style={{ borderTop: '1px solid var(--color-border)', padding: 24, textAlign: 'center', marginTop: 48 }}>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', margin: 0 }}>
+        <div style={{ borderTop: '1px solid #E8E8E5', padding: '32px 0', textAlign: 'center', marginTop: 48 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#9A9A9A', margin: 0 }}>
             Registro emitido por {schoolData?.name} via fightport.pro · SportCombat
           </p>
           <Link
             to="/#busca"
-            style={{ display: 'block', marginTop: 8, fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 13, color: 'var(--color-text)', textDecoration: 'none' }}
+            style={{ display: 'block', marginTop: 8, fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: '#1C1C1C', textDecoration: 'none' }}
           >
             Verificar outro atleta →
           </Link>
