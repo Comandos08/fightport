@@ -119,6 +119,42 @@ export default function PraticantesPage() {
         />
       </div>
 
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <Filter className="h-4 w-4 text-ink-faint shrink-0" />
+        <select
+          value={beltFilter}
+          onChange={e => handleFilterChange(setBeltFilter)(e.target.value)}
+          className="h-9 px-3 rounded-lg border bg-popover font-body text-sm text-ink focus:outline-none"
+          style={{ borderColor: 'var(--color-border)' }}
+        >
+          <option value="">Todas as faixas</option>
+          {belts.map(b => <option key={b} value={b}>{b}</option>)}
+        </select>
+        {arts.length > 1 && (
+          <select
+            value={artFilter}
+            onChange={e => handleFilterChange(setArtFilter)(e.target.value)}
+            className="h-9 px-3 rounded-lg border bg-popover font-body text-sm text-ink focus:outline-none"
+            style={{ borderColor: 'var(--color-border)' }}
+          >
+            <option value="">Todas as artes marciais</option>
+            {arts.map(a => <option key={a} value={a}>{a}</option>)}
+          </select>
+        )}
+        {hasActiveFilters && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-9 text-xs"
+            onClick={() => { setBeltFilter(''); setArtFilter(''); setPage(1); }}
+          >
+            <X className="h-3 w-3" />
+            Limpar filtros
+          </Button>
+        )}
+      </div>
+
       {isLoading ? (
         <div className="text-center py-20">
           <div className="animate-spin h-8 w-8 border-4 border-accent-brand border-t-transparent rounded-full mx-auto" />
