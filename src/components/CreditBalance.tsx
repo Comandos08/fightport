@@ -8,18 +8,27 @@ interface CreditBalanceProps {
 export function CreditBalance({ balance, compact = false }: CreditBalanceProps) {
   if (compact) {
     return (
-      <div className="flex items-center gap-1.5 font-body text-sm font-medium text-ink">
-        <Coins className="h-4 w-4 text-accent-brand" />
-        {balance}
+      <div className="flex items-center" style={{ gap: 6 }}>
+        <Coins style={{ width: 16, height: 16, color: 'var(--blue-deep)' }} />
+        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>{balance}</span>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-brand px-4 py-2 bg-main">
-      <Coins className="h-5 w-5 text-accent-brand" />
-      <span className="font-display font-bold text-base text-ink">{balance}</span>
-      <span className="text-sm text-ink-muted">créditos</span>
+    <div
+      className="flex items-center"
+      style={{
+        gap: 8,
+        border: '1px solid var(--border-2)',
+        borderRadius: 'var(--radius-sm)',
+        padding: '10px 16px',
+        background: 'var(--white)',
+      }}
+    >
+      <Coins style={{ width: 18, height: 18, color: 'var(--blue-deep)' }} />
+      <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, color: 'var(--blue-deep)' }}>{balance}</span>
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)' }}>créditos</span>
     </div>
   );
 }
