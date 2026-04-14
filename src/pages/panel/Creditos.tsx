@@ -11,7 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 const packages = [
   { name: 'Starter', credits: 10, price: 97, unit: '9,70', highlight: false },
   { name: 'Escola', credits: 50, price: 397, unit: '7,94', highlight: true },
-  { name: 'Academia', credits: 150, price: 990, unit: '6,60', highlight: false },
+  { name: 'Organização', credits: 150, price: 990, unit: '6,60', highlight: false },
 ];
 
 const thStyle: React.CSSProperties = {
