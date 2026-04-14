@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, CheckCircle, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,28 @@ import { AthleteCard } from '@/components/AthleteCard';
 import { mockAthletes, mockStats } from '@/lib/mock-data';
 import { beltColor, beltTextColor } from '@/lib/utils';
 
+function useRevealRef() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add('revealed'); obs.unobserve(el); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return ref;
+}
+
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Todos');
+  const buscaRef = useRevealRef();
+  const comoRef = useRevealRef();
+  const provaRef = useRevealRef();
+  const ctaRef = useRevealRef();
 
   const filters = ['Todos', 'Jiu-Jitsu', 'Judô', 'Karatê', 'Muay Thai', 'Faixa Preta', 'Faixa Roxa'];
 
@@ -148,7 +167,7 @@ export default function HomePage() {
       </section>
 
       {/* BUSCA */}
-      <section id="busca" className="py-16 md:py-24 px-4 relative">
+      <section ref={buscaRef} id="busca" className="section-reveal py-16 md:py-24 px-4 relative">
         <div className="absolute top-0 left-0 right-0 h-10" style={{ background: 'linear-gradient(to bottom, var(--color-bg-surface), var(--color-bg))' }} />
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-10">
@@ -177,7 +196,7 @@ export default function HomePage() {
           <div className="flex flex-wrap gap-2 justify-center mb-12">
             {filters.map(f => (
               <button key={f} onClick={() => setActiveFilter(f)}
-                className={`px-4 py-1.5 rounded-full text-[13px] font-body transition-all duration-200 cursor-pointer ${activeFilter === f ? 'bg-ink text-popover font-medium' : 'hover:bg-surface'}`}
+                className={`filter-pill px-4 py-1.5 rounded-full text-[13px] font-body cursor-pointer ${activeFilter === f ? 'bg-ink text-popover font-medium filter-active' : 'hover:bg-surface'}`}
                 style={activeFilter !== f ? { border: '1px solid var(--color-border)' } : {}}
               >{f}</button>
             ))}
@@ -197,7 +216,7 @@ export default function HomePage() {
       </section>
 
       {/* COMO FUNCIONA */}
-      <section id="como-funciona" className="py-16 md:py-28 lg:py-32 px-4 bg-surface">
+      <section ref={comoRef} id="como-funciona" className="section-reveal py-16 md:py-28 lg:py-32 px-4 bg-surface">
         <div className="container mx-auto max-w-7xl">
           <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-8 md:mb-10">
             <h2 className="font-display font-bold text-[32px] md:text-[48px] text-ink uppercase" style={{ lineHeight: '1' }}>Como funciona</h2>
@@ -208,8 +227,8 @@ export default function HomePage() {
             {steps.map((step, i) => (
               <div key={step.num}>
                 {i > 0 && <div className="w-full h-px" style={{ backgroundColor: 'var(--color-border)' }} />}
-                <div className="flex items-start gap-4 md:gap-12 py-8 md:py-10">
-                  <span className="font-display font-extrabold text-[48px] md:text-[80px] leading-none shrink-0" style={{ color: 'rgba(200,241,53,0.6)' }}>{step.num}</span>
+                <div className="step-row flex items-start gap-4 md:gap-12 py-8 md:py-10">
+                  <span className="step-num font-display font-extrabold text-[48px] md:text-[80px] leading-none shrink-0" style={{ color: 'rgba(200,241,53,0.6)' }}>{step.num}</span>
                   <div className="pt-3">
                     <h3 className="font-body font-medium text-base md:text-xl text-ink mb-2">{step.title}</h3>
                     <p className="font-body text-[13px] md:text-[15px] text-ink-muted max-w-lg" style={{ lineHeight: '1.6' }}>{step.desc}</p>
@@ -222,7 +241,7 @@ export default function HomePage() {
       </section>
 
       {/* PROVA SOCIAL */}
-      <section className="py-16 md:py-24 lg:py-28 px-4">
+      <section ref={provaRef} className="section-reveal py-16 md:py-24 lg:py-28 px-4">
         <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-16 items-start">
           <div className="lg:col-span-5">
             <h2 className="font-display font-extrabold text-[36px] md:text-[48px] lg:text-[64px] text-ink uppercase" style={{ lineHeight: '0.9' }}>
@@ -236,7 +255,7 @@ export default function HomePage() {
                 { value: mockStats.totalSchools.toString(), label: 'Academias' },
                 { value: mockStats.totalCertificates.toLocaleString('pt-BR'), label: 'Certificados' },
               ].map(m => (
-                <div key={m.label}>
+                <div key={m.label} className="stat-block">
                   <span className="font-display font-bold text-[32px] md:text-[48px] text-ink block" style={{ lineHeight: '1' }}>{m.value}</span>
                   <span className="font-body text-sm text-ink-faint">{m.label}</span>
                 </div>
@@ -254,7 +273,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA FINAL */}
-      <section className="py-20 md:py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
+      <section ref={ctaRef} className="section-reveal py-20 md:py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.03 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -275,7 +294,7 @@ export default function HomePage() {
           </h2>
           <p className="font-body text-lg mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>Cadastro gratuito. Você só paga quando graduar.</p>
           <Link to="/cadastro">
-            <Button className="font-body font-semibold text-base px-12 py-5 h-auto rounded-lg transition-all duration-200 hover:scale-[1.02]" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink)' }}>
+            <Button className="cta-glow font-body font-semibold text-base px-12 py-5 h-auto rounded-lg transition-all duration-200 hover:scale-[1.02]" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink)' }}>
               Cadastre sua escola
             </Button>
           </Link>
