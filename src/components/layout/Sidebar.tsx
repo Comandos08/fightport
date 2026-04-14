@@ -22,9 +22,9 @@ export function Sidebar() {
     <aside className="hidden lg:flex flex-col w-60 border-r bg-main shrink-0 min-h-screen" style={{ borderColor: 'var(--color-border)' }}>
       <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
         <Link to="/" className="flex items-baseline">
-          <span className="font-display font-bold text-xl text-ink">fight</span>
-          <span className="font-display font-normal text-xl text-ink">port</span>
-          <span className="font-display font-bold text-xl text-accent-brand">.pro</span>
+          <span className="font-display font-bold text-[18px] text-ink" style={{ letterSpacing: '0.05em' }}>FIGHT</span>
+          <span className="font-display font-normal text-[18px] text-ink" style={{ letterSpacing: '0.05em' }}>PORT</span>
+          <span className="font-display font-bold text-[18px] text-accent-brand" style={{ letterSpacing: '0.05em' }}>.PRO</span>
         </Link>
       </div>
       <nav className="flex-1 p-3 flex flex-col gap-1">

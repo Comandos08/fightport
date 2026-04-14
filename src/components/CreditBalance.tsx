@@ -18,7 +18,7 @@ export function CreditBalance({ balance, compact = false }: CreditBalanceProps) 
   return (
     <div className="flex items-center gap-2 rounded-lg border border-brand px-4 py-2 bg-main">
       <Coins className="h-5 w-5 text-accent-brand" />
-      <span className="font-display font-bold text-lg text-ink">{balance}</span>
+      <span className="font-display font-bold text-base text-ink">{balance}</span>
       <span className="text-sm text-ink-muted">créditos</span>
     </div>
   );

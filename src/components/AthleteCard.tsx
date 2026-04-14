@@ -24,13 +24,13 @@ export function AthleteCard({ athlete }: AthleteCardProps) {
       {/* Avatar + info */}
       <div className="flex items-center gap-3 w-full mb-4">
         <div
-          className="w-12 h-12 rounded-full flex items-center justify-center font-display font-bold text-sm shrink-0"
+          className="w-12 h-12 rounded-full flex items-center justify-center font-display font-bold text-xs shrink-0"
           style={{ backgroundColor: '#C9A84C', color: '#FFFFFF' }}
         >
           {getInitials(athlete.name, athlete.surname)}
         </div>
         <div className="min-w-0">
-          <p className="font-body font-medium text-base text-ink truncate">
+          <p className="font-body font-medium text-sm text-ink truncate">
             {athlete.name} {athlete.surname}
           </p>
           <p className="font-body text-[13px] text-ink-faint truncate">{athlete.school}</p>
