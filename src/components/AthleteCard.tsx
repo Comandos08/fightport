@@ -15,41 +15,62 @@ export function AthleteCard({ athlete }: AthleteCardProps) {
   return (
     <button
       onClick={() => navigate(`/p/${athlete.publicId}`)}
-      className="flex flex-col items-start gap-0 rounded-2xl bg-popover transition-all duration-200 hover:shadow-lg hover:-translate-y-1 cursor-pointer text-left w-full"
+      className="cursor-pointer w-full"
       style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: 0,
+        background: 'var(--color-bg)',
         border: '1px solid var(--color-border)',
-        padding: '20px',
+        borderRadius: 'var(--radius-sm)',
+        padding: 20,
+        textAlign: 'left',
+        transition: 'var(--transition)',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'var(--color-border-dark)';
+        e.currentTarget.style.transform = 'translateY(-2px)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'var(--color-border)';
+        e.currentTarget.style.transform = 'translateY(0)';
       }}
     >
       {/* Avatar + info */}
-      <div className="flex items-center gap-3 w-full mb-4">
+      <div className="flex items-center w-full" style={{ gap: 12, marginBottom: 16 }}>
         <div
-          className="w-12 h-12 rounded-full flex items-center justify-center font-display font-bold text-xs shrink-0"
-          style={{ backgroundColor: '#C9A84C', color: '#FFFFFF' }}
+          style={{
+            width: 48, height: 48, borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'var(--color-text)', color: '#FFFFFF',
+            fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 13,
+            flexShrink: 0,
+          }}
         >
           {getInitials(athlete.name, athlete.surname)}
         </div>
-        <div className="min-w-0">
-          <p className="font-body font-medium text-sm text-ink truncate">
+        <div style={{ minWidth: 0 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {athlete.name} {athlete.surname}
           </p>
-          <p className="font-body text-[13px] text-ink-faint truncate">{athlete.school}</p>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{athlete.school}</p>
         </div>
       </div>
 
       {/* Separator */}
-      <div className="w-full h-px mb-4" style={{ backgroundColor: 'var(--color-bg-surface)' }} />
+      <div style={{ width: '100%', height: 1, background: 'var(--color-border)', marginBottom: 16 }} />
 
       {/* Belt + date */}
-      <div className="flex items-center justify-between w-full mb-3">
+      <div className="flex items-center justify-between w-full" style={{ marginBottom: 12 }}>
         <BeltBadge belt={lastAchievement.belt} size="sm" />
-        <span className="font-body text-xs text-ink-faint">{formatDate(lastAchievement.date)}</span>
+        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>{formatDate(lastAchievement.date)}</span>
       </div>
 
       {/* Footer */}
-      <div className="flex items-center gap-1.5">
-        <CheckCircle className="w-3 h-3" style={{ color: 'var(--color-verified)' }} />
-        <span className="font-body text-[11px] text-ink-faint">Certificado por fightport.pro</span>
+      <div className="flex items-center" style={{ gap: 6 }}>
+        <CheckCircle style={{ width: 12, height: 12, color: 'var(--color-text-muted)' }} />
+        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-muted)' }}>Certificado por fightport.pro</span>
       </div>
     </button>
   );
