@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Navbar } from '@/components/layout/Navbar';
 import { Navbar } from '@/components/layout/Navbar';
 import { HeroSection } from '@/components/home/HeroSection';
 import { SocialProof } from '@/components/home/SocialProof';
