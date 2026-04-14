@@ -166,7 +166,7 @@ export default function HomePage() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Nome do atleta, ID ou academia..."
-                className="w-full h-16 pl-14 pr-5 rounded-xl bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all duration-200"
+                className="w-full h-14 md:h-16 pl-14 pr-5 rounded-xl bg-popover font-body text-sm md:text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all duration-200"
                 style={{ border: '1.5px solid var(--color-border)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}
                 onFocus={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(0,0,0,0.06), 0 0 0 4px rgba(200,241,53,0.15)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(0,0,0,0.06)'; }}
