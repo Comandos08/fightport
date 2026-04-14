@@ -1,15 +1,24 @@
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 export function Navbar() {
   const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center border-b"
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center transition-all duration-300"
       style={{
-        backdropFilter: 'blur(12px)',
-        backgroundColor: 'rgba(247,245,240,0.88)',
-        borderColor: 'var(--color-border)',
+        backdropFilter: scrolled ? 'blur(16px)' : 'none',
+        backgroundColor: scrolled ? 'rgba(247,245,240,0.92)' : 'transparent',
+        borderBottom: scrolled ? '1px solid var(--color-border)' : '1px solid transparent',
       }}
     >
       <div className="container mx-auto flex items-center justify-between px-4 max-w-7xl">
