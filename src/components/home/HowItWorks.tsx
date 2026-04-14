@@ -40,8 +40,7 @@ export function HowItWorks() {
             <motion.div
               key={step.num}
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
             >
               {i > 0 && <div className="w-full h-px my-0" style={{ backgroundColor: 'var(--color-border)' }} />}
