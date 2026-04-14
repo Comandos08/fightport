@@ -2,20 +2,20 @@ const steps = [
   {
     num: '01',
     title: 'A academia cadastra seus atletas',
-    desc: 'Nome, foto e CPF. O sistema bloqueia duplicatas automaticamente.',
-    badge: '✓ CPF verificado',
+    desc: 'Nome, foto e CPF. O sistema bloqueia duplicatas — nenhum atleta pode ter dois perfis.',
+    badge: 'CPF verificado',
   },
   {
     num: '02',
-    title: 'Você registra a graduação',
-    desc: 'Seleciona o atleta, a nova faixa, a data e quem graduou. O sistema gera o hash e o QR em segundos.',
-    badge: '🔒 Hash imutável',
+    title: 'Registra a graduação',
+    desc: 'Seleciona o atleta, a nova faixa, a data e quem graduou. Hash gerado automaticamente.',
+    badge: 'SHA-256 · imutável',
   },
   {
     num: '03',
     title: 'Qualquer pessoa verifica',
-    desc: 'Escaneie o QR. Cai na página pública do atleta. Histórico completo, assinado digitalmente.',
-    badge: '⬛ Público · Auditável',
+    desc: 'Escaneie o QR. Veja o passaporte digital completo do atleta. Assinado. Para sempre.',
+    badge: 'Público · auditável',
   },
 ];
 
@@ -23,69 +23,50 @@ export function HowItWorks() {
   return (
     <section
       id="como-funciona"
-      className="px-6 md:px-10"
       style={{
-        background: 'var(--bg-2)',
-        padding: '100px 40px',
-        borderTop: '1px solid var(--border-2)',
+        background: 'var(--color-bg)',
+        padding: 'var(--section-py) var(--section-px-sm)',
       }}
     >
-      <div className="container mx-auto max-w-7xl">
-        {/* Label */}
-        <div className="flex items-center" style={{ gap: 10, marginBottom: 20 }}>
-          <div style={{ width: 20, height: 1.5, background: 'var(--terra)' }} />
-          <span
-            className="font-display"
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: 'var(--terra)',
-            }}
-          >
-            ◆ PROCESSO
-          </span>
-        </div>
-
-        {/* H2 */}
-        <h2
-          className="font-display"
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <p
           style={{
-            fontWeight: 700,
-            fontSize: 'clamp(32px, 4vw, 50px)',
-            letterSpacing: '-0.02em',
+            fontFamily: 'var(--font-sans)',
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--color-text-muted)',
+          }}
+        >
+          PROCESSO
+        </p>
+
+        <h2
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 500,
+            fontSize: 'clamp(32px, 4vw, 48px)',
+            letterSpacing: '-0.025em',
             lineHeight: 1.1,
-            color: 'var(--ink)',
-            marginBottom: 48,
+            color: 'var(--color-text)',
+            maxWidth: 480,
+            marginTop: 24,
+            marginBottom: 80,
           }}
         >
           Três passos. Para sempre.
         </h2>
 
-        {/* Desktop grid */}
-        <div
-          className="hidden md:grid md:grid-cols-3"
-          style={{
-            background: 'var(--border-2)',
-            borderRadius: 'var(--radius-lg)',
-            overflow: 'hidden',
-            gap: 1,
-          }}
-        >
-          {steps.map((step) => (
+        {/* Desktop */}
+        <div className="hidden md:grid md:grid-cols-3">
+          {steps.map((step, i) => (
             <div
               key={step.num}
               style={{
-                background: 'var(--bg-2)',
-                padding: '36px 32px',
-                transition: 'var(--transition)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'var(--white)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'var(--bg-2)';
+                paddingRight: i < steps.length - 1 ? 40 : 0,
+                borderRight: i < steps.length - 1 ? '1px solid var(--color-border)' : 'none',
+                paddingLeft: i > 0 ? 40 : 0,
               }}
             >
               <StepContent step={step} />
@@ -93,14 +74,15 @@ export function HowItWorks() {
           ))}
         </div>
 
-        {/* Mobile stack */}
+        {/* Mobile */}
         <div className="md:hidden flex flex-col">
           {steps.map((step, i) => (
             <div
               key={step.num}
               style={{
-                padding: '36px 0',
-                borderBottom: i < steps.length - 1 ? '1px solid var(--border-2)' : 'none',
+                paddingBottom: i < steps.length - 1 ? 40 : 0,
+                borderBottom: i < steps.length - 1 ? '1px solid var(--color-border)' : 'none',
+                paddingTop: i > 0 ? 40 : 0,
               }}
             >
               <StepContent step={step} />
@@ -115,64 +97,50 @@ export function HowItWorks() {
 function StepContent({ step }: { step: typeof steps[number] }) {
   return (
     <>
-      {/* Number */}
-      <span
-        className="font-display block"
+      <p
         style={{
-          fontWeight: 700,
-          fontSize: 52,
-          color: 'var(--blue-deep)',
-          opacity: 0.2,
-          lineHeight: 1,
-          marginBottom: 20,
-          letterSpacing: '-0.03em',
+          fontFamily: 'var(--font-sans)',
+          fontSize: 13,
+          fontWeight: 400,
+          color: 'var(--color-text-muted)',
+          marginBottom: 80,
         }}
       >
         {step.num}
-      </span>
-
-      {/* Title */}
+      </p>
       <p
-        className="font-display"
         style={{
-          fontWeight: 700,
-          fontSize: 13,
+          fontFamily: 'var(--font-sans)',
+          fontWeight: 500,
+          fontSize: 22,
+          color: 'var(--color-text)',
           letterSpacing: '-0.01em',
-          color: 'var(--ink)',
-          lineHeight: 1.35,
-          marginBottom: 10,
+          marginBottom: 16,
         }}
       >
         {step.title}
       </p>
-
-      {/* Description */}
       <p
-        className="font-body"
         style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: 15,
           fontWeight: 400,
-          fontSize: 13,
-          color: 'var(--muted)',
+          color: 'var(--color-text-muted)',
           lineHeight: 1.7,
         }}
       >
         {step.desc}
       </p>
-
-      {/* Badge */}
       <span
-        className="font-display inline-flex items-center"
         style={{
-          gap: 5,
-          background: 'var(--blue-deep)',
-          color: '#ffffff',
-          fontWeight: 700,
-          fontSize: 9,
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
+          fontFamily: 'var(--font-mono)',
+          fontSize: 12,
+          color: 'var(--color-text-muted)',
+          background: 'var(--color-bg-soft)',
           padding: '4px 10px',
-          borderRadius: 4,
-          marginTop: 16,
+          borderRadius: 'var(--radius-xs)',
+          display: 'inline-block',
+          marginTop: 24,
         }}
       >
         {step.badge}
