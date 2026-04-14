@@ -16,7 +16,7 @@ export default function LoginPage() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) navigate('/painel', { replace: true });
+    if (user) navigate('/painel/praticantes', { replace: true });
   }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -29,7 +29,7 @@ export default function LoginPage() {
         ? 'E-mail ou senha incorretos.'
         : error.message);
     } else {
-      navigate('/painel');
+      navigate('/painel/praticantes');
     }
   };
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
       return;
     }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${window.location.origin}/recuperar-senha`,
     });
     if (error) {
       toast.error(error.message);
