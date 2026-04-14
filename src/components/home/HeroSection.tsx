@@ -1,250 +1,461 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { mockAthletes, mockStats } from '@/lib/mock-data';
-import { CheckCircle, QrCode } from 'lucide-react';
-import { beltColor, beltTextColor } from '@/lib/utils';
 
 function HeroPassportCard() {
-  const athlete = mockAthletes[0];
-  const achievements = [...athlete.achievements].reverse();
-
   return (
-    <div className="relative w-full h-full flex items-center justify-center" style={{ perspective: '1200px' }}>
-      {/* Subtle glow behind */}
+    <div
+      className="animate-float"
+      style={{
+        background: '#ffffff',
+        borderRadius: 'var(--radius-xl)',
+        width: '100%',
+        maxWidth: 300,
+        boxShadow: 'var(--shadow-float)',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Terra bar */}
       <div
-        className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 600px 600px at 50% 50%, rgba(200,241,53,0.06) 0%, transparent 70%)',
+          height: 3,
+          background: 'linear-gradient(90deg, var(--terra), var(--terra-soft), transparent)',
         }}
       />
 
-      {/* Layer 1 - Background grid frame */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 0.4, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="absolute"
+      {/* Header */}
+      <div
         style={{
-          width: '380px',
-          height: '520px',
-          border: '1px solid var(--color-border)',
-          borderRadius: '16px',
-          transform: 'rotateY(8deg) rotateX(-4deg)',
-          transformStyle: 'preserve-3d',
-          backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(212,208,200,0.3) 19px, rgba(212,208,200,0.3) 20px),
-            repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(212,208,200,0.3) 19px, rgba(212,208,200,0.3) 20px)`,
-        }}
-      />
-
-      {/* Layer 2 - Main passport card */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="relative z-10 bg-popover"
-        style={{
-          width: '340px',
-          border: '1px solid var(--color-border)',
-          borderRadius: '16px',
-          boxShadow: '0 32px 64px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)',
-          transform: 'rotateY(-6deg) rotateX(3deg)',
-          transformStyle: 'preserve-3d',
-          padding: '24px',
+          background: 'var(--blue-deep)',
+          padding: '12px 18px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
-        {/* Verified badge */}
-        <div className="flex items-center gap-2 mb-5 px-3 py-2 rounded-full w-fit" style={{ backgroundColor: 'var(--color-verified-bg)' }}>
-          <CheckCircle className="w-4 h-4" style={{ color: 'var(--color-verified)' }} />
-          <span className="font-display font-bold text-xs uppercase tracking-wide" style={{ color: 'var(--color-verified)' }}>
+        <span
+          className="font-display"
+          style={{
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: 'rgba(255,255,255,0.5)',
+          }}
+        >
+          FightPort · Passaporte Digital
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div
+            className="animate-pulse-dot"
+            style={{
+              width: 5,
+              height: 5,
+              borderRadius: '50%',
+              background: '#c8f135',
+            }}
+          />
+          <span
+            className="font-display"
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              color: 'rgba(255,255,255,0.7)',
+            }}
+          >
             Verificado
           </span>
         </div>
+      </div>
 
-        {/* Athlete info */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-14 h-14 rounded-full flex items-center justify-center font-display font-bold text-lg shrink-0" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>
+      {/* Body */}
+      <div style={{ padding: 18 }}>
+        {/* Athlete */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 12,
+            marginBottom: 16,
+            paddingBottom: 14,
+            borderBottom: '1px solid var(--border)',
+          }}
+        >
+          <div
+            className="font-display"
+            style={{
+              width: 42,
+              height: 42,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--terra-soft), var(--terra))',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#fff',
+              flexShrink: 0,
+            }}
+          >
             CM
           </div>
           <div>
-            <p className="font-display font-bold text-lg text-ink leading-tight">{athlete.name} {athlete.surname}</p>
-            <p className="font-body text-sm text-ink-muted">{athlete.school} · {athlete.sport}</p>
+            <p
+              className="font-display"
+              style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)' }}
+            >
+              Carlos E. Mendes Silva
+            </p>
+            <p
+              className="font-body"
+              style={{ fontSize: 11, fontWeight: 400, color: 'var(--muted)' }}
+            >
+              Academia Tiger BJJ · Jiu-Jitsu
+            </p>
           </div>
         </div>
 
-        {/* Separator */}
-        <div className="w-full h-px mb-4" style={{ backgroundColor: 'var(--color-border)' }} />
-
-        {/* Mini timeline */}
-        <div className="space-y-3 mb-4">
-          {achievements.map((ach, i) => (
-            <div key={ach.id} className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: beltColor(ach.belt), border: ach.belt === 'Branca' ? '1px solid var(--color-border)' : undefined }} />
-              <span
-                className="px-2 py-0.5 rounded-full text-xs font-body font-medium"
-                style={{ backgroundColor: beltColor(ach.belt), color: beltTextColor(ach.belt), border: ach.belt === 'Branca' ? '1px solid var(--color-border)' : undefined }}
-              >
-                {ach.belt}
-              </span>
-              <span className="font-body text-xs text-ink-faint">{new Date(ach.date + 'T00:00:00').getFullYear()}</span>
-            </div>
-          ))}
+        {/* Belts */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
+          {/* Roxa */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#7c3aed', flexShrink: 0 }} />
+            <span
+              className="font-display"
+              style={{
+                fontSize: 9,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                background: '#7c3aed',
+                color: '#fff',
+                padding: '2px 8px',
+                borderRadius: 100,
+              }}
+            >
+              Roxa
+            </span>
+            <span
+              className="font-display"
+              style={{ fontSize: 9, color: 'var(--muted)', marginLeft: 'auto' }}
+            >
+              2023
+            </span>
+          </div>
+          {/* Azul */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--blue-deep)', flexShrink: 0 }} />
+            <span
+              className="font-display"
+              style={{
+                fontSize: 9,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                background: 'var(--blue-deep)',
+                color: '#fff',
+                padding: '2px 8px',
+                borderRadius: 100,
+              }}
+            >
+              Azul
+            </span>
+            <span
+              className="font-display"
+              style={{ fontSize: 9, color: 'var(--muted)', marginLeft: 'auto' }}
+            >
+              2021
+            </span>
+          </div>
+          {/* Branca */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--bg-3)', border: '1px solid var(--border-2)', flexShrink: 0 }} />
+            <span
+              className="font-display"
+              style={{
+                fontSize: 9,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                background: 'var(--bg-2)',
+                color: 'var(--muted)',
+                border: '1px solid var(--border-2)',
+                padding: '2px 8px',
+                borderRadius: 100,
+              }}
+            >
+              Branca
+            </span>
+            <span
+              className="font-display"
+              style={{ fontSize: 9, color: 'var(--muted)', marginLeft: 'auto' }}
+            >
+              2019
+            </span>
+          </div>
         </div>
 
-        {/* Separator */}
-        <div className="w-full h-px mb-4" style={{ backgroundColor: 'var(--color-border)' }} />
-
-        {/* Footer */}
-        <div className="flex items-center justify-between">
-          <span className="font-mono-hash text-[11px] text-ink-faint">{achievements[0]?.hashPartial}</span>
-          {/* Simple QR placeholder */}
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className="opacity-40">
-            <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="2" />
-            <rect x="8" y="8" width="8" height="8" rx="1" fill="currentColor" />
-            <rect x="28" y="4" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="2" />
-            <rect x="32" y="8" width="8" height="8" rx="1" fill="currentColor" />
-            <rect x="4" y="28" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="2" />
-            <rect x="8" y="32" width="8" height="8" rx="1" fill="currentColor" />
-            <rect x="28" y="28" width="4" height="4" fill="currentColor" />
-            <rect x="36" y="28" width="4" height="4" fill="currentColor" />
-            <rect x="28" y="36" width="4" height="4" fill="currentColor" />
-            <rect x="36" y="36" width="8" height="8" rx="1" fill="currentColor" />
-          </svg>
+        {/* Hash */}
+        <div
+          style={{
+            paddingTop: 12,
+            borderTop: '1px solid var(--border)',
+          }}
+        >
+          <span
+            className="font-display"
+            style={{
+              fontSize: 8.5,
+              fontWeight: 400,
+              color: 'var(--cloud)',
+              letterSpacing: '0.04em',
+            }}
+          >
+            ID: FP-2024-246861 · 7c9a31fe...f2d18e90 · SHA-256
+          </span>
         </div>
-      </motion.div>
-
-      {/* Layer 3 - Floating mini-cards */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="absolute z-20 bg-popover p-3 rounded-xl flex items-center gap-2"
-        style={{
-          top: '8%',
-          right: '2%',
-          border: '1px solid var(--color-border)',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-          animation: 'heroFloat 3s ease-in-out infinite',
-        }}
-      >
-        <CheckCircle className="w-4 h-4" style={{ color: 'var(--color-verified)' }} />
-        <span className="font-body text-[13px] text-ink-muted whitespace-nowrap">Verificado em 0,3s</span>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.7 }}
-        className="absolute z-20 bg-popover p-3 rounded-xl flex items-center gap-2"
-        style={{
-          bottom: '12%',
-          left: '0%',
-          border: '1px solid var(--color-border)',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-          animation: 'heroFloat 3s ease-in-out infinite 1.5s',
-        }}
-      >
-        <QrCode className="w-4 h-4 text-ink-muted" />
-        <span className="font-body text-[13px] text-ink-muted whitespace-nowrap">QR Code gerado</span>
-      </motion.div>
+      </div>
     </div>
   );
 }
 
 export function HeroSection() {
-  const container = {
-    hidden: {},
-    show: { transition: { staggerChildren: 0.1 } },
-  };
-  const item = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-  };
-
   return (
-    <section className="min-h-screen flex items-center px-4 pt-20 pb-12 lg:pt-0 lg:pb-0">
-      <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-        {/* Left column */}
-        <motion.div
-          className="lg:col-span-7"
-          variants={container}
-          initial="hidden"
-          animate="show"
+    <section
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '55fr 45fr',
+        minHeight: 'calc(100vh - 62px)',
+      }}
+      className="grid-cols-1 md:!grid-cols-[55fr_45fr]"
+    >
+      {/* Left side */}
+      <div
+        className="flex flex-col justify-center px-6 py-12 md:px-10 md:py-[72px] md:pr-[52px]"
+        style={{ background: 'var(--bg)' }}
+      >
+        {/* Eyebrow */}
+        <div
+          className="animate-fadeup delay-0 flex items-center"
+          style={{ gap: 10, marginBottom: 22 }}
         >
-          {/* Category tag */}
-          <motion.div variants={item} className="mb-8">
-            <span className="font-display text-[13px] uppercase tracking-[0.15em] text-ink-faint">
-              ◆ Certificação Esportiva
-            </span>
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            variants={item}
-            className="font-display font-extrabold text-[64px] md:text-[96px] lg:text-[108px] text-ink mb-6"
-            style={{ lineHeight: '0.88' }}
+          <div style={{ width: 20, height: 1.5, background: 'var(--terra)' }} />
+          <span
+            className="font-display"
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.20em',
+              textTransform: 'uppercase',
+              color: 'var(--terra)',
+            }}
           >
-            O PASSAPORTE<br />
-            <span className="italic">DEFINITIVO</span><br />
-            DO SEU ATLETA.
-          </motion.h1>
+            ◆ CERTIFICAÇÃO ESPORTIVA DIGITAL
+          </span>
+        </div>
 
-          {/* Decorative line */}
-          <motion.div variants={item} className="w-16 h-px mb-6" style={{ backgroundColor: 'var(--color-accent)' }} />
+        {/* H1 */}
+        <h1
+          className="animate-fadeup delay-100 font-display"
+          style={{
+            fontWeight: 700,
+            fontSize: 'clamp(42px, 5.5vw, 68px)',
+            lineHeight: 1.04,
+            letterSpacing: '-0.025em',
+            margin: 0,
+          }}
+        >
+          <span style={{ color: 'var(--ink)' }}>A GRADUAÇÃO</span>
+          <br />
+          <span style={{ fontStyle: 'italic', color: 'var(--blue-mid)' }}>do seu atleta,</span>
+          <br />
+          <span style={{ color: 'var(--blue-deep)' }}>IMUTÁVEL.</span>
+        </h1>
 
-          {/* Subheadline */}
-          <motion.p
-            variants={item}
-            className="font-body text-lg text-ink-muted max-w-[480px] mb-12"
-            style={{ lineHeight: '1.65' }}
+        {/* Subtitle */}
+        <p
+          className="animate-fadeup delay-200 font-body"
+          style={{
+            fontSize: 17,
+            fontWeight: 400,
+            color: 'var(--muted)',
+            lineHeight: 1.72,
+            maxWidth: 440,
+            margin: '20px 0 36px',
+          }}
+        >
+          Qualquer pessoa no mundo verifica a faixa do seu aluno
+          em 3 segundos — com um simples escaneamento de QR Code.
+          Para sempre. Sem falsificação possível.
+        </p>
+
+        {/* Buttons */}
+        <div
+          className="animate-fadeup delay-300 flex flex-wrap"
+          style={{ gap: 12 }}
+        >
+          <Link
+            to="/cadastro"
+            className="font-display inline-flex items-center"
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '0.07em',
+              textTransform: 'uppercase',
+              color: '#ffffff',
+              background: 'var(--blue-deep)',
+              border: '2px solid var(--blue-deep)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '14px 26px',
+              gap: 8,
+              textDecoration: 'none',
+              transition: 'var(--transition)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--blue-mid)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-btn)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'var(--blue-deep)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           >
-            Registre graduações. Gere autenticidade. Qualquer pessoa confirma a faixa do seu aluno escaneando um QR Code — para sempre.
-          </motion.p>
+            Cadastrar minha academia — é grátis
+          </Link>
 
-          {/* CTAs */}
-          <motion.div variants={item} className="flex flex-wrap items-center gap-4 mb-12">
-            <Link to="/#busca">
-              <Button
-                variant="hero"
-                size="lg"
-                className="hover:-translate-y-0.5 transition-transform duration-200"
+          <a
+            href="/#busca"
+            className="font-display"
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '0.07em',
+              textTransform: 'uppercase',
+              color: 'var(--ink)',
+              background: 'transparent',
+              border: '1.5px solid var(--border-2)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '13px 22px',
+              textDecoration: 'none',
+              transition: 'var(--transition)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--bg-3)';
+              e.currentTarget.style.borderColor = 'var(--ink)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.borderColor = 'var(--border-2)';
+            }}
+          >
+            Verificar um atleta →
+          </a>
+        </div>
+
+        {/* Stats */}
+        <div
+          className="animate-fadeup delay-400 flex"
+          style={{
+            gap: 36,
+            borderTop: '1px solid var(--border-2)',
+            paddingTop: 28,
+            marginTop: 52,
+          }}
+        >
+          {[
+            { number: '1.247', suffix: '+', label: 'atletas' },
+            { number: '89', suffix: '', label: 'escolas' },
+            { number: '3.891', suffix: '', label: 'certificados' },
+          ].map((stat) => (
+            <div key={stat.label} style={{ display: 'flex', flexDirection: 'column' }}>
+              <span
+                className="font-display"
+                style={{
+                  fontSize: 26,
+                  fontWeight: 700,
+                  color: 'var(--blue-deep)',
+                  letterSpacing: '-0.02em',
+                }}
               >
-                Verificar um atleta
-              </Button>
-            </Link>
-            <Link
-              to="/cadastro"
-              className="group font-body font-medium text-base text-ink inline-flex items-center gap-1 relative"
-            >
-              <span className="relative">
-                Cadastrar minha escola
-                <span className="absolute bottom-0 left-0 w-0 h-px bg-ink transition-all duration-300 group-hover:w-full" />
+                {stat.number}
+                {stat.suffix && (
+                  <sup style={{ fontSize: 13, color: 'var(--terra)' }}>{stat.suffix}</sup>
+                )}
               </span>
-              <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
-            </Link>
-          </motion.div>
+              <span
+                className="font-body"
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--muted)',
+                  marginTop: 4,
+                }}
+              >
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-          {/* Stats counter */}
-          <motion.div variants={item} className="flex items-center gap-4 text-sm">
-            <div>
-              <span className="font-body font-medium text-ink">{mockStats.totalAthletes.toLocaleString('pt-BR')}</span>
-              <span className="font-body text-ink-faint ml-1.5">atletas</span>
-            </div>
-            <div className="w-px h-4" style={{ backgroundColor: 'var(--color-border)' }} />
-            <div>
-              <span className="font-body font-medium text-ink">{mockStats.totalSchools}</span>
-              <span className="font-body text-ink-faint ml-1.5">escolas</span>
-            </div>
-            <div className="w-px h-4" style={{ backgroundColor: 'var(--color-border)' }} />
-            <div>
-              <span className="font-body font-medium text-ink">{mockStats.totalCertificates.toLocaleString('pt-BR')}</span>
-              <span className="font-body text-ink-faint ml-1.5">certificados</span>
-            </div>
-          </motion.div>
-        </motion.div>
+      {/* Right side */}
+      <div
+        className="flex flex-col items-center justify-center relative overflow-hidden px-6 py-10 md:px-11 md:py-[60px] min-h-[420px]"
+        style={{
+          background: 'var(--blue-deep)',
+          gap: 20,
+        }}
+      >
+        {/* Glow */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            top: -80,
+            right: -80,
+            width: 320,
+            height: 320,
+            borderRadius: '50%',
+            background: 'rgba(216,66,26,0.18)',
+            filter: 'blur(60px)',
+          }}
+        />
 
-        {/* Right column - 3D visual */}
-        <div className="lg:col-span-5 relative hidden lg:flex items-center justify-center" style={{ minHeight: '600px' }}>
+        {/* Pill */}
+        <div
+          className="self-end font-display"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            background: 'rgba(255,255,255,0.12)',
+            border: '1px solid rgba(255,255,255,0.20)',
+            borderRadius: 100,
+            padding: '7px 16px 7px 8px',
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            color: '#ffffff',
+          }}
+        >
+          <div
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              background: '#c8f135',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              color: '#000',
+              fontWeight: 700,
+            }}
+          >
+            ✓
+          </div>
+          Verificado em 0,3s
+        </div>
+
+        {/* Card */}
+        <div className="w-full flex justify-center" style={{ maxWidth: 300 }}>
           <HeroPassportCard />
         </div>
       </div>
