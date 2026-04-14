@@ -5,7 +5,7 @@
     "forSchools": "Para escolas",
     "organizations": "Organizações",
     "login": "Entrar",
-    "registerSchool": "Cadastre sua escola"
+    "registerSchool": "Cadastre sua organização"
   },
   "hero": {
     "badge": "CERTIFICAÇÃO ESPORTIVA → ORGANIZAÇÕES DE ARTES MARCIAIS",
@@ -47,7 +47,10 @@
     "placeholder": "Nome do atleta, ID ou organização...",
     "emptyTitle": "Nenhum atleta cadastrado ainda.",
     "emptyDesc": "Cadastre sua organização e emita o primeiro certificado.",
-    "emptyCta": "Cadastrar minha organização →"
+    "emptyCta": "Cadastrar minha organização →",
+    "table": { "athlete": "Atleta", "id": "ID", "organization": "Organização", "belt": "Faixa" },
+    "found": "{{count}} atleta(s) encontrado(s)",
+    "page": "Página {{current}} de {{total}}"
   },
   "pricing": {
     "badge": "PREÇOS",
@@ -329,5 +332,116 @@
       "testimonial": "\"O fightport.pro trouxe credibilidade real para nossa organização.\"",
       "testimonialAuthor": "— Prof. Ricardo Almeida · Faixa Preta 5° Grau"
     }
+  },
+  "passport": {
+    "verified": "VERIFICADO POR FIGHTPORT.PRO",
+    "verifyAnother": "Verificar outro atleta",
+    "notFoundTitle": "Atleta não encontrado",
+    "notFoundDesc": "Verifique o ID e tente novamente.",
+    "backToHome": "Voltar ao início",
+    "share": "Compartilhar perfil",
+    "qrCode": "Ver QR Code",
+    "qrScan": "Escaneie para verificar",
+    "qrClose": "Fechar",
+    "journey": "Jornada do atleta",
+    "mostRecent": "Mais recente",
+    "beltLabel": "Faixa {{belt}}",
+    "noAchievements": "Nenhuma conquista registrada ainda.",
+    "footer": "Registro emitido por {{school}} via fightport.pro · SportCombat",
+    "idLabel": "ID do praticante",
+    "graduatedBy": "Graduado por {{name}}"
+  },
+  "about": {
+    "title": "Sobre nós",
+    "backLink": "← voltar ao início",
+    "mission": {
+      "label": "NOSSA MISSÃO",
+      "heading": "Construímos a infraestrutura de confiança para as artes marciais.",
+      "p1": "Faixas levam anos para ser conquistadas. Horas de treino, superação e dedicação ficam registradas no corpo — mas raramente em algum lugar que resista ao tempo ou possa ser verificado por qualquer pessoa, em qualquer lugar do mundo.",
+      "p2": "O fightport.pro nasceu para mudar isso. Criamos um sistema onde cada graduação se torna um registro permanente, criptografado e verificável publicamente em menos de um segundo. Sem papéis que se perdem. Sem certificados que se falsificam. Sem dúvidas sobre a trajetória de um atleta."
+    },
+    "problemSection": {
+      "label": "O PROBLEMA QUE RESOLVEMOS",
+      "heading": "Certificados físicos são fáceis de falsificar. Registros digitais, não.",
+      "p1": "O mercado de artes marciais no Brasil movimenta bilhões de reais e conta com mais de 2 milhões de praticantes ativos. Mas a certificação de graduações ainda funciona como há décadas: um papel impresso, uma assinatura e um carimbo.",
+      "p2": "Árbitros de competições, empregadores, outras academias — qualquer pessoa que precise verificar a graduação de um atleta não tem como fazer isso com segurança. O fightport.pro resolve esse problema com criptografia SHA-256 e QR Codes verificáveis por qualquer pessoa, em qualquer dispositivo, sem precisar de conta ou aplicativo."
+    },
+    "stats": {
+      "s1": { "value": "72%", "label": "das organizações ainda usam certificados físicos sem respaldo digital" },
+      "s2": { "value": "50%", "label": "dos árbitros não conseguem verificar graduações em competições" },
+      "s3": { "value": "5 anos", "label": "de treino registrados em papel que pode ser perdido ou falsificado" }
+    },
+    "howItWorks": {
+      "label": "COMO FUNCIONA",
+      "heading": "Simples para a organização. Definitivo para o atleta.",
+      "p1": "A organização cadastra seus praticantes, registra a graduação e gera automaticamente um passaporte digital com QR Code. O processo leva menos de dois minutos. O registro dura para sempre.",
+      "p2": "Cada graduação recebe um hash SHA-256 único, calculado no momento do registro. Qualquer alteração posterior — mesmo mínima — produziria um hash completamente diferente, tornando a adulteração detectável imediatamente. É a mesma tecnologia usada para garantir a integridade de transações financeiras digitais."
+    },
+    "whoWeAre": {
+      "label": "QUEM SOMOS",
+      "heading": "Uma empresa brasileira construída para o esporte nacional.",
+      "p1": "O fightport.pro é desenvolvido pela SportCombat, empresa com sede no Rio de Janeiro — RJ, focada em soluções de tecnologia para o ecossistema esportivo brasileiro.",
+      "p2": "Operamos sob a Lei Geral de Proteção de Dados (LGPD) e levamos a sério a responsabilidade de guardar informações de atletas. Todos os dados são armazenados em infraestrutura segura, criptografados em trânsito e em repouso.",
+      "p3": "Estamos presentes em organizações em São Paulo, Rio de Janeiro, Curitiba, Belo Horizonte, Porto Alegre, Fortaleza e Recife — e crescendo."
+    },
+    "ctaSection": {
+      "title": "Sua organização merece isso.",
+      "subtitle": "Cadastre grátis. Você só paga quando graduar um atleta.",
+      "button": "Cadastrar minha organização"
+    }
+  },
+  "contact": {
+    "hero": "Contato",
+    "heroSub": "Responderemos em até 1 dia útil.",
+    "backLink": "← voltar ao início",
+    "title": "Fale com a gente",
+    "subtitle": "Se você tem dúvidas sobre a plataforma, precisa de ajuda com sua conta ou quer saber mais sobre o fightport.pro para sua organização, estamos aqui.",
+    "cards": {
+      "support": { "title": "Suporte técnico", "desc": "Problemas com sua conta, créditos ou cadastro de praticantes." },
+      "orgs": { "title": "Para organizações", "desc": "Dúvidas sobre planos, onboarding ou uso da plataforma para sua organização." },
+      "privacy": { "title": "Privacidade e LGPD", "desc": "Solicitações de titulares de dados, exclusão de registros ou questões legais." }
+    },
+    "emailNote": "O e-mail de contato oficial será disponibilizado em breve. Use o formulário ao lado para enviar sua mensagem agora.",
+    "form": {
+      "name": "Seu nome",
+      "email": "E-mail",
+      "org": "Organização (opcional)",
+      "subject": "Assunto",
+      "subjectPlaceholder": "Selecione...",
+      "subjects": ["Suporte técnico", "Dúvida sobre planos e créditos", "Cadastro e conta", "Privacidade e proteção de dados", "Outro"],
+      "message": "Mensagem",
+      "messagePlaceholder": "Descreva sua dúvida ou solicitação...",
+      "submit": "Enviar mensagem"
+    },
+    "success": {
+      "title": "Mensagem enviada.",
+      "desc": "Obrigado pelo contato. Responderemos em até 1 dia útil no e-mail informado.",
+      "back": "Voltar ao início →"
+    }
+  },
+  "resetPw": {
+    "title": "Nova senha",
+    "label": "Nova senha",
+    "placeholder": "Mínimo 8 caracteres",
+    "submit": "Salvar nova senha",
+    "saving": "Salvando...",
+    "invalidLink": "Link inválido ou expirado.",
+    "backToLogin": "Voltar ao login",
+    "minLength": "A senha deve ter no mínimo 8 caracteres.",
+    "success": "Senha atualizada com sucesso!"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Página não encontrada",
+    "back": "Voltar ao início"
+  },
+  "common": {
+    "fillAllFields": "Preencha todos os campos.",
+    "minPassword": "A senha deve ter no mínimo 8 caracteres.",
+    "accountError": "Erro ao criar conta.",
+    "wrongCredentials": "E-mail ou senha incorretos.",
+    "recoveryEmailSent": "E-mail de recuperação enviado. Verifique sua caixa de entrada.",
+    "linkCopied": "Link otimizado copiado para a área de transferência",
+    "select": "Selecione"
   }
 }

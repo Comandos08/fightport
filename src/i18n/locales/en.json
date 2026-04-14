@@ -5,7 +5,7 @@
     "forSchools": "For schools",
     "organizations": "Organizations",
     "login": "Sign in",
-    "registerSchool": "Register your school"
+    "registerSchool": "Register your organization"
   },
   "hero": {
     "badge": "SPORTS CERTIFICATION → MARTIAL ARTS ORGANIZATIONS",
@@ -43,7 +43,10 @@
     "placeholder": "Athlete name, ID, or organization...",
     "emptyTitle": "No athletes registered yet.",
     "emptyDesc": "Register your organization and issue the first certificate.",
-    "emptyCta": "Register my organization →"
+    "emptyCta": "Register my organization →",
+    "table": { "athlete": "Athlete", "id": "ID", "organization": "Organization", "belt": "Belt" },
+    "found": "{{count}} athlete(s) found",
+    "page": "Page {{current}} of {{total}}"
   },
   "pricing": {
     "badge": "PRICING",
@@ -253,5 +256,116 @@
       "testimonial": "\"fightport.pro brought real credibility to our organization.\"",
       "testimonialAuthor": "— Prof. Ricardo Almeida · Black Belt 5th Degree"
     }
+  },
+  "passport": {
+    "verified": "VERIFIED BY FIGHTPORT.PRO",
+    "verifyAnother": "Verify another athlete",
+    "notFoundTitle": "Athlete not found",
+    "notFoundDesc": "Check the ID and try again.",
+    "backToHome": "Back to home",
+    "share": "Share profile",
+    "qrCode": "View QR Code",
+    "qrScan": "Scan to verify",
+    "qrClose": "Close",
+    "journey": "Athlete's journey",
+    "mostRecent": "Most recent",
+    "beltLabel": "{{belt}} Belt",
+    "noAchievements": "No achievements recorded yet.",
+    "footer": "Record issued by {{school}} via fightport.pro · SportCombat",
+    "idLabel": "Practitioner ID",
+    "graduatedBy": "Graded by {{name}}"
+  },
+  "about": {
+    "title": "About us",
+    "backLink": "← back to home",
+    "mission": {
+      "label": "OUR MISSION",
+      "heading": "We build the trust infrastructure for martial arts.",
+      "p1": "Belts take years to earn. Hours of training, perseverance, and dedication are recorded in the body — but rarely in a place that withstands time or can be verified by anyone, anywhere in the world.",
+      "p2": "fightport.pro was born to change that. We created a system where every graduation becomes a permanent, encrypted, and publicly verifiable record in less than one second. No papers that get lost. No certificates that can be forged. No doubts about an athlete's journey."
+    },
+    "problemSection": {
+      "label": "THE PROBLEM WE SOLVE",
+      "heading": "Paper certificates are easy to forge. Digital records are not.",
+      "p1": "The martial arts market generates billions and has millions of active practitioners. But certification of graduations still works as it did decades ago: a printed paper, a signature, and a stamp.",
+      "p2": "Competition referees, employers, other schools — anyone who needs to verify an athlete's graduation has no way to do so securely. fightport.pro solves this problem with SHA-256 cryptography and QR Codes verifiable by anyone, on any device, without needing an account or app."
+    },
+    "stats": {
+      "s1": { "value": "72%", "label": "of organizations still use paper certificates with no digital backing" },
+      "s2": { "value": "50%", "label": "of referees cannot verify graduations at competitions" },
+      "s3": { "value": "5 years", "label": "of training recorded on paper that can be lost or forged" }
+    },
+    "howItWorks": {
+      "label": "HOW IT WORKS",
+      "heading": "Simple for the organization. Definitive for the athlete.",
+      "p1": "The organization registers its practitioners, records the graduation, and automatically generates a digital passport with a QR Code. The process takes less than two minutes. The record lasts forever.",
+      "p2": "Each graduation receives a unique SHA-256 hash, calculated at the time of registration. Any subsequent change — even minimal — would produce a completely different hash, making tampering immediately detectable. It's the same technology used to ensure the integrity of digital financial transactions."
+    },
+    "whoWeAre": {
+      "label": "WHO WE ARE",
+      "heading": "A Brazilian company built for national sports.",
+      "p1": "fightport.pro is developed by SportCombat, a company based in Rio de Janeiro, Brazil, focused on technology solutions for the Brazilian sports ecosystem.",
+      "p2": "We operate under the General Data Protection Law (LGPD) and take seriously the responsibility of safeguarding athlete information. All data is stored in secure infrastructure, encrypted in transit and at rest.",
+      "p3": "We are present in organizations across São Paulo, Rio de Janeiro, Curitiba, Belo Horizonte, Porto Alegre, Fortaleza, and Recife — and growing."
+    },
+    "ctaSection": {
+      "title": "Your organization deserves this.",
+      "subtitle": "Sign up for free. You only pay when you grade an athlete.",
+      "button": "Register my organization"
+    }
+  },
+  "contact": {
+    "hero": "Contact",
+    "heroSub": "We'll respond within 1 business day.",
+    "backLink": "← back to home",
+    "title": "Get in touch",
+    "subtitle": "If you have questions about the platform, need help with your account, or want to learn more about fightport.pro for your organization, we're here.",
+    "cards": {
+      "support": { "title": "Technical support", "desc": "Issues with your account, credits, or practitioner registration." },
+      "orgs": { "title": "For organizations", "desc": "Questions about plans, onboarding, or using the platform for your organization." },
+      "privacy": { "title": "Privacy and LGPD", "desc": "Data subject requests, record deletion, or legal matters." }
+    },
+    "emailNote": "The official contact email will be available soon. Use the form to send your message now.",
+    "form": {
+      "name": "Your name",
+      "email": "E-mail",
+      "org": "Organization (optional)",
+      "subject": "Subject",
+      "subjectPlaceholder": "Select...",
+      "subjects": ["Technical support", "Questions about plans and credits", "Registration and account", "Privacy and data protection", "Other"],
+      "message": "Message",
+      "messagePlaceholder": "Describe your question or request...",
+      "submit": "Send message"
+    },
+    "success": {
+      "title": "Message sent.",
+      "desc": "Thank you for reaching out. We'll respond within 1 business day to the email provided.",
+      "back": "Back to home →"
+    }
+  },
+  "resetPw": {
+    "title": "New password",
+    "label": "New password",
+    "placeholder": "Minimum 8 characters",
+    "submit": "Save new password",
+    "saving": "Saving...",
+    "invalidLink": "Invalid or expired link.",
+    "backToLogin": "Back to login",
+    "minLength": "Password must be at least 8 characters.",
+    "success": "Password updated successfully!"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Page not found",
+    "back": "Return to home"
+  },
+  "common": {
+    "fillAllFields": "Please fill in all fields.",
+    "minPassword": "Password must be at least 8 characters.",
+    "accountError": "Error creating account.",
+    "wrongCredentials": "Incorrect email or password.",
+    "recoveryEmailSent": "Recovery email sent. Check your inbox.",
+    "linkCopied": "Optimized link copied to clipboard",
+    "select": "Select"
   }
 }

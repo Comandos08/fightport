@@ -4,19 +4,13 @@ import { Eye, EyeOff, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 // ── Input style helpers ──
 const inputStyle: React.CSSProperties = {
-  background: 'var(--color-bg-soft)',
-  border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm)',
-  padding: '13px 16px',
-  fontFamily: 'var(--font-sans)',
-  fontSize: 15,
-  color: 'var(--color-text)',
-  outline: 'none',
-  width: '100%',
-  transition: 'var(--transition)',
+  background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)',
+  padding: '13px 16px', fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--color-text)',
+  outline: 'none', width: '100%', transition: 'var(--transition)',
 };
 
 const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -29,18 +23,14 @@ const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) =>
 };
 
 const labelStyle: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)',
-  fontSize: 12,
-  fontWeight: 500,
-  letterSpacing: '0.01em',
-  color: 'var(--color-text)',
-  display: 'block',
-  marginBottom: 6,
+  fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, letterSpacing: '0.01em',
+  color: 'var(--color-text)', display: 'block', marginBottom: 6,
 };
 
 const selectChevron = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`;
 
 export default function CadastroPage() {
+  const { t } = useTranslation();
   const location = useLocation();
   const [mode, setMode] = useState<'signup' | 'login'>(
     (location.state as any)?.mode === 'login' || location.pathname === '/login' ? 'login' : 'signup'
@@ -49,7 +39,6 @@ export default function CadastroPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Signup fields
   const [schoolName, setSchoolName] = useState('');
   const [coachName, setCoachName] = useState('');
   const [coachGraduation, setCoachGraduation] = useState('');
@@ -58,7 +47,6 @@ export default function CadastroPage() {
   const [password, setPassword] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Login fields
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
@@ -69,34 +57,27 @@ export default function CadastroPage() {
     if (user) navigate('/painel/praticantes', { replace: true });
   }, [user, navigate]);
 
-  // ── ALL LOGIC BELOW IS PRESERVED EXACTLY ──
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!schoolName || !coachName || !coachGraduation || !martialArt || !email || !password) {
-      toast.error('Preencha todos os campos.');
+      toast.error(t('common.fillAllFields'));
       return;
     }
     if (password.length < 8) {
-      toast.error('A senha deve ter no mínimo 8 caracteres.');
+      toast.error(t('common.minPassword'));
       return;
     }
     setLoading(true);
     const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
+      email, password,
       options: {
         emailRedirectTo: window.location.origin,
-        data: {
-          school_name: schoolName,
-          coach_name: coachName,
-          coach_graduation: coachGraduation,
-          martial_art: martialArt,
-        },
+        data: { school_name: schoolName, coach_name: coachName, coach_graduation: coachGraduation, martial_art: martialArt },
       },
     });
     if (authError) { setLoading(false); toast.error(authError.message); return; }
     const userId = authData.user?.id;
-    if (!userId) { setLoading(false); toast.error('Erro ao criar conta.'); return; }
+    if (!userId) { setLoading(false); toast.error(t('common.accountError')); return; }
     const { error: schoolError } = await supabase.from('schools').insert({ id: userId, name: schoolName, martial_art: martialArt, email });
     if (schoolError) console.error('School insert error:', schoolError);
     const { error: coachError } = await supabase.from('head_coaches').insert({ school_id: userId, name: coachName, graduation: coachGraduation });
@@ -113,31 +94,26 @@ export default function CadastroPage() {
     const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
     setLoading(false);
     if (error) {
-      toast.error(error.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos.' : error.message);
+      toast.error(error.message === 'Invalid login credentials' ? t('common.wrongCredentials') : error.message);
     } else {
       navigate('/painel/praticantes');
     }
   };
 
   const handleForgotPassword = async () => {
-    if (!loginEmail) { toast.error('Digite seu e-mail primeiro.'); return; }
+    if (!loginEmail) { toast.error(t('common.fillAllFields')); return; }
     const { error } = await supabase.auth.resetPasswordForEmail(loginEmail, {
       redirectTo: `${window.location.origin}/recuperar-senha`,
     });
-    if (error) { toast.error(error.message); } else { toast.success('E-mail de recuperação enviado. Verifique sua caixa de entrada.'); }
+    if (error) { toast.error(error.message); } else { toast.success(t('common.recoveryEmailSent')); }
   };
 
   const switchMode = (newMode: 'signup' | 'login') => {
     if (newMode === mode) return;
     setAnimating(true);
-    setTimeout(() => {
-      setMode(newMode);
-      setShowPassword(false);
-      setTimeout(() => setAnimating(false), 50);
-    }, 150);
+    setTimeout(() => { setMode(newMode); setShowPassword(false); setTimeout(() => setAnimating(false), 50); }, 150);
   };
 
-  // ── SUCCESS STATE ──
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8" style={{ background: 'var(--color-bg)' }}>
@@ -146,72 +122,42 @@ export default function CadastroPage() {
             <Shield className="h-8 w-8" style={{ color: 'var(--color-text)' }} />
           </div>
           <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--color-text)', marginBottom: 8 }}>
-            Conta criada!
+            {t('auth.success.title')}
           </h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--color-text-muted)', marginBottom: 32, lineHeight: 1.65 }}>
-            Enviamos um e-mail de confirmação para <strong>{email}</strong>. Clique no link para ativar sua conta.
-          </p>
-          <button
-            onClick={() => switchMode('login')}
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 15,
-              fontWeight: 500,
-              background: 'var(--color-bg-amber)',
-              color: 'var(--color-text)',
-              padding: '14px 28px',
-              borderRadius: 'var(--radius-sm)',
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'var(--transition)',
-            }}
-          >
-            Ir para o login
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--color-text-muted)', marginBottom: 32, lineHeight: 1.65 }}
+            dangerouslySetInnerHTML={{ __html: t('auth.success.desc', { email }) }} />
+          <button onClick={() => switchMode('login')}
+            style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, background: 'var(--color-bg-amber)', color: 'var(--color-text)', padding: '14px 28px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', transition: 'var(--transition)' }}>
+            {t('auth.success.goToLogin')}
           </button>
         </div>
       </div>
     );
   }
 
-  // ── MAIN RENDER ──
+  const benefits = t('auth.leftPanel.benefits', { returnObjects: true }) as string[];
+
   return (
     <div className="min-h-screen flex justify-center" style={{ background: 'var(--color-bg-dark)' }}>
     <div className="w-full min-h-screen grid grid-cols-1 md:grid-cols-2" style={{ maxWidth: 1440 }}>
-      {/* LEFT PANEL — Dark */}
-      <div
-        className="hidden md:flex flex-col justify-between"
-        style={{ background: 'var(--color-bg-dark)', padding: '64px 52px' }}
-      >
-        {/* Top */}
+      {/* LEFT PANEL */}
+      <div className="hidden md:flex flex-col justify-between" style={{ background: 'var(--color-bg-dark)', padding: '64px 52px' }}>
         <div>
           <Link to="/" style={{ textDecoration: 'none', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: '#FFFFFF' }}>
             fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
           </Link>
-
           <div style={{ marginTop: 64 }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 20 }}>
-              PARA ORGANIZAÇÕES ESPORTIVAS
+              {t('auth.leftPanel.badge')}
             </p>
-
-            <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 3.5vw, 48px)', lineHeight: 1.08, letterSpacing: '-0.025em', color: '#FFFFFF', marginBottom: 32 }}>
-              Comece hoje.<br />
-              Seu primeiro<br />
-              cadastro é grátis.
+            <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 3.5vw, 48px)', lineHeight: 1.08, letterSpacing: '-0.025em', color: '#FFFFFF', marginBottom: 32, whiteSpace: 'pre-line' }}>
+              {t('auth.leftPanel.title')}
             </h2>
-
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 400, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 }}>
-              Você só paga quando graduar um atleta.<br />
-              Sem mensalidade. Sem surpresas.
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 400, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, whiteSpace: 'pre-line' }}>
+              {t('auth.leftPanel.subtitle')}
             </p>
-
-            {/* Benefits */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 40 }}>
-              {[
-                'Certificação com hash SHA-256 imutável',
-                'QR Code verificável por qualquer pessoa',
-                'Passaporte digital permanente por atleta',
-                'Créditos nunca expiram — use quando quiser',
-              ].map((text) => (
+              {benefits.map((text) => (
                 <div key={text} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                   <span style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-bg-amber)', flexShrink: 0, marginTop: 2 }}>→</span>
                   <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'rgba(255,255,255,0.65)', lineHeight: 1.5 }}>{text}</span>
@@ -220,286 +166,136 @@ export default function CadastroPage() {
             </div>
           </div>
         </div>
-
-        {/* Testimonial */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 32, marginTop: 'auto' }}>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, fontStyle: 'italic', color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 }}>
-            "O fightport.pro trouxe credibilidade real para nossa organização."
+            {t('auth.leftPanel.testimonial')}
           </p>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.35)', marginTop: 12 }}>
-            — Prof. Ricardo Almeida · Faixa Preta 5° Grau
+            {t('auth.leftPanel.testimonialAuthor')}
           </p>
         </div>
       </div>
 
-      {/* RIGHT PANEL — Form */}
+      {/* RIGHT PANEL */}
       <div className="flex flex-col justify-center cadastro-form-panel" style={{ background: 'var(--color-bg)', padding: '64px 72px' }}>
         <div className="w-full" style={{ maxWidth: 460, margin: '0 auto' }}>
-          {/* Mobile logo */}
           <div className="md:hidden mb-8">
             <Link to="/" style={{ textDecoration: 'none', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: 'var(--color-text)' }}>
               fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
             </Link>
           </div>
 
-          {/* Title */}
           <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--color-text)', marginBottom: 4 }}>
-            {mode === 'signup' ? 'Criar conta gratuita' : 'Bem-vindo de volta'}
+            {mode === 'signup' ? t('auth.register.title') : t('auth.login.title')}
           </h2>
 
-          {/* Switch row */}
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginBottom: 32 }}>
             {mode === 'signup' ? (
-              <>
-                Já tem conta?{' '}
-                <button
-                  type="button"
-                  onClick={() => switchMode('login')}
-                  style={{
-                    fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text)',
-                    background: 'none', border: 'none', textDecoration: 'underline', textUnderlineOffset: '3px',
-                    cursor: 'pointer', padding: 0, transition: 'var(--transition)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-accent)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
-                >
-                  Entrar
-                </button>
-              </>
+              <>{t('auth.register.hasAccount')}{' '}
+                <button type="button" onClick={() => switchMode('login')}
+                  style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text)', background: 'none', border: 'none', textDecoration: 'underline', textUnderlineOffset: '3px', cursor: 'pointer', padding: 0, transition: 'var(--transition)' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-accent)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text)')}>
+                  {t('auth.register.login')}
+                </button></>
             ) : (
-              <>
-                Ainda não tem conta?{' '}
-                <button
-                  type="button"
-                  onClick={() => switchMode('signup')}
-                  style={{
-                    fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text)',
-                    background: 'none', border: 'none', textDecoration: 'underline', textUnderlineOffset: '3px',
-                    cursor: 'pointer', padding: 0, transition: 'var(--transition)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-accent)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
-                >
-                  Cadastrar
-                </button>
-              </>
+              <>{t('auth.login.noAccount')}{' '}
+                <button type="button" onClick={() => switchMode('signup')}
+                  style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text)', background: 'none', border: 'none', textDecoration: 'underline', textUnderlineOffset: '3px', cursor: 'pointer', padding: 0, transition: 'var(--transition)' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-accent)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text)')}>
+                  {t('auth.login.register')}
+                </button></>
             )}
           </p>
 
-          {/* FORM AREA with transition */}
-          <div
-            style={{
-              opacity: animating ? 0 : 1,
-              transform: animating ? 'translateY(8px)' : 'translateY(0)',
-              transition: 'opacity 150ms ease, transform 200ms ease',
-            }}
-          >
+          <div style={{ opacity: animating ? 0 : 1, transform: animating ? 'translateY(8px)' : 'translateY(0)', transition: 'opacity 150ms ease, transform 200ms ease' }}>
             {mode === 'signup' ? (
-              <form
-                onSubmit={handleSignup}
-                style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
-              >
-                {/* School name */}
+              <form onSubmit={handleSignup} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div>
-                  <label style={labelStyle}>Nome da organização</label>
+                  <label style={labelStyle}>{t('auth.register.orgName')}</label>
                   <input value={schoolName} onChange={e => setSchoolName(e.target.value)} required placeholder="Ex: Academia Tiger BJJ" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
-
-                {/* Coach + Martial art — 2 cols */}
                 <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 16 }}>
                   <div>
-                    <label style={labelStyle}>Seu nome (Head Coach)</label>
+                    <label style={labelStyle}>{t('auth.register.headCoach')}</label>
                     <input value={coachName} onChange={e => setCoachName(e.target.value)} required placeholder="Nome completo" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                   </div>
                   <div>
-                    <label style={labelStyle}>Arte marcial principal</label>
+                    <label style={labelStyle}>{t('auth.register.martialArt')}</label>
                     <select value={martialArt} onChange={e => setMartialArt(e.target.value)} required style={{ ...inputStyle, appearance: 'none', backgroundImage: selectChevron, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center', paddingRight: 36 }} onFocus={focusInput as any} onBlur={blurInput as any}>
-                      <option value="">Selecione</option>
-                      <option>Jiu-Jitsu</option>
-                      <option>Judo</option>
-                      <option>Ju-Jitsu</option>
-                      <option>Wrestling</option>
-                      <option>Luta Livre</option>
-                      <option>Sambo</option>
-                      <option>Karate</option>
-                      <option>Boxe</option>
-                      <option>Kickboxing</option>
-                      <option>Savate</option>
-                      <option>Aikido</option>
-                      <option>Kurash</option>
-                      <option>Pankration</option>
-                      <option>Kenpo</option>
-                      <option>Muay Thai</option>
-                      <option>MMA</option>
-                      <option>Outros</option>
+                      <option value="">{t('common.select')}</option>
+                      <option>Jiu-Jitsu</option><option>Judo</option><option>Ju-Jitsu</option><option>Wrestling</option><option>Luta Livre</option><option>Sambo</option><option>Karate</option><option>Boxe</option><option>Kickboxing</option><option>Savate</option><option>Aikido</option><option>Kurash</option><option>Pankration</option><option>Kenpo</option><option>Muay Thai</option><option>MMA</option><option>Outros</option>
                     </select>
                   </div>
                 </div>
-
-                {/* Graduation */}
                 <div>
-                  <label style={labelStyle}>Graduação do Head Coach</label>
+                  <label style={labelStyle}>{t('auth.register.belt')}</label>
                   <select value={coachGraduation} onChange={e => setCoachGraduation(e.target.value)} required style={{ ...inputStyle, appearance: 'none', backgroundImage: selectChevron, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center', paddingRight: 36 }} onFocus={focusInput as any} onBlur={blurInput as any}>
-                    <option value="">Selecione</option>
-                    <option>Faixa Branca</option>
-                    <option>Faixa Azul</option>
-                    <option>Faixa Roxa</option>
-                    <option>Faixa Marrom</option>
-                    <option>Faixa Preta</option>
+                    <option value="">{t('common.select')}</option>
+                    <option>Faixa Branca</option><option>Faixa Azul</option><option>Faixa Roxa</option><option>Faixa Marrom</option><option>Faixa Preta</option>
                   </select>
                 </div>
-
-                {/* Spacer */}
                 <div style={{ marginTop: 8, marginBottom: 8 }} />
-
-                {/* Email */}
                 <div>
-                  <label style={labelStyle}>E-mail</label>
+                  <label style={labelStyle}>{t('auth.email')}</label>
                   <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="contato@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
-
-                {/* Password */}
                 <div>
-                  <label style={labelStyle}>Senha</label>
+                  <label style={labelStyle}>{t('auth.password')}</label>
                   <div style={{ position: 'relative' }}>
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      required
-                      minLength={8}
-                      placeholder="Mínimo 8 caracteres"
-                      style={{ ...inputStyle, paddingRight: 44 }}
-                      onFocus={focusInput}
-                      onBlur={blurInput}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{
-                        position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                        background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-light)',
-                        padding: 4, display: 'flex',
-                      }}
-                      aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                    >
+                    <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={8} placeholder={t('resetPw.placeholder')} style={{ ...inputStyle, paddingRight: 44 }} onFocus={focusInput} onBlur={blurInput} />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)}
+                      style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-light)', padding: 4, display: 'flex' }}>
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
                 </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  style={{
-                    marginTop: 8,
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 15,
-                    fontWeight: 500,
-                    background: 'var(--color-bg-amber)',
-                    color: 'var(--color-text)',
-                    padding: '14px 28px',
-                    width: '100%',
-                    borderRadius: 'var(--radius-sm)',
-                    border: 'none',
-                    cursor: loading ? 'wait' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'var(--transition)',
-                  }}
-                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#e09600'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-bg-amber)'; }}
-                >
-                  {loading ? 'Criando conta...' : 'Criar conta gratuita'}
+                <button type="submit" disabled={loading}
+                  style={{ marginTop: 8, fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, background: 'var(--color-bg-amber)', color: 'var(--color-text)', padding: '14px 28px', width: '100%', borderRadius: 'var(--radius-sm)', border: 'none', cursor: loading ? 'wait' : 'pointer', opacity: loading ? 0.7 : 1, transition: 'var(--transition)' }}
+                  onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#e09600'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'var(--color-bg-amber)'; }}>
+                  {loading ? t('auth.register.submitting') : t('auth.register.submit')}
                 </button>
-
-                {/* Terms */}
                 <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-light)', lineHeight: 1.6 }}>
-                  Ao criar conta você concorda com os{' '}
-                  <Link to="/termos" style={{ color: 'var(--color-text-light)', textDecoration: 'underline' }}>Termos de Uso</Link> e{' '}
-                  <Link to="/privacidade" style={{ color: 'var(--color-text-light)', textDecoration: 'underline' }}>Política de Privacidade</Link>
+                  {t('auth.register.termsPrefix')}{' '}
+                  <Link to="/termos" style={{ color: 'var(--color-text-light)', textDecoration: 'underline' }}>{t('auth.register.terms')}</Link> {t('auth.register.termsAnd')}{' '}
+                  <Link to="/privacidade" style={{ color: 'var(--color-text-light)', textDecoration: 'underline' }}>{t('auth.register.privacy')}</Link>
                 </p>
               </form>
             ) : (
               <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {/* Email */}
                 <div>
-                  <label style={labelStyle}>E-mail</label>
+                  <label style={labelStyle}>{t('auth.email')}</label>
                   <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} required placeholder="contato@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
-
-                {/* Password */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                    <label style={{ ...labelStyle, marginBottom: 0 }}>Senha</label>
-                    <button
-                      type="button"
-                      onClick={handleForgotPassword}
-                      style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                    >
-                      Esqueci minha senha
+                    <label style={{ ...labelStyle, marginBottom: 0 }}>{t('auth.password')}</label>
+                    <button type="button" onClick={handleForgotPassword}
+                      style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                      {t('auth.forgotPassword')}
                     </button>
                   </div>
                   <div style={{ position: 'relative' }}>
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={loginPassword}
-                      onChange={e => setLoginPassword(e.target.value)}
-                      required
-                      placeholder="Sua senha"
-                      style={{ ...inputStyle, paddingRight: 44 }}
-                      onFocus={focusInput}
-                      onBlur={blurInput}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{
-                        position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                        background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-light)',
-                        padding: 4, display: 'flex',
-                      }}
-                      aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                    >
+                    <input type={showPassword ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)} required style={{ ...inputStyle, paddingRight: 44 }} onFocus={focusInput} onBlur={blurInput} />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)}
+                      style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-light)', padding: 4, display: 'flex' }}>
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
                 </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  style={{
-                    marginTop: 8,
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 15,
-                    fontWeight: 500,
-                    background: 'var(--color-bg-amber)',
-                    color: 'var(--color-text)',
-                    padding: '14px 28px',
-                    width: '100%',
-                    borderRadius: 'var(--radius-sm)',
-                    border: 'none',
-                    cursor: loading ? 'wait' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'var(--transition)',
-                  }}
-                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#e09600'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-bg-amber)'; }}
-                >
-                  {loading ? 'Entrando...' : 'Entrar'}
+                <button type="submit" disabled={loading}
+                  style={{ marginTop: 8, fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, background: 'var(--color-bg-amber)', color: 'var(--color-text)', padding: '14px 28px', width: '100%', borderRadius: 'var(--radius-sm)', border: 'none', cursor: loading ? 'wait' : 'pointer', opacity: loading ? 0.7 : 1, transition: 'var(--transition)' }}
+                  onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#e09600'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'var(--color-bg-amber)'; }}>
+                  {loading ? t('auth.login.submitting') : t('auth.login.submit')}
                 </button>
-
-                {/* Switch link */}
                 <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>
-                  Ainda não tem conta?{' '}
-                  <button
-                    type="button"
-                    onClick={() => switchMode('signup')}
-                    style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)', background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
-                  >
-                    Cadastrar →
+                  {t('auth.login.noAccount')}{' '}
+                  <button type="button" onClick={() => switchMode('signup')}
+                    style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)', background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}>
+                    {t('auth.login.register')}
                   </button>
                 </p>
               </form>
@@ -508,12 +304,8 @@ export default function CadastroPage() {
         </div>
       </div>
       <style>{`
-        @media (max-width: 1024px) {
-          .cadastro-form-panel { padding: 48px 40px !important; }
-        }
-        @media (max-width: 768px) {
-          .cadastro-form-panel { padding: 40px 24px !important; }
-        }
+        @media (max-width: 1024px) { .cadastro-form-panel { padding: 48px 40px !important; } }
+        @media (max-width: 768px) { .cadastro-form-panel { padding: 40px 24px !important; } }
       `}</style>
     </div>
     </div>
