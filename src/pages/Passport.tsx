@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Share2, QrCode } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { QRCodeSVG } from 'qrcode.react';
 import { NavbarPublic } from '@/components/layout/NavbarPublic';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
@@ -102,8 +103,52 @@ export default function PassportPage() {
     toast.success('Link copiado para a área de transferência');
   };
 
+  const fullName = `${practitioner.first_name} ${practitioner.last_name}`;
+  const pageTitle = `${fullName} — Passaporte ${practitioner.martial_art} | fightport.pro`;
+  const pageDescription = `Passaporte verificado de ${fullName}. ${practitioner.martial_art} na ${schoolData?.name}. Graduações autenticadas com hash SHA-256.`;
+  const pageUrl = `https://fightport.lovable.app/p/${practitioner.fp_id}`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: fullName,
+    url: pageUrl,
+    description: pageDescription,
+    memberOf: {
+      '@type': 'SportsOrganization',
+      name: schoolData?.name,
+      sport: practitioner.martial_art,
+    },
+    ...(practitioner.current_belt && {
+      hasCredential: {
+        '@type': 'EducationalOccupationalCredential',
+        name: `Faixa ${practitioner.current_belt} — ${practitioner.martial_art}`,
+        credentialCategory: 'Belt Rank',
+      },
+    }),
+  };
+
   return (
     <div className="min-h-screen bg-main">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={pageUrl} />
+
+        <meta property="og:type" content="profile" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:site_name" content="fightport.pro" />
+        {practitioner.photo_url && <meta property="og:image" content={practitioner.photo_url} />}
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        {practitioner.photo_url && <meta name="twitter:image" content={practitioner.photo_url} />}
+
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
       <NavbarPublic />
       <div className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-2xl">
