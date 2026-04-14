@@ -43,7 +43,7 @@ const selectChevron = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
 export default function CadastroPage() {
   const location = useLocation();
   const [mode, setMode] = useState<'signup' | 'login'>(
-    location.pathname === '/login' ? 'login' : 'signup'
+    (location.state as any)?.mode === 'login' || location.pathname === '/login' ? 'login' : 'signup'
   );
   const [animating, setAnimating] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
