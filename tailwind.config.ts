@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Barlow Condensed"', 'sans-serif'],
-        body: ['"DM Sans"', 'sans-serif'],
+        display: ['"Syncopate"', 'sans-serif'],
+        body: ['"Krub"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
