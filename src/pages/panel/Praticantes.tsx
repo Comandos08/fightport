@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Plus, Upload, Eye, Award, Pencil, Trash2, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
+import { Search, Plus, Upload, Download, Eye, Award, Pencil, Trash2, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { BeltBadge } from '@/components/BeltBadge';
@@ -87,11 +87,43 @@ export default function PraticantesPage() {
     }
   };
 
+  const handleExportCsv = () => {
+    if (filtered.length === 0) {
+      toast.error('Nenhum praticante para exportar.');
+      return;
+    }
+    const headers = ['Nome', 'Sobrenome', 'Arte Marcial', 'Faixa Atual', 'FP ID', 'Data de Nascimento', 'Gênero'];
+    const rows = filtered.map(a => [
+      a.first_name,
+      a.last_name,
+      a.martial_art,
+      a.current_belt ?? '',
+      a.fp_id,
+      a.birth_date ?? '',
+      a.gender ?? '',
+    ]);
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `praticantes_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(`${filtered.length} praticante(s) exportado(s).`);
+  };
+
   return (
     <div className="p-4 lg:p-8 max-w-6xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <h1 className="font-display font-bold text-2xl text-ink" style={{ letterSpacing: '0.02em' }}>Praticantes</h1>
         <div className="flex gap-2">
+          <Button variant="ghost" size="sm" onClick={handleExportCsv}>
+            <Download className="h-4 w-4" />
+            Exportar CSV
+          </Button>
           <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}>
             <Upload className="h-4 w-4" />
             Importar CSV/XLSX
