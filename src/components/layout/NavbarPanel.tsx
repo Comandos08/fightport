@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { CreditBalance } from '@/components/CreditBalance';
-import { User, LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings } from 'lucide-react';
+import { LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -51,32 +50,29 @@ export function NavbarPanel() {
         style={{
           height: 56,
           padding: '0 32px',
-          borderBottom: '1px solid var(--border-2)',
-          background: 'var(--white)',
+          borderBottom: '1px solid var(--color-border)',
+          background: 'var(--color-bg)',
         }}
       >
         <button
           className="lg:hidden mr-3 cursor-pointer"
           onClick={() => setMobileOpen(true)}
           aria-label="Abrir menu"
-          style={{ color: 'var(--ink)' }}
+          style={{ color: 'var(--color-text)', background: 'none', border: 'none' }}
         >
           <Menu className="h-5 w-5" />
         </button>
         <div className="lg:hidden mr-3">
-          <Link to="/" className="flex items-baseline">
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>FIGHT</span>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>PORT</span>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--terra)' }}>.PRO</span>
+          <Link to="/" className="no-underline">
+            <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
           </Link>
         </div>
 
         {/* Credits left */}
         <div className="flex items-center" style={{ gap: 8 }}>
-          <Coins style={{ width: 16, height: 16, color: 'var(--blue-deep)' }} />
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>{balance}</span>
+          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>{balance} créditos</span>
           {balance <= 2 && (
-            <Link to="/painel/creditos" style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 12, color: 'var(--terra)', textDecoration: 'none' }}>
+            <Link to="/painel/creditos" style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 13, color: 'var(--color-bg-amber)', textDecoration: 'none' }}>
               Comprar mais
             </Link>
           )}
@@ -86,10 +82,10 @@ export function NavbarPanel() {
 
         {/* School name + logout */}
         <div className="flex items-center" style={{ gap: 12 }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, color: 'var(--ink)' }} className="hidden sm:block">
+          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text-muted)' }} className="hidden sm:block">
             {school?.name ?? '...'}
           </span>
-          <button onClick={signOut} className="cursor-pointer" style={{ color: 'var(--muted)' }} aria-label="Sair">
+          <button onClick={signOut} className="cursor-pointer" style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none' }} aria-label="Sair">
             <LogOut className="h-4 w-4" />
           </button>
         </div>
@@ -101,15 +97,13 @@ export function NavbarPanel() {
           <div className="absolute inset-0" style={{ background: 'rgba(15,25,35,0.4)' }} onClick={() => setMobileOpen(false)} />
           <aside
             className="absolute left-0 top-0 bottom-0 flex flex-col animate-in slide-in-from-left duration-200"
-            style={{ width: 280, background: 'var(--white)' }}
+            style={{ width: 280, background: 'var(--color-bg)' }}
           >
-            <div className="flex items-center justify-between" style={{ padding: '20px 20px', borderBottom: '1px solid var(--border-2)' }}>
-              <Link to="/" className="flex items-baseline" onClick={() => setMobileOpen(false)}>
-                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>FIGHT</span>
-                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>PORT</span>
-                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--terra)' }}>.PRO</span>
+            <div className="flex items-center justify-between" style={{ padding: '20px 20px', borderBottom: '1px solid var(--color-border)' }}>
+              <Link to="/" className="no-underline" onClick={() => setMobileOpen(false)}>
+                <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
               </Link>
-              <button onClick={() => setMobileOpen(false)} className="cursor-pointer" style={{ color: 'var(--muted)' }} aria-label="Fechar menu">
+              <button onClick={() => setMobileOpen(false)} className="cursor-pointer" style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none' }} aria-label="Fechar menu">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -124,18 +118,18 @@ export function NavbarPanel() {
                     className="flex items-center no-underline"
                     style={{
                       gap: 10,
-                      padding: '10px 20px',
-                      fontFamily: 'var(--font-body)',
-                      fontWeight: 600,
+                      padding: '9px 20px',
+                      fontFamily: 'var(--font-sans)',
+                      fontWeight: active ? 500 : 400,
                       fontSize: 14,
-                      color: active ? 'var(--blue-deep)' : 'var(--muted)',
-                      background: active ? 'var(--blue-light)' : 'transparent',
-                      borderLeft: active ? '3px solid var(--blue-deep)' : '3px solid transparent',
+                      color: active ? 'var(--color-text)' : 'var(--color-text-muted)',
+                      background: active ? 'var(--color-bg-soft)' : 'transparent',
+                      borderLeft: active ? '2px solid var(--color-text)' : '2px solid transparent',
                       borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
                       transition: 'var(--transition)',
                     }}
                   >
-                    <Icon style={{ width: 18, height: 18 }} />
+                    <Icon style={{ width: 16, height: 16 }} />
                     {label}
                   </Link>
                 );
