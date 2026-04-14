@@ -328,6 +328,8 @@ export default function CadastroPage() {
                       <option>Kurash</option>
                       <option>Pankration</option>
                       <option>Kenpo</option>
+                      <option>Muay Thai</option>
+                      <option>MMA</option>
                       <option>Outros</option>
                     </select>
                   </div>
