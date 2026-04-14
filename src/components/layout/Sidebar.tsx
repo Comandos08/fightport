@@ -22,8 +22,8 @@ export function Sidebar() {
       className="hidden lg:flex flex-col shrink-0 min-h-screen"
       style={{
         width: 240,
-        background: 'var(--white)',
-        borderRight: '1px solid var(--border-2)',
+        background: 'var(--color-bg)',
+        borderRight: '1px solid var(--color-border)',
         position: 'fixed',
         top: 0,
         left: 0,
@@ -31,11 +31,9 @@ export function Sidebar() {
         zIndex: 30,
       }}
     >
-      <div style={{ padding: 24 }}>
-        <Link to="/" className="flex items-baseline">
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>FIGHT</span>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>PORT</span>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--terra)' }}>.PRO</span>
+      <div style={{ padding: '24px 20px' }}>
+        <Link to="/" className="no-underline">
+          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
         </Link>
       </div>
       <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>
@@ -48,30 +46,30 @@ export function Sidebar() {
               className="flex items-center no-underline"
               style={{
                 gap: 10,
-                padding: '10px 20px',
-                fontFamily: 'var(--font-body)',
-                fontWeight: 600,
+                padding: '9px 20px',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: active ? 500 : 400,
                 fontSize: 14,
-                color: active ? 'var(--blue-deep)' : 'var(--muted)',
-                background: active ? 'var(--blue-light)' : 'transparent',
-                borderLeft: active ? '3px solid var(--blue-deep)' : '3px solid transparent',
-                borderRadius: active ? '0 var(--radius-sm) var(--radius-sm) 0' : '0 var(--radius-sm) var(--radius-sm) 0',
+                color: active ? 'var(--color-text)' : 'var(--color-text-muted)',
+                background: active ? 'var(--color-bg-soft)' : 'transparent',
+                borderLeft: active ? '2px solid var(--color-text)' : '2px solid transparent',
+                borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
                 transition: 'var(--transition)',
               }}
               onMouseEnter={e => {
                 if (!active) {
-                  (e.currentTarget as HTMLElement).style.background = 'var(--bg-2)';
-                  (e.currentTarget as HTMLElement).style.color = 'var(--ink)';
+                  (e.currentTarget as HTMLElement).style.background = 'var(--color-bg-soft)';
+                  (e.currentTarget as HTMLElement).style.color = 'var(--color-text)';
                 }
               }}
               onMouseLeave={e => {
                 if (!active) {
                   (e.currentTarget as HTMLElement).style.background = 'transparent';
-                  (e.currentTarget as HTMLElement).style.color = 'var(--muted)';
+                  (e.currentTarget as HTMLElement).style.color = 'var(--color-text-muted)';
                 }
               }}
             >
-              <Icon style={{ width: 18, height: 18 }} />
+              <Icon style={{ width: 16, height: 16 }} />
               {label}
             </Link>
           );

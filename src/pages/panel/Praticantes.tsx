@@ -12,6 +12,27 @@ import { ImportPraticantesModal } from '@/components/ImportPraticantesModal';
 
 const PAGE_SIZE = 20;
 
+const inputStyle: React.CSSProperties = {
+  background: 'var(--color-bg-soft)',
+  border: '1px solid var(--color-border)',
+  borderRadius: 'var(--radius-sm)',
+  padding: '13px 16px',
+  fontFamily: 'var(--font-sans)',
+  fontSize: 15,
+  color: 'var(--color-text)',
+  outline: 'none',
+  transition: 'var(--transition)',
+};
+
+const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  e.currentTarget.style.borderColor = '#9A9A9A';
+  e.currentTarget.style.background = 'var(--color-bg)';
+};
+const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  e.currentTarget.style.borderColor = 'var(--color-border)';
+  e.currentTarget.style.background = 'var(--color-bg-soft)';
+};
+
 export default function PraticantesPage() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -93,31 +114,10 @@ export default function PraticantesPage() {
     toast.success(`${filtered.length} praticante(s) exportado(s).`);
   };
 
-  const inputStyle: React.CSSProperties = {
-    background: 'var(--white)',
-    border: '1.5px solid var(--border-2)',
-    borderRadius: 'var(--radius-sm)',
-    padding: '11px 14px',
-    fontFamily: 'var(--font-body)',
-    fontSize: 14,
-    color: 'var(--ink)',
-    outline: 'none',
-    transition: 'var(--transition)',
-  };
-
-  const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-    e.currentTarget.style.borderColor = 'var(--blue-mid)';
-    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(88,131,154,0.15)';
-  };
-  const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-    e.currentTarget.style.borderColor = 'var(--border-2)';
-    e.currentTarget.style.boxShadow = 'none';
-  };
-
   return (
-    <div style={{ padding: '24px 32px', maxWidth: 1100 }}>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between" style={{ gap: 16, marginBottom: 24 }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 24, color: 'var(--ink)', letterSpacing: '-0.02em' }}>Praticantes</h1>
+    <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between" style={{ gap: 16, marginBottom: 28 }}>
+        <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>Praticantes</h1>
         <div className="flex" style={{ gap: 8 }}>
           <Button variant="ghost" size="sm" onClick={handleExportCsv}><Download className="h-4 w-4" /> Exportar CSV</Button>
           <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}><Upload className="h-4 w-4" /> Importar CSV/XLSX</Button>
@@ -126,7 +126,7 @@ export default function PraticantesPage() {
       </div>
 
       <div className="relative" style={{ marginBottom: 20 }}>
-        <Search className="absolute top-1/2 -translate-y-1/2" style={{ left: 14, width: 16, height: 16, color: 'var(--cloud)' }} />
+        <Search className="absolute top-1/2 -translate-y-1/2" style={{ left: 14, width: 16, height: 16, color: 'var(--color-text-muted)' }} />
         <input
           type="text"
           value={search}
@@ -140,7 +140,7 @@ export default function PraticantesPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center" style={{ gap: 12, marginBottom: 20 }}>
-        <Filter style={{ width: 16, height: 16, color: 'var(--cloud)' }} />
+        <Filter style={{ width: 16, height: 16, color: 'var(--color-text-muted)' }} />
         <select
           value={beltFilter}
           onChange={e => handleFilterChange(setBeltFilter)(e.target.value)}
@@ -172,35 +172,36 @@ export default function PraticantesPage() {
 
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '80px 0' }}>
-          <div className="animate-spin" style={{ width: 32, height: 32, border: '4px solid var(--blue-deep)', borderTopColor: 'transparent', borderRadius: '50%', margin: '0 auto' }} />
+          <div className="animate-spin" style={{ width: 32, height: 32, border: '3px solid var(--color-text)', borderTopColor: 'transparent', borderRadius: '50%', margin: '0 auto' }} />
         </div>
       ) : filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '80px 0' }}>
-          <div style={{ width: 64, height: 64, margin: '0 auto 16px', borderRadius: '50%', background: 'var(--bg-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Search style={{ width: 24, height: 24, color: 'var(--cloud)' }} />
+          <div style={{ width: 64, height: 64, margin: '0 auto 16px', borderRadius: '50%', background: 'var(--color-bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Search style={{ width: 24, height: 24, color: 'var(--color-text-muted)' }} />
           </div>
-          <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, color: 'var(--ink)', marginBottom: 4 }}>Nenhum praticante cadastrado.</p>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>Adicione o primeiro.</p>
+          <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)', marginBottom: 4 }}>Nenhum praticante cadastrado.</p>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 16 }}>Adicione o primeiro.</p>
           <Link to="/painel/praticantes/novo"><Button>Novo praticante</Button></Link>
         </div>
       ) : (
         <>
-          <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'auto' }}>
+          <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'auto' }}>
             <table style={{ width: '100%', minWidth: 600, borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: 'var(--bg-2)' }}>
+                <tr style={{ background: 'var(--color-bg-soft)' }}>
                   {['Nome', 'Arte Marcial', 'Última Faixa', 'Escola', ''].map((h, i) => (
                     <th
                       key={i}
                       style={{
                         textAlign: i === 4 ? 'right' : 'left',
-                        fontFamily: 'var(--font-display)',
-                        fontWeight: 700,
-                        fontSize: 10,
+                        fontFamily: 'var(--font-sans)',
+                        fontWeight: 500,
+                        fontSize: 11,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.12em',
-                        color: 'var(--muted)',
+                        letterSpacing: '0.1em',
+                        color: 'var(--color-text-muted)',
                         padding: '10px 16px',
+                        borderBottom: '1px solid var(--color-border)',
                       }}
                     >
                       {h}
@@ -212,21 +213,21 @@ export default function PraticantesPage() {
                 {paginatedItems.map((a, i) => (
                   <tr
                     key={a.id}
-                    style={{ borderBottom: i !== paginatedItems.length - 1 ? '1px solid var(--border)' : 'none', transition: 'var(--transition)' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-2)')}
+                    style={{ borderBottom: i !== paginatedItems.length - 1 ? '1px solid var(--color-border)' : 'none', transition: 'var(--transition)' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                   >
                     <td style={{ padding: '14px 16px' }}>
                       <div className="flex items-center" style={{ gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--blue-deep)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 11, flexShrink: 0 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-text)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, flexShrink: 0 }}>
                           {getInitials(a.first_name, a.last_name)}
                         </div>
-                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500, color: 'var(--ink)' }}>{a.first_name} {a.last_name}</span>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{a.first_name} {a.last_name}</span>
                       </div>
                     </td>
-                    <td style={{ padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)' }}>{a.martial_art}</td>
-                    <td style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--cloud)' }}>—</span>}</td>
-                    <td style={{ padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)' }}>{school?.name ?? '...'}</td>
+                    <td style={{ padding: '14px 16px', fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)' }}>{a.martial_art}</td>
+                    <td style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>—</span>}</td>
+                    <td style={{ padding: '14px 16px', fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)' }}>{school?.name ?? '...'}</td>
                     <td style={{ padding: '14px 16px', textAlign: 'right' }}>
                       <div className="flex items-center justify-end" style={{ gap: 8 }}>
                         {[
@@ -238,9 +239,9 @@ export default function PraticantesPage() {
                             <button
                               className="cursor-pointer"
                               aria-label={act.label}
-                              style={{ background: 'none', border: 'none', padding: 4, color: 'var(--muted)', transition: 'var(--transition)' }}
-                              onMouseEnter={e => (e.currentTarget.style.color = 'var(--blue-mid)')}
-                              onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
+                              style={{ background: 'none', border: 'none', padding: 4, color: 'var(--color-text-muted)', transition: 'var(--transition)' }}
+                              onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+                              onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
                             >
                               <act.icon style={{ width: 16, height: 16 }} />
                             </button>
@@ -250,9 +251,9 @@ export default function PraticantesPage() {
                           className="cursor-pointer"
                           aria-label="Excluir"
                           onClick={() => setDeleteTarget({ id: a.id, name: `${a.first_name} ${a.last_name}` })}
-                          style={{ background: 'none', border: 'none', padding: 4, color: 'var(--terra)', transition: 'var(--transition)' }}
-                          onMouseEnter={e => (e.currentTarget.style.color = '#b83515')}
-                          onMouseLeave={e => (e.currentTarget.style.color = 'var(--terra)')}
+                          style={{ background: 'none', border: 'none', padding: 4, color: 'var(--color-text-muted)', transition: 'var(--transition)' }}
+                          onMouseEnter={e => (e.currentTarget.style.color = '#DC2626')}
+                          onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
                         >
                           <Trash2 style={{ width: 16, height: 16 }} />
                         </button>
@@ -266,7 +267,7 @@ export default function PraticantesPage() {
 
           {/* Pagination */}
           <div className="flex items-center justify-between" style={{ marginTop: 16 }}>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', margin: 0 }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>
               {filtered.length} praticante{filtered.length !== 1 ? 's' : ''} · Página {currentPage} de {totalPages}
             </p>
             {totalPages > 1 && (
@@ -283,7 +284,7 @@ export default function PraticantesPage() {
                   }, [])
                   .map((item, idx) =>
                     item === 'ellipsis' ? (
-                      <span key={`e-${idx}`} style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--cloud)', padding: '0 4px' }}>…</span>
+                      <span key={`e-${idx}`} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', padding: '0 4px' }}>…</span>
                     ) : (
                       <Button key={item} variant={item === currentPage ? 'default' : 'ghost'} size="icon" className="h-8 w-8 text-sm" onClick={() => setPage(item)}>{item}</Button>
                     )
@@ -299,9 +300,9 @@ export default function PraticantesPage() {
 
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(15,25,35,0.5)', padding: 16 }} onClick={() => setDeleteTarget(null)}>
-          <div onClick={e => e.stopPropagation()} style={{ background: 'var(--white)', borderRadius: 'var(--radius-md)', padding: 24, maxWidth: 400, width: '100%', boxShadow: 'var(--shadow-float)' }}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: 'var(--ink)', marginBottom: 8 }}>Excluir praticante</h3>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)', marginBottom: 16 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: 'var(--color-bg)', borderRadius: 'var(--radius-sm)', padding: 24, maxWidth: 400, width: '100%', boxShadow: '0 20px 60px -15px rgba(0,0,0,0.2)' }}>
+            <h3 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)', marginBottom: 8 }}>Excluir praticante</h3>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginBottom: 16 }}>
               Tem certeza que deseja excluir <strong>{deleteTarget.name}</strong>? Esta ação não pode ser desfeita.
             </p>
             <div className="flex justify-end" style={{ gap: 12 }}>
