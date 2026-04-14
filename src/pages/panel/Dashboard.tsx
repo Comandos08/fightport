@@ -6,6 +6,7 @@ import { formatDate } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useTranslation } from 'react-i18next';
 import {
   ChartContainer,
   ChartTooltip,
@@ -15,15 +16,11 @@ import {
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
 const BELT_COLORS: Record<string, string> = {
-  Branca: '#E8E8E5',
-  Azul: '#134C73',
-  Roxa: '#5B21B6',
-  Marrom: '#78350F',
-  Preta: '#1C1C1C',
-  Vermelha: '#DC2626',
+  Branca: '#E8E8E5', Azul: '#134C73', Roxa: '#5B21B6', Marrom: '#78350F', Preta: '#1C1C1C', Vermelha: '#DC2626',
 };
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
 
   const { data: practitionerCount = 0 } = useQuery({
@@ -72,16 +69,10 @@ export default function DashboardPage() {
   const { data: beltDistribution = [] } = useQuery({
     queryKey: ['belt-distribution', user?.id],
     queryFn: async () => {
-      const { data } = await supabase
-        .from('practitioners')
-        .select('current_belt')
-        .eq('school_id', user!.id);
+      const { data } = await supabase.from('practitioners').select('current_belt').eq('school_id', user!.id);
       if (!data) return [];
       const counts: Record<string, number> = {};
-      data.forEach((p) => {
-        const belt = p.current_belt || 'Branca';
-        counts[belt] = (counts[belt] || 0) + 1;
-      });
+      data.forEach((p) => { const belt = p.current_belt || 'Branca'; counts[belt] = (counts[belt] || 0) + 1; });
       return Object.entries(counts).map(([belt, count]) => ({ belt, count }));
     },
     enabled: !!user,
@@ -93,29 +84,13 @@ export default function DashboardPage() {
       const sixMonthsAgo = new Date();
       sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
       sixMonthsAgo.setDate(1);
-      const { data } = await supabase
-        .from('achievements')
-        .select('graduation_date')
-        .eq('school_id', user!.id)
-        .gte('graduation_date', sixMonthsAgo.toISOString().split('T')[0]);
+      const { data } = await supabase.from('achievements').select('graduation_date').eq('school_id', user!.id).gte('graduation_date', sixMonthsAgo.toISOString().split('T')[0]);
       if (!data) return [];
       const counts: Record<string, number> = {};
-      for (let i = 5; i >= 0; i--) {
-        const d = new Date();
-        d.setMonth(d.getMonth() - i);
-        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-        counts[key] = 0;
-      }
-      data.forEach((a) => {
-        const d = new Date(a.graduation_date);
-        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-        if (key in counts) counts[key] = (counts[key] || 0) + 1;
-      });
+      for (let i = 5; i >= 0; i--) { const d = new Date(); d.setMonth(d.getMonth() - i); counts[`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`] = 0; }
+      data.forEach((a) => { const d = new Date(a.graduation_date); const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; if (key in counts) counts[key] = (counts[key] || 0) + 1; });
       const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      return Object.entries(counts).map(([key, count]) => ({
-        month: monthNames[parseInt(key.split('-')[1]) - 1],
-        count,
-      }));
+      return Object.entries(counts).map(([key, count]) => ({ month: monthNames[parseInt(key.split('-')[1]) - 1], count }));
     },
     enabled: !!user,
   });
@@ -123,30 +98,12 @@ export default function DashboardPage() {
   const { data: practitionerGrowth = [] } = useQuery({
     queryKey: ['practitioner-growth', user?.id],
     queryFn: async () => {
-      const sixMonthsAgo = new Date();
-      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
-      sixMonthsAgo.setDate(1);
-      const { data } = await supabase
-        .from('practitioners')
-        .select('created_at')
-        .eq('school_id', user!.id);
+      const { data } = await supabase.from('practitioners').select('created_at').eq('school_id', user!.id);
       if (!data) return [];
       const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
       const months: { key: string; label: string }[] = [];
-      for (let i = 5; i >= 0; i--) {
-        const d = new Date();
-        d.setMonth(d.getMonth() - i);
-        months.push({
-          key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
-          label: monthNames[d.getMonth()],
-        });
-      }
-      return months.map((m) => {
-        const endOfMonth = new Date(`${m.key}-01`);
-        endOfMonth.setMonth(endOfMonth.getMonth() + 1);
-        const total = data.filter((p) => new Date(p.created_at!) < endOfMonth).length;
-        return { month: m.label, total };
-      });
+      for (let i = 5; i >= 0; i--) { const d = new Date(); d.setMonth(d.getMonth() - i); months.push({ key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`, label: monthNames[d.getMonth()] }); }
+      return months.map((m) => { const endOfMonth = new Date(`${m.key}-01`); endOfMonth.setMonth(endOfMonth.getMonth() + 1); const total = data.filter((p) => new Date(p.created_at!) < endOfMonth).length; return { month: m.label, total }; });
     },
     enabled: !!user,
   });
@@ -154,83 +111,52 @@ export default function DashboardPage() {
   const lastDate = recentAchievements.length > 0 ? formatDate(recentAchievements[0].graduation_date) : '—';
 
   const stats = [
-    { label: 'Total de praticantes', value: practitionerCount, icon: Users },
-    { label: 'Certificados emitidos', value: achievementCount, icon: Award },
-    { label: 'Saldo de créditos', value: creditBalance, icon: Coins, cta: creditBalance < 5 },
-    { label: 'Última graduação', value: lastDate, icon: Calendar, isDate: true },
+    { label: t('dashboard.cards.totalPractitioners'), value: practitionerCount, icon: Users },
+    { label: t('dashboard.cards.certificatesIssued'), value: achievementCount, icon: Award },
+    { label: t('dashboard.cards.creditBalance'), value: creditBalance, icon: Coins, cta: creditBalance < 5 },
+    { label: t('dashboard.cards.lastGraduation'), value: lastDate, icon: Calendar, isDate: true },
   ];
 
-  const beltChartConfig: ChartConfig = {
-    count: { label: 'Praticantes' },
-  };
-
-  const monthlyChartConfig: ChartConfig = {
-    count: { label: 'Conquistas', color: '#1C1C1C' },
-  };
-
-  const growthChartConfig: ChartConfig = {
-    total: { label: 'Praticantes', color: '#1C1C1C' },
-  };
+  const beltChartConfig: ChartConfig = { count: { label: t('dashboard.chartLabels.practitioners') } };
+  const monthlyChartConfig: ChartConfig = { count: { label: t('dashboard.chartLabels.achievements'), color: '#1C1C1C' } };
+  const growthChartConfig: ChartConfig = { total: { label: t('dashboard.chartLabels.practitioners'), color: '#1C1C1C' } };
 
   return (
     <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
-      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>Dashboard</h1>
+      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>{t('dashboard.title')}</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 32 }}>
         {stats.map(s => (
-          <div
-            key={s.label}
-            style={{
-              background: 'var(--color-bg-soft)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 'var(--radius-sm)',
-              padding: 24,
-            }}
-          >
+          <div key={s.label} style={{ background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: 24 }}>
             <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
-              <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)' }}>
-                {s.label}
-              </span>
+              <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)' }}>{s.label}</span>
               {s.cta && (
-                <Link to="/painel/creditos" style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 13, color: 'var(--color-bg-amber)', textDecoration: 'none' }}>
-                  Comprar mais
-                </Link>
+                <Link to="/painel/creditos" style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 13, color: 'var(--color-bg-amber)', textDecoration: 'none' }}>{t('dashboard.buyMore')}</Link>
               )}
             </div>
-            <p style={{
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 400,
-              fontSize: (s as any).isDate ? 24 : 36,
-              color: 'var(--color-text)',
-              letterSpacing: '-0.025em',
-              margin: 0,
-            }}>
-              {s.value}
-            </p>
+            <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: (s as any).isDate ? 24 : 36, color: 'var(--color-text)', letterSpacing: '-0.025em', margin: 0 }}>{s.value}</p>
           </div>
         ))}
       </div>
 
       {creditBalance === 0 && (
         <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: 24, marginBottom: 32, textAlign: 'center', background: 'var(--color-bg-soft)' }}>
-          <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)', marginBottom: 8 }}>Você não tem créditos.</p>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 16 }}>Compre agora para registrar graduações.</p>
-          <Link to="/painel/creditos"><Button>Comprar créditos</Button></Link>
+          <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)', marginBottom: 8 }}>{t('dashboard.noCredits')}</p>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 16 }}>{t('dashboard.buyCreditsNow')}</p>
+          <Link to="/painel/creditos"><Button>{t('dashboard.buyCredits')}</Button></Link>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 16, marginBottom: 32 }}>
         <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: 24 }}>
-          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Distribuição por faixa</h2>
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>{t('dashboard.charts.byBelt')}</h2>
           {beltDistribution.length === 0 ? (
-            <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', padding: '32px 0' }}>Nenhum praticante cadastrado.</p>
+            <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', padding: '32px 0' }}>{t('dashboard.noPractitioners')}</p>
           ) : (
             <ChartContainer config={beltChartConfig} className="aspect-square max-h-[250px] mx-auto">
               <PieChart>
                 <Pie data={beltDistribution} dataKey="count" nameKey="belt" cx="50%" cy="50%" outerRadius={90} innerRadius={40} strokeWidth={2} stroke="var(--color-bg)">
-                  {beltDistribution.map((entry) => (
-                    <Cell key={entry.belt} fill={BELT_COLORS[entry.belt] || '#999'} />
-                  ))}
+                  {beltDistribution.map((entry) => (<Cell key={entry.belt} fill={BELT_COLORS[entry.belt] || '#999'} />))}
                 </Pie>
                 <ChartTooltip content={<ChartTooltipContent />} />
               </PieChart>
@@ -249,9 +175,9 @@ export default function DashboardPage() {
         </div>
 
         <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: 24 }}>
-          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Conquistas por mês</h2>
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>{t('dashboard.charts.achievementsPerMonth')}</h2>
           {monthlyAchievements.every(m => m.count === 0) ? (
-            <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', padding: '32px 0' }}>Nenhuma conquista nos últimos 6 meses.</p>
+            <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', padding: '32px 0' }}>{t('dashboard.noAchievementsChart')}</p>
           ) : (
             <ChartContainer config={monthlyChartConfig} className="aspect-video max-h-[250px]">
               <BarChart data={monthlyAchievements}>
@@ -266,9 +192,9 @@ export default function DashboardPage() {
       </div>
 
       <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: 24, marginBottom: 32 }}>
-        <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Evolução de praticantes</h2>
+        <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>{t('dashboard.charts.practitionerEvolution')}</h2>
         {practitionerGrowth.every(m => m.total === 0) ? (
-          <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', padding: '32px 0' }}>Nenhum praticante cadastrado nos últimos 6 meses.</p>
+          <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', padding: '32px 0' }}>{t('dashboard.noPractitionersChart')}</p>
         ) : (
           <ChartContainer config={growthChartConfig} className="aspect-video max-h-[250px]">
             <LineChart data={practitionerGrowth}>
@@ -281,17 +207,15 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Últimas conquistas</h2>
+      <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>{t('dashboard.recentAchievements')}</h2>
       <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
         {recentAchievements.length === 0 ? (
-          <p style={{ padding: 32, textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>Nenhuma conquista registrada ainda.</p>
+          <p style={{ padding: 32, textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{t('dashboard.noAchievementsYet')}</p>
         ) : (
           recentAchievements.map((ach: any, i: number) => (
             <div key={ach.id} className="flex items-center" style={{ gap: 16, padding: '14px 16px', borderBottom: i !== recentAchievements.length - 1 ? '1px solid var(--color-border)' : 'none' }}>
               <div className="flex-1 min-w-0">
-                <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {ach.practitioners?.first_name} {ach.practitioners?.last_name}
-                </p>
+                <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ach.practitioners?.first_name} {ach.practitioners?.last_name}</p>
                 <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', margin: 0 }}>{ach.schools?.name}</p>
               </div>
               <BeltBadge belt={ach.belt} size="sm" />
