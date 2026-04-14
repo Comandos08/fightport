@@ -137,8 +137,9 @@ export default function PassportPage() {
   }
 
   const share = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success('Link copiado para a área de transferência');
+  const ogUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-passport?id=${practitioner.fp_id}`;
+    navigator.clipboard.writeText(ogUrl);
+    toast.success('Link otimizado copiado para a área de transferência');
   };
 
   return (
