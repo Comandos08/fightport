@@ -12,13 +12,13 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Todos');
 
-  const filters = ['Todos', 'Jiu-Jitsu', 'Judô', 'Karatê', 'Muay Thai', 'Faixa Preta', 'Faixa Roxa'];
+  const filters = ['Todos', 'Jiu-Jitsu', 'Judô', 'Faixa Azul', 'Faixa Preta'];
 
   const filtered = mockAthletes.filter(a => {
     const matchesSearch = `${a.name} ${a.surname} ${a.school}`.toLowerCase().includes(searchQuery.toLowerCase());
     if (activeFilter === 'Todos') return matchesSearch;
     if (activeFilter === 'Faixa Preta') return matchesSearch && a.achievements.some(ach => ach.belt === 'Preta');
-    if (activeFilter === 'Faixa Roxa') return matchesSearch && a.achievements.some(ach => ach.belt === 'Roxa');
+    if (activeFilter === 'Faixa Azul') return matchesSearch && a.achievements.some(ach => ach.belt === 'Azul');
     return matchesSearch && a.sport === activeFilter;
   });
 
@@ -147,19 +147,14 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* SEÇÃO 1: BUSCA DE ATLETAS */}
+      <section id="busca" style={{ backgroundColor: '#F7F5F0', padding: '100px 0' }}>
+        <div className="container mx-auto max-w-7xl px-4">
+          <h2 className="font-display font-bold text-[48px] text-ink uppercase text-center mb-10" style={{ lineHeight: '1' }}>
+            ENCONTRE UM ATLETA CERTIFICADO
+          </h2>
 
-      {/* BUSCA */}
-      <section id="busca" className="py-16 md:py-24 px-4 relative">
-        <div className="absolute top-0 left-0 right-0 h-10" style={{ background: 'linear-gradient(to bottom, var(--color-bg-surface), var(--color-bg))' }} />
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-10">
-            <h2 className="font-display font-bold text-[48px] md:text-[56px] text-ink uppercase mb-2" style={{ lineHeight: '0.95' }}>
-              Encontre um atleta
-            </h2>
-            <p className="font-body text-lg text-ink-faint">certificado pela sua academia</p>
-          </div>
-
-          <div className="max-w-[720px] mx-auto mb-6">
+          <div className="mx-auto mb-6" style={{ maxWidth: '680px' }}>
             <div className="relative">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-ink-faint" />
               <input
@@ -167,8 +162,8 @@ export default function HomePage() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Nome do atleta, ID ou academia..."
-                className="w-full h-16 pl-14 pr-5 rounded-xl bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all duration-200"
-                style={{ border: '1.5px solid var(--color-border)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}
+                className="w-full pl-14 pr-5 rounded-xl bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all duration-200"
+                style={{ height: '56px', border: '1.5px solid var(--color-border)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}
                 onFocus={e => { e.currentTarget.style.borderColor = 'var(--color-accent)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(0,0,0,0.06), 0 0 0 4px rgba(200,241,53,0.15)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(0,0,0,0.06)'; }}
               />
@@ -177,10 +172,18 @@ export default function HomePage() {
 
           <div className="flex flex-wrap gap-2 justify-center mb-12">
             {filters.map(f => (
-              <button key={f} onClick={() => setActiveFilter(f)}
-                className={`px-4 py-1.5 rounded-full text-[13px] font-body transition-all duration-200 cursor-pointer ${activeFilter === f ? 'bg-ink text-popover font-medium' : 'hover:bg-surface'}`}
-                style={activeFilter !== f ? { border: '1px solid var(--color-border)' } : {}}
-              >{f}</button>
+              <button
+                key={f}
+                onClick={() => setActiveFilter(f)}
+                className={`px-4 py-1.5 rounded-full text-[13px] font-body transition-all duration-200 cursor-pointer ${activeFilter === f ? 'font-medium' : 'hover:bg-surface'}`}
+                style={
+                  activeFilter === f
+                    ? { backgroundColor: 'var(--color-ink)', color: '#FFFFFF' }
+                    : { border: '1px solid var(--color-border)' }
+                }
+              >
+                {f}
+              </button>
             ))}
           </div>
 
@@ -197,94 +200,61 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* COMO FUNCIONA */}
-      <section id="como-funciona" className="py-28 lg:py-32 px-4 bg-surface">
-        <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-10">
-            <h2 className="font-display font-bold text-[40px] md:text-[48px] text-ink uppercase" style={{ lineHeight: '1' }}>Como funciona</h2>
-            <p className="font-body text-lg text-ink-muted mt-2 md:mt-0">Simples para a academia. Poderoso para a credibilidade.</p>
-          </div>
-          <div className="w-full h-px mb-12" style={{ backgroundColor: 'var(--color-border)' }} />
-          <div className="space-y-0">
-            {steps.map((step, i) => (
-              <div key={step.num}>
-                {i > 0 && <div className="w-full h-px" style={{ backgroundColor: 'var(--color-border)' }} />}
-                <div className="flex items-start gap-8 md:gap-12 py-10">
-                  <span className="font-display font-extrabold text-[64px] md:text-[80px] leading-none shrink-0" style={{ color: 'rgba(200,241,53,0.6)' }}>{step.num}</span>
-                  <div className="pt-3">
-                    <h3 className="font-body font-medium text-xl text-ink mb-2">{step.title}</h3>
-                    <p className="font-body text-[15px] text-ink-muted max-w-lg" style={{ lineHeight: '1.6' }}>{step.desc}</p>
-                  </div>
+      {/* SEÇÃO 2: COMO FUNCIONA */}
+      <section id="como-funciona" style={{ backgroundColor: '#EDEAE3', padding: '100px 0' }}>
+        <div className="container mx-auto max-w-7xl px-4">
+          <h2 className="font-display font-bold text-[48px] text-ink uppercase mb-10" style={{ lineHeight: '1' }}>
+            COMO FUNCIONA
+          </h2>
+          <div className="w-full h-px mb-0" style={{ backgroundColor: 'var(--color-border)' }} />
+          {steps.map((step, i) => (
+            <div key={step.num}>
+              <div className="flex items-start gap-8 md:gap-12 py-10">
+                <span className="font-display font-extrabold text-[64px] leading-none shrink-0" style={{ color: '#C8F135' }}>
+                  {step.num}
+                </span>
+                <div className="pt-2">
+                  <h3 className="font-body font-medium text-xl text-ink mb-2">{step.title}</h3>
+                  <p className="font-body text-[15px] text-ink-muted max-w-lg" style={{ lineHeight: '1.6' }}>{step.desc}</p>
                 </div>
               </div>
-            ))}
-          </div>
+              {i < steps.length - 1 && <div className="w-full h-px" style={{ backgroundColor: 'var(--color-border)' }} />}
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* PROVA SOCIAL */}
-      <section className="py-24 lg:py-28 px-4">
-        <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          <div className="lg:col-span-5">
-            <h2 className="font-display font-extrabold text-[48px] md:text-[64px] text-ink uppercase" style={{ lineHeight: '0.9' }}>
-              MAIS DE {mockStats.totalAthletes.toLocaleString('pt-BR')} ATLETAS CERTIFICADOS.
-            </h2>
-          </div>
-          <div className="lg:col-span-7">
-            <div className="flex gap-12 md:gap-16 mb-12">
-              {[
-                { value: mockStats.totalAthletes.toLocaleString('pt-BR'), label: 'Atletas' },
-                { value: mockStats.totalSchools.toString(), label: 'Academias' },
-                { value: mockStats.totalCertificates.toLocaleString('pt-BR'), label: 'Certificados' },
-              ].map(m => (
-                <div key={m.label}>
-                  <span className="font-display font-bold text-[40px] md:text-[48px] text-ink block" style={{ lineHeight: '1' }}>{m.value}</span>
-                  <span className="font-body text-sm text-ink-faint">{m.label}</span>
-                </div>
-              ))}
-            </div>
-            <div className="relative">
-              <span className="font-display font-bold text-[100px] md:text-[120px] absolute -top-12 -left-4 select-none pointer-events-none" style={{ color: 'var(--color-bg-surface)', lineHeight: '1' }}>&ldquo;</span>
-              <blockquote className="font-body italic text-base md:text-lg text-ink-muted pl-8" style={{ lineHeight: '1.65' }}>
-                Agora qualquer árbitro ou federação consegue confirmar a faixa dos meus alunos na hora. Isso mudou a credibilidade da minha academia.
-              </blockquote>
-              <p className="font-body text-sm text-ink-faint mt-4 pl-8">— Prof. Luiz Felipe Villar, Faixa Preta 6° Grau</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA FINAL */}
-      <section className="py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.03 }}>
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="ctaGrid" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#ctaGrid)" />
-          </svg>
-        </div>
-        <div className="container mx-auto max-w-3xl text-center relative z-10">
-          <h2 className="font-display font-extrabold text-[64px] md:text-[96px] mb-6" style={{ color: '#FFFFFF', lineHeight: '0.88' }}>
-            SUA ACADEMIA<br />
-            <span className="relative inline-block">
-              MERECE ISSO.
-              <span className="absolute left-0 w-full" style={{ height: '3px', backgroundColor: 'var(--color-accent)', bottom: '-4px' }} />
-            </span>
+      {/* SEÇÃO 3: CTA FINAL */}
+      <section style={{ backgroundColor: '#0D0D0D', padding: '120px 0' }}>
+        <div className="container mx-auto max-w-3xl text-center px-4">
+          <h2 className="font-display font-extrabold text-[48px] md:text-[80px] mb-6" style={{ color: '#FFFFFF', lineHeight: '0.9' }}>
+            SUA ACADEMIA<br />MERECE ISSO.
           </h2>
-          <p className="font-body text-lg mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>Cadastro gratuito. Você só paga quando graduar.</p>
+          <p className="font-body text-lg mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Cadastro gratuito. Você só paga quando graduar.
+          </p>
           <Link to="/cadastro">
-            <Button className="font-body font-semibold text-base px-12 py-5 h-auto rounded-lg transition-all duration-200 hover:scale-[1.02]" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink)' }}>
-              Cadastre sua escola
-            </Button>
+            <button
+              className="font-body font-semibold text-base rounded-lg transition-all duration-200 hover:opacity-90 cursor-pointer"
+              style={{ backgroundColor: '#C8F135', color: '#0D0D0D', padding: '16px 40px' }}
+            >
+              Começar agora — é grátis
+            </button>
           </Link>
-          <p className="mt-6 font-body text-[13px]" style={{ color: 'rgba(255,255,255,0.3)' }}>Sem cartão de crédito · Sem contrato · Cancele quando quiser</p>
+          <p className="mt-6 font-body text-[13px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            Sem cartão · Sem contrato · Cancele quando quiser
+          </p>
         </div>
       </section>
 
-      <Footer />
+      {/* FOOTER */}
+      <footer style={{ backgroundColor: '#F7F5F0', borderTop: '1px solid #D4D0C8' }}>
+        <div className="container mx-auto max-w-7xl px-4 py-8 text-center">
+          <p className="font-body text-[13px]" style={{ color: '#9A9590' }}>
+            fightport.pro · © 2026 fightport.pro · SportCombat
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
