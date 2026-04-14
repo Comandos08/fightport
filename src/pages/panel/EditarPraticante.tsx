@@ -52,6 +52,9 @@ export default function EditarPraticantePage() {
   const [cpf, setCpf] = useState('');
   const [fatherName, setFatherName] = useState('');
   const [motherName, setMotherName] = useState('');
+  const [currentBelt, setCurrentBelt] = useState('');
+
+  const beltOptions = ['Branca', 'Cinza', 'Amarela', 'Laranja', 'Verde', 'Azul', 'Roxa', 'Marrom', 'Preta', 'Preta 1º Grau', 'Preta 2º Grau', 'Preta 3º Grau', 'Preta 4º Grau', 'Preta 5º Grau', 'Preta 6º Grau', 'Preta 7º Grau', 'Preta 8º Grau', 'Preta 9º Grau'];
 
   const { data: practitioner, isLoading: fetching } = useQuery({
     queryKey: ['practitioner', id],
@@ -77,6 +80,7 @@ export default function EditarPraticantePage() {
       setCpf(practitioner.cpf ?? '');
       setFatherName(practitioner.father_name ?? '');
       setMotherName(practitioner.mother_name ?? '');
+      setCurrentBelt(practitioner.current_belt ?? '');
     }
   }, [practitioner]);
 
@@ -98,6 +102,7 @@ export default function EditarPraticantePage() {
         cpf: cpf || null,
         father_name: fatherName || null,
         mother_name: motherName || null,
+        current_belt: currentBelt || null,
       })
       .eq('id', id!)
       .eq('school_id', user!.id);

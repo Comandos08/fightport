@@ -50,6 +50,9 @@ export default function NovoPraticantePage() {
   const [cpf, setCpf] = useState('');
   const [fatherName, setFatherName] = useState('');
   const [motherName, setMotherName] = useState('');
+  const [currentBelt, setCurrentBelt] = useState('');
+
+  const beltOptions = ['Branca', 'Cinza', 'Amarela', 'Laranja', 'Verde', 'Azul', 'Roxa', 'Marrom', 'Preta', 'Preta 1º Grau', 'Preta 2º Grau', 'Preta 3º Grau', 'Preta 4º Grau', 'Preta 5º Grau', 'Preta 6º Grau', 'Preta 7º Grau', 'Preta 8º Grau', 'Preta 9º Grau'];
 
   const { data: school } = useQuery({
     queryKey: ['school', user?.id],
@@ -87,6 +90,7 @@ export default function NovoPraticantePage() {
       father_name: fatherName || null,
       mother_name: motherName || null,
       martial_art: school?.martial_art ?? 'Jiu-Jitsu',
+      current_belt: currentBelt || null,
     });
 
     setLoading(false);
@@ -153,9 +157,18 @@ export default function NovoPraticantePage() {
 
         <section>
           <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Arte Marcial</h2>
-          <div>
-            <label style={labelStyle}>Arte marcial da escola</label>
-            <input style={{ ...inputStyle, color: 'var(--color-text-muted)', cursor: 'not-allowed' }} value={school?.martial_art ?? 'Jiu-Jitsu'} readOnly />
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 16 }}>
+            <div>
+              <label style={labelStyle}>Arte marcial da escola</label>
+              <input style={{ ...inputStyle, color: 'var(--color-text-muted)', cursor: 'not-allowed' }} value={school?.martial_art ?? 'Jiu-Jitsu'} readOnly />
+            </div>
+            <div>
+              <label style={labelStyle}>Faixa atual</label>
+              <select value={currentBelt} onChange={e => setCurrentBelt(e.target.value)} style={inputStyle} onFocus={focusInput as any} onBlur={blurInput as any}>
+                <option value="">Selecione</option>
+                {beltOptions.map(b => <option key={b}>{b}</option>)}
+              </select>
+            </div>
           </div>
         </section>
 
