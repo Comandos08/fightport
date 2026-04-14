@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Plus, Upload, Eye, Award, Pencil, Trash2 } from 'lucide-react';
+import { Search, Plus, Upload, Eye, Award, Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { BeltBadge } from '@/components/BeltBadge';
@@ -10,8 +10,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { ImportPraticantesModal } from '@/components/ImportPraticantesModal';
 
+const PAGE_SIZE = 20;
+
 export default function PraticantesPage() {
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
   const [importOpen, setImportOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -43,6 +46,16 @@ export default function PraticantesPage() {
   const filtered = practitioners.filter(a =>
     `${a.first_name} ${a.last_name}`.toLowerCase().includes(search.toLowerCase())
   );
+
+  // Reset to page 1 when search changes
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginatedItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -82,7 +95,7 @@ export default function PraticantesPage() {
         <input
           type="text"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={e => handleSearchChange(e.target.value)}
           placeholder="Buscar praticante..."
           className="w-full h-12 pl-10 pr-4 rounded-lg border bg-popover font-body text-sm text-ink placeholder:text-ink-faint focus:outline-none transition-all"
           style={{ borderColor: 'var(--color-border)' }}
@@ -105,64 +118,119 @@ export default function PraticantesPage() {
           <Link to="/painel/praticantes/novo"><Button>Novo praticante</Button></Link>
         </div>
       ) : (
-        <div className="rounded-xl border bg-main shadow-card overflow-x-auto" style={{ borderColor: 'var(--color-border)' }}>
-          <table className="w-full min-w-[600px]">
-            <thead>
-              <tr className="border-b" style={{ borderColor: 'var(--color-border)' }}>
-                <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Nome</th>
-                <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Arte Marcial</th>
-                <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Última Faixa</th>
-                <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Escola</th>
-                <th className="text-right font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((a, i) => (
-                <tr key={a.id} className={i !== filtered.length - 1 ? 'border-b' : ''} style={{ borderColor: 'var(--color-border)' }}>
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-display font-bold text-xs shrink-0" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>
-                        {getInitials(a.first_name, a.last_name)}
-                      </div>
-                      <span className="font-body text-sm font-medium text-ink">{a.first_name} {a.last_name}</span>
-                    </div>
-                  </td>
-                  <td className="p-4 font-body text-sm text-ink-muted">{a.martial_art}</td>
-                  <td className="p-4">{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span className="font-body text-xs text-ink-faint">—</span>}</td>
-                  <td className="p-4 font-body text-sm text-ink-muted">{school?.name ?? '...'}</td>
-                  <td className="p-4 text-right">
-                    <div className="flex items-center gap-1 justify-end">
-                      <Link to={`/p/${a.fp_id}`}>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Ver passaporte">
-                          <Eye className="h-3.5 w-3.5" />
-                        </Button>
-                      </Link>
-                      <Link to="/painel/conquistas/nova">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Registrar conquista">
-                          <Award className="h-3.5 w-3.5" />
-                        </Button>
-                      </Link>
-                      <Link to={`/painel/praticantes/${a.id}/editar`}>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Editar">
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive hover:text-destructive"
-                        aria-label="Excluir"
-                        onClick={() => setDeleteTarget({ id: a.id, name: `${a.first_name} ${a.last_name}` })}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </td>
+        <>
+          <div className="rounded-xl border bg-main shadow-card overflow-x-auto" style={{ borderColor: 'var(--color-border)' }}>
+            <table className="w-full min-w-[600px]">
+              <thead>
+                <tr className="border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Nome</th>
+                  <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Arte Marcial</th>
+                  <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Última Faixa</th>
+                  <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Escola</th>
+                  <th className="text-right font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {paginatedItems.map((a, i) => (
+                  <tr key={a.id} className={i !== paginatedItems.length - 1 ? 'border-b' : ''} style={{ borderColor: 'var(--color-border)' }}>
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-display font-bold text-xs shrink-0" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>
+                          {getInitials(a.first_name, a.last_name)}
+                        </div>
+                        <span className="font-body text-sm font-medium text-ink">{a.first_name} {a.last_name}</span>
+                      </div>
+                    </td>
+                    <td className="p-4 font-body text-sm text-ink-muted">{a.martial_art}</td>
+                    <td className="p-4">{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span className="font-body text-xs text-ink-faint">—</span>}</td>
+                    <td className="p-4 font-body text-sm text-ink-muted">{school?.name ?? '...'}</td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center gap-1 justify-end">
+                        <Link to={`/p/${a.fp_id}`}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Ver passaporte">
+                            <Eye className="h-3.5 w-3.5" />
+                          </Button>
+                        </Link>
+                        <Link to="/painel/conquistas/nova">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Registrar conquista">
+                            <Award className="h-3.5 w-3.5" />
+                          </Button>
+                        </Link>
+                        <Link to={`/painel/praticantes/${a.id}/editar`}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Editar">
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          aria-label="Excluir"
+                          onClick={() => setDeleteTarget({ id: a.id, name: `${a.first_name} ${a.last_name}` })}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex items-center justify-between mt-4">
+            <p className="font-body text-sm text-ink-muted">
+              {filtered.length} praticante{filtered.length !== 1 ? 's' : ''} · Página {currentPage} de {totalPages}
+            </p>
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  disabled={currentPage <= 1}
+                  onClick={() => setPage(p => p - 1)}
+                  aria-label="Página anterior"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                  .reduce<(number | 'ellipsis')[]>((acc, p, idx, arr) => {
+                    if (idx > 0 && p - (arr[idx - 1] as number) > 1) acc.push('ellipsis');
+                    acc.push(p);
+                    return acc;
+                  }, [])
+                  .map((item, idx) =>
+                    item === 'ellipsis' ? (
+                      <span key={`e-${idx}`} className="font-body text-sm text-ink-faint px-1">…</span>
+                    ) : (
+                      <Button
+                        key={item}
+                        variant={item === currentPage ? 'default' : 'ghost'}
+                        size="icon"
+                        className="h-8 w-8 text-sm"
+                        onClick={() => setPage(item)}
+                      >
+                        {item}
+                      </Button>
+                    )
+                  )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setPage(p => p + 1)}
+                  aria-label="Próxima página"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       {deleteTarget && (
