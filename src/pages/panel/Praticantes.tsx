@@ -3,19 +3,43 @@ import { Link } from 'react-router-dom';
 import { Search, Plus, Upload, Eye, Award, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BeltBadge } from '@/components/BeltBadge';
-import { mockAthletes } from '@/lib/mock-data';
 import { getInitials } from '@/lib/utils';
+import { useAuth } from '@/hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function PraticantesPage() {
   const [search, setSearch] = useState('');
+  const { user } = useAuth();
 
-  const filtered = mockAthletes.filter(a =>
-    `${a.name} ${a.surname}`.toLowerCase().includes(search.toLowerCase())
+  const { data: practitioners = [], isLoading } = useQuery({
+    queryKey: ['practitioners', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('practitioners')
+        .select('*')
+        .eq('school_id', user!.id)
+        .order('first_name');
+      return data ?? [];
+    },
+    enabled: !!user,
+  });
+
+  const { data: school } = useQuery({
+    queryKey: ['school', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.from('schools').select('name, martial_art').eq('id', user!.id).single();
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const filtered = practitioners.filter(a =>
+    `${a.first_name} ${a.last_name}`.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="p-4 lg:p-8 max-w-6xl">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <h1 className="font-display font-bold text-2xl text-ink" style={{ letterSpacing: '0.02em' }}>Praticantes</h1>
         <div className="flex gap-2">
@@ -32,7 +56,6 @@ export default function PraticantesPage() {
         </div>
       </div>
 
-      {/* Search */}
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-faint" />
         <input
@@ -47,7 +70,11 @@ export default function PraticantesPage() {
         />
       </div>
 
-      {filtered.length === 0 ? (
+      {isLoading ? (
+        <div className="text-center py-20">
+          <div className="animate-spin h-8 w-8 border-4 border-accent-brand border-t-transparent rounded-full mx-auto" />
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="text-center py-20">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface flex items-center justify-center">
             <Search className="h-6 w-6 text-ink-faint" />
@@ -69,41 +96,38 @@ export default function PraticantesPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((a, i) => {
-                const lastBelt = a.achievements[a.achievements.length - 1];
-                return (
-                  <tr key={a.id} className={i !== filtered.length - 1 ? 'border-b' : ''} style={{ borderColor: 'var(--color-border)' }}>
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-display font-bold text-xs shrink-0" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>
-                          {getInitials(a.name, a.surname)}
-                        </div>
-                        <span className="font-body text-sm font-medium text-ink">{a.name} {a.surname}</span>
+              {filtered.map((a, i) => (
+                <tr key={a.id} className={i !== filtered.length - 1 ? 'border-b' : ''} style={{ borderColor: 'var(--color-border)' }}>
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-display font-bold text-xs shrink-0" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>
+                        {getInitials(a.first_name, a.last_name)}
                       </div>
-                    </td>
-                    <td className="p-4 font-body text-sm text-ink-muted">{a.sport}</td>
-                    <td className="p-4"><BeltBadge belt={lastBelt.belt} size="sm" /></td>
-                    <td className="p-4 font-body text-sm text-ink-muted">{a.school}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center gap-1 justify-end">
-                        <Link to={`/p/${a.publicId}`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Ver passaporte">
-                            <Eye className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        <Link to="/painel/conquistas/nova">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Registrar conquista">
-                            <Award className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Editar">
-                          <Pencil className="h-3.5 w-3.5" />
+                      <span className="font-body text-sm font-medium text-ink">{a.first_name} {a.last_name}</span>
+                    </div>
+                  </td>
+                  <td className="p-4 font-body text-sm text-ink-muted">{a.martial_art}</td>
+                  <td className="p-4">{a.current_belt ? <BeltBadge belt={a.current_belt} size="sm" /> : <span className="font-body text-xs text-ink-faint">—</span>}</td>
+                  <td className="p-4 font-body text-sm text-ink-muted">{school?.name ?? '...'}</td>
+                  <td className="p-4 text-right">
+                    <div className="flex items-center gap-1 justify-end">
+                      <Link to={`/p/${a.fp_id}`}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Ver passaporte">
+                          <Eye className="h-3.5 w-3.5" />
                         </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                      </Link>
+                      <Link to="/painel/conquistas/nova">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Registrar conquista">
+                          <Award className="h-3.5 w-3.5" />
+                        </Button>
+                      </Link>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Editar">
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
