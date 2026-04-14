@@ -71,44 +71,17 @@ export default function PassportPage() {
     enabled: !!practitioner?.school_id,
   });
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-main">
-        <NavbarPublic />
-        <div className="pt-28 flex justify-center">
-          <div className="animate-spin h-8 w-8 border-4 border-accent-brand border-t-transparent rounded-full" />
-        </div>
-      </div>
-    );
-  }
+  const schoolData = practitioner?.schools as any;
+  const fullName = practitioner ? `${practitioner.first_name} ${practitioner.last_name}` : '';
+  const pageTitle = practitioner
+    ? `${fullName} — Passaporte ${practitioner.martial_art} | fightport.pro`
+    : 'Carregando... | fightport.pro';
+  const pageDescription = practitioner
+    ? `Passaporte verificado de ${fullName}. ${practitioner.martial_art} na ${schoolData?.name}. Graduações autenticadas com hash SHA-256.`
+    : 'Carregando passaporte do praticante...';
+  const pageUrl = practitioner ? `https://fightport.lovable.app/p/${practitioner.fp_id}` : '';
 
-  if (!practitioner) {
-    return (
-      <div className="min-h-screen bg-main">
-        <NavbarPublic />
-        <div className="pt-28 text-center">
-          <h1 className="font-display font-bold text-2xl text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Atleta não encontrado</h1>
-          <p className="font-body text-ink-muted">Verifique o ID e tente novamente.</p>
-          <Link to="/" className="mt-4 inline-block">
-            <Button variant="default">Voltar ao início</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const schoolData = practitioner.schools as any;
-  const share = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success('Link copiado para a área de transferência');
-  };
-
-  const fullName = `${practitioner.first_name} ${practitioner.last_name}`;
-  const pageTitle = `${fullName} — Passaporte ${practitioner.martial_art} | fightport.pro`;
-  const pageDescription = `Passaporte verificado de ${fullName}. ${practitioner.martial_art} na ${schoolData?.name}. Graduações autenticadas com hash SHA-256.`;
-  const pageUrl = `https://fightport.lovable.app/p/${practitioner.fp_id}`;
-
-  const jsonLd = {
+  const jsonLd = practitioner ? {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: fullName,
@@ -126,13 +99,13 @@ export default function PassportPage() {
         credentialCategory: 'Belt Rank',
       },
     }),
-  };
+  } : undefined;
 
   useSeo({
     title: pageTitle,
     description: pageDescription,
-    url: pageUrl,
-    image: practitioner.photo_url ?? undefined,
+    url: pageUrl || undefined,
+    image: practitioner?.photo_url ?? undefined,
     type: 'profile',
     jsonLd,
   });
