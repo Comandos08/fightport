@@ -28,14 +28,16 @@ export default function DashboardPage() {
     enabled: !!user,
   });
 
-  const { data: creditBalance = 0 } = useQuery({
+  const { data: credits } = useQuery({
     queryKey: ['credits', user?.id],
     queryFn: async () => {
       const { data } = await supabase.from('credits').select('balance').eq('school_id', user!.id).single();
-      return data?.balance ?? 0;
+      return data;
     },
     enabled: !!user,
   });
+
+  const creditBalance = credits?.balance ?? 0;
 
   const { data: recentAchievements = [] } = useQuery({
     queryKey: ['recent-achievements', user?.id],
