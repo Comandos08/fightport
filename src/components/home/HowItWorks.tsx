@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 const steps = [
   {
     num: '01',
@@ -22,7 +20,6 @@ export function HowItWorks() {
   return (
     <section id="como-funciona" className="py-28 lg:py-32 px-4 bg-surface">
       <div className="container mx-auto max-w-7xl">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-10">
           <h2 className="font-display font-bold text-[40px] md:text-[48px] text-ink uppercase" style={{ lineHeight: '1' }}>
             Como funciona
@@ -34,15 +31,9 @@ export function HowItWorks() {
 
         <div className="w-full h-px mb-12" style={{ backgroundColor: 'var(--color-border)' }} />
 
-        {/* Steps */}
         <div className="space-y-0">
           {steps.map((step, i) => (
-            <motion.div
-              key={step.num}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-            >
+            <div key={step.num} className="animate-fade-in">
               {i > 0 && <div className="w-full h-px my-0" style={{ backgroundColor: 'var(--color-border)' }} />}
               <div className="flex items-start gap-8 md:gap-12 py-10">
                 <span
@@ -58,7 +49,7 @@ export function HowItWorks() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
