@@ -216,12 +216,8 @@ function HeroPassportCard() {
 export function HeroSection() {
   return (
     <section
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '55fr 45fr',
-        minHeight: 'calc(100vh - 62px)',
-      }}
-      className="grid-cols-1 md:!grid-cols-[55fr_45fr]"
+      className="grid grid-cols-1 md:grid-cols-[55fr_45fr]"
+      style={{ minHeight: 'calc(100vh - 62px)' }}
     >
       {/* Left side */}
       <div
