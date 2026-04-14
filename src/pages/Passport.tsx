@@ -1,11 +1,9 @@
 import { useParams, Link } from 'react-router-dom';
-import { Share2, QrCode, Search } from 'lucide-react';
+import { Share2, QrCode, Search, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { useSeo } from '@/hooks/useSeo';
 import { QRCodeSVG } from 'qrcode.react';
-import { NavbarPublic } from '@/components/layout/NavbarPublic';
-import { VerifiedBadge } from '@/components/VerifiedBadge';
 import { BeltBadge } from '@/components/BeltBadge';
 import { HashDisplay } from '@/components/HashDisplay';
 import { getInitials, formatDate, beltColor } from '@/lib/utils';
@@ -14,41 +12,39 @@ import { supabase } from '@/integrations/supabase/client';
 
 function QrModal({ url, onClose }: { url: string; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(15,25,35,0.5)', padding: 16 }} onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)', padding: 16 }} onClick={onClose}>
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          background: 'var(--white)',
-          borderRadius: 'var(--radius-xl)',
-          padding: 32,
-          maxWidth: 360,
+          background: '#FFFFFF',
+          borderRadius: 'var(--radius-md)',
+          padding: 40,
+          maxWidth: 320,
           width: '100%',
-          boxShadow: 'var(--shadow-float)',
           textAlign: 'center',
         }}
       >
-        <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, letterSpacing: '-0.01em', color: 'var(--ink)', marginBottom: 20 }}>QR CODE DO PASSAPORTE</h3>
+        <h3 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)', marginBottom: 24 }}>QR Code</h3>
         <div style={{ width: 192, height: 192, margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <QRCodeSVG value={url} size={192} />
         </div>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', marginBottom: 20 }}>Escaneie para verificar</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginTop: 16 }}>Escaneie para verificar</p>
         <button
           onClick={onClose}
           className="cursor-pointer"
           style={{
             background: 'transparent',
-            border: '1.5px solid var(--border-2)',
+            border: '1px solid var(--color-border)',
             borderRadius: 'var(--radius-sm)',
-            padding: '10px 24px',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: 10,
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            color: 'var(--blue-deep)',
+            padding: '8px 20px',
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 400,
+            fontSize: 14,
+            color: 'var(--color-text-muted)',
             transition: 'var(--transition)',
+            marginTop: 20,
           }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'var(--blue-light)')}
+          onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')}
           onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
           Fechar
@@ -140,13 +136,45 @@ export default function PassportPage() {
     jsonLd,
   });
 
+  // Header component
+  const Header = () => (
+    <header
+      className="flex items-center justify-between"
+      style={{
+        height: 60,
+        padding: '0 40px',
+        background: '#FFFFFF',
+        borderBottom: '1px solid var(--color-border)',
+      }}
+    >
+      <Link to="/" className="no-underline">
+        <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
+      </Link>
+      <Link
+        to="/#busca"
+        style={{
+          fontFamily: 'var(--font-sans)',
+          fontWeight: 400,
+          fontSize: 14,
+          color: 'var(--color-text-muted)',
+          textDecoration: 'none',
+          transition: 'var(--transition)',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
+        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
+      >
+        Verificar outro atleta
+      </Link>
+    </header>
+  );
+
   // Loading
   if (isLoading) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-        <NavbarPublic />
+      <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+        <Header />
         <div style={{ paddingTop: 120, display: 'flex', justifyContent: 'center' }}>
-          <div className="animate-spin" style={{ width: 32, height: 32, border: '4px solid var(--blue-deep)', borderTopColor: 'transparent', borderRadius: '50%' }} />
+          <div className="animate-spin" style={{ width: 32, height: 32, border: '3px solid var(--color-text)', borderTopColor: 'transparent', borderRadius: '50%' }} />
         </div>
       </div>
     );
@@ -155,28 +183,23 @@ export default function PassportPage() {
   // Not found
   if (!practitioner) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-        <NavbarPublic />
-        <div style={{ padding: '80px 24px', textAlign: 'center' }}>
-          <div style={{ width: 64, height: 64, margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Search style={{ width: 64, height: 64, color: 'var(--cloud)' }} />
-          </div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 24, color: 'var(--ink)', marginBottom: 8 }}>Atleta não encontrado</h1>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--muted)', marginTop: 8 }}>Verifique o ID e tente novamente.</p>
-          <Link to="/" style={{ display: 'inline-block', marginTop: 24 }}>
+      <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+        <Header />
+        <div style={{ padding: '80px 24px', textAlign: 'center', maxWidth: 400, margin: '0 auto' }}>
+          <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, color: 'var(--color-text)', marginBottom: 8 }}>Atleta não encontrado</h1>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--color-text-muted)' }}>Verifique o ID e tente novamente.</p>
+          <Link to="/" style={{ display: 'inline-block', marginTop: 28 }}>
             <button
               className="cursor-pointer"
               style={{
-                background: 'var(--blue-deep)',
-                color: '#ffffff',
+                background: 'var(--color-bg-amber)',
+                color: 'var(--color-text)',
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
-                padding: '14px 28px',
-                fontFamily: 'var(--font-display)',
-                fontWeight: 700,
-                fontSize: 11,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
+                padding: '12px 24px',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
+                fontSize: 14,
                 transition: 'var(--transition)',
               }}
             >
@@ -194,17 +217,15 @@ export default function PassportPage() {
     toast.success('Link otimizado copiado para a área de transferência');
   };
 
-  const ghostBtnStyle: React.CSSProperties = {
+  const actionBtnStyle: React.CSSProperties = {
     background: 'transparent',
-    border: '1.5px solid var(--border-2)',
+    border: '1px solid var(--color-border)',
     borderRadius: 'var(--radius-sm)',
     padding: '10px 20px',
-    fontFamily: 'var(--font-display)',
-    fontWeight: 700,
-    fontSize: 10,
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    color: 'var(--blue-deep)',
+    fontFamily: 'var(--font-sans)',
+    fontWeight: 400,
+    fontSize: 14,
+    color: 'var(--color-text-muted)',
     transition: 'var(--transition)',
     display: 'inline-flex',
     alignItems: 'center',
@@ -212,13 +233,26 @@ export default function PassportPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-      <NavbarPublic />
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+      <Header />
 
-      <div style={{ maxWidth: 560, margin: '0 auto', padding: '48px 24px' }}>
+      <div style={{ maxWidth: 680, margin: '0 auto', padding: '64px 24px' }}>
         {/* Verified badge */}
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <VerifiedBadge />
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <span style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 500,
+            fontSize: 11,
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            color: 'var(--color-text-muted)',
+          }}>
+            <CheckCircle style={{ width: 16, height: 16 }} />
+            VERIFICADO POR FIGHTPORT.PRO
+          </span>
         </div>
 
         {/* Avatar */}
@@ -227,15 +261,15 @@ export default function PassportPage() {
             <img
               src={practitioner.photo_url}
               alt={fullName}
-              style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--blue-light)', margin: '0 auto' }}
+              style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--color-border)', margin: '0 auto' }}
             />
           ) : (
             <div style={{
-              width: 88, height: 88, borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--terra-soft), var(--terra))',
+              width: 80, height: 80, borderRadius: '50%',
+              background: 'var(--color-bg-soft)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               margin: '0 auto',
-              fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 28, color: '#ffffff',
+              fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text-muted)',
             }}>
               {getInitials(practitioner.first_name, practitioner.last_name)}
             </div>
@@ -243,51 +277,50 @@ export default function PassportPage() {
 
           {/* Name */}
           <h1 style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: 'clamp(28px, 4vw, 40px)',
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 500,
+            fontSize: 'clamp(32px, 4vw, 48px)',
             letterSpacing: '-0.025em',
-            color: 'var(--ink)',
+            color: 'var(--color-text)',
             marginTop: 20,
-            marginBottom: 0,
+            marginBottom: 8,
           }}>
             {practitioner.first_name} {practitioner.last_name}
           </h1>
 
           {/* Modality + School */}
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--muted)', marginTop: 8, marginBottom: 0 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--color-text-muted)', marginTop: 0, marginBottom: 0 }}>
             {practitioner.martial_art} · {schoolData?.name}
           </p>
 
           {/* Head coach */}
           {headCoach && (
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)', marginTop: 4 }}>
-              Graduado por {headCoach.name}, {headCoach.graduation}
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginTop: 4 }}>
+              Graduado por {headCoach.name}
             </p>
           )}
         </div>
 
         {/* Practitioner ID */}
         <div style={{
-          background: 'var(--bg-2)',
-          border: '1px solid var(--border)',
+          background: 'var(--color-bg-soft)',
           borderRadius: 'var(--radius-sm)',
-          padding: '12px 16px',
+          padding: '14px 20px',
           textAlign: 'center',
-          margin: '28px 0',
+          marginTop: 32,
         }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)' }}>ID do praticante: </span>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 13, color: 'var(--blue-deep)', letterSpacing: '0.04em' }}>{practitioner.fp_id}</span>
+          <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>ID do praticante: </span>
+          <span style={{ fontFamily: 'var(--font-mono, ui-monospace, SFMono-Regular, monospace)', fontSize: 13, color: 'var(--color-text)' }}>{practitioner.fp_id}</span>
         </div>
 
         {/* Action buttons */}
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
           <button
             onClick={share}
             className="cursor-pointer"
-            style={ghostBtnStyle}
-            onMouseEnter={e => (e.currentTarget.style.background = 'var(--blue-light)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            style={actionBtnStyle}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-bg-soft)'; e.currentTarget.style.borderColor = 'var(--color-border-dark)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
           >
             <Share2 style={{ width: 14, height: 14 }} />
             Compartilhar perfil
@@ -295,9 +328,9 @@ export default function PassportPage() {
           <button
             onClick={() => setShowQr(true)}
             className="cursor-pointer"
-            style={ghostBtnStyle}
-            onMouseEnter={e => (e.currentTarget.style.background = 'var(--blue-light)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            style={actionBtnStyle}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-bg-soft)'; e.currentTarget.style.borderColor = 'var(--color-border-dark)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
           >
             <QrCode style={{ width: 14, height: 14 }} />
             Ver QR Code
@@ -305,80 +338,80 @@ export default function PassportPage() {
         </div>
 
         {/* Timeline */}
-        <p style={{
-          fontFamily: 'var(--font-display)',
-          fontWeight: 700,
-          fontSize: 11,
-          textTransform: 'uppercase',
-          letterSpacing: '0.14em',
-          color: 'var(--muted)',
-          marginBottom: 24,
-        }}>
-          JORNADA DO ATLETA
-        </p>
+        <div style={{ marginTop: 56 }}>
+          <h2 style={{
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 500,
+            fontSize: 18,
+            color: 'var(--color-text)',
+            marginBottom: 32,
+          }}>
+            Jornada do atleta
+          </h2>
 
-        <div>
-          {achievements.map((ach: any, idx: number) => {
-            const hashPartial = ach.hash ? `${ach.hash.slice(0, 8)}...${ach.hash.slice(-8)}` : '';
-            const isLast = idx === achievements.length - 1;
-            return (
-              <div key={ach.id} style={{ display: 'flex', gap: 16, marginBottom: 20 }}>
-                {/* Dot + line */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 10, flexShrink: 0 }}>
-                  <div style={{
-                    width: 10, height: 10, borderRadius: '50%',
-                    backgroundColor: beltColor(ach.belt),
-                    border: ach.belt === 'Branca' ? '1px solid var(--border-2)' : 'none',
-                    flexShrink: 0,
-                  }} />
-                  {!isLast && (
-                    <div style={{ width: 1, flexGrow: 1, background: 'var(--border-2)', marginTop: 4 }} />
-                  )}
-                </div>
-
-                {/* Content */}
-                <div style={{ flex: 1, paddingBottom: isLast ? 0 : 4 }}>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 11, color: 'var(--muted)' }}>{formatDate(ach.graduation_date)}</span>
-                    <BeltBadge belt={ach.belt} size="sm" />
-                    {idx === 0 && (
-                      <span style={{
-                        background: 'var(--terra)',
-                        color: '#ffffff',
-                        fontFamily: 'var(--font-display)',
-                        fontWeight: 700,
-                        fontSize: 9,
-                        textTransform: 'uppercase',
-                        padding: '2px 8px',
-                        borderRadius: 4,
-                      }}>
-                        Mais recente
-                      </span>
+          <div>
+            {achievements.map((ach: any, idx: number) => {
+              const hashPartial = ach.hash ? `${ach.hash.slice(0, 8)}...${ach.hash.slice(-8)}` : '';
+              const isLast = idx === achievements.length - 1;
+              return (
+                <div key={ach.id} style={{ display: 'flex', gap: 20, alignItems: 'flex-start', marginBottom: 24 }}>
+                  {/* Dot + line */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 8, flexShrink: 0 }}>
+                    <div style={{
+                      width: 8, height: 8, borderRadius: '50%',
+                      backgroundColor: beltColor(ach.belt),
+                      border: ach.belt === 'Branca' ? '1px solid var(--color-border)' : 'none',
+                      flexShrink: 0,
+                      marginTop: 6,
+                    }} />
+                    {!isLast && (
+                      <div style={{ width: 1, flexGrow: 1, background: 'var(--color-border)', marginTop: 4 }} />
                     )}
                   </div>
-                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 15, color: 'var(--ink)', margin: '6px 0 4px' }}>Faixa {ach.belt}</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', margin: 0 }}>{schoolData?.name} · {ach.graduated_by}</p>
-                  <div style={{ marginTop: 4 }}>
-                    <HashDisplay hashPartial={hashPartial} hashFull={ach.hash} showCopy />
+
+                  {/* Content */}
+                  <div style={{ flex: 1, paddingBottom: isLast ? 0 : 4 }}>
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginBottom: 8 }}>
+                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{formatDate(ach.graduation_date)}</span>
+                      <BeltBadge belt={ach.belt} size="sm" />
+                      {idx === 0 && (
+                        <span style={{
+                          fontFamily: 'var(--font-sans)',
+                          fontWeight: 500,
+                          fontSize: 10,
+                          textTransform: 'uppercase',
+                          color: 'var(--color-bg-amber)',
+                        }}>
+                          Mais recente
+                        </span>
+                      )}
+                    </div>
+                    <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 16, color: 'var(--color-text)', margin: '0 0 4px' }}>Faixa {ach.belt}</p>
+                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>{schoolData?.name} · {ach.graduated_by}</p>
+                    <div style={{ marginTop: 6 }}>
+                      <span style={{ fontFamily: 'var(--font-mono, ui-monospace, SFMono-Regular, monospace)', fontSize: 11, color: 'var(--color-text-light)' }}>
+                        {hashPartial}
+                      </span>
+                    </div>
+                    {ach.notes && <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', fontStyle: 'italic', marginTop: 8 }}>{ach.notes}</p>}
                   </div>
-                  {ach.notes && <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', fontStyle: 'italic', marginTop: 8 }}>{ach.notes}</p>}
                 </div>
-              </div>
-            );
-          })}
-          {achievements.length === 0 && (
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)' }}>Nenhuma conquista registrada ainda.</p>
-          )}
+              );
+            })}
+            {achievements.length === 0 && (
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>Nenhuma conquista registrada ainda.</p>
+            )}
+          </div>
         </div>
 
         {/* Footer */}
-        <div style={{ borderTop: '1px solid var(--border-2)', padding: '24px 0', textAlign: 'center', marginTop: 48 }}>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--muted)', margin: 0 }}>
+        <div style={{ borderTop: '1px solid var(--color-border)', padding: 24, textAlign: 'center', marginTop: 48 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', margin: 0 }}>
             Registro emitido por {schoolData?.name} via fightport.pro · SportCombat
           </p>
           <Link
             to="/#busca"
-            style={{ display: 'inline-block', marginTop: 8, fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 13, color: 'var(--blue-deep)', textDecoration: 'none' }}
+            style={{ display: 'block', marginTop: 8, fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 13, color: 'var(--color-text)', textDecoration: 'none' }}
           >
             Verificar outro atleta →
           </Link>
