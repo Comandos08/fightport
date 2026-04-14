@@ -22,7 +22,7 @@ export function SearchSection() {
         .from('practitioners')
         .select('*, schools(name), achievements(belt)')
         .order('created_at', { ascending: false })
-        .limit(200);
+        .limit(1000);
       return data ?? [];
     },
   });
