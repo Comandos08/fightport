@@ -39,15 +39,15 @@ export function HeroSection() {
       {/* Content */}
       <div className="fp-container relative">
         <div className="section-inner">
-          <p className="animate-fadeup delay-100" style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 32 }}>
+          <p className="animate-fadeup delay-100" style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 32 }}>
             CERTIFICAÇÃO ESPORTIVA → ACADEMIAS DE ARTES MARCIAIS
           </p>
 
-          <h1 className="animate-fadeup delay-200" style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(48px, 6.5vw, 80px)', lineHeight: 1.06, letterSpacing: '-0.03em', color: 'var(--color-text)', maxWidth: 680, margin: 0 }}>
+          <h1 className="animate-fadeup delay-200" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(48px, 6.5vw, 80px)', lineHeight: 1.04, letterSpacing: '-0.04em', color: 'var(--color-text)', maxWidth: 680, margin: 0 }}>
             A graduação<br />do seu atleta,<br /><span style={{ color: 'var(--color-accent)' }}>imutável.</span>
           </h1>
 
-          <p className="animate-fadeup delay-300" style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 400, color: 'var(--color-text-muted)', lineHeight: 1.65, maxWidth: 500, marginTop: 24 }}>
+          <p className="animate-fadeup delay-300" style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 300, color: 'var(--color-text-muted)', lineHeight: 1.65, maxWidth: 500, marginTop: 24 }}>
             Qualquer pessoa verifica a faixa do seu aluno em segundos — escaneando um QR Code. Para sempre. Sem falsificação possível.
           </p>
 
@@ -64,7 +64,7 @@ export function HeroSection() {
             {stats.map((stat, i) => (
               <div key={stat.label} className="flex items-center" style={{ gap: 48 }}>
                 <div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 32, fontWeight: 500, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>{stat.number}</div>
+                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 32, fontWeight: 400, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>{stat.number}</div>
                   <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 4 }}>{stat.label}</div>
                 </div>
                 {i < stats.length - 1 && (
