@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
 import { CreditBalance } from '@/components/CreditBalance';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -21,7 +20,6 @@ export default function CreditosPage() {
   const [searchParams] = useSearchParams();
   const [loadingPkg, setLoadingPkg] = useState<string | null>(null);
 
-  // Show toast based on return from MercadoPago
   useEffect(() => {
     const status = searchParams.get('status');
     if (status === 'success') {
@@ -75,65 +73,123 @@ export default function CreditosPage() {
     }
   };
 
-  return (
-    <div className="p-4 lg:p-8 max-w-5xl">
-      <h1 className="font-display font-bold text-2xl text-ink mb-6" style={{ letterSpacing: '0.02em' }}>Créditos</h1>
+  const formatDate = (ts: string | null) => {
+    if (!ts) return '—';
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
 
-      <div className="mb-8">
+  return (
+    <div style={{ padding: '24px 32px', maxWidth: 900 }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 24, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 24 }}>Créditos</h1>
+
+      <div style={{ marginBottom: 32 }}>
         <CreditBalance balance={credits?.balance ?? 0} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      {/* Plan cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 16, marginBottom: 16, maxWidth: 860 }}>
         {packages.map(pkg => (
-          <div key={pkg.name} className={`rounded-xl border p-6 bg-main shadow-card relative ${pkg.highlight ? 'border-2' : ''}`} style={{ borderColor: pkg.highlight ? 'var(--color-accent)' : 'var(--color-border)' }}>
+          <div
+            key={pkg.name}
+            style={{
+              background: 'var(--white)',
+              border: pkg.highlight ? '2px solid var(--blue-deep)' : '1px solid var(--border-2)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '32px 28px',
+              position: 'relative',
+              transform: pkg.highlight ? 'scale(1.04)' : 'none',
+              boxShadow: pkg.highlight ? 'var(--shadow-btn)' : 'none',
+              textAlign: 'center',
+            }}
+          >
             {pkg.highlight && (
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-body font-medium bg-accent text-accent-foreground">
+              <span style={{
+                position: 'absolute',
+                top: -14,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'var(--terra)',
+                color: '#ffffff',
+                fontFamily: 'var(--font-display)',
+                fontWeight: 700,
+                fontSize: 9,
+                textTransform: 'uppercase',
+                letterSpacing: '0.12em',
+                padding: '5px 16px',
+                borderRadius: 100,
+              }}>
                 Mais popular
               </span>
             )}
-            <div className="text-center">
-              <h3 className="font-display font-bold text-lg text-ink mb-1">{pkg.name} {pkg.highlight && '⭐'}</h3>
-              <p className="font-display font-bold text-3xl text-ink mb-1">{pkg.credits}</p>
-              <p className="font-body text-sm text-ink-muted mb-1">créditos</p>
-              <p className="font-display font-bold text-xl text-ink mb-0.5">R$ {pkg.price}</p>
-              <p className="font-body text-xs text-ink-faint mb-4">R${pkg.unit}/un</p>
-              <Button
-                className="w-full"
-                variant={pkg.highlight ? 'default' : 'ghost'}
-                onClick={() => handleBuy(pkg.name)}
-                disabled={loadingPkg !== null}
-              >
-                {loadingPkg === pkg.name ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                {loadingPkg === pkg.name ? 'Redirecionando...' : 'Comprar'}
-              </Button>
-            </div>
+            <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--muted)', marginBottom: 8 }}>{pkg.name}</p>
+            <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 52, color: 'var(--blue-deep)', letterSpacing: '-0.025em', lineHeight: 1, margin: '0 0 4px' }}>{pkg.credits}</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>créditos</p>
+            <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 26, color: 'var(--ink)', marginBottom: 2 }}>R$ {pkg.price}</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--muted)', marginBottom: 20 }}>R${pkg.unit}/un</p>
+            <button
+              onClick={() => handleBuy(pkg.name)}
+              disabled={loadingPkg !== null}
+              className="flex items-center justify-center cursor-pointer"
+              style={{
+                width: '100%',
+                padding: '12px 20px',
+                borderRadius: 'var(--radius-sm)',
+                fontFamily: 'var(--font-display)',
+                fontWeight: 700,
+                fontSize: 11,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                border: pkg.highlight ? 'none' : '1.5px solid var(--border-2)',
+                background: pkg.highlight ? 'var(--terra)' : 'transparent',
+                color: pkg.highlight ? '#ffffff' : 'var(--blue-deep)',
+                transition: 'var(--transition)',
+                gap: 8,
+              }}
+            >
+              {loadingPkg === pkg.name ? <Loader2 style={{ width: 16, height: 16 }} className="animate-spin" /> : null}
+              {loadingPkg === pkg.name ? 'Redirecionando...' : 'Comprar'}
+            </button>
           </div>
         ))}
       </div>
-      <p className="font-body text-sm text-ink-muted text-center mb-12">Créditos nunca expiram. Use quando quiser.</p>
+      <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', textAlign: 'center', marginBottom: 48 }}>Créditos nunca expiram. Use quando quiser.</p>
 
-      <h2 className="font-display font-bold text-lg text-ink mb-4 uppercase" style={{ letterSpacing: '0.02em' }}>Histórico de transações</h2>
-      <div className="rounded-xl border bg-main shadow-card overflow-x-auto" style={{ borderColor: 'var(--color-border)' }}>
-        <table className="w-full min-w-[500px]">
+      {/* Transaction history */}
+      <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: 16 }}>Histórico de transações</h2>
+      <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'auto' }}>
+        <table style={{ width: '100%', minWidth: 500, borderCollapse: 'collapse' }}>
           <thead>
-            <tr className="border-b" style={{ borderColor: 'var(--color-border)' }}>
-              <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Data</th>
-              <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Tipo</th>
-              <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Créditos</th>
-              <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Status</th>
+            <tr style={{ background: 'var(--bg-2)' }}>
+              {['Data', 'Tipo', 'Créditos', 'Status'].map(h => (
+                <th key={h} style={{ textAlign: 'left', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', padding: '10px 16px' }}>{h}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {transactions.length === 0 ? (
-              <tr><td colSpan={4} className="p-8 text-center font-body text-sm text-ink-muted">Nenhuma transação ainda.</td></tr>
+              <tr><td colSpan={4} style={{ padding: 32, textAlign: 'center', fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)' }}>Nenhuma transação ainda.</td></tr>
             ) : (
               transactions.map((tx: any, i: number) => (
-                <tr key={tx.id} className={i !== transactions.length - 1 ? 'border-b' : ''} style={{ borderColor: 'var(--color-border)' }}>
-                  <td className="p-4 font-body text-sm text-ink">{(() => { if (!tx.created_at) return '—'; const d = new Date(tx.created_at); if (isNaN(d.getTime())) return '—'; return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }); })()}</td>
-                  <td className="p-4 font-body text-sm text-ink">{tx.package_name ?? tx.type}</td>
-                  <td className="p-4 font-body text-sm text-ink">{tx.amount > 0 ? `+${tx.amount}` : tx.amount}</td>
-                  <td className="p-4">
-                    <span className="px-2 py-0.5 rounded-full text-xs font-body font-medium bg-verified text-verified">{tx.status}</span>
+                <tr
+                  key={tx.id}
+                  style={{ borderBottom: i !== transactions.length - 1 ? '1px solid var(--border)' : 'none', transition: 'var(--transition)' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-2)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <td style={{ padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink)' }}>{formatDate(tx.created_at)}</td>
+                  <td style={{ padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink)' }}>{tx.package_name ?? tx.type}</td>
+                  <td style={{ padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink)' }}>{tx.amount > 0 ? `+${tx.amount}` : tx.amount}</td>
+                  <td style={{ padding: '14px 16px' }}>
+                    <span style={{
+                      fontFamily: 'var(--font-body)',
+                      fontWeight: 700,
+                      fontSize: 12,
+                      color: 'var(--terra)',
+                    }}>
+                      {tx.status}
+                    </span>
                   </td>
                 </tr>
               ))
