@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
 export function CtaSection() {
@@ -18,43 +17,36 @@ export function CtaSection() {
       </div>
 
       <div className="container mx-auto max-w-3xl text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+        <h2
+          className="font-display font-extrabold text-[64px] md:text-[96px] mb-6"
+          style={{ color: '#FFFFFF', lineHeight: '0.88' }}
         >
-          <h2
-            className="font-display font-extrabold text-[64px] md:text-[96px] mb-6"
-            style={{ color: '#FFFFFF', lineHeight: '0.88' }}
+          SUA ACADEMIA<br />
+          <span className="relative inline-block">
+            MERECE ISSO.
+            <span
+              className="absolute left-0 w-full"
+              style={{ height: '3px', backgroundColor: 'var(--color-accent)', bottom: '-4px' }}
+            />
+          </span>
+        </h2>
+
+        <p className="font-body text-lg mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          Cadastro gratuito. Você só paga quando graduar.
+        </p>
+
+        <Link to="/cadastro">
+          <Button
+            className="font-body font-semibold text-base px-12 py-5 h-auto rounded-lg transition-all duration-200 hover:scale-[1.02]"
+            style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink)' }}
           >
-            SUA ACADEMIA<br />
-            <span className="relative inline-block">
-              MERECE ISSO.
-              <span
-                className="absolute bottom-0 left-0 w-full"
-                style={{ height: '3px', backgroundColor: 'var(--color-accent)', bottom: '-4px' }}
-              />
-            </span>
-          </h2>
+            Cadastre sua escola
+          </Button>
+        </Link>
 
-          <p className="font-body text-lg mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Cadastro gratuito. Você só paga quando graduar.
-          </p>
-
-          <Link to="/cadastro">
-            <Button
-              className="font-body font-semibold text-base px-12 py-5 h-auto rounded-lg transition-all duration-200 hover:scale-[1.02]"
-              style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink)' }}
-            >
-              Cadastre sua escola
-            </Button>
-          </Link>
-
-          <p className="mt-6 font-body text-[13px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            Sem cartão de crédito · Sem contrato · Cancele quando quiser
-          </p>
-        </motion.div>
+        <p className="mt-6 font-body text-[13px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          Sem cartão de crédito · Sem contrato · Cancele quando quiser
+        </p>
       </div>
     </section>
   );

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { AthleteCard } from '@/components/AthleteCard';
 import { mockAthletes } from '@/lib/mock-data';
@@ -20,11 +19,9 @@ export function SearchSection() {
 
   return (
     <section id="busca" className="py-24 px-4 relative">
-      {/* Top gradient separator */}
       <div className="absolute top-0 left-0 right-0 h-10" style={{ background: 'linear-gradient(to bottom, var(--color-bg-surface), var(--color-bg))' }} />
 
       <div className="container mx-auto max-w-7xl">
-        {/* Title */}
         <div className="text-center mb-10">
           <h2 className="font-display font-bold text-[48px] md:text-[56px] text-ink uppercase mb-2" style={{ lineHeight: '0.95' }}>
             Encontre um atleta
@@ -32,7 +29,6 @@ export function SearchSection() {
           <p className="font-body text-lg text-ink-faint">certificado pela sua academia</p>
         </div>
 
-        {/* Search input */}
         <div className="max-w-[720px] mx-auto mb-6">
           <div className="relative">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-ink-faint" />
@@ -58,7 +54,6 @@ export function SearchSection() {
           </div>
         </div>
 
-        {/* Filter pills */}
         <div className="flex flex-wrap gap-2 justify-center mb-12">
           {filters.map(f => (
             <button
@@ -76,18 +71,11 @@ export function SearchSection() {
           ))}
         </div>
 
-        {/* Athlete grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((a, i) => (
-            <motion.div
-              key={a.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-            >
+          {filtered.map((a) => (
+            <div key={a.id} className="animate-fade-in">
               <AthleteCard athlete={a} />
-            </motion.div>
+            </div>
           ))}
           {filtered.length === 0 && (
             <div className="col-span-full text-center py-16">
