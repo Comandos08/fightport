@@ -1,25 +1,48 @@
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 
 export function NavbarPublic() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center border-b"
+    <header
       style={{
-        backdropFilter: 'blur(12px)',
-        backgroundColor: 'rgba(247,245,240,0.88)',
-        borderColor: 'var(--color-border)',
+        height: 56,
+        padding: '0 32px',
+        background: 'var(--white)',
+        borderBottom: '1px solid var(--border-2)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
       }}
     >
-      <div className="container mx-auto flex items-center justify-between px-4 max-w-7xl">
-        <Link to="/" className="flex items-baseline gap-0">
-          <span className="font-display font-bold text-[18px] text-ink" style={{ letterSpacing: '0.05em' }}>FIGHT</span>
-          <span className="font-display font-normal text-[18px] text-ink" style={{ letterSpacing: '0.05em' }}>PORT</span>
-          <span className="font-display font-bold text-[18px] text-accent-brand" style={{ letterSpacing: '0.05em' }}>.PRO</span>
-        </Link>
-        <Link to="/#busca">
-          <Button variant="ghost" size="sm">Verificar outro atleta</Button>
-        </Link>
-      </div>
-    </nav>
+      <Link to="/" className="flex items-baseline no-underline">
+        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>FIGHT</span>
+        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>PORT</span>
+        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--terra)' }}>.PRO</span>
+      </Link>
+      <Link to="/#busca">
+        <button
+          className="cursor-pointer"
+          style={{
+            background: 'transparent',
+            border: '1.5px solid var(--border-2)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '10px 20px',
+            fontFamily: 'var(--font-display)',
+            fontWeight: 700,
+            fontSize: 10,
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            color: 'var(--blue-deep)',
+            transition: 'var(--transition)',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'var(--blue-light)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+        >
+          Verificar outro atleta
+        </button>
+      </Link>
+    </header>
   );
 }
