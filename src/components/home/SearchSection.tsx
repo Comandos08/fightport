@@ -80,7 +80,7 @@ export function SearchSection() {
           {/* Results count */}
           {filtered.length > 0 && (
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 16 }}>
-              {filtered.length} {filtered.length === 1 ? 'atleta encontrado' : 'atletas encontrados'}
+              {t('search.found', { count: filtered.length })}
             </p>
           )}
 
@@ -91,10 +91,10 @@ export function SearchSection() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
                   <thead>
                     <tr style={{ background: 'var(--color-bg-soft)', borderBottom: '1px solid var(--color-border)' }}>
-                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>Atleta</th>
-                      <th className="hidden md:table-cell" style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>ID</th>
-                      <th className="hidden sm:table-cell" style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>Organização</th>
-                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>Faixa</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>{t('search.table.athlete')}</th>
+                      <th className="hidden md:table-cell" style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>{t('search.table.id')}</th>
+                      <th className="hidden sm:table-cell" style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>{t('search.table.organization')}</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>{t('search.table.belt')}</th>
                       <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}></th>
                     </tr>
                   </thead>
@@ -160,7 +160,7 @@ export function SearchSection() {
               {totalPages > 1 && (
                 <div className="flex items-center justify-between" style={{ marginTop: 16, fontFamily: 'var(--font-sans)' }}>
                   <span style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>
-                    Página {currentPage} de {totalPages}
+                    {t('search.page', { current: currentPage, total: totalPages })}
                   </span>
                   <div className="flex items-center" style={{ gap: 8 }}>
                     <button

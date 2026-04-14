@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function ResetPasswordPage() {
+  const { t } = useTranslation();
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ export default function ResetPasswordPage() {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 8) {
-      toast.error('A senha deve ter no mínimo 8 caracteres.');
+      toast.error(t('resetPw.minLength'));
       return;
     }
     setLoading(true);
@@ -39,7 +41,7 @@ export default function ResetPasswordPage() {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success('Senha atualizada com sucesso!');
+      toast.success(t('resetPw.success'));
       navigate('/painel');
     }
   };
@@ -62,8 +64,8 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg)', padding: 32 }}>
         <div style={{ textAlign: 'center' }}>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginBottom: 16 }}>Link inválido ou expirado.</p>
-          <Link to="/login"><Button>Voltar ao login</Button></Link>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginBottom: 16 }}>{t('resetPw.invalidLink')}</p>
+          <Link to="/login"><Button>{t('resetPw.backToLogin')}</Button></Link>
         </div>
       </div>
     );
@@ -72,10 +74,10 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg)', padding: 32 }}>
       <div style={{ width: '100%', maxWidth: 400 }}>
-        <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 24 }}>Nova senha</h1>
+        <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 24 }}>{t('resetPw.title')}</h1>
         <form onSubmit={handleReset} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <label style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 12, color: 'var(--color-text)', display: 'block', marginBottom: 6 }}>Nova senha</label>
+            <label style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 12, color: 'var(--color-text)', display: 'block', marginBottom: 6 }}>{t('resetPw.label')}</label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -84,7 +86,7 @@ export default function ResetPasswordPage() {
                 required
                 minLength={8}
                 style={{ ...inputStyle, paddingRight: 48 }}
-                placeholder="Mínimo 8 caracteres"
+                placeholder={t('resetPw.placeholder')}
                 onFocus={e => { e.currentTarget.style.borderColor = '#9A9A9A'; e.currentTarget.style.background = '#FFFFFF'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.background = 'var(--color-bg-soft)'; }}
               />
@@ -115,7 +117,7 @@ export default function ResetPasswordPage() {
               transition: 'var(--transition)',
             }}
           >
-            {loading ? 'Salvando...' : 'Salvar nova senha'}
+            {loading ? t('resetPw.saving') : t('resetPw.submit')}
           </button>
         </form>
       </div>
