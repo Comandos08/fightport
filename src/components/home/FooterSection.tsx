@@ -24,7 +24,7 @@ export function FooterSection() {
               O passaporte digital do seu atleta.
             </p>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, color: 'rgba(255,255,255,0.2)', marginTop: 32 }}>
-              © 2026 FightPort.pro · SportCombat
+              © 2026 FightPort.pro · <a href="https://sportcombat.pro" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.2)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>SportCombat</a>
             </p>
           </div>
 
