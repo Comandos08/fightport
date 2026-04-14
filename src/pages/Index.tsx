@@ -167,7 +167,7 @@ export default function HomePage() {
       </section>
 
       {/* BUSCA */}
-      <section id="busca" className="py-16 md:py-24 px-4 relative">
+      <section ref={buscaRef} id="busca" className="section-reveal py-16 md:py-24 px-4 relative">
         <div className="absolute top-0 left-0 right-0 h-10" style={{ background: 'linear-gradient(to bottom, var(--color-bg-surface), var(--color-bg))' }} />
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-10">
@@ -196,7 +196,7 @@ export default function HomePage() {
           <div className="flex flex-wrap gap-2 justify-center mb-12">
             {filters.map(f => (
               <button key={f} onClick={() => setActiveFilter(f)}
-                className={`px-4 py-1.5 rounded-full text-[13px] font-body transition-all duration-200 cursor-pointer ${activeFilter === f ? 'bg-ink text-popover font-medium' : 'hover:bg-surface'}`}
+                className={`filter-pill px-4 py-1.5 rounded-full text-[13px] font-body cursor-pointer ${activeFilter === f ? 'bg-ink text-popover font-medium filter-active' : 'hover:bg-surface'}`}
                 style={activeFilter !== f ? { border: '1px solid var(--color-border)' } : {}}
               >{f}</button>
             ))}
