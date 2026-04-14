@@ -14,6 +14,16 @@ const packages = [
   { name: 'Academia', credits: 150, price: 990, unit: '6,60', highlight: false },
 ];
 
+const thStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)',
+  fontSize: 11,
+  fontWeight: 500,
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase' as const,
+  color: 'var(--color-text-muted)',
+  padding: '0 0 16px 0',
+};
+
 export default function CreditosPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -90,71 +100,124 @@ export default function CreditosPage() {
 
       {/* Pricing table */}
       <div style={{ marginBottom: 16, maxWidth: 860 }}>
-        {/* Header */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px 100px 100px 100px', padding: '0 20px 16px', borderBottom: '2px solid var(--color-text)' }}>
-          {['PLANO', 'CRÉDITOS', 'PREÇO', 'POR GRAD.', ''].map(h => (
-            <span key={h} style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)' }}>{h}</span>
-          ))}
-        </div>
-        {/* Rows */}
-        {packages.map(pkg => (
-          <div
-            key={pkg.name}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 100px 100px 100px 100px',
-              padding: '24px 20px',
-              borderBottom: '1px solid var(--color-border)',
-              background: pkg.highlight ? 'var(--color-bg-amber)' : 'transparent',
-              borderRadius: pkg.highlight ? 'var(--radius-sm)' : 0,
-              alignItems: 'center',
-            }}
-          >
-            <div className="flex items-center" style={{ gap: 12 }}>
-              <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)' }}>{pkg.name}</span>
-              {pkg.highlight && (
-                <span style={{
-                  background: '#1C1C1C',
-                  color: '#FFFFFF',
-                  fontFamily: 'var(--font-sans)',
-                  fontWeight: 500,
-                  fontSize: 10,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  padding: '2px 8px',
-                  borderRadius: 'var(--radius-xs)',
-                }}>
-                  Mais popular
-                </span>
-              )}
-            </div>
-            <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)' }}>{pkg.credits}</span>
-            <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)' }}>R$ {pkg.price}</span>
-            <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text-muted)' }}>R$ {pkg.unit}</span>
-            <button
-              onClick={() => handleBuy(pkg.name)}
-              disabled={loadingPkg !== null}
-              className="flex items-center cursor-pointer"
-              style={{
-                background: 'none',
-                border: 'none',
+        <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+          <colgroup>
+            <col style={{ width: '35%' }} />
+            <col style={{ width: '15%' }} />
+            <col style={{ width: '20%' }} />
+            <col style={{ width: '18%' }} />
+            <col style={{ width: '12%' }} />
+          </colgroup>
+          <thead>
+            <tr style={{ borderBottom: '2px solid var(--color-text)' }}>
+              <th style={{ ...thStyle, textAlign: 'left' }}>PLANO</th>
+              <th style={{ ...thStyle, textAlign: 'right' }}>CRÉDITOS</th>
+              <th style={{ ...thStyle, textAlign: 'right' }}>PREÇO</th>
+              <th style={{ ...thStyle, textAlign: 'right' }}>POR GRAD.</th>
+              <th style={{ padding: '0 0 16px 0' }}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {packages.map((pkg) => {
+              const isHL = pkg.highlight;
+              const tdBase: React.CSSProperties = {
+                padding: '24px 0',
                 fontFamily: 'var(--font-sans)',
+                fontSize: 17,
                 fontWeight: 500,
-                fontSize: 14,
                 color: 'var(--color-text)',
-                gap: 4,
-                padding: 0,
-                textDecoration: 'none',
-                transition: 'var(--transition)',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.textDecoration = 'underline')}
-              onMouseLeave={e => (e.currentTarget.style.textDecoration = 'none')}
-            >
-              {loadingPkg === pkg.name ? <Loader2 style={{ width: 16, height: 16 }} className="animate-spin" /> : null}
-              {loadingPkg === pkg.name ? 'Aguarde...' : 'Comprar →'}
-            </button>
-          </div>
-        ))}
+              };
+              return (
+                <tr
+                  key={pkg.name}
+                  style={{ background: isHL ? 'var(--color-bg-amber)' : 'transparent' }}
+                >
+                  <td style={{
+                    ...tdBase,
+                    padding: isHL ? '24px 20px' : '24px 0',
+                    borderBottom: isHL ? 'none' : '1px solid var(--color-border)',
+                    borderRadius: isHL ? '6px 0 0 6px' : 0,
+                  }}>
+                    {pkg.name}
+                    {isHL && (
+                      <span style={{
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: 10,
+                        fontWeight: 600,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        background: '#1C1C1C',
+                        color: '#FFFFFF',
+                        padding: '2px 8px',
+                        borderRadius: 3,
+                        marginLeft: 10,
+                        verticalAlign: 'middle',
+                      }}>
+                        MAIS POPULAR
+                      </span>
+                    )}
+                  </td>
+                  <td style={{
+                    ...tdBase,
+                    textAlign: 'right',
+                    borderBottom: isHL ? 'none' : '1px solid var(--color-border)',
+                  }}>
+                    {pkg.credits}
+                  </td>
+                  <td style={{
+                    ...tdBase,
+                    textAlign: 'right',
+                    borderBottom: isHL ? 'none' : '1px solid var(--color-border)',
+                  }}>
+                    R$ {pkg.price}
+                  </td>
+                  <td style={{
+                    ...tdBase,
+                    textAlign: 'right',
+                    fontSize: 13,
+                    fontWeight: 400,
+                    color: isHL ? 'var(--color-text)' : 'var(--color-text-muted)',
+                    opacity: isHL ? 0.65 : 1,
+                    borderBottom: isHL ? 'none' : '1px solid var(--color-border)',
+                  }}>
+                    R$ {pkg.unit}/un
+                  </td>
+                  <td style={{
+                    ...tdBase,
+                    textAlign: 'right',
+                    padding: isHL ? '24px 20px' : '24px 0',
+                    borderBottom: isHL ? 'none' : '1px solid var(--color-border)',
+                    borderRadius: isHL ? '0 6px 6px 0' : 0,
+                  }}>
+                    <button
+                      onClick={() => handleBuy(pkg.name)}
+                      disabled={loadingPkg !== null}
+                      className="flex items-center cursor-pointer"
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        fontFamily: 'var(--font-sans)',
+                        fontWeight: 500,
+                        fontSize: 14,
+                        color: 'var(--color-text)',
+                        gap: 4,
+                        padding: 0,
+                        textDecoration: 'none',
+                        transition: 'var(--transition)',
+                        marginLeft: 'auto',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.textDecoration = 'underline')}
+                      onMouseLeave={e => (e.currentTarget.style.textDecoration = 'none')}
+                    >
+                      {loadingPkg === pkg.name ? <Loader2 style={{ width: 16, height: 16 }} className="animate-spin" /> : null}
+                      {loadingPkg === pkg.name ? 'Aguarde...' : 'Comprar →'}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
       <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 48 }}>Créditos nunca expiram. Use quando quiser.</p>
 
