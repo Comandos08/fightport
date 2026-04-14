@@ -168,7 +168,7 @@ export default function NovaConquistaPage() {
           </div>
 
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 24 }}>
-            Cole a hash no certificado físico da sua academia.
+            Cole a hash no certificado físico da sua organização.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center" style={{ gap: 12 }}>

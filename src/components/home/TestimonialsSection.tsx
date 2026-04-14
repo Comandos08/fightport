@@ -1,5 +1,5 @@
 const testimonials = [
-  { text: 'O fightport.pro trouxe credibilidade para a nossa academia. Os pais pedem o link antes de matricular.', name: 'Prof. Ricardo Almeida', role: 'Faixa Preta 5° Grau · Academia Tiger BJJ, SP', initials: 'RA' },
+  { text: 'O fightport.pro trouxe credibilidade para a nossa organização. Os pais pedem o link antes de matricular.', name: 'Prof. Ricardo Almeida', role: 'Faixa Preta 5° Grau · Academia Tiger BJJ, SP', initials: 'RA' },
   { text: 'O árbitro escaneou o QR na hora do check-in do campeonato e aceitou na hora. Zero burocracia.', name: 'Carlos Mendes', role: 'Atleta Faixa Roxa · Gracie Barra RJ', initials: 'CM' },
   { text: 'Implantei em 20 minutos. Cada graduação virou um momento especial — o aluno recebe o link na hora.', name: 'Prof. Ana Freitas', role: 'Head Coach · Alliance SP', initials: 'AF' },
 ];
@@ -10,7 +10,7 @@ export function TestimonialsSection() {
       <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
         <div className="section-inner">
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
-            O QUE DIZEM AS ACADEMIAS
+            O QUE DIZEM AS ORGANIZAÇÕES
           </p>
           <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: 'var(--color-text)', marginTop: 24, marginBottom: 64 }}>
             Quem usa, não volta atrás.

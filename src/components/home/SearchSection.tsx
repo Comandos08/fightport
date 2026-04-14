@@ -58,7 +58,7 @@ export function SearchSection() {
               Encontre um atleta
             </h2>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--color-text-muted)', fontWeight: 300 }}>
-              certificado pela sua academia
+              certificado pela sua organização
             </p>
           </div>
 
@@ -69,7 +69,7 @@ export function SearchSection() {
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Nome do atleta, ID ou academia..."
+                placeholder="Nome do atleta, ID ou organização..."
                 style={{
                   width: '100%', height: 64, paddingLeft: 56, paddingRight: 20,
                   borderRadius: 'var(--radius-sm)', background: 'var(--color-bg-soft)',
@@ -95,7 +95,7 @@ export function SearchSection() {
                   Nenhum atleta cadastrado ainda.
                 </p>
                 <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 8, marginBottom: 24 }}>
-                  Cadastre sua academia e emita o primeiro certificado.
+                  Cadastre sua organização e emita o primeiro certificado.
                 </p>
                 <a
                   href="/cadastro"
@@ -103,7 +103,7 @@ export function SearchSection() {
                   onMouseEnter={e => (e.currentTarget.style.background = '#e09600')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-bg-amber)')}
                 >
-                  Cadastrar minha academia →
+                  Cadastrar minha organização →
                 </a>
               </div>
             )}

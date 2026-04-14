@@ -2,8 +2,8 @@ import { CheckCircle, Lock, Award } from 'lucide-react';
 
 const items = [
   { num: '01', icon: CheckCircle, title: 'Verificação instantânea', desc: 'Qualquer pessoa escaneia o QR Code e vê o histórico completo do atleta em 0,3 segundos.' },
-  { num: '02', icon: Lock, title: 'Imutável por criptografia', desc: 'Hash SHA-256 único por graduação. Ninguém pode alterar — nem a academia, nem nós.' },
-  { num: '03', icon: Award, title: 'Passaporte vitalício', desc: 'O atleta leva o link para sempre. Troca de academia, fecha a escola — o passaporte permanece.' },
+  { num: '02', icon: Lock, title: 'Imutável por criptografia', desc: 'Hash SHA-256 único por graduação. Ninguém pode alterar — nem a organização, nem nós.' },
+  { num: '03', icon: Award, title: 'Passaporte vitalício', desc: 'O atleta leva o link para sempre. Troca de organização, fecha a escola — o passaporte permanece.' },
 ];
 
 export function SolutionSection() {
@@ -15,7 +15,7 @@ export function SolutionSection() {
             A SOLUÇÃO
           </p>
           <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: '#FFFFFF', maxWidth: 560, marginTop: 24, marginBottom: 64 }}>
-            Um sprint para modernizar o jeito que sua academia certifica atletas.
+            Um sprint para modernizar o jeito que sua organização certifica atletas.
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 1 }}>
             {items.map((item) => (

@@ -24,7 +24,7 @@ export function SocialProof() {
             flexShrink: 0,
           }}
         >
-          ACADEMIAS ATIVAS EM →
+          ORGANIZAÇÕES ATIVAS EM →
         </span>
         <div style={{ overflow: 'hidden', flex: 1 }}>
           <div className="marquee-track">
