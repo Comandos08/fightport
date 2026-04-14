@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, CheckCircle, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,28 +8,9 @@ import { AthleteCard } from '@/components/AthleteCard';
 import { mockAthletes, mockStats } from '@/lib/mock-data';
 import { beltColor, beltTextColor } from '@/lib/utils';
 
-function useRevealRef() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { el.classList.add('revealed'); obs.unobserve(el); } },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return ref;
-}
-
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Todos');
-  const buscaRef = useRevealRef();
-  const comoRef = useRevealRef();
-  const provaRef = useRevealRef();
-  const ctaRef = useRevealRef();
 
   const filters = ['Todos', 'Jiu-Jitsu', 'Judô', 'Karatê', 'Muay Thai', 'Faixa Preta', 'Faixa Roxa'];
 
