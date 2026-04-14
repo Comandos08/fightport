@@ -21,7 +21,7 @@ export function PricingSection() {
   const { t } = useTranslation();
 
   return (
-    <section style={{ background: 'var(--color-bg-soft)' }}>
+    <section id="precos" style={{ background: 'var(--color-bg-soft)' }}>
       <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
         <div className="section-inner">
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
