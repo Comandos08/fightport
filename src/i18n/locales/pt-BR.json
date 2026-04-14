@@ -21,56 +21,23 @@
   "problem": {
     "badge": "O PROBLEMA",
     "title": "Certificados físicos são fáceis de falsificar.",
-    "stat1": {
-      "number": "72%",
-      "desc": "plataformas de certificação falham por falta de padrão",
-      "source": "FONTE: VFUNCTION, 2022"
-    },
-    "stat2": {
-      "number": "50%",
-      "desc": "dos árbitros não têm como verificar a graduação real",
-      "source": "ESTIMATIVA INTERNA, 2024"
-    },
-    "stat3": {
-      "number": "5 anos",
-      "desc": "de treino que qualquer um pode falsificar com uma impressora",
-      "source": "REALIDADE DO MERCADO"
-    }
+    "stat1": { "number": "72%", "desc": "plataformas de certificação falham por falta de padrão", "source": "FONTE: VFUNCTION, 2022" },
+    "stat2": { "number": "50%", "desc": "dos árbitros não têm como verificar a graduação real", "source": "ESTIMATIVA INTERNA, 2024" },
+    "stat3": { "number": "5 anos", "desc": "de treino que qualquer um pode falsificar com uma impressora", "source": "REALIDADE DO MERCADO" }
   },
   "solution": {
     "badge": "A SOLUÇÃO",
     "title": "Um sprint para modernizar o jeito que sua organização certifica atletas.",
-    "item1": {
-      "title": "Verificação instantânea",
-      "desc": "Qualquer pessoa escaneia o QR Code e vê o histórico completo do atleta em 0,3 segundos."
-    },
-    "item2": {
-      "title": "Imutável por criptografia",
-      "desc": "Hash SHA-256 único por graduação. Ninguém pode alterar — nem a organização, nem nós."
-    },
-    "item3": {
-      "title": "Passaporte vitalício",
-      "desc": "O atleta leva o link para sempre. Troca de organização, fecha a escola — o passaporte permanece."
-    }
+    "item1": { "title": "Verificação instantânea", "desc": "Qualquer pessoa escaneia o QR Code e vê o histórico completo do atleta em 0,3 segundos." },
+    "item2": { "title": "Imutável por criptografia", "desc": "Hash SHA-256 único por graduação. Ninguém pode alterar — nem a organização, nem nós." },
+    "item3": { "title": "Passaporte vitalício", "desc": "O atleta leva o link para sempre. Troca de organização, fecha a escola — o passaporte permanece." }
   },
   "process": {
     "badge": "PROCESSO",
     "title": "Três passos. Para sempre.",
-    "step1": {
-      "title": "A organização cadastra seus atletas",
-      "desc": "Nome, foto e CPF. O sistema bloqueia duplicatas — nenhum atleta pode ter dois perfis.",
-      "tag": "CPF verificado"
-    },
-    "step2": {
-      "title": "Registra a graduação",
-      "desc": "Seleciona o atleta, a nova faixa, a data e quem graduou. Hash gerado automaticamente.",
-      "tag": "SHA-256 · imutável"
-    },
-    "step3": {
-      "title": "Qualquer pessoa verifica",
-      "desc": "Escaneie o QR. Veja o passaporte digital completo do atleta. Assinado. Para sempre.",
-      "tag": "Público · auditável"
-    }
+    "step1": { "title": "A organização cadastra seus atletas", "desc": "Nome, foto e CPF. O sistema bloqueia duplicatas — nenhum atleta pode ter dois perfis.", "tag": "CPF verificado" },
+    "step2": { "title": "Registra a graduação", "desc": "Seleciona o atleta, a nova faixa, a data e quem graduou. Hash gerado automaticamente.", "tag": "SHA-256 · imutável" },
+    "step3": { "title": "Qualquer pessoa verifica", "desc": "Escaneie o QR. Veja o passaporte digital completo do atleta. Assinado. Para sempre.", "tag": "Público · auditável" }
   },
   "search": {
     "badge": "BUSCA PÚBLICA",
@@ -90,25 +57,11 @@
     "buy": "Comprar →",
     "credits": "créditos",
     "perGrad": "POR GRAD.",
-    "plan": {
-      "starter": "Starter",
-      "school": "Escola",
-      "org": "Organização"
-    },
-    "tableHeaders": {
-      "plan": "PLANO",
-      "credits": "CRÉDITOS",
-      "price": "PREÇO",
-      "perGrad": "POR GRAD."
-    }
+    "plan": { "starter": "Starter", "school": "Escola", "org": "Organização" },
+    "tableHeaders": { "plan": "PLANO", "credits": "CRÉDITOS", "price": "PREÇO", "perGrad": "POR GRAD." }
   },
-  "testimonials": {
-    "badge": "O QUE DIZEM AS ORGANIZAÇÕES",
-    "title": "Quem usa, não volta atrás."
-  },
-  "socialProof": {
-    "label": "ORGANIZAÇÕES ATIVAS EM →"
-  },
+  "testimonials": { "badge": "O QUE DIZEM AS ORGANIZAÇÕES", "title": "Quem usa, não volta atrás." },
+  "socialProof": { "label": "ORGANIZAÇÕES ATIVAS EM →" },
   "cta": {
     "title": "Sua organização merece isso.",
     "subtitle": "Cadastro gratuito. Você só paga quando graduar o atleta.",
@@ -125,5 +78,254 @@
     "terms": "Termos de Uso",
     "privacy": "Privacidade",
     "lgpd": "LGPD"
+  },
+  "app": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "practitioners": "Praticantes",
+      "newAchievement": "Nova Conquista",
+      "credits": "Créditos",
+      "settings": "Configurações",
+      "logout": "Sair"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "cards": {
+      "totalPractitioners": "Total de praticantes",
+      "certificatesIssued": "Certificados emitidos",
+      "creditBalance": "Saldo de créditos",
+      "lastGraduation": "Última graduação"
+    },
+    "charts": {
+      "byBelt": "Distribuição por faixa",
+      "achievementsPerMonth": "Conquistas por mês",
+      "practitionerEvolution": "Evolução de praticantes"
+    },
+    "recentAchievements": "Últimas conquistas",
+    "noCredits": "Você não tem créditos.",
+    "buyCreditsNow": "Compre agora para registrar graduações.",
+    "buyCredits": "Comprar créditos",
+    "buyMore": "Comprar mais",
+    "noPractitioners": "Nenhum praticante cadastrado.",
+    "noAchievementsChart": "Nenhuma conquista nos últimos 6 meses.",
+    "noPractitionersChart": "Nenhum praticante cadastrado nos últimos 6 meses.",
+    "noAchievementsYet": "Nenhuma conquista registrada ainda.",
+    "chartLabels": {
+      "practitioners": "Praticantes",
+      "achievements": "Conquistas"
+    }
+  },
+  "practitioners": {
+    "title": "Praticantes",
+    "exportCsv": "Exportar CSV",
+    "importCsv": "Importar CSV/XLSX",
+    "newPractitioner": "Novo praticante",
+    "table": {
+      "name": "Nome",
+      "martialArt": "Arte Marcial",
+      "lastBelt": "Última Faixa",
+      "school": "Escola"
+    },
+    "allBelts": "Todas as faixas",
+    "allArts": "Todas as artes marciais",
+    "searchPlaceholder": "Buscar praticante...",
+    "count": "{{count}} praticante(s) · Página {{page}} de {{total}}",
+    "emptyTitle": "Nenhum praticante cadastrado.",
+    "emptyDesc": "Adicione o primeiro.",
+    "noneForExport": "Nenhum praticante para exportar.",
+    "exported": "{{count}} praticante(s) exportado(s).",
+    "deleteTitle": "Excluir praticante",
+    "deleteConfirm": "Tem certeza que deseja excluir <strong>{{name}}</strong>? Esta ação não pode ser desfeita.",
+    "deleteSuccess": "Praticante excluído com sucesso.",
+    "deleteForeignKey": "Não é possível excluir: praticante possui conquistas registradas.",
+    "cancel": "Cancelar",
+    "deleting": "Excluindo...",
+    "delete": "Excluir",
+    "clearFilters": "Limpar filtros",
+    "viewPassport": "Ver passaporte",
+    "registerAchievement": "Registrar conquista",
+    "edit": "Editar"
+  },
+  "newPractitioner": {
+    "title": "Novo Praticante",
+    "personalData": "Dados Pessoais",
+    "firstName": "Nome",
+    "lastName": "Sobrenome",
+    "dob": "Data de nascimento",
+    "sex": "Sexo",
+    "select": "Selecione",
+    "male": "Masculino",
+    "female": "Feminino",
+    "other": "Outro",
+    "cpf": "CPF",
+    "cpfHint": "Usado apenas para evitar duplicatas — nunca exibido publicamente",
+    "affiliation": "Filiação",
+    "fatherName": "Nome do pai",
+    "motherName": "Nome da mãe",
+    "martialArtSection": "Arte Marcial",
+    "schoolArt": "Arte marcial da escola",
+    "currentBelt": "Faixa atual",
+    "cancel": "Cancelar",
+    "save": "Salvar praticante",
+    "saving": "Salvando..."
+  },
+  "edit": {
+    "title": "Editar Praticante",
+    "personalData": "Dados Pessoais",
+    "firstName": "Nome",
+    "lastName": "Sobrenome",
+    "dob": "Data de nascimento",
+    "sex": "Sexo",
+    "select": "Selecione",
+    "male": "Masculino",
+    "female": "Feminino",
+    "other": "Outro",
+    "cpf": "CPF",
+    "affiliation": "Filiação",
+    "fatherName": "Nome do pai",
+    "motherName": "Nome da mãe",
+    "graduation": "Graduação",
+    "currentBelt": "Faixa atual",
+    "save": "Salvar alterações",
+    "saving": "Salvando...",
+    "cancel": "Cancelar",
+    "notFound": "Praticante não encontrado.",
+    "back": "Voltar"
+  },
+  "achievement": {
+    "title": "Registrar Conquista",
+    "creditInfo": "Você tem {{balance}} créditos · Cada graduação consome 1 crédito",
+    "noCredits": "Sem créditos disponíveis.",
+    "buyCredits": "Comprar créditos",
+    "practitioner": "Praticante",
+    "searchPlaceholder": "Buscar por nome (mín. 3 letras)...",
+    "belt": "Faixa",
+    "selectBelt": "Selecione a faixa",
+    "date": "Data da graduação",
+    "graduatedBy": "Quem graduou",
+    "notes": "Texto complementar (opcional)",
+    "notesPlaceholder": "Ex: Promovido a Faixa Azul...",
+    "submit": "Registrar conquista",
+    "preview": {
+      "label": "Preview",
+      "empty": "Selecione um atleta e faixa para ver o preview",
+      "verified": "Verificado"
+    },
+    "confirm": {
+      "title": "Confirmar registro",
+      "message": "Isso consumirá 1 crédito do seu saldo ({{balance}} restantes). Confirmar?",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "confirming": "Registrando..."
+    },
+    "success": {
+      "title": "Conquista registrada!",
+      "desc": "A graduação foi registrada com sucesso.",
+      "hashLabel": "Hash de verificação",
+      "hashCopied": "Hash copiada",
+      "hashHint": "Cole a hash no certificado físico da sua organização.",
+      "viewPassport": "Ver passaporte do atleta",
+      "registerAnother": "Registrar outra conquista"
+    }
+  },
+  "credits": {
+    "title": "Créditos",
+    "plan": "PLANO",
+    "creditsCol": "CRÉDITOS",
+    "price": "PREÇO",
+    "perGrad": "POR GRAD.",
+    "buy": "Comprar →",
+    "waiting": "Aguarde...",
+    "neverExpire": "Créditos nunca expiram. Use quando quiser.",
+    "mostPopular": "MAIS POPULAR",
+    "type": {
+      "usage": "Graduação"
+    },
+    "history": {
+      "title": "Histórico de transações",
+      "date": "Data",
+      "type": "Tipo",
+      "amount": "Créditos",
+      "status": "Status",
+      "empty": "Nenhuma transação ainda."
+    },
+    "toast": {
+      "success": "Pagamento aprovado! Seus créditos serão adicionados em instantes.",
+      "failure": "Pagamento não aprovado. Tente novamente.",
+      "pending": "Pagamento pendente. Seus créditos serão adicionados quando confirmado."
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "tabs": {
+      "school": "Escola",
+      "headCoach": "Head Coach",
+      "account": "Conta"
+    },
+    "schoolName": "Nome da escola",
+    "martialArt": "Arte marcial principal",
+    "logo": "Logo (opcional)",
+    "uploadLogo": "Enviar logo",
+    "uploading": "Enviando...",
+    "city": "Cidade",
+    "state": "Estado",
+    "save": "Salvar alterações",
+    "saving": "Salvando...",
+    "coachName": "Nome do Head Coach",
+    "coachGraduation": "Graduação",
+    "coachGraduationPlaceholder": "Ex: Faixa Preta 3° Grau",
+    "currentEmail": "E-mail atual",
+    "changeEmail": "Alterar e-mail",
+    "newEmail": "Novo e-mail",
+    "confirmNewEmail": "Confirmar novo e-mail",
+    "changePassword": "Alterar senha",
+    "newPassword": "Nova senha",
+    "confirmPassword": "Confirmar nova senha"
+  },
+  "auth": {
+    "login": {
+      "title": "Bem-vindo de volta",
+      "submit": "Entrar",
+      "submitting": "Entrando...",
+      "noAccount": "Ainda não tem conta?",
+      "register": "Cadastrar →"
+    },
+    "register": {
+      "title": "Criar conta gratuita",
+      "hasAccount": "Já tem conta?",
+      "login": "Entrar",
+      "orgName": "Nome da organização",
+      "headCoach": "Seu nome (Head Coach)",
+      "martialArt": "Arte marcial principal",
+      "belt": "Graduação do Head Coach",
+      "submit": "Criar conta gratuita",
+      "submitting": "Criando conta...",
+      "terms": "Termos de Uso",
+      "privacy": "Política de Privacidade",
+      "termsPrefix": "Ao criar conta você concorda com os",
+      "termsAnd": "e"
+    },
+    "email": "E-mail",
+    "password": "Senha",
+    "forgotPassword": "Esqueci minha senha",
+    "success": {
+      "title": "Conta criada!",
+      "desc": "Enviamos um e-mail de confirmação para <strong>{{email}}</strong>. Clique no link para ativar sua conta.",
+      "goToLogin": "Ir para o login"
+    },
+    "leftPanel": {
+      "badge": "PARA ORGANIZAÇÕES ESPORTIVAS",
+      "title": "Comece hoje.\nSeu primeiro\ncadastro é grátis.",
+      "subtitle": "Você só paga quando graduar um atleta.\nSem mensalidade. Sem surpresas.",
+      "benefits": [
+        "Certificação com hash SHA-256 imutável",
+        "QR Code verificável por qualquer pessoa",
+        "Passaporte digital permanente por atleta",
+        "Créditos nunca expiram — use quando quiser"
+      ],
+      "testimonial": "\"O fightport.pro trouxe credibilidade real para nossa organização.\"",
+      "testimonialAuthor": "— Prof. Ricardo Almeida · Faixa Preta 5° Grau"
+    }
   }
 }

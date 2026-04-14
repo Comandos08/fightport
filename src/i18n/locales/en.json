@@ -12,65 +12,28 @@
     "subtitle": "Anyone can verify your student's belt in seconds — just scan a QR Code. Forever. No forgery possible.",
     "ctaPrimary": "Register my organization",
     "ctaSecondary": "Verify an athlete →",
-    "stats": {
-      "athletes": "certified athletes",
-      "organizations": "active organizations",
-      "graduations": "recorded graduations"
-    }
+    "stats": { "athletes": "certified athletes", "organizations": "active organizations", "graduations": "recorded graduations" }
   },
   "problem": {
     "badge": "THE PROBLEM",
     "title": "Paper certificates are easy to forge.",
-    "stat1": {
-      "number": "72%",
-      "desc": "of certification platforms fail due to lack of standards",
-      "source": "SOURCE: VFUNCTION, 2022"
-    },
-    "stat2": {
-      "number": "50%",
-      "desc": "of referees have no way to verify real rank",
-      "source": "INTERNAL ESTIMATE, 2024"
-    },
-    "stat3": {
-      "number": "5 years",
-      "desc": "of training anyone can fake with a printer",
-      "source": "MARKET REALITY"
-    }
+    "stat1": { "number": "72%", "desc": "of certification platforms fail due to lack of standards", "source": "SOURCE: VFUNCTION, 2022" },
+    "stat2": { "number": "50%", "desc": "of referees have no way to verify real rank", "source": "INTERNAL ESTIMATE, 2024" },
+    "stat3": { "number": "5 years", "desc": "of training anyone can fake with a printer", "source": "MARKET REALITY" }
   },
   "solution": {
     "badge": "THE SOLUTION",
     "title": "A sprint to modernize how your organization certifies athletes.",
-    "item1": {
-      "title": "Instant verification",
-      "desc": "Anyone scans the QR Code and sees the athlete's full history in 0.3 seconds."
-    },
-    "item2": {
-      "title": "Cryptographically immutable",
-      "desc": "Unique SHA-256 hash per graduation. No one can alter it — not even the organization, not even us."
-    },
-    "item3": {
-      "title": "Lifetime passport",
-      "desc": "The athlete keeps their link forever. Switch organizations, close the school — the passport remains."
-    }
+    "item1": { "title": "Instant verification", "desc": "Anyone scans the QR Code and sees the athlete's full history in 0.3 seconds." },
+    "item2": { "title": "Cryptographically immutable", "desc": "Unique SHA-256 hash per graduation. No one can alter it — not even the organization, not even us." },
+    "item3": { "title": "Lifetime passport", "desc": "The athlete keeps their link forever. Switch organizations, close the school — the passport remains." }
   },
   "process": {
     "badge": "PROCESS",
     "title": "Three steps. Forever.",
-    "step1": {
-      "title": "The organization registers its athletes",
-      "desc": "Name, photo, and ID. The system blocks duplicates — no athlete can have two profiles.",
-      "tag": "ID verified"
-    },
-    "step2": {
-      "title": "Record the graduation",
-      "desc": "Select the athlete, the new belt, the date, and who graded. Hash generated automatically.",
-      "tag": "SHA-256 · immutable"
-    },
-    "step3": {
-      "title": "Anyone can verify",
-      "desc": "Scan the QR. See the athlete's complete digital passport. Signed. Forever.",
-      "tag": "Public · auditable"
-    }
+    "step1": { "title": "The organization registers its athletes", "desc": "Name, photo, and ID. The system blocks duplicates — no athlete can have two profiles.", "tag": "ID verified" },
+    "step2": { "title": "Record the graduation", "desc": "Select the athlete, the new belt, the date, and who graded. Hash generated automatically.", "tag": "SHA-256 · immutable" },
+    "step3": { "title": "Anyone can verify", "desc": "Scan the QR. See the athlete's complete digital passport. Signed. Forever.", "tag": "Public · auditable" }
   },
   "search": {
     "badge": "PUBLIC SEARCH",
@@ -90,25 +53,11 @@
     "buy": "Buy →",
     "credits": "credits",
     "perGrad": "PER GRAD.",
-    "plan": {
-      "starter": "Starter",
-      "school": "School",
-      "org": "Organization"
-    },
-    "tableHeaders": {
-      "plan": "PLAN",
-      "credits": "CREDITS",
-      "price": "PRICE",
-      "perGrad": "PER GRAD."
-    }
+    "plan": { "starter": "Starter", "school": "School", "org": "Organization" },
+    "tableHeaders": { "plan": "PLAN", "credits": "CREDITS", "price": "PRICE", "perGrad": "PER GRAD." }
   },
-  "testimonials": {
-    "badge": "WHAT ORGANIZATIONS SAY",
-    "title": "Once you try it, there's no going back."
-  },
-  "socialProof": {
-    "label": "ACTIVE ORGANIZATIONS IN →"
-  },
+  "testimonials": { "badge": "WHAT ORGANIZATIONS SAY", "title": "Once you try it, there's no going back." },
+  "socialProof": { "label": "ACTIVE ORGANIZATIONS IN →" },
   "cta": {
     "title": "Your organization deserves this.",
     "subtitle": "Free signup. You only pay when you grade an athlete.",
@@ -125,5 +74,182 @@
     "terms": "Terms of Use",
     "privacy": "Privacy",
     "lgpd": "LGPD"
+  },
+  "app": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "practitioners": "Practitioners",
+      "newAchievement": "New Achievement",
+      "credits": "Credits",
+      "settings": "Settings",
+      "logout": "Sign out"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "cards": {
+      "totalPractitioners": "Total practitioners",
+      "certificatesIssued": "Certificates issued",
+      "creditBalance": "Credit balance",
+      "lastGraduation": "Last graduation"
+    },
+    "charts": {
+      "byBelt": "Distribution by belt",
+      "achievementsPerMonth": "Achievements per month",
+      "practitionerEvolution": "Practitioner growth"
+    },
+    "recentAchievements": "Recent achievements",
+    "noCredits": "You have no credits.",
+    "buyCreditsNow": "Buy now to record graduations.",
+    "buyCredits": "Buy credits",
+    "buyMore": "Buy more",
+    "noPractitioners": "No practitioners registered.",
+    "noAchievementsChart": "No achievements in the last 6 months.",
+    "noPractitionersChart": "No practitioners registered in the last 6 months.",
+    "noAchievementsYet": "No achievements recorded yet.",
+    "chartLabels": { "practitioners": "Practitioners", "achievements": "Achievements" }
+  },
+  "practitioners": {
+    "title": "Practitioners",
+    "exportCsv": "Export CSV",
+    "importCsv": "Import CSV/XLSX",
+    "newPractitioner": "New practitioner",
+    "table": { "name": "Name", "martialArt": "Martial Art", "lastBelt": "Last Belt", "school": "School" },
+    "allBelts": "All belts",
+    "allArts": "All martial arts",
+    "searchPlaceholder": "Search practitioner...",
+    "count": "{{count}} practitioner(s) · Page {{page}} of {{total}}",
+    "emptyTitle": "No practitioners registered.",
+    "emptyDesc": "Add the first one.",
+    "noneForExport": "No practitioners to export.",
+    "exported": "{{count}} practitioner(s) exported.",
+    "deleteTitle": "Delete practitioner",
+    "deleteConfirm": "Are you sure you want to delete <strong>{{name}}</strong>? This action cannot be undone.",
+    "deleteSuccess": "Practitioner deleted successfully.",
+    "deleteForeignKey": "Cannot delete: practitioner has recorded achievements.",
+    "cancel": "Cancel",
+    "deleting": "Deleting...",
+    "delete": "Delete",
+    "clearFilters": "Clear filters",
+    "viewPassport": "View passport",
+    "registerAchievement": "Record achievement",
+    "edit": "Edit"
+  },
+  "newPractitioner": {
+    "title": "New Practitioner",
+    "personalData": "Personal Data",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "dob": "Date of birth",
+    "sex": "Sex",
+    "select": "Select",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "cpf": "ID Number",
+    "cpfHint": "Used only to prevent duplicates — never shown publicly",
+    "affiliation": "Parentage",
+    "fatherName": "Father's name",
+    "motherName": "Mother's name",
+    "martialArtSection": "Martial Art",
+    "schoolArt": "School's martial art",
+    "currentBelt": "Current belt",
+    "cancel": "Cancel",
+    "save": "Save practitioner",
+    "saving": "Saving..."
+  },
+  "edit": {
+    "title": "Edit Practitioner",
+    "personalData": "Personal Data",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "dob": "Date of birth",
+    "sex": "Sex",
+    "select": "Select",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "cpf": "ID Number",
+    "affiliation": "Parentage",
+    "fatherName": "Father's name",
+    "motherName": "Mother's name",
+    "graduation": "Graduation",
+    "currentBelt": "Current belt",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "notFound": "Practitioner not found.",
+    "back": "Back"
+  },
+  "achievement": {
+    "title": "Record Achievement",
+    "creditInfo": "You have {{balance}} credits · Each graduation consumes 1 credit",
+    "noCredits": "No credits available.",
+    "buyCredits": "Buy credits",
+    "practitioner": "Practitioner",
+    "searchPlaceholder": "Search by name (min. 3 letters)...",
+    "belt": "Belt",
+    "selectBelt": "Select belt",
+    "date": "Graduation date",
+    "graduatedBy": "Graded by",
+    "notes": "Additional notes (optional)",
+    "notesPlaceholder": "E.g.: Promoted to Blue Belt...",
+    "submit": "Record achievement",
+    "preview": { "label": "Preview", "empty": "Select an athlete and belt to see the preview", "verified": "Verified" },
+    "confirm": { "title": "Confirm record", "message": "This will consume 1 credit from your balance ({{balance}} remaining). Confirm?", "cancel": "Cancel", "confirm": "Confirm", "confirming": "Recording..." },
+    "success": { "title": "Achievement recorded!", "desc": "The graduation was recorded successfully.", "hashLabel": "Verification hash", "hashCopied": "Hash copied", "hashHint": "Paste the hash on your organization's physical certificate.", "viewPassport": "View athlete's passport", "registerAnother": "Record another achievement" }
+  },
+  "credits": {
+    "title": "Credits",
+    "plan": "PLAN",
+    "creditsCol": "CREDITS",
+    "price": "PRICE",
+    "perGrad": "PER GRAD.",
+    "buy": "Buy →",
+    "waiting": "Please wait...",
+    "neverExpire": "Credits never expire. Use them anytime.",
+    "mostPopular": "MOST POPULAR",
+    "type": { "usage": "Graduation" },
+    "history": { "title": "Transaction history", "date": "Date", "type": "Type", "amount": "Credits", "status": "Status", "empty": "No transactions yet." },
+    "toast": { "success": "Payment approved! Your credits will be added shortly.", "failure": "Payment not approved. Please try again.", "pending": "Payment pending. Your credits will be added once confirmed." }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": { "school": "School", "headCoach": "Head Coach", "account": "Account" },
+    "schoolName": "School name",
+    "martialArt": "Main martial art",
+    "logo": "Logo (optional)",
+    "uploadLogo": "Upload logo",
+    "uploading": "Uploading...",
+    "city": "City",
+    "state": "State",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "coachName": "Head Coach name",
+    "coachGraduation": "Graduation",
+    "coachGraduationPlaceholder": "E.g.: Black Belt 3rd Degree",
+    "currentEmail": "Current e-mail",
+    "changeEmail": "Change e-mail",
+    "newEmail": "New e-mail",
+    "confirmNewEmail": "Confirm new e-mail",
+    "changePassword": "Change password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password"
+  },
+  "auth": {
+    "login": { "title": "Welcome back", "submit": "Sign in", "submitting": "Signing in...", "noAccount": "Don't have an account yet?", "register": "Sign up →" },
+    "register": { "title": "Create free account", "hasAccount": "Already have an account?", "login": "Sign in", "orgName": "Organization name", "headCoach": "Your name (Head Coach)", "martialArt": "Main martial art", "belt": "Head Coach graduation", "submit": "Create free account", "submitting": "Creating account...", "terms": "Terms of Use", "privacy": "Privacy Policy", "termsPrefix": "By creating an account you agree to the", "termsAnd": "and" },
+    "email": "E-mail",
+    "password": "Password",
+    "forgotPassword": "Forgot my password",
+    "success": { "title": "Account created!", "desc": "We sent a confirmation e-mail to <strong>{{email}}</strong>. Click the link to activate your account.", "goToLogin": "Go to sign in" },
+    "leftPanel": {
+      "badge": "FOR SPORTS ORGANIZATIONS",
+      "title": "Start today.\nYour first\nregistration is free.",
+      "subtitle": "You only pay when you grade an athlete.\nNo monthly fee. No surprises.",
+      "benefits": ["Certification with immutable SHA-256 hash", "QR Code verifiable by anyone", "Permanent digital passport per athlete", "Credits never expire — use them anytime"],
+      "testimonial": "\"fightport.pro brought real credibility to our organization.\"",
+      "testimonialAuthor": "— Prof. Ricardo Almeida · Black Belt 5th Degree"
+    }
   }
 }
