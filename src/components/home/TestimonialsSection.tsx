@@ -1,7 +1,7 @@
 const testimonials = [
-  { text: 'O fightport.pro trouxe credibilidade para a nossa organização. Os pais pedem o link antes de matricular.', name: 'Prof. Ricardo Almeida', role: 'Faixa Preta 5° Grau · Academia Tiger BJJ, SP', initials: 'RA' },
-  { text: 'O árbitro escaneou o QR na hora do check-in do campeonato e aceitou na hora. Zero burocracia.', name: 'Carlos Mendes', role: 'Atleta Faixa Roxa · Gracie Barra RJ', initials: 'CM' },
-  { text: 'Implantei em 20 minutos. Cada graduação virou um momento especial — o aluno recebe o link na hora.', name: 'Prof. Ana Freitas', role: 'Head Coach · Alliance SP', initials: 'AF' },
+  { text: 'O fightport.pro trouxe credibilidade para a nossa organização. Os pais pedem o link antes de matricular.', name: 'Professor Marciano Rodrigues', role: 'Faixa Preta 5º Dan · Judo · Kasei Dojo', initials: 'MR' },
+  { text: 'O árbitro escaneou o QR na hora do check-in do campeonato e aceitou na hora. Zero burocracia.', name: 'Mestre Luiz Felipe Villar', role: 'Faixa Coral 7º Grau · BJJ · Tier One Grappling School', initials: 'LV' },
+  { text: 'Implantei em 20 minutos. Cada graduação virou um momento especial — o aluno recebe o link na hora.', name: 'Professor Cyro Pessanha', role: 'Presidente da Federação de Sambo do RJ', initials: 'CP' },
 ];
 
 export function TestimonialsSection() {
