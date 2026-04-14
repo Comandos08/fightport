@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { AthleteCard } from '@/components/AthleteCard';
-import { mockAthletes } from '@/lib/mock-data';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 export function SearchSection() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -9,13 +10,49 @@ export function SearchSection() {
 
   const filters = ['Todos', 'Jiu-Jitsu', 'Judô', 'Karatê', 'Muay Thai', 'Faixa Preta', 'Faixa Roxa'];
 
-  const filtered = mockAthletes.filter(a => {
-    const matchesSearch = `${a.name} ${a.surname} ${a.school}`.toLowerCase().includes(searchQuery.toLowerCase());
-    if (activeFilter === 'Todos') return matchesSearch;
-    if (activeFilter === 'Faixa Preta') return matchesSearch && a.achievements.some(ach => ach.belt === 'Preta');
-    if (activeFilter === 'Faixa Roxa') return matchesSearch && a.achievements.some(ach => ach.belt === 'Roxa');
-    return matchesSearch && a.sport === activeFilter;
+  const { data: practitioners = [] } = useQuery({
+    queryKey: ['public-practitioners'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('practitioners')
+        .select('*, schools(name), achievements(belt)')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      return data ?? [];
+    },
   });
+
+  const filtered = practitioners.filter((a: any) => {
+    const schoolName = (a.schools as any)?.name ?? '';
+    const matchesSearch = `${a.first_name} ${a.last_name} ${schoolName}`.toLowerCase().includes(searchQuery.toLowerCase());
+    if (activeFilter === 'Todos') return matchesSearch;
+    if (activeFilter === 'Faixa Preta') return matchesSearch && a.achievements?.some((ach: any) => ach.belt === 'Preta');
+    if (activeFilter === 'Faixa Roxa') return matchesSearch && a.achievements?.some((ach: any) => ach.belt === 'Roxa');
+    return matchesSearch && a.martial_art === activeFilter;
+  });
+
+  // Adapt to AthleteCard expected shape
+  const mappedAthletes = filtered.map((a: any) => ({
+    id: a.id,
+    publicId: a.fp_id,
+    name: a.first_name,
+    surname: a.last_name,
+    sport: a.martial_art,
+    school: (a.schools as any)?.name ?? '',
+    headCoach: '',
+    headCoachBelt: '',
+    photo: a.photo_url,
+    achievements: (a.achievements ?? []).map((ach: any, idx: number) => ({
+      id: `${a.id}-${idx}`,
+      date: '',
+      belt: ach.belt,
+      title: `Faixa ${ach.belt}`,
+      hashPartial: '',
+      hashFull: '',
+      school: '',
+      graduatedBy: '',
+    })),
+  }));
 
   return (
     <section id="busca" className="py-24 px-4 relative">
@@ -72,12 +109,12 @@ export function SearchSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((a) => (
+          {mappedAthletes.map((a: any) => (
             <div key={a.id} className="animate-fade-in">
               <AthleteCard athlete={a} />
             </div>
           ))}
-          {filtered.length === 0 && (
+          {mappedAthletes.length === 0 && (
             <div className="col-span-full text-center py-16">
               <p className="font-body text-ink-muted">Nenhum atleta encontrado.</p>
             </div>
