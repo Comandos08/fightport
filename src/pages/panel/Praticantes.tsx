@@ -107,7 +107,7 @@ export default function PraticantesPage() {
                     </div>
                   </td>
                   <td className="p-4 font-body text-sm text-ink-muted">{a.martial_art}</td>
-                  <td className="p-4">{a.current_belt ? <BeltBadge belt={a.current_belt} size="sm" /> : <span className="font-body text-xs text-ink-faint">—</span>}</td>
+                  <td className="p-4">{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span className="font-body text-xs text-ink-faint">—</span>}</td>
                   <td className="p-4 font-body text-sm text-ink-muted">{school?.name ?? '...'}</td>
                   <td className="p-4 text-right">
                     <div className="flex items-center gap-1 justify-end">

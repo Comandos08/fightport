@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Copy, Download, CheckCircle } from 'lucide-react';
+import { Search, Copy, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { BeltBadge } from '@/components/BeltBadge';
@@ -45,7 +45,7 @@ export default function NovaConquistaPage() {
     enabled: !!user,
   });
 
-  const { data: headCoach } = useQuery({
+  const { data: _headCoach } = useQuery({
     queryKey: ['head-coach', user?.id],
     queryFn: async () => {
       const { data } = await supabase.from('head_coaches').select('name').eq('school_id', user!.id).single();
