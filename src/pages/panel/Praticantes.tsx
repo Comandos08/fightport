@@ -136,6 +136,7 @@ export default function PraticantesPage() {
           </table>
         </div>
       )}
+      <ImportPraticantesModal open={importOpen} onClose={() => setImportOpen(false)} />
     </div>
   );
 }
