@@ -86,6 +86,7 @@ export function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center" style={{ gap: 12 }}>
+            <LanguageSwitcher />
             <Link
               to="/login"
               className="hidden md:inline-block"
