@@ -190,7 +190,7 @@ export default function NovaConquistaPage() {
 
   return (
     <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
-      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 24 }}>Registrar Conquista</h1>
+      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>Registrar Conquista</h1>
 
       {/* Credit banner */}
       <div

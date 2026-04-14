@@ -92,7 +92,7 @@ export default function CreditosPage() {
 
   return (
     <div style={{ padding: '32px 32px', maxWidth: 900 }}>
-      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 28 }}>Créditos</h1>
+      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>Créditos</h1>
 
       <div style={{ marginBottom: 32 }}>
         <CreditBalance balance={credits?.balance ?? 0} />
