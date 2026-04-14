@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const getNavLinks = (t: (key: string) => string) => [
   { href: '/#busca', label: t('nav.verifyAthlete') },
@@ -85,6 +86,7 @@ export function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center" style={{ gap: 12 }}>
+            <LanguageSwitcher />
             <Link
               to="/login"
               className="hidden md:inline-block"
