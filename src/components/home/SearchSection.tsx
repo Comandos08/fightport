@@ -115,8 +115,25 @@ export function SearchSection() {
             </div>
           ))}
           {mappedAthletes.length === 0 && (
-            <div className="col-span-full text-center py-16">
-              <p className="font-body text-ink-muted">Nenhum atleta encontrado.</p>
+            <div className="col-span-full text-center py-20">
+              <div className="font-display" style={{ fontSize: 40, marginBottom: 16, opacity: 0.3 }}>🎖</div>
+              <p className="font-display" style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 8 }}>
+                Nenhum atleta público cadastrado ainda.
+              </p>
+              <p className="font-body" style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 20 }}>
+                Cadastre sua academia e emita o primeiro certificado.
+              </p>
+              <a
+                href="/cadastro"
+                className="font-display inline-flex items-center"
+                style={{
+                  fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em',
+                  color: '#fff', background: 'var(--blue-deep)', padding: '12px 22px',
+                  borderRadius: 'var(--radius-sm)', textDecoration: 'none', transition: 'var(--transition)',
+                }}
+              >
+                Cadastrar minha academia →
+              </a>
             </div>
           )}
         </div>
