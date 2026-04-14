@@ -36,34 +36,34 @@ export default function HomePage() {
       <Navbar />
 
       {/* HERO */}
-      <section className="min-h-screen flex items-center px-4 pt-20 pb-12 lg:pt-0 lg:pb-0">
+      <section className="min-h-screen flex items-center px-4 pt-24 pb-16 md:pt-20 md:pb-12 lg:pt-0 lg:pb-0">
         <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           <div className="lg:col-span-7">
-            <div className="mb-8">
-              <span className="font-display text-[13px] uppercase tracking-[0.15em] text-ink-faint">
+            <div className="mb-6 md:mb-8">
+              <span className="font-display text-[11px] md:text-[13px] uppercase tracking-[0.15em] text-ink-faint">
                 ◆ Certificação Esportiva
               </span>
             </div>
 
-            <h1 className="font-display font-extrabold text-[64px] md:text-[96px] lg:text-[108px] text-ink mb-6" style={{ lineHeight: '0.88' }}>
+            <h1 className="font-display font-extrabold text-[48px] sm:text-[64px] md:text-[96px] lg:text-[108px] text-ink mb-4 md:mb-6" style={{ lineHeight: '0.88' }}>
               O PASSAPORTE<br />
               <span className="italic">DEFINITIVO</span><br />
               DO SEU ATLETA.
             </h1>
 
-            <div className="w-16 h-px mb-6" style={{ backgroundColor: 'var(--color-accent)' }} />
+            <div className="w-12 md:w-16 h-px mb-4 md:mb-6" style={{ backgroundColor: 'var(--color-accent)' }} />
 
-            <p className="font-body text-lg text-ink-muted max-w-[480px] mb-12" style={{ lineHeight: '1.65' }}>
+            <p className="font-body text-base md:text-lg text-ink-muted max-w-[480px] mb-8 md:mb-12" style={{ lineHeight: '1.65' }}>
               Registre graduações. Gere autenticidade. Qualquer pessoa confirma a faixa do seu aluno escaneando um QR Code — para sempre.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 mb-12">
+            <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-8 md:mb-12">
               <Link to="/#busca">
-                <Button variant="hero" size="lg" className="hover:-translate-y-0.5 transition-transform duration-200">
+                <Button variant="hero" size="lg" className="hover:-translate-y-0.5 transition-transform duration-200 text-sm md:text-base">
                   Verificar um atleta
                 </Button>
               </Link>
-              <Link to="/cadastro" className="group font-body font-medium text-base text-ink inline-flex items-center gap-1 relative">
+              <Link to="/cadastro" className="group font-body font-medium text-sm md:text-base text-ink inline-flex items-center gap-1 relative">
                 <span className="relative">
                   Cadastrar minha escola
                   <span className="absolute bottom-0 left-0 w-0 h-px bg-ink transition-all duration-300 group-hover:w-full" />
@@ -72,20 +72,20 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm">
               <div>
                 <span className="font-body font-medium text-ink">{mockStats.totalAthletes.toLocaleString('pt-BR')}</span>
-                <span className="font-body text-ink-faint ml-1.5">atletas</span>
+                <span className="font-body text-ink-faint ml-1">atletas</span>
               </div>
-              <div className="w-px h-4" style={{ backgroundColor: 'var(--color-border)' }} />
+              <div className="w-px h-3 md:h-4" style={{ backgroundColor: 'var(--color-border)' }} />
               <div>
                 <span className="font-body font-medium text-ink">{mockStats.totalSchools}</span>
-                <span className="font-body text-ink-faint ml-1.5">escolas</span>
+                <span className="font-body text-ink-faint ml-1">escolas</span>
               </div>
-              <div className="w-px h-4" style={{ backgroundColor: 'var(--color-border)' }} />
+              <div className="w-px h-3 md:h-4" style={{ backgroundColor: 'var(--color-border)' }} />
               <div>
                 <span className="font-body font-medium text-ink">{mockStats.totalCertificates.toLocaleString('pt-BR')}</span>
-                <span className="font-body text-ink-faint ml-1.5">certificados</span>
+                <span className="font-body text-ink-faint ml-1">certificados</span>
               </div>
             </div>
           </div>
