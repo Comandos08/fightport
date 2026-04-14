@@ -238,7 +238,7 @@ export default function Sobre() {
               display: 'inline-block',
               fontFamily: 'var(--font-sans)',
               fontSize: 15,
-              fontWeight: 600,
+              fontWeight: 400,
               color: '#000000',
               background: '#F97316',
               border: 'none',
