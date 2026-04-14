@@ -232,7 +232,7 @@ export default function CadastroPage() {
       </div>
 
       {/* RIGHT PANEL — Form */}
-      <div className="flex flex-col justify-center" style={{ background: 'var(--color-bg)', padding: '64px 72px' }}>
+      <div className="flex flex-col justify-center cadastro-form-panel" style={{ background: 'var(--color-bg)', padding: '64px 72px' }}>
         <div className="w-full" style={{ maxWidth: 460, margin: '0 auto' }}>
           {/* Mobile logo */}
           <div className="md:hidden mb-8">
@@ -495,6 +495,14 @@ export default function CadastroPage() {
           </div>
         </div>
       </div>
+      <style>{`
+        @media (max-width: 1024px) {
+          .cadastro-form-panel { padding: 48px 40px !important; }
+        }
+        @media (max-width: 768px) {
+          .cadastro-form-panel { padding: 40px 24px !important; }
+        }
+      `}</style>
     </div>
   );
 }
