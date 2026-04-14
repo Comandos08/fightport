@@ -187,10 +187,10 @@ export function Navbar() {
             </div>
             <div className="mt-auto flex flex-col" style={{ gap: 12, paddingBottom: 32 }}>
               <Link to="/login" style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', textDecoration: 'none', textAlign: 'center', padding: '10px 0' }} onClick={() => setDrawerOpen(false)}>
-                Entrar
+                {t('nav.login')}
               </Link>
               <Link to="/cadastro" style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: '#FFFFFF', background: 'var(--color-text)', borderRadius: 'var(--radius-sm)', padding: '12px 20px', textDecoration: 'none', textAlign: 'center' }} onClick={() => setDrawerOpen(false)}>
-                Cadastre sua escola
+                {t('nav.registerSchool')}
               </Link>
             </div>
           </div>
