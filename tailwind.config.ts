@@ -14,10 +14,18 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Syncopate"', 'sans-serif'],
-        body: ['"Krub"', 'sans-serif'],
+        display: ["'Space Mono'", 'monospace'],
+        body: ["'Plus Jakarta Sans'", 'sans-serif'],
       },
       colors: {
+        'blue-deep': '#134C73',
+        'blue-mid': '#58839A',
+        'blue-light': '#D6E6F0',
+        'terra': '#D8421A',
+        'terra-soft': '#CA7552',
+        'cloud': '#ABB5BB',
+        'ink': '#0F1923',
+        'muted-fg': '#6B7580',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
