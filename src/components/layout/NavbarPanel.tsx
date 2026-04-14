@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export function NavbarPanel() {
   const { t } = useTranslation();
@@ -83,7 +84,8 @@ export function NavbarPanel() {
         <div className="flex-1" />
 
         {/* School name + logout */}
-        <div className="flex items-center" style={{ gap: 12 }}>
+        <div className="flex items-center" style={{ gap: 16 }}>
+          <LanguageSwitcher />
           <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text-muted)' }} className="hidden sm:block">
             {school?.name ?? '...'}
           </span>
