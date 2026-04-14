@@ -4,19 +4,21 @@ import { LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings } from 
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-
-const links = [
-  { to: '/painel', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { to: '/painel/praticantes', label: 'Praticantes', icon: Users, exact: false },
-  { to: '/painel/conquistas/nova', label: 'Nova Conquista', icon: Award, exact: true },
-  { to: '/painel/creditos', label: 'Créditos', icon: Coins, exact: true },
-  { to: '/painel/configuracoes', label: 'Configurações', icon: Settings, exact: true },
-];
+import { useTranslation } from 'react-i18next';
 
 export function NavbarPanel() {
+  const { t } = useTranslation();
   const { user, signOut } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const links = [
+    { to: '/painel', label: t('app.nav.dashboard'), icon: LayoutDashboard, exact: true },
+    { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false },
+    { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true },
+    { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true },
+    { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true },
+  ];
 
   const isActive = (to: string, exact: boolean) => {
     if (exact) return location.pathname === to;
@@ -57,7 +59,7 @@ export function NavbarPanel() {
         <button
           className="lg:hidden mr-3 cursor-pointer"
           onClick={() => setMobileOpen(true)}
-          aria-label="Abrir menu"
+          aria-label={t('app.nav.dashboard')}
           style={{ color: 'var(--color-text)', background: 'none', border: 'none' }}
         >
           <Menu className="h-5 w-5" />
@@ -70,10 +72,10 @@ export function NavbarPanel() {
 
         {/* Credits left */}
         <div className="flex items-center" style={{ gap: 8 }}>
-          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>{balance} créditos</span>
+          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>{balance} {t('pricing.credits')}</span>
           {balance <= 2 && (
             <Link to="/painel/creditos" style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 13, color: 'var(--color-bg-amber)', textDecoration: 'none' }}>
-              Comprar mais
+              {t('dashboard.buyMore')}
             </Link>
           )}
         </div>
@@ -85,7 +87,7 @@ export function NavbarPanel() {
           <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text-muted)' }} className="hidden sm:block">
             {school?.name ?? '...'}
           </span>
-          <button onClick={signOut} className="cursor-pointer" style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none' }} aria-label="Sair">
+          <button onClick={signOut} className="cursor-pointer" style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none' }} aria-label={t('app.nav.logout')}>
             <LogOut className="h-4 w-4" />
           </button>
         </div>
@@ -103,7 +105,7 @@ export function NavbarPanel() {
               <Link to="/" className="no-underline" onClick={() => setMobileOpen(false)}>
                 <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
               </Link>
-              <button onClick={() => setMobileOpen(false)} className="cursor-pointer" style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none' }} aria-label="Fechar menu">
+              <button onClick={() => setMobileOpen(false)} className="cursor-pointer" style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none' }} aria-label="Close">
                 <X className="h-5 w-5" />
               </button>
             </div>

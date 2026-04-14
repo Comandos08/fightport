@@ -1,16 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Award, Coins, Settings } from 'lucide-react';
-
-const links = [
-  { to: '/painel', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { to: '/painel/praticantes', label: 'Praticantes', icon: Users, exact: false },
-  { to: '/painel/conquistas/nova', label: 'Nova Conquista', icon: Award, exact: true },
-  { to: '/painel/creditos', label: 'Créditos', icon: Coins, exact: true },
-  { to: '/painel/configuracoes', label: 'Configurações', icon: Settings, exact: true },
-];
+import { useTranslation } from 'react-i18next';
 
 export function Sidebar() {
+  const { t } = useTranslation();
   const location = useLocation();
+
+  const links = [
+    { to: '/painel', label: t('app.nav.dashboard'), icon: LayoutDashboard, exact: true },
+    { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false },
+    { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true },
+    { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true },
+    { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true },
+  ];
 
   const isActive = (to: string, exact: boolean) => {
     if (exact) return location.pathname === to;
