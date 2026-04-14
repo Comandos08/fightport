@@ -37,7 +37,7 @@ export function FooterSection() {
               <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 16 }}>{t('footer.product')}</span>
               <a href="/#busca" style={linkStyle} onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}>{t('nav.verifyAthlete')}</a>
               <a href="/#como-funciona" style={linkStyle} onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}>{t('nav.howItWorks')}</a>
-              <a href="/#precos" style={linkStyle} onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}>{t('pricing.badge')}</a>
+              <a href="/#precos" style={linkStyle} onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}>{t('footer.pricing')}</a>
             </div>
             <div className="flex flex-col">
               <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 16 }}>{t('footer.company')}</span>
