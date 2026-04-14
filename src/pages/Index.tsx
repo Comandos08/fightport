@@ -216,7 +216,7 @@ export default function HomePage() {
       </section>
 
       {/* COMO FUNCIONA */}
-      <section id="como-funciona" className="py-16 md:py-28 lg:py-32 px-4 bg-surface">
+      <section ref={comoRef} id="como-funciona" className="section-reveal py-16 md:py-28 lg:py-32 px-4 bg-surface">
         <div className="container mx-auto max-w-7xl">
           <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-8 md:mb-10">
             <h2 className="font-display font-bold text-[32px] md:text-[48px] text-ink uppercase" style={{ lineHeight: '1' }}>Como funciona</h2>
@@ -227,8 +227,8 @@ export default function HomePage() {
             {steps.map((step, i) => (
               <div key={step.num}>
                 {i > 0 && <div className="w-full h-px" style={{ backgroundColor: 'var(--color-border)' }} />}
-                <div className="flex items-start gap-4 md:gap-12 py-8 md:py-10">
-                  <span className="font-display font-extrabold text-[48px] md:text-[80px] leading-none shrink-0" style={{ color: 'rgba(200,241,53,0.6)' }}>{step.num}</span>
+                <div className="step-row flex items-start gap-4 md:gap-12 py-8 md:py-10">
+                  <span className="step-num font-display font-extrabold text-[48px] md:text-[80px] leading-none shrink-0" style={{ color: 'rgba(200,241,53,0.6)' }}>{step.num}</span>
                   <div className="pt-3">
                     <h3 className="font-body font-medium text-base md:text-xl text-ink mb-2">{step.title}</h3>
                     <p className="font-body text-[13px] md:text-[15px] text-ink-muted max-w-lg" style={{ lineHeight: '1.6' }}>{step.desc}</p>
