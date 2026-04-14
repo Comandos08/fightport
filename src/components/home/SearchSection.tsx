@@ -6,9 +6,6 @@ import { supabase } from '@/integrations/supabase/client';
 
 export function SearchSection() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('Todos');
-
-  const filters = ['Todos', 'Jiu-Jitsu', 'Judô', 'Karatê', 'Muay Thai', 'Faixa Preta', 'Faixa Roxa'];
 
   const { data: practitioners = [] } = useQuery({
     queryKey: ['public-practitioners'],
@@ -24,11 +21,7 @@ export function SearchSection() {
 
   const filtered = practitioners.filter((a: any) => {
     const schoolName = (a.schools as any)?.name ?? '';
-    const matchesSearch = `${a.first_name} ${a.last_name} ${schoolName}`.toLowerCase().includes(searchQuery.toLowerCase());
-    if (activeFilter === 'Todos') return matchesSearch;
-    if (activeFilter === 'Faixa Preta') return matchesSearch && a.achievements?.some((ach: any) => ach.belt === 'Preta');
-    if (activeFilter === 'Faixa Roxa') return matchesSearch && a.achievements?.some((ach: any) => ach.belt === 'Roxa');
-    return matchesSearch && a.martial_art === activeFilter;
+    return `${a.first_name} ${a.last_name} ${a.fp_id} ${schoolName}`.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   const mappedAthletes = filtered.map((a: any) => ({
@@ -89,26 +82,6 @@ export function SearchSection() {
             </div>
           </div>
 
-          <div className="flex flex-wrap justify-center" style={{ gap: 8, marginBottom: 48 }}>
-            {filters.map(f => (
-              <button
-                key={f}
-                onClick={() => setActiveFilter(f)}
-                className="cursor-pointer"
-                style={{
-                  padding: '6px 16px', borderRadius: 100,
-                  fontFamily: 'var(--font-sans)', fontSize: 13,
-                  fontWeight: activeFilter === f ? 500 : 400,
-                  background: activeFilter === f ? 'var(--color-text)' : 'transparent',
-                  color: activeFilter === f ? '#FFFFFF' : 'var(--color-text-muted)',
-                  border: activeFilter === f ? 'none' : '1px solid var(--color-border)',
-                  transition: 'var(--transition)',
-                }}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 20 }}>
             {mappedAthletes.map((a: any) => (
