@@ -40,12 +40,12 @@ export default function HomePage() {
         <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           <div className="lg:col-span-7">
             <div className="mb-8">
-              <span className="font-display text-[13px] uppercase tracking-[0.15em] text-ink-faint">
+              <span className="font-display text-[11px] uppercase tracking-[0.15em] text-ink-faint">
                 ◆ Certificação Esportiva
               </span>
             </div>
 
-            <h1 className="font-display font-extrabold text-[64px] md:text-[96px] lg:text-[108px] text-ink mb-6" style={{ lineHeight: '0.88' }}>
+            <h1 className="font-display font-bold text-[36px] md:text-[44px] lg:text-[52px] text-ink mb-6" style={{ lineHeight: '1.0', letterSpacing: '-0.02em' }}>
               O PASSAPORTE<br />
               <span className="italic">DEFINITIVO</span><br />
               DO SEU ATLETA.
@@ -53,7 +53,7 @@ export default function HomePage() {
 
             <div className="w-16 h-px mb-6" style={{ backgroundColor: 'var(--color-accent)' }} />
 
-            <p className="font-body text-lg text-ink-muted max-w-[480px] mb-12" style={{ lineHeight: '1.65' }}>
+            <p className="font-body text-base text-ink-muted max-w-[480px] mb-12" style={{ lineHeight: '1.65' }}>
               Registre graduações. Gere autenticidade. Qualquer pessoa confirma a faixa do seu aluno escaneando um QR Code — para sempre.
             </p>
 
@@ -63,7 +63,7 @@ export default function HomePage() {
                   Verificar um atleta
                 </Button>
               </Link>
-              <Link to="/cadastro" className="group font-body font-medium text-base text-ink inline-flex items-center gap-1 relative">
+              <Link to="/cadastro" className="group font-body font-medium text-sm text-ink inline-flex items-center gap-1 relative">
                 <span className="relative">
                   Cadastrar minha escola
                   <span className="absolute bottom-0 left-0 w-0 h-px bg-ink transition-all duration-300 group-hover:w-full" />
@@ -91,7 +91,7 @@ export default function HomePage() {
           </div>
 
           {/* 3D Card */}
-          <div className="lg:col-span-5 relative hidden lg:flex items-center justify-center" style={{ minHeight: '600px', perspective: '1200px' }}>
+          <div className="lg:col-span-5 relative hidden lg:flex items-center justify-center" style={{ minHeight: '500px', perspective: '1200px' }}>
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 600px 600px at 50% 50%, rgba(200,241,53,0.06) 0%, transparent 70%)' }} />
 
             <div className="absolute" style={{ width: '380px', height: '520px', border: '1px solid var(--color-border)', borderRadius: '16px', transform: 'rotateY(8deg) rotateX(-4deg)', opacity: 0.4, backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(212,208,200,0.3) 19px, rgba(212,208,200,0.3) 20px), repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(212,208,200,0.3) 19px, rgba(212,208,200,0.3) 20px)' }} />
@@ -99,12 +99,12 @@ export default function HomePage() {
             <div className="relative z-10 bg-popover" style={{ width: '340px', border: '1px solid var(--color-border)', borderRadius: '16px', boxShadow: '0 32px 64px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)', transform: 'rotateY(-6deg) rotateX(3deg)', padding: '24px' }}>
               <div className="flex items-center gap-2 mb-5 px-3 py-2 rounded-full w-fit" style={{ backgroundColor: 'var(--color-verified-bg)' }}>
                 <CheckCircle className="w-4 h-4" style={{ color: 'var(--color-verified)' }} />
-                <span className="font-display font-bold text-xs uppercase tracking-wide" style={{ color: 'var(--color-verified)' }}>Verificado</span>
+                <span className="font-display font-bold text-[10px] uppercase tracking-wide" style={{ color: 'var(--color-verified)' }}>Verificado</span>
               </div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-14 h-14 rounded-full flex items-center justify-center font-display font-bold text-lg shrink-0" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>CM</div>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center font-display font-bold text-sm shrink-0" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>CM</div>
                 <div>
-                  <p className="font-display font-bold text-lg text-ink leading-tight">{athlete.name} {athlete.surname}</p>
+                  <p className="font-display font-bold text-sm text-ink leading-tight">{athlete.name} {athlete.surname}</p>
                   <p className="font-body text-sm text-ink-muted">{athlete.school} · {athlete.sport}</p>
                 </div>
               </div>
@@ -150,7 +150,7 @@ export default function HomePage() {
       {/* SEÇÃO 1: BUSCA DE ATLETAS */}
       <section id="busca" style={{ backgroundColor: '#F7F5F0', padding: '100px 0' }}>
         <div className="container mx-auto max-w-7xl px-4">
-          <h2 className="font-display font-bold text-[48px] text-ink uppercase text-center mb-10" style={{ lineHeight: '1' }}>
+          <h2 className="font-display font-bold text-[32px] text-ink uppercase text-center mb-10" style={{ lineHeight: '1', letterSpacing: '0.03em' }}>
             ENCONTRE UM ATLETA CERTIFICADO
           </h2>
 
@@ -203,19 +203,19 @@ export default function HomePage() {
       {/* SEÇÃO 2: COMO FUNCIONA */}
       <section id="como-funciona" style={{ backgroundColor: '#EDEAE3', padding: '100px 0' }}>
         <div className="container mx-auto max-w-7xl px-4">
-          <h2 className="font-display font-bold text-[48px] text-ink uppercase mb-10" style={{ lineHeight: '1' }}>
+          <h2 className="font-display font-bold text-[36px] text-ink uppercase mb-10" style={{ lineHeight: '1', letterSpacing: '0.03em' }}>
             COMO FUNCIONA
           </h2>
           <div className="w-full h-px mb-0" style={{ backgroundColor: 'var(--color-border)' }} />
           {steps.map((step, i) => (
             <div key={step.num}>
               <div className="flex items-start gap-8 md:gap-12 py-10">
-                <span className="font-display font-extrabold text-[64px] leading-none shrink-0" style={{ color: '#C8F135' }}>
+                <span className="font-display font-bold text-[48px] leading-none shrink-0" style={{ color: '#C8F135' }}>
                   {step.num}
                 </span>
                 <div className="pt-2">
-                  <h3 className="font-body font-medium text-xl text-ink mb-2">{step.title}</h3>
-                  <p className="font-body text-[15px] text-ink-muted max-w-lg" style={{ lineHeight: '1.6' }}>{step.desc}</p>
+                  <h3 className="font-body font-medium text-base text-ink mb-2">{step.title}</h3>
+                  <p className="font-body text-sm text-ink-muted max-w-lg" style={{ lineHeight: '1.6' }}>{step.desc}</p>
                 </div>
               </div>
               {i < steps.length - 1 && <div className="w-full h-px" style={{ backgroundColor: 'var(--color-border)' }} />}
@@ -227,7 +227,7 @@ export default function HomePage() {
       {/* SEÇÃO 3: CTA FINAL */}
       <section style={{ backgroundColor: '#0D0D0D', padding: '120px 0' }}>
         <div className="container mx-auto max-w-3xl text-center px-4">
-          <h2 className="font-display font-extrabold text-[48px] md:text-[80px] mb-6" style={{ color: '#FFFFFF', lineHeight: '0.9' }}>
+          <h2 className="font-display font-bold text-[36px] md:text-[56px] mb-6" style={{ color: '#FFFFFF', lineHeight: '1.05', letterSpacing: '-0.01em' }}>
             SUA ACADEMIA<br />MERECE ISSO.
           </h2>
           <p className="font-body text-lg mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>

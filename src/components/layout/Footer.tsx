@@ -7,9 +7,9 @@ export function Footer() {
         {/* Logo + tagline */}
         <div>
           <div className="flex items-baseline gap-0 mb-2">
-            <span className="font-display font-bold text-lg text-ink">fight</span>
-            <span className="font-display font-normal text-lg text-ink">port</span>
-            <span className="font-display font-bold text-lg text-accent-brand">.pro</span>
+            <span className="font-display font-bold text-[16px] text-ink" style={{ letterSpacing: '0.05em' }}>FIGHT</span>
+            <span className="font-display font-normal text-[16px] text-ink" style={{ letterSpacing: '0.05em' }}>PORT</span>
+            <span className="font-display font-bold text-[16px] text-accent-brand" style={{ letterSpacing: '0.05em' }}>.PRO</span>
           </div>
           <p className="font-body text-[13px] text-ink-faint">O passaporte do seu atleta.</p>
         </div>

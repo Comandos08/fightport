@@ -8,9 +8,9 @@ export function NavbarPanel() {
     <header className="h-16 border-b flex items-center px-4 lg:px-6 bg-main shrink-0" style={{ borderColor: 'var(--color-border)' }}>
       <div className="lg:hidden mr-3">
         <Link to="/" className="flex items-baseline">
-          <span className="font-display font-bold text-lg text-ink">fight</span>
-          <span className="font-display font-normal text-lg text-ink">port</span>
-          <span className="font-display font-bold text-lg text-accent-brand">.pro</span>
+          <span className="font-display font-bold text-[16px] text-ink" style={{ letterSpacing: '0.05em' }}>FIGHT</span>
+          <span className="font-display font-normal text-[16px] text-ink" style={{ letterSpacing: '0.05em' }}>PORT</span>
+          <span className="font-display font-bold text-[16px] text-accent-brand" style={{ letterSpacing: '0.05em' }}>.PRO</span>
         </Link>
       </div>
       <div className="flex-1" />

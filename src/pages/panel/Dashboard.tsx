@@ -20,7 +20,7 @@ const recentAchievements = mockAthletes
 export default function DashboardPage() {
   return (
     <div className="p-4 lg:p-8 max-w-6xl">
-      <h1 className="font-display font-bold text-3xl text-ink mb-8">Dashboard</h1>
+      <h1 className="font-display font-bold text-2xl text-ink mb-8" style={{ letterSpacing: '0.02em' }}>Dashboard</h1>
 
       {/* Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -34,7 +34,7 @@ export default function DashboardPage() {
                 </Link>
               )}
             </div>
-            <p className="font-display font-bold text-3xl text-ink">{s.value}</p>
+            <p className="font-display font-bold text-2xl text-ink">{s.value}</p>
             <p className="font-body text-sm text-ink-muted">{s.label}</p>
           </div>
         ))}
@@ -50,7 +50,7 @@ export default function DashboardPage() {
       )}
 
       {/* Recent */}
-      <h2 className="font-display font-bold text-xl text-ink mb-4 uppercase">Últimas conquistas</h2>
+      <h2 className="font-display font-bold text-lg text-ink mb-4 uppercase" style={{ letterSpacing: '0.02em' }}>Últimas conquistas</h2>
       <div className="rounded-xl border bg-main shadow-card overflow-hidden" style={{ borderColor: 'var(--color-border)' }}>
         {recentAchievements.map((ach, i) => (
           <div key={ach.id} className={`flex items-center gap-4 p-4 ${i !== recentAchievements.length - 1 ? 'border-b' : ''}`} style={{ borderColor: 'var(--color-border)' }}>

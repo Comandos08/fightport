@@ -15,7 +15,7 @@ function QrModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-main rounded-xl p-8 shadow-card max-w-sm w-full text-center" onClick={e => e.stopPropagation()}>
-        <h3 className="font-display font-bold text-xl text-ink mb-4">QR Code do Passaporte</h3>
+        <h3 className="font-display font-bold text-lg text-ink mb-4" style={{ letterSpacing: '0.02em' }}>QR Code do Passaporte</h3>
         <div className="w-48 h-48 mx-auto border-2 rounded-lg flex items-center justify-center mb-4" style={{ borderColor: 'var(--color-border)' }}>
           <div className="grid grid-cols-5 gap-1">
             {Array.from({ length: 25 }).map((_, i) => (
@@ -41,7 +41,7 @@ export default function PassportPage() {
       <div className="min-h-screen bg-main">
         <NavbarPublic />
         <div className="pt-28 text-center">
-          <h1 className="font-display font-bold text-3xl text-ink mb-2">Atleta não encontrado</h1>
+          <h1 className="font-display font-bold text-2xl text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Atleta não encontrado</h1>
           <p className="font-body text-ink-muted">Verifique o ID e tente novamente.</p>
           <Link to="/" className="mt-4 inline-block">
             <Button variant="default">Voltar ao início</Button>
@@ -71,12 +71,12 @@ export default function PassportPage() {
           {/* Athlete Card */}
           <div className="text-center mb-8">
             <div
-              className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 font-display font-bold text-2xl"
+              className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 font-display font-bold text-xl"
               style={{ backgroundColor: '#C9A84C', color: '#FFFFFF' }}
             >
               {getInitials(athlete.name, athlete.surname)}
             </div>
-            <h1 className="font-display font-bold text-3xl md:text-4xl text-ink">
+            <h1 className="font-display font-bold text-2xl md:text-3xl text-ink" style={{ letterSpacing: '0.02em' }}>
               {athlete.name} {athlete.surname}
             </h1>
             <p className="font-body text-ink-muted mt-1">
@@ -106,7 +106,7 @@ export default function PassportPage() {
           </div>
 
           {/* Timeline */}
-          <h2 className="font-display font-bold text-xl text-ink uppercase tracking-wide mb-8">
+          <h2 className="font-display font-bold text-lg text-ink uppercase tracking-wide mb-8" style={{ letterSpacing: '0.02em' }}>
             Jornada do Atleta
           </h2>
 

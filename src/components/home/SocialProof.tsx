@@ -21,7 +21,7 @@ export function SocialProof() {
               { value: mockStats.totalCertificates.toLocaleString('pt-BR'), label: 'Certificados' },
             ].map(m => (
               <div key={m.label}>
-                <span className="font-display font-bold text-[40px] md:text-[48px] text-ink block" style={{ lineHeight: '1' }}>
+                <span className="font-display font-bold text-[28px] md:text-[36px] text-ink block" style={{ lineHeight: '1' }}>
                   {m.value}
                 </span>
                 <span className="font-body text-sm text-ink-faint">{m.label}</span>
@@ -31,7 +31,7 @@ export function SocialProof() {
 
           <div className="relative">
             <span
-              className="font-display font-bold text-[100px] md:text-[120px] absolute -top-12 -left-4 select-none pointer-events-none"
+              className="font-display font-bold text-[80px] md:text-[100px] absolute -top-12 -left-4 select-none pointer-events-none"
               style={{ color: 'var(--color-bg-surface)', lineHeight: '1' }}
             >
               &ldquo;

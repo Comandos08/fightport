@@ -18,8 +18,8 @@ export function CtaSection() {
 
       <div className="container mx-auto max-w-3xl text-center relative z-10">
         <h2
-          className="font-display font-extrabold text-[64px] md:text-[96px] mb-6"
-          style={{ color: '#FFFFFF', lineHeight: '0.88' }}
+          className="font-display font-bold text-[36px] md:text-[56px] mb-6"
+          style={{ color: '#FFFFFF', lineHeight: '1.05', letterSpacing: '-0.01em' }}
         >
           SUA ACADEMIA<br />
           <span className="relative inline-block">

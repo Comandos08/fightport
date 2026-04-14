@@ -23,9 +23,9 @@ export function Navbar() {
     >
       <div className="container mx-auto flex items-center justify-between px-4 max-w-7xl">
         <Link to="/" className="flex items-baseline gap-0">
-          <span className="font-display font-bold text-xl text-ink">fight</span>
-          <span className="font-display font-normal text-xl text-ink">port</span>
-          <span className="font-display font-bold text-xl text-accent-brand">.pro</span>
+          <span className="font-display font-bold text-[18px] text-ink" style={{ letterSpacing: '0.05em' }}>FIGHT</span>
+          <span className="font-display font-normal text-[18px] text-ink" style={{ letterSpacing: '0.05em' }}>PORT</span>
+          <span className="font-display font-bold text-[18px] text-accent-brand" style={{ letterSpacing: '0.05em' }}>.PRO</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
