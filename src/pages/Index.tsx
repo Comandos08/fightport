@@ -8,6 +8,12 @@ import { AthleteCard } from '@/components/AthleteCard';
 import { mockAthletes, mockStats } from '@/lib/mock-data';
 import { beltColor, beltTextColor } from '@/lib/utils';
 
+// Intersection Observer hook for section reveals
+function useReveal() {
+  const ref = useState<HTMLElement | null>(null);
+  return ref;
+}
+
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Todos');
