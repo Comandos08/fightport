@@ -14,15 +14,16 @@ export function HashDisplay({ hashPartial, hashFull, showCopy = false }: HashDis
   };
 
   return (
-    <div className="inline-flex items-center gap-2 group" title="Hash de verificação — compare com o certificado físico">
-      <span className="font-mono-hash text-xs text-ink-faint">{hashPartial}</span>
+    <div className="inline-flex items-center group" style={{ gap: 8 }} title="Hash de verificação — compare com o certificado físico">
+      <span style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 10, color: 'var(--cloud)', letterSpacing: '0.04em' }}>{hashPartial}</span>
       {showCopy && (
         <button
           onClick={copy}
-          className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+          className="opacity-0 group-hover:opacity-100 cursor-pointer"
+          style={{ background: 'none', border: 'none', transition: 'var(--transition)' }}
           aria-label="Copiar hash completa"
         >
-          <Copy className="h-3 w-3 text-ink-faint" />
+          <Copy style={{ width: 12, height: 12, color: 'var(--cloud)' }} />
         </button>
       )}
     </div>
