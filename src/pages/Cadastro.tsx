@@ -315,11 +315,20 @@ export default function CadastroPage() {
                     <select value={martialArt} onChange={e => setMartialArt(e.target.value)} required style={{ ...inputStyle, appearance: 'none', backgroundImage: selectChevron, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center', paddingRight: 36 }} onFocus={focusInput as any} onBlur={blurInput as any}>
                       <option value="">Selecione</option>
                       <option>Jiu-Jitsu</option>
-                      <option>Judô</option>
-                      <option>Muay Thai</option>
-                      <option>MMA</option>
-                      <option>Karatê</option>
-                      <option>Outra</option>
+                      <option>Judo</option>
+                      <option>Ju-Jitsu</option>
+                      <option>Wrestling</option>
+                      <option>Luta Livre</option>
+                      <option>Sambo</option>
+                      <option>Karate</option>
+                      <option>Boxe</option>
+                      <option>Kickboxing</option>
+                      <option>Savate</option>
+                      <option>Aikido</option>
+                      <option>Kurash</option>
+                      <option>Pankration</option>
+                      <option>Kenpo</option>
+                      <option>Outros</option>
                     </select>
                   </div>
                 </div>
