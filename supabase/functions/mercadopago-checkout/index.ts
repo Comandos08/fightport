@@ -77,6 +77,7 @@ Deno.serve(async (req) => {
         pending: `${req.headers.get("origin") || "https://fightport.lovable.app"}/painel/creditos?status=pending`,
       },
       auto_return: "approved",
+      notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/mercadopago-webhook`,
     };
 
     const mpResponse = await fetch("https://api.mercadopago.com/checkout/preferences", {
