@@ -1,10 +1,13 @@
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { CreditBalance } from '@/components/CreditBalance';
 import { formatDate } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { Loader2 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 const packages = [
   { name: 'Starter', credits: 10, price: 97, unit: '9,70', highlight: false },
@@ -14,6 +17,23 @@ const packages = [
 
 export default function CreditosPage() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const [loadingPkg, setLoadingPkg] = useState<string | null>(null);
+
+  // Show toast based on return from MercadoPago
+  useEffect(() => {
+    const status = searchParams.get('status');
+    if (status === 'success') {
+      toast.success('Pagamento aprovado! Seus créditos serão adicionados em instantes.');
+      queryClient.invalidateQueries({ queryKey: ['credits'] });
+      queryClient.invalidateQueries({ queryKey: ['credit-transactions'] });
+    } else if (status === 'failure') {
+      toast.error('Pagamento não aprovado. Tente novamente.');
+    } else if (status === 'pending') {
+      toast.info('Pagamento pendente. Seus créditos serão adicionados quando confirmado.');
+    }
+  }, [searchParams, queryClient]);
 
   const { data: credits } = useQuery({
     queryKey: ['credits', user?.id],
@@ -37,6 +57,24 @@ export default function CreditosPage() {
     enabled: !!user,
   });
 
+  const handleBuy = async (pkgName: string) => {
+    setLoadingPkg(pkgName);
+    try {
+      const { data, error } = await supabase.functions.invoke('mercadopago-checkout', {
+        body: { package_name: pkgName },
+      });
+      if (error) throw error;
+      if (data?.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        throw new Error('Nenhum link de checkout retornado');
+      }
+    } catch (err: any) {
+      toast.error('Erro ao iniciar checkout: ' + (err.message || 'Tente novamente'));
+      setLoadingPkg(null);
+    }
+  };
+
   return (
     <div className="p-4 lg:p-8 max-w-5xl">
       <h1 className="font-display font-bold text-2xl text-ink mb-6" style={{ letterSpacing: '0.02em' }}>Créditos</h1>
@@ -59,8 +97,14 @@ export default function CreditosPage() {
               <p className="font-body text-sm text-ink-muted mb-1">créditos</p>
               <p className="font-display font-bold text-xl text-ink mb-0.5">R$ {pkg.price}</p>
               <p className="font-body text-xs text-ink-faint mb-4">R${pkg.unit}/un</p>
-              <Button className="w-full" variant={pkg.highlight ? 'default' : 'ghost'} onClick={() => toast('Em breve — integração de pagamento')}>
-                Comprar
+              <Button
+                className="w-full"
+                variant={pkg.highlight ? 'default' : 'ghost'}
+                onClick={() => handleBuy(pkg.name)}
+                disabled={loadingPkg !== null}
+              >
+                {loadingPkg === pkg.name ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                {loadingPkg === pkg.name ? 'Redirecionando...' : 'Comprar'}
               </Button>
             </div>
           </div>
