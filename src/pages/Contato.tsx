@@ -173,11 +173,11 @@ export default function Contato() {
                       style={{ ...inputStyle, resize: 'vertical', minHeight: 120 }}
                       onFocus={focusStyle as any} onBlur={blurStyle as any} required maxLength={2000} />
                   </div>
-                  <button type="submit" disabled={!isValid}
-                    style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: isValid ? '#000000' : 'rgba(0,0,0,0.4)', background: isValid ? 'var(--color-bg-amber)' : 'rgba(245,166,35,0.4)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '14px 24px', cursor: isValid ? 'pointer' : 'not-allowed', transition: 'var(--transition)', width: '100%' }}
-                    onMouseEnter={e => { if (isValid) e.currentTarget.style.opacity = '0.9'; }}
+                 <button type="submit" disabled={!isValid || sending}
+                    style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: isValid && !sending ? '#000000' : 'rgba(0,0,0,0.4)', background: isValid && !sending ? 'var(--color-bg-amber)' : 'rgba(245,166,35,0.4)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '14px 24px', cursor: isValid && !sending ? 'pointer' : 'not-allowed', transition: 'var(--transition)', width: '100%' }}
+                    onMouseEnter={e => { if (isValid && !sending) e.currentTarget.style.opacity = '0.9'; }}
                     onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}>
-                    {t('contact.form.submit')}
+                    {sending ? '...' : t('contact.form.submit')}
                   </button>
                 </form>
               )}
