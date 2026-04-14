@@ -7,26 +7,38 @@ import { useAuth } from '@/hooks/useAuth';
 
 // ── Input style helpers ──
 const inputStyle: React.CSSProperties = {
-  background: 'var(--white)',
-  border: '1.5px solid var(--border-2)',
+  background: 'var(--color-bg-soft)',
+  border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-sm)',
-  padding: '11px 14px',
-  fontFamily: 'var(--font-body)',
-  fontSize: 14,
-  color: 'var(--ink)',
+  padding: '13px 16px',
+  fontFamily: 'var(--font-sans)',
+  fontSize: 15,
+  color: 'var(--color-text)',
   outline: 'none',
   width: '100%',
   transition: 'var(--transition)',
 };
 
 const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-  e.currentTarget.style.borderColor = 'var(--blue-mid)';
-  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(88,131,154,0.15)';
+  e.currentTarget.style.borderColor = '#9A9A9A';
+  e.currentTarget.style.background = '#FFFFFF';
 };
 const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-  e.currentTarget.style.borderColor = 'var(--border-2)';
-  e.currentTarget.style.boxShadow = 'none';
+  e.currentTarget.style.borderColor = 'var(--color-border)';
+  e.currentTarget.style.background = 'var(--color-bg-soft)';
 };
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)',
+  fontSize: 12,
+  fontWeight: 500,
+  letterSpacing: '0.01em',
+  color: 'var(--color-text)',
+  display: 'block',
+  marginBottom: 6,
+};
+
+const selectChevron = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`;
 
 export default function CadastroPage() {
   const location = useLocation();
@@ -128,27 +140,25 @@ export default function CadastroPage() {
   // ── SUCCESS STATE ──
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-8" style={{ background: 'var(--bg)' }}>
+      <div className="min-h-screen flex items-center justify-center p-8" style={{ background: 'var(--color-bg)' }}>
         <div className="max-w-md text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'var(--blue-light)' }}>
-            <Shield className="h-8 w-8" style={{ color: 'var(--blue-deep)' }} />
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'var(--color-bg-soft)' }}>
+            <Shield className="h-8 w-8" style={{ color: 'var(--color-text)' }} />
           </div>
-          <h1 className="font-display font-bold text-2xl mb-2" style={{ color: 'var(--ink)', letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--color-text)', marginBottom: 8 }}>
             Conta criada!
           </h1>
-          <p className="font-body text-sm mb-6" style={{ color: 'var(--muted)' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--color-text-muted)', marginBottom: 32, lineHeight: 1.65 }}>
             Enviamos um e-mail de confirmação para <strong>{email}</strong>. Clique no link para ativar sua conta.
           </p>
           <button
             onClick={() => switchMode('login')}
-            className="font-display"
             style={{
-              fontSize: 11,
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              background: 'var(--blue-deep)',
-              color: '#fff',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 15,
+              fontWeight: 500,
+              background: 'var(--color-bg-amber)',
+              color: 'var(--color-text)',
               padding: '14px 28px',
               borderRadius: 'var(--radius-sm)',
               border: 'none',
@@ -166,136 +176,93 @@ export default function CadastroPage() {
   // ── MAIN RENDER ──
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
-      {/* LEFT PANEL */}
+      {/* LEFT PANEL — Dark */}
       <div
-        className="relative overflow-hidden hidden md:flex flex-col justify-between"
-        style={{ background: 'var(--blue-deep)', padding: '56px 52px' }}
+        className="hidden md:flex flex-col justify-between"
+        style={{ background: 'var(--color-bg-dark)', padding: '64px 52px' }}
       >
-        {/* Glow */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            bottom: -80, right: -60, width: 260, height: 260,
-            borderRadius: '50%', background: 'rgba(216,66,26,0.15)', filter: 'blur(50px)',
-          }}
-        />
-
         {/* Top */}
         <div>
-          <Link to="/" className="flex items-baseline" style={{ textDecoration: 'none' }}>
-            <span className="font-display" style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>FIGHT PORT</span>
-            <span className="font-display" style={{ fontSize: 16, fontWeight: 700, color: 'var(--terra)' }}>.PRO</span>
+          <Link to="/" style={{ textDecoration: 'none', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: '#FFFFFF' }}>
+            fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
           </Link>
 
-          <h2
-            className="font-display"
-            style={{
-              fontWeight: 700,
-              fontSize: 'clamp(38px, 4vw, 54px)',
-              lineHeight: 1.0,
-              letterSpacing: '-0.025em',
-              color: '#fff',
-              marginTop: 56,
-            }}
-          >
-            COMECE<br />HOJE,<br /><span style={{ color: 'var(--terra)' }}>GRÁTIS.</span>
-          </h2>
+          <div style={{ marginTop: 64 }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 20 }}>
+              PARA ACADEMIAS
+            </p>
 
-          <p className="font-body" style={{ fontSize: 14, fontWeight: 400, color: 'rgba(255,255,255,0.4)', marginTop: 12, marginBottom: 40 }}>
-            Seu primeiro cadastro não custa nada.
-          </p>
+            <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 3.5vw, 48px)', lineHeight: 1.08, letterSpacing: '-0.025em', color: '#FFFFFF', marginBottom: 32 }}>
+              Comece hoje.<br />
+              Seu primeiro<br />
+              cadastro é grátis.
+            </h2>
 
-          {/* Benefits */}
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 44 }}>
-            {[
-              { emoji: '🔒', text: 'Certificação com hash SHA-256 imutável' },
-              { emoji: '⬛', text: 'QR Code verificável por qualquer pessoa' },
-              { emoji: '🎖', text: 'Passaporte digital permanente por atleta' },
-              { emoji: '🔄', text: 'Créditos nunca expiram — use quando quiser' },
-            ].map((b) => (
-              <li key={b.text} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div
-                  style={{
-                    width: 30, height: 30,
-                    background: 'rgba(255,255,255,0.08)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    borderRadius: 6,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 14, flexShrink: 0,
-                  }}
-                >
-                  {b.emoji}
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 400, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 }}>
+              Você só paga quando graduar um atleta.<br />
+              Sem mensalidade. Sem surpresas.
+            </p>
+
+            {/* Benefits */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 40 }}>
+              {[
+                'Certificação com hash SHA-256 imutável',
+                'QR Code verificável por qualquer pessoa',
+                'Passaporte digital permanente por atleta',
+                'Créditos nunca expiram — use quando quiser',
+              ].map((text) => (
+                <div key={text} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-bg-amber)', flexShrink: 0, marginTop: 2 }}>→</span>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'rgba(255,255,255,0.65)', lineHeight: 1.5 }}>{text}</span>
                 </div>
-                <span className="font-body" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.70)' }}>
-                  {b.text}
-                </span>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Testimonial */}
-        <div
-          style={{
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderLeft: '3px solid var(--terra)',
-            borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
-            padding: '20px 22px',
-          }}
-        >
-          <p className="font-body" style={{ fontSize: 13, fontWeight: 400, fontStyle: 'italic', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
-            "O fightport.pro trouxe credibilidade e profissionalismo para a nossa academia. Os pais dos alunos adoram."
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 32, marginTop: 'auto' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, fontStyle: 'italic', color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 }}>
+            "O fightport.pro trouxe credibilidade real para nossa academia."
           </p>
-          <p className="font-display" style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--terra-soft)', marginTop: 12 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.35)', marginTop: 12 }}>
             — Prof. Ricardo Almeida · Faixa Preta 5° Grau
           </p>
         </div>
       </div>
 
-      {/* RIGHT PANEL */}
-      <div className="flex flex-col justify-center" style={{ background: 'var(--bg)', padding: '56px 60px' }}>
+      {/* RIGHT PANEL — Form */}
+      <div className="flex flex-col justify-center" style={{ background: 'var(--color-bg)', padding: '64px 60px' }}>
         <div className="w-full" style={{ maxWidth: 460, margin: '0 auto' }}>
           {/* Mobile logo */}
           <div className="md:hidden mb-8">
-            <Link to="/" className="flex items-baseline" style={{ textDecoration: 'none' }}>
-              <span className="font-display" style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>FIGHT PORT</span>
-              <span className="font-display" style={{ fontSize: 16, fontWeight: 700, color: 'var(--terra)' }}>.PRO</span>
+            <Link to="/" style={{ textDecoration: 'none', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: 'var(--color-text)' }}>
+              fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
             </Link>
           </div>
 
           {/* Title */}
-          <h2
-            className="font-display"
-            style={{
-              fontWeight: 700,
-              fontSize: 24,
-              letterSpacing: '-0.02em',
-              color: 'var(--ink)',
-              marginBottom: 8,
-            }}
-          >
-            {mode === 'signup' ? 'CRIAR CONTA GRATUITA' : 'BEM-VINDO DE VOLTA'}
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, letterSpacing: '-0.02em', color: 'var(--color-text)', marginBottom: 4 }}>
+            {mode === 'signup' ? 'Criar conta gratuita' : 'Bem-vindo de volta'}
           </h2>
 
           {/* Switch row */}
-          <p className="font-body" style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 32 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginBottom: 32 }}>
             {mode === 'signup' ? (
               <>
-                Já tem uma conta?{' '}
+                Já tem conta?{' '}
                 <button
                   type="button"
                   onClick={() => switchMode('login')}
-                  className="font-body"
                   style={{
-                    fontSize: 13, fontWeight: 700, color: 'var(--blue-deep)',
-                    background: 'none', border: 'none', borderBottom: '1.5px solid var(--blue-light)',
+                    fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text)',
+                    background: 'none', border: 'none', textDecoration: 'underline', textUnderlineOffset: '3px',
                     cursor: 'pointer', padding: 0, transition: 'var(--transition)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--terra)'; e.currentTarget.style.borderColor = 'var(--terra)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--blue-deep)'; e.currentTarget.style.borderColor = 'var(--blue-light)'; }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-accent)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
                 >
-                  Entrar →
+                  Entrar
                 </button>
               </>
             ) : (
@@ -304,16 +271,15 @@ export default function CadastroPage() {
                 <button
                   type="button"
                   onClick={() => switchMode('signup')}
-                  className="font-body"
                   style={{
-                    fontSize: 13, fontWeight: 700, color: 'var(--blue-deep)',
-                    background: 'none', border: 'none', borderBottom: '1.5px solid var(--blue-light)',
+                    fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text)',
+                    background: 'none', border: 'none', textDecoration: 'underline', textUnderlineOffset: '3px',
                     cursor: 'pointer', padding: 0, transition: 'var(--transition)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--terra)'; e.currentTarget.style.borderColor = 'var(--terra)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--blue-deep)'; e.currentTarget.style.borderColor = 'var(--blue-light)'; }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-accent)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
                 >
-                  Criar conta grátis →
+                  Cadastrar
                 </button>
               </>
             )}
@@ -323,45 +289,45 @@ export default function CadastroPage() {
           <div
             style={{
               opacity: animating ? 0 : 1,
-              transform: animating ? 'translateY(-8px)' : 'translateY(0)',
-              transition: 'opacity 150ms ease, transform 150ms ease',
+              transform: animating ? 'translateY(8px)' : 'translateY(0)',
+              transition: 'opacity 150ms ease, transform 200ms ease',
             }}
           >
             {mode === 'signup' ? (
               <form
                 onSubmit={handleSignup}
-                style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}
+                style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
               >
-                {/* School name — full */}
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label className="font-body" style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Nome da academia</label>
+                {/* School name */}
+                <div>
+                  <label style={labelStyle}>Nome da academia</label>
                   <input value={schoolName} onChange={e => setSchoolName(e.target.value)} required placeholder="Ex: Academia Tiger BJJ" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
 
-                {/* Coach name — half */}
-                <div>
-                  <label className="font-body" style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Seu nome (Head Coach)</label>
-                  <input value={coachName} onChange={e => setCoachName(e.target.value)} required placeholder="Nome completo" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
+                {/* Coach + Martial art — 2 cols */}
+                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 16 }}>
+                  <div>
+                    <label style={labelStyle}>Seu nome (Head Coach)</label>
+                    <input value={coachName} onChange={e => setCoachName(e.target.value)} required placeholder="Nome completo" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Arte marcial principal</label>
+                    <select value={martialArt} onChange={e => setMartialArt(e.target.value)} required style={{ ...inputStyle, appearance: 'none', backgroundImage: selectChevron, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center', paddingRight: 36 }} onFocus={focusInput as any} onBlur={blurInput as any}>
+                      <option value="">Selecione</option>
+                      <option>Jiu-Jitsu</option>
+                      <option>Judô</option>
+                      <option>Muay Thai</option>
+                      <option>MMA</option>
+                      <option>Karatê</option>
+                      <option>Outra</option>
+                    </select>
+                  </div>
                 </div>
 
-                {/* Martial art — half */}
+                {/* Graduation */}
                 <div>
-                  <label className="font-body" style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Arte marcial principal</label>
-                  <select value={martialArt} onChange={e => setMartialArt(e.target.value)} required style={{ ...inputStyle, appearance: 'none', backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7580' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center', paddingRight: 36 }} onFocus={focusInput as any} onBlur={blurInput as any}>
-                    <option value="">Selecione</option>
-                    <option>Jiu-Jitsu</option>
-                    <option>Judô</option>
-                    <option>Muay Thai</option>
-                    <option>MMA</option>
-                    <option>Karatê</option>
-                    <option>Outra</option>
-                  </select>
-                </div>
-
-                {/* Graduation — full */}
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label className="font-body" style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Graduação do Head Coach</label>
-                  <select value={coachGraduation} onChange={e => setCoachGraduation(e.target.value)} required style={{ ...inputStyle, appearance: 'none', backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7580' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center', paddingRight: 36 }} onFocus={focusInput as any} onBlur={blurInput as any}>
+                  <label style={labelStyle}>Graduação do Head Coach</label>
+                  <select value={coachGraduation} onChange={e => setCoachGraduation(e.target.value)} required style={{ ...inputStyle, appearance: 'none', backgroundImage: selectChevron, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center', paddingRight: 36 }} onFocus={focusInput as any} onBlur={blurInput as any}>
                     <option value="">Selecione</option>
                     <option>Faixa Branca</option>
                     <option>Faixa Azul</option>
@@ -371,18 +337,18 @@ export default function CadastroPage() {
                   </select>
                 </div>
 
-                {/* Divider */}
-                <div style={{ gridColumn: '1 / -1', height: 1, background: 'var(--border-2)', margin: '4px 0' }} />
+                {/* Spacer */}
+                <div style={{ marginTop: 8, marginBottom: 8 }} />
 
-                {/* Email — full */}
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label className="font-body" style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>E-mail</label>
+                {/* Email */}
+                <div>
+                  <label style={labelStyle}>E-mail</label>
                   <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="academia@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
 
-                {/* Password — full */}
-                <div style={{ gridColumn: '1 / -1', position: 'relative' }}>
-                  <label className="font-body" style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Senha</label>
+                {/* Password */}
+                <div>
+                  <label style={labelStyle}>Senha</label>
                   <div style={{ position: 'relative' }}>
                     <input
                       type={showPassword ? 'text' : 'password'}
@@ -400,7 +366,7 @@ export default function CadastroPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       style={{
                         position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                        background: 'none', border: 'none', cursor: 'pointer', color: 'var(--cloud)',
+                        background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-light)',
                         padding: 4, display: 'flex',
                       }}
                       aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
@@ -414,53 +380,50 @@ export default function CadastroPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="font-display"
                   style={{
-                    gridColumn: '1 / -1',
-                    marginTop: 6,
-                    background: 'var(--blue-deep)',
-                    color: '#fff',
-                    fontSize: 11,
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    padding: '15px 28px',
+                    marginTop: 8,
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 15,
+                    fontWeight: 500,
+                    background: 'var(--color-bg-amber)',
+                    color: 'var(--color-text)',
+                    padding: '14px 28px',
+                    width: '100%',
                     borderRadius: 'var(--radius-sm)',
                     border: 'none',
                     cursor: loading ? 'wait' : 'pointer',
                     opacity: loading ? 0.7 : 1,
                     transition: 'var(--transition)',
                   }}
-                  onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.background = 'var(--blue-mid)'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = 'var(--shadow-btn)'; } }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--blue-deep)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#e09600'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-bg-amber)'; }}
                 >
                   {loading ? 'Criando conta...' : 'Criar conta gratuita'}
                 </button>
 
                 {/* Terms */}
-                <p className="font-body" style={{ gridColumn: '1 / -1', textAlign: 'center', fontSize: 11, color: 'var(--muted)', lineHeight: 1.6 }}>
+                <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-light)', lineHeight: 1.6 }}>
                   Ao criar conta você concorda com os{' '}
-                  <Link to="/termos" style={{ color: 'var(--blue-mid)', textDecoration: 'underline' }}>Termos de Uso</Link> e{' '}
-                  <Link to="/privacidade" style={{ color: 'var(--blue-mid)', textDecoration: 'underline' }}>Política de Privacidade</Link>
+                  <Link to="/termos" style={{ color: 'var(--color-text-light)', textDecoration: 'underline' }}>Termos de Uso</Link> e{' '}
+                  <Link to="/privacidade" style={{ color: 'var(--color-text-light)', textDecoration: 'underline' }}>Política de Privacidade</Link>
                 </p>
               </form>
             ) : (
-              <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {/* Email */}
                 <div>
-                  <label className="font-body" style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>E-mail</label>
+                  <label style={labelStyle}>E-mail</label>
                   <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} required placeholder="academia@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
 
                 {/* Password */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                    <label className="font-body" style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>Senha</label>
+                    <label style={{ ...labelStyle, marginBottom: 0 }}>Senha</label>
                     <button
                       type="button"
                       onClick={handleForgotPassword}
-                      className="font-body"
-                      style={{ fontSize: 12, color: 'var(--blue-mid)', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                      style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                     >
                       Esqueci minha senha
                     </button>
@@ -481,7 +444,7 @@ export default function CadastroPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       style={{
                         position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                        background: 'none', border: 'none', cursor: 'pointer', color: 'var(--cloud)',
+                        background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-light)',
                         padding: 4, display: 'flex',
                       }}
                       aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
@@ -495,27 +458,38 @@ export default function CadastroPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="font-display"
                   style={{
-                    marginTop: 6,
-                    background: 'var(--blue-deep)',
-                    color: '#fff',
-                    fontSize: 11,
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    padding: '15px 28px',
+                    marginTop: 8,
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 15,
+                    fontWeight: 500,
+                    background: 'var(--color-bg-amber)',
+                    color: 'var(--color-text)',
+                    padding: '14px 28px',
+                    width: '100%',
                     borderRadius: 'var(--radius-sm)',
                     border: 'none',
                     cursor: loading ? 'wait' : 'pointer',
                     opacity: loading ? 0.7 : 1,
                     transition: 'var(--transition)',
                   }}
-                  onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.background = 'var(--blue-mid)'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = 'var(--shadow-btn)'; } }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--blue-deep)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#e09600'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-bg-amber)'; }}
                 >
-                  {loading ? 'Entrando...' : 'Entrar na minha academia'}
+                  {loading ? 'Entrando...' : 'Entrar'}
                 </button>
+
+                {/* Switch link */}
+                <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>
+                  Ainda não tem conta?{' '}
+                  <button
+                    type="button"
+                    onClick={() => switchMode('signup')}
+                    style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)', background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
+                  >
+                    Cadastrar →
+                  </button>
+                </p>
               </form>
             )}
           </div>
