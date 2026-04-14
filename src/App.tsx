@@ -46,6 +46,7 @@ const App = () => (
               <Route path="creditos" element={<Creditos />} />
               <Route path="configuracoes" element={<Configuracoes />} />
             </Route>
+            <Route path="/verificar" element={<VerificarRedirect />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
