@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-const navLinks = [
-  { href: '/#busca', label: 'Verificar atleta' },
-  { href: '/#como-funciona', label: 'Como funciona' },
-  { href: '/cadastro', label: 'Para escolas', isRoute: true },
+const getNavLinks = (t: (key: string) => string) => [
+  { href: '/#busca', label: t('nav.verifyAthlete') },
+  { href: '/#como-funciona', label: t('nav.howItWorks') },
+  { href: '/cadastro', label: t('nav.forSchools'), isRoute: true },
 ];
 
 export function Navbar() {
