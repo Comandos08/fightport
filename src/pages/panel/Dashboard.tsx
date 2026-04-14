@@ -265,6 +265,23 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Practitioner growth */}
+      <div className="rounded-xl border bg-main shadow-card p-5 mb-8" style={{ borderColor: 'var(--color-border)' }}>
+        <h2 className="font-display font-bold text-sm text-ink uppercase mb-4" style={{ letterSpacing: '0.02em' }}>Evolução de praticantes</h2>
+        {practitionerGrowth.every(m => m.total === 0) ? (
+          <p className="text-center font-body text-sm text-ink-muted py-8">Nenhum praticante cadastrado nos últimos 6 meses.</p>
+        ) : (
+          <ChartContainer config={growthChartConfig} className="aspect-video max-h-[250px]">
+            <LineChart data={practitionerGrowth}>
+              <XAxis dataKey="month" tickLine={false} axisLine={false} className="font-body text-xs" />
+              <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={30} className="font-body text-xs" />
+              <Line type="monotone" dataKey="total" stroke="hsl(var(--accent))" strokeWidth={2} dot={{ r: 4, fill: 'hsl(var(--accent))' }} />
+              <ChartTooltip content={<ChartTooltipContent />} />
+            </LineChart>
+          </ChartContainer>
+        )}
+      </div>
+
       <h2 className="font-display font-bold text-lg text-ink mb-4 uppercase" style={{ letterSpacing: '0.02em' }}>Últimas conquistas</h2>
       <div className="rounded-xl border bg-main shadow-card overflow-hidden" style={{ borderColor: 'var(--color-border)' }}>
         {recentAchievements.length === 0 ? (
