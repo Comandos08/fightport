@@ -48,6 +48,8 @@ const App = () => (
               <Route path="creditos" element={<Creditos />} />
               <Route path="configuracoes" element={<Configuracoes />} />
             </Route>
+            <Route path="/termos" element={<TermosDeUso />} />
+            <Route path="/privacidade" element={<Privacidade />} />
             <Route path="/verificar" element={<VerificarRedirect />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
