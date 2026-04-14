@@ -21,7 +21,6 @@ export function Navbar() {
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid var(--border-2)',
-          padding: '0 40px',
         }}
       >
         {/* Logo */}
