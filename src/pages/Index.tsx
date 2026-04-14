@@ -294,7 +294,7 @@ export default function HomePage() {
           </h2>
           <p className="font-body text-lg mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>Cadastro gratuito. Você só paga quando graduar.</p>
           <Link to="/cadastro">
-            <Button className="font-body font-semibold text-base px-12 py-5 h-auto rounded-lg transition-all duration-200 hover:scale-[1.02]" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink)' }}>
+            <Button className="cta-glow font-body font-semibold text-base px-12 py-5 h-auto rounded-lg transition-all duration-200 hover:scale-[1.02]" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink)' }}>
               Cadastre sua escola
             </Button>
           </Link>
