@@ -11,7 +11,7 @@ export function ProblemSection() {
         <div className="section-inner grid grid-cols-1 md:grid-cols-2" style={{ gap: 64 }}>
           {/* Left */}
           <div>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text)', marginBottom: 48 }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 48 }}>
               O PROBLEMA
             </p>
             <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.02em', lineHeight: 1.1, color: 'var(--color-text)', maxWidth: 460, margin: 0 }}>

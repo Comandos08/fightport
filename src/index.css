@@ -163,10 +163,12 @@
 }
 
 @media (max-width: 1024px) {
+  :root { --section-py: 80px; --section-py-md: 64px; }
   .fp-container { padding-left: 40px; padding-right: 40px; }
 }
 
 @media (max-width: 768px) {
+  :root { --section-py: 64px; --section-py-md: 48px; }
   .fp-container { padding-left: 24px; padding-right: 24px; }
 }
 

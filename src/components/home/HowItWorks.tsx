@@ -19,7 +19,7 @@ export function HowItWorks() {
           {/* Desktop */}
           <div className="hidden md:grid md:grid-cols-3">
             {steps.map((step, i) => (
-              <div key={step.num} style={{ paddingRight: i < steps.length - 1 ? 40 : 0, borderRight: i < steps.length - 1 ? '1px solid var(--color-border)' : 'none', paddingLeft: i > 0 ? 40 : 0 }}>
+              <div key={step.num} style={{ paddingRight: i < steps.length - 1 ? 40 : 0, borderRight: i < steps.length - 1 ? '1px solid #E8E8E5' : 'none', paddingLeft: i > 0 ? 40 : 0 }}>
                 <StepContent step={step} />
               </div>
             ))}

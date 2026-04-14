@@ -116,15 +116,20 @@ export function SearchSection() {
                 <AthleteCard athlete={a} />
               </div>
             ))}
-            {mappedAthletes.length === 0 && (
-              <div className="col-span-full" style={{ textAlign: 'center', padding: '80px 0' }}>
-                <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: 'var(--color-text)', marginBottom: 8 }}>
-                  Nenhum atleta público cadastrado ainda.
+           {mappedAthletes.length === 0 && (
+              <div className="col-span-full" style={{ margin: '64px auto', maxWidth: 400, textAlign: 'center' }}>
+                <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 22, color: 'var(--color-text)', marginBottom: 8 }}>
+                  Nenhum atleta cadastrado ainda.
                 </p>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginBottom: 20 }}>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 8, marginBottom: 24 }}>
                   Cadastre sua academia e emita o primeiro certificado.
                 </p>
-                <a href="/cadastro" style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: '#1C1C1C', background: 'var(--color-bg-amber)', padding: '12px 24px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', transition: 'var(--transition)', display: 'inline-block' }}>
+                <a
+                  href="/cadastro"
+                  style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: '#1C1C1C', background: 'var(--color-bg-amber)', padding: '12px 24px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', transition: 'var(--transition)', display: 'inline-block' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#e09600')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-bg-amber)')}
+                >
                   Cadastrar minha academia →
                 </a>
               </div>
