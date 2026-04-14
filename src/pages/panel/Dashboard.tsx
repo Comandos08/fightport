@@ -15,7 +15,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
 const BELT_COLORS: Record<string, string> = {
-  Branca: '#E5E5E5',
+  Branca: '#E8E8E5',
   Azul: '#134C73',
   Roxa: '#5B21B6',
   Marrom: '#78350F',
