@@ -123,6 +123,39 @@ export default function DashboardPage() {
     enabled: !!user,
   });
 
+  // Practitioner growth (last 6 months cumulative)
+  const { data: practitionerGrowth = [] } = useQuery({
+    queryKey: ['practitioner-growth', user?.id],
+    queryFn: async () => {
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+      sixMonthsAgo.setDate(1);
+      const { data } = await supabase
+        .from('practitioners')
+        .select('created_at')
+        .eq('school_id', user!.id);
+      if (!data) return [];
+      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      const months: { key: string; label: string }[] = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date();
+        d.setMonth(d.getMonth() - i);
+        months.push({
+          key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
+          label: monthNames[d.getMonth()],
+        });
+      }
+      // Count cumulative practitioners up to end of each month
+      return months.map((m) => {
+        const endOfMonth = new Date(`${m.key}-01`);
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+        const total = data.filter((p) => new Date(p.created_at!) < endOfMonth).length;
+        return { month: m.label, total };
+      });
+    },
+    enabled: !!user,
+  });
+
   const lastDate = recentAchievements.length > 0 ? formatDate(recentAchievements[0].graduation_date) : '—';
 
   const stats = [
@@ -138,6 +171,10 @@ export default function DashboardPage() {
 
   const monthlyChartConfig: ChartConfig = {
     count: { label: 'Conquistas', color: 'hsl(var(--accent))' },
+  };
+
+  const growthChartConfig: ChartConfig = {
+    total: { label: 'Praticantes', color: 'hsl(var(--accent))' },
   };
 
   return (
