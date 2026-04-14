@@ -100,11 +100,14 @@ export default function Sobre() {
         <div className="fp-container">
           <h1
             style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 32,
-              fontWeight: 700,
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 400,
+              fontSize: 'clamp(32px, 4vw, 52px)',
+              letterSpacing: '-0.035em',
+              lineHeight: 1.08,
               color: '#FFFFFF',
-              letterSpacing: '-0.02em',
+              maxWidth: 460,
+              margin: '0 auto',
             }}
           >
             Sobre nós
