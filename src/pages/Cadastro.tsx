@@ -175,7 +175,8 @@ export default function CadastroPage() {
 
   // ── MAIN RENDER ──
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+    <div className="min-h-screen flex justify-center" style={{ background: 'var(--color-bg-dark)' }}>
+    <div className="w-full grid grid-cols-1 md:grid-cols-2" style={{ maxWidth: 1440 }}>
       {/* LEFT PANEL — Dark */}
       <div
         className="hidden md:flex flex-col justify-between"
