@@ -151,11 +151,11 @@ export default function HomePage() {
       <section id="busca" className="py-16 md:py-24 px-4 relative">
         <div className="absolute top-0 left-0 right-0 h-10" style={{ background: 'linear-gradient(to bottom, var(--color-bg-surface), var(--color-bg))' }} />
         <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-10">
-            <h2 className="font-display font-bold text-[48px] md:text-[56px] text-ink uppercase mb-2" style={{ lineHeight: '0.95' }}>
+          <div className="text-center mb-8 md:mb-10">
+            <h2 className="font-display font-bold text-[36px] md:text-[56px] text-ink uppercase mb-2" style={{ lineHeight: '0.95' }}>
               Encontre um atleta
             </h2>
-            <p className="font-body text-lg text-ink-faint">certificado pela sua academia</p>
+            <p className="font-body text-base md:text-lg text-ink-faint">certificado pela sua academia</p>
           </div>
 
           <div className="max-w-[720px] mx-auto mb-6">
