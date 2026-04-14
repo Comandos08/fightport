@@ -103,7 +103,7 @@ export function Navbar() {
               onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}
             >
-              Entrar
+              {t('nav.login')}
             </Link>
 
             <Link
@@ -124,7 +124,7 @@ export function Navbar() {
               onMouseEnter={(e) => (e.currentTarget.style.background = '#333333')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-text)')}
             >
-              Cadastre sua escola
+              {t('nav.registerSchool')}
             </Link>
 
             <button
