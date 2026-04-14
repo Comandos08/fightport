@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Plus, Upload, Eye, Award, Pencil } from 'lucide-react';
+import { Search, Plus, Upload, Eye, Award, Pencil, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { BeltBadge } from '@/components/BeltBadge';
 import { getInitials } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { ImportPraticantesModal } from '@/components/ImportPraticantesModal';
 
 export default function PraticantesPage() {
   const [search, setSearch] = useState('');
   const [importOpen, setImportOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const { data: practitioners = [], isLoading } = useQuery({
     queryKey: ['practitioners', user?.id],
@@ -39,6 +43,21 @@ export default function PraticantesPage() {
   const filtered = practitioners.filter(a =>
     `${a.first_name} ${a.last_name}`.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const { error } = await supabase.from('practitioners').delete().eq('id', deleteTarget.id);
+    setDeleting(false);
+    setDeleteTarget(null);
+    if (error) {
+      toast.error(error.message.includes('foreign') ? 'Não é possível excluir: praticante possui conquistas registradas.' : error.message);
+    } else {
+      toast.success('Praticante excluído com sucesso.');
+      queryClient.invalidateQueries({ queryKey: ['practitioners'] });
+      queryClient.invalidateQueries({ queryKey: ['practitioner-count'] });
+    }
+  };
 
   return (
     <div className="p-4 lg:p-8 max-w-6xl">
@@ -128,6 +147,15 @@ export default function PraticantesPage() {
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
                       </Link>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:text-destructive"
+                        aria-label="Excluir"
+                        onClick={() => setDeleteTarget({ id: a.id, name: `${a.first_name} ${a.last_name}` })}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -136,6 +164,24 @@ export default function PraticantesPage() {
           </table>
         </div>
       )}
+
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4" onClick={() => setDeleteTarget(null)}>
+          <div className="bg-main rounded-xl p-6 shadow-card max-w-sm w-full" onClick={e => e.stopPropagation()}>
+            <h3 className="font-display font-bold text-lg text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Excluir praticante</h3>
+            <p className="font-body text-sm text-ink-muted mb-4">
+              Tem certeza que deseja excluir <strong>{deleteTarget.name}</strong>? Esta ação não pode ser desfeita.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
+              <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+                {deleting ? 'Excluindo...' : 'Excluir'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <ImportPraticantesModal open={importOpen} onClose={() => setImportOpen(false)} />
     </div>
   );
