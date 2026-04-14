@@ -1,12 +1,20 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-const stats = [
-  { number: '1.247+', label: 'atletas certificados' },
-  { number: '89', label: 'organizações ativas' },
-  { number: '3.891', label: 'graduações registradas' },
-];
+const statNumbers = ['1.247+', '89', '3.891'];
 
 export function HeroSection() {
+  const { t } = useTranslation();
+
+  const stats = [
+    { number: statNumbers[0], label: t('hero.stats.athletes') },
+    { number: statNumbers[1], label: t('hero.stats.organizations') },
+    { number: statNumbers[2], label: t('hero.stats.graduations') },
+  ];
+
+  // Parse title with <accent> tags
+  const titleParts = t('hero.title').split(/<accent>(.*?)<\/accent>/);
+
   return (
     <section
       className="relative overflow-hidden"
@@ -40,23 +48,29 @@ export function HeroSection() {
       <div className="fp-container relative">
         <div className="section-inner">
           <p className="animate-fadeup delay-100" style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 32 }}>
-            CERTIFICAÇÃO ESPORTIVA → ORGANIZAÇÕES DE ARTES MARCIAIS
+            {t('hero.badge')}
           </p>
 
           <h1 className="animate-fadeup delay-200" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(48px, 6.5vw, 80px)', lineHeight: 1.04, letterSpacing: '-0.04em', color: 'var(--color-text)', maxWidth: 680, margin: 0 }}>
-            A graduação<br />do seu atleta,<br /><span style={{ color: 'var(--color-accent)' }}>imutável.</span>
+            {titleParts.map((part, i) =>
+              i % 2 === 1 ? (
+                <span key={i} style={{ color: 'var(--color-accent)' }} dangerouslySetInnerHTML={{ __html: part }} />
+              ) : (
+                <span key={i} dangerouslySetInnerHTML={{ __html: part }} />
+              )
+            )}
           </h1>
 
           <p className="animate-fadeup delay-300" style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 300, color: 'var(--color-text-muted)', lineHeight: 1.65, maxWidth: 500, marginTop: 24 }}>
-            Qualquer pessoa verifica a faixa do seu aluno em segundos — escaneando um QR Code. Para sempre. Sem falsificação possível.
+            {t('hero.subtitle')}
           </p>
 
           <div className="animate-fadeup delay-400 flex flex-wrap items-center" style={{ gap: 16, marginTop: 40 }}>
             <Link to="/cadastro" style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: 'var(--color-text)', background: 'var(--color-bg-amber)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '14px 28px', textDecoration: 'none', transition: 'var(--transition)', display: 'inline-block' }} onMouseEnter={(e) => (e.currentTarget.style.background = '#e09600')} onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-bg-amber)')}>
-              Cadastrar minha organização
+              {t('hero.ctaPrimary')}
             </Link>
             <a href="/#busca" style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', background: 'transparent', border: 'none', padding: '14px 0', textDecoration: 'none', transition: 'var(--transition)' }} onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}>
-              Verificar um atleta →
+              {t('hero.ctaSecondary')}
             </a>
           </div>
 

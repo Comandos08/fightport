@@ -1,10 +1,14 @@
-const stats = [
-  { number: '72%', desc: 'plataformas de certificação falham por falta de padrão', source: 'FONTE: VFUNCTION, 2022' },
-  { number: '50%', desc: 'dos árbitros não têm como verificar a graduação real', source: 'ESTIMATIVA INTERNA, 2024' },
-  { number: '5 anos', desc: 'de treino que qualquer um pode falsificar com uma impressora', source: 'REALIDADE DO MERCADO' },
-];
+import { useTranslation } from 'react-i18next';
 
 export function ProblemSection() {
+  const { t } = useTranslation();
+
+  const stats = [
+    { number: t('problem.stat1.number'), desc: t('problem.stat1.desc'), source: t('problem.stat1.source') },
+    { number: t('problem.stat2.number'), desc: t('problem.stat2.desc'), source: t('problem.stat2.source') },
+    { number: t('problem.stat3.number'), desc: t('problem.stat3.desc'), source: t('problem.stat3.source') },
+  ];
+
   return (
     <section style={{ background: 'var(--color-bg-amber)' }}>
       <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
@@ -12,10 +16,10 @@ export function ProblemSection() {
           {/* Left */}
           <div>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 48 }}>
-              O PROBLEMA
+              {t('problem.badge')}
             </p>
             <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: 'var(--color-text)', maxWidth: 460, margin: 0 }}>
-              Certificados físicos são fáceis de falsificar.
+              {t('problem.title')}
             </h2>
           </div>
 

@@ -1,19 +1,23 @@
-const steps = [
-  { num: '01', title: 'A organização cadastra seus atletas', desc: 'Nome, foto e CPF. O sistema bloqueia duplicatas — nenhum atleta pode ter dois perfis.', badge: 'CPF verificado' },
-  { num: '02', title: 'Registra a graduação', desc: 'Seleciona o atleta, a nova faixa, a data e quem graduou. Hash gerado automaticamente.', badge: 'SHA-256 · imutável' },
-  { num: '03', title: 'Qualquer pessoa verifica', desc: 'Escaneie o QR. Veja o passaporte digital completo do atleta. Assinado. Para sempre.', badge: 'Público · auditável' },
-];
+import { useTranslation } from 'react-i18next';
 
 export function HowItWorks() {
+  const { t } = useTranslation();
+
+  const steps = [
+    { num: '01', title: t('process.step1.title'), desc: t('process.step1.desc'), badge: t('process.step1.tag') },
+    { num: '02', title: t('process.step2.title'), desc: t('process.step2.desc'), badge: t('process.step2.tag') },
+    { num: '03', title: t('process.step3.title'), desc: t('process.step3.desc'), badge: t('process.step3.tag') },
+  ];
+
   return (
     <section id="como-funciona" style={{ background: 'var(--color-bg)' }}>
       <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
         <div className="section-inner">
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
-            PROCESSO
+            {t('process.badge')}
           </p>
           <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: 'var(--color-text)', maxWidth: 480, marginTop: 24, marginBottom: 80 }}>
-            Três passos. Para sempre.
+            {t('process.title')}
           </h2>
 
           {/* Desktop */}
@@ -39,7 +43,7 @@ export function HowItWorks() {
   );
 }
 
-function StepContent({ step }: { step: typeof steps[number] }) {
+function StepContent({ step }: { step: { num: string; title: string; desc: string; badge: string } }) {
   return (
     <>
       <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 400, color: 'var(--color-text-muted)', marginBottom: 80 }}>{step.num}</p>

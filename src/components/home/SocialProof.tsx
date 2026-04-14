@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 export function SocialProof() {
+  const { t } = useTranslation();
   const cities = 'São Paulo · Rio de Janeiro · Curitiba · Belo Horizonte · Porto Alegre · Fortaleza · Recife';
 
   return (
@@ -24,7 +27,7 @@ export function SocialProof() {
             flexShrink: 0,
           }}
         >
-          ORGANIZAÇÕES ATIVAS EM →
+          {t('socialProof.label')}
         </span>
         <div style={{ overflow: 'hidden', flex: 1 }}>
           <div className="marquee-track">
