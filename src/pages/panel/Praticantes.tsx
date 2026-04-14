@@ -15,6 +15,8 @@ const PAGE_SIZE = 20;
 export default function PraticantesPage() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [beltFilter, setBeltFilter] = useState('');
+  const [artFilter, setArtFilter] = useState('');
   const [importOpen, setImportOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -43,11 +45,17 @@ export default function PraticantesPage() {
     enabled: !!user,
   });
 
-  const filtered = practitioners.filter(a =>
-    `${a.first_name} ${a.last_name}`.toLowerCase().includes(search.toLowerCase())
-  );
+  // Derive unique belt and martial art values for filter options
+  const belts = [...new Set(practitioners.map(p => p.current_belt).filter(Boolean))] as string[];
+  const arts = [...new Set(practitioners.map(p => p.martial_art).filter(Boolean))] as string[];
 
-  // Reset to page 1 when search changes
+  const filtered = practitioners.filter(a => {
+    const matchesSearch = `${a.first_name} ${a.last_name}`.toLowerCase().includes(search.toLowerCase());
+    const matchesBelt = !beltFilter || a.current_belt === beltFilter;
+    const matchesArt = !artFilter || a.martial_art === artFilter;
+    return matchesSearch && matchesBelt && matchesArt;
+  });
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const paginatedItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -56,6 +64,13 @@ export default function PraticantesPage() {
     setSearch(value);
     setPage(1);
   };
+
+  const handleFilterChange = (setter: (v: string) => void) => (value: string) => {
+    setter(value);
+    setPage(1);
+  };
+
+  const hasActiveFilters = !!beltFilter || !!artFilter;
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
