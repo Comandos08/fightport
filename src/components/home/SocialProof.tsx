@@ -11,7 +11,7 @@ export function SocialProof() {
         overflow: 'hidden',
       }}
     >
-      <div className="flex items-center" style={{ gap: 40, paddingLeft: 'var(--section-px-sm)' }}>
+      <div className="fp-container flex items-center" style={{ gap: 40 }}>
         <span
           style={{
             fontFamily: 'var(--font-sans)',

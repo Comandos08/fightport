@@ -6,99 +6,29 @@ const stats = [
 
 export function ProblemSection() {
   return (
-    <section
-      style={{
-        background: 'var(--color-bg-amber)',
-        padding: 'var(--section-py) var(--section-px-sm)',
-      }}
-    >
-      <div
-        className="grid grid-cols-1 md:grid-cols-2"
-        style={{ maxWidth: 1200, margin: '0 auto', gap: 64 }}
-      >
-        {/* Left */}
-        <div>
-          <p
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              fontWeight: 500,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: 'var(--color-text)',
-              marginBottom: 48,
-            }}
-          >
-            O PROBLEMA
-          </p>
-          <h2
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 500,
-              fontSize: 'clamp(32px, 4vw, 52px)',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.1,
-              color: 'var(--color-text)',
-              maxWidth: 460,
-              margin: 0,
-            }}
-          >
-            Certificados físicos são fáceis de falsificar.
-          </h2>
-        </div>
+    <section style={{ background: 'var(--color-bg-amber)' }}>
+      <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
+        <div className="section-inner grid grid-cols-1 md:grid-cols-2" style={{ gap: 64 }}>
+          {/* Left */}
+          <div>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text)', marginBottom: 48 }}>
+              O PROBLEMA
+            </p>
+            <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.02em', lineHeight: 1.1, color: 'var(--color-text)', maxWidth: 460, margin: 0 }}>
+              Certificados físicos são fáceis de falsificar.
+            </h2>
+          </div>
 
-        {/* Right — stat cards */}
-        <div className="flex flex-col" style={{ gap: 2 }}>
-          {stats.map((s) => (
-            <div
-              key={s.number}
-              style={{
-                background: 'rgba(0,0,0,0.08)',
-                padding: '28px 24px',
-                borderRadius: 'var(--radius-xs)',
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontWeight: 500,
-                  fontSize: 48,
-                  letterSpacing: '-0.025em',
-                  lineHeight: 1,
-                  color: 'var(--color-text)',
-                }}
-              >
-                {s.number}
+          {/* Right — stat cards */}
+          <div className="flex flex-col" style={{ gap: 2 }}>
+            {stats.map((s) => (
+              <div key={s.number} style={{ background: 'rgba(0,0,0,0.08)', padding: '28px 24px', borderRadius: 'var(--radius-xs)' }}>
+                <div style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 48, letterSpacing: '-0.025em', lineHeight: 1, color: 'var(--color-text)' }}>{s.number}</div>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text)', opacity: 0.75, marginTop: 8, maxWidth: 280 }}>{s.desc}</p>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text)', opacity: 0.45, marginTop: 12 }}>{s.source}</p>
               </div>
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 15,
-                  fontWeight: 400,
-                  color: 'var(--color-text)',
-                  opacity: 0.75,
-                  marginTop: 8,
-                  maxWidth: 280,
-                }}
-              >
-                {s.desc}
-              </p>
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 11,
-                  fontWeight: 400,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-text)',
-                  opacity: 0.45,
-                  marginTop: 12,
-                }}
-              >
-                {s.source}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

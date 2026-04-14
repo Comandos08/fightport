@@ -145,6 +145,31 @@
   }
 }
 
+@layer components {
+  .fp-container {
+    width: 100%;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  .section-inner {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 1024px) {
+  .fp-container { padding-left: 40px; padding-right: 40px; }
+}
+
+@media (max-width: 768px) {
+  .fp-container { padding-left: 24px; padding-right: 24px; }
+}
+
 @layer utilities {
   /* ── Typography system ── */
   .t-display {
