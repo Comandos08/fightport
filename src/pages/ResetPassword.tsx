@@ -44,11 +44,25 @@ export default function ResetPasswordPage() {
     }
   };
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    height: 48,
+    padding: '0 16px',
+    borderRadius: 'var(--radius-sm)',
+    border: '1px solid var(--color-border)',
+    background: 'var(--color-bg-soft)',
+    fontFamily: 'var(--font-sans)',
+    fontSize: 15,
+    color: 'var(--color-text)',
+    outline: 'none',
+    transition: 'var(--transition)',
+  };
+
   if (!isRecovery) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-main p-8">
-        <div className="text-center">
-          <p className="font-body text-ink-muted mb-4">Link inválido ou expirado.</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg)', padding: 32 }}>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginBottom: 16 }}>Link inválido ou expirado.</p>
           <Link to="/login"><Button>Voltar ao login</Button></Link>
         </div>
       </div>
@@ -56,22 +70,53 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-main p-8">
-      <div className="w-full max-w-md">
-        <h1 className="font-display font-bold text-xl text-ink mb-6" style={{ letterSpacing: '0.02em' }}>Nova senha</h1>
-        <form onSubmit={handleReset} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg)', padding: 32 }}>
+      <div style={{ width: '100%', maxWidth: 400 }}>
+        <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 24 }}>Nova senha</h1>
+        <form onSubmit={handleReset} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Nova senha</label>
+            <label style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 12, color: 'var(--color-text)', display: 'block', marginBottom: 6 }}>Nova senha</label>
             <div className="relative">
-              <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={8} className="w-full h-12 px-4 pr-12 rounded-lg border bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} placeholder="Mínimo 8 caracteres" />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-ink-faint hover:text-ink transition-colors cursor-pointer">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                minLength={8}
+                style={{ ...inputStyle, paddingRight: 48 }}
+                placeholder="Mínimo 8 caracteres"
+                onFocus={e => { e.currentTarget.style.borderColor = '#9A9A9A'; e.currentTarget.style.background = '#FFFFFF'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.background = 'var(--color-bg-soft)'; }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-1/2 -translate-y-1/2 cursor-pointer"
+                style={{ right: 16, background: 'none', border: 'none', color: 'var(--color-text-muted)' }}
+              >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
           </div>
-          <Button className="w-full" size="lg" disabled={loading}>
+          <button
+            type="submit"
+            disabled={loading}
+            className="cursor-pointer"
+            style={{
+              width: '100%',
+              padding: '14px 28px',
+              background: 'var(--color-bg-amber)',
+              color: '#1C1C1C',
+              border: 'none',
+              borderRadius: 'var(--radius-sm)',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 500,
+              fontSize: 15,
+              transition: 'var(--transition)',
+            }}
+          >
             {loading ? 'Salvando...' : 'Salvar nova senha'}
-          </Button>
+          </button>
         </form>
       </div>
     </div>

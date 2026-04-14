@@ -52,10 +52,8 @@ function normalizeKey(key: string): string {
 function parseDate(val: string | undefined): string | null {
   if (!val) return null;
   const s = val.trim();
-  // DD/MM/YYYY
   const brMatch = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (brMatch) return `${brMatch[3]}-${brMatch[2].padStart(2, '0')}-${brMatch[1].padStart(2, '0')}`;
-  // YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
   return null;
 }
@@ -137,7 +135,6 @@ export function ImportPraticantesModal({ open, onClose }: { open: boolean; onClo
     if (!user || validRows.length === 0) return;
     setImporting(true);
 
-    // Fetch school martial art
     const { data: school } = await supabase.from('schools').select('martial_art').eq('id', user.id).single();
     const martialArt = school?.martial_art ?? 'Jiu-Jitsu';
 
@@ -148,7 +145,6 @@ export function ImportPraticantesModal({ open, onClose }: { open: boolean; onClo
       const r = updated[i];
       if (r.status !== 'valid') continue;
 
-      // Generate FP-ID
       const { data: fpId, error: fpError } = await supabase.rpc('generate_fp_id');
       if (fpError || !fpId) {
         updated[i] = { ...r, status: 'error', error: 'Erro ao gerar ID' };
@@ -205,24 +201,36 @@ export function ImportPraticantesModal({ open, onClose }: { open: boolean; onClo
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-main rounded-xl shadow-card max-w-2xl w-full max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)', padding: 16 }} onClick={onClose}>
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'var(--color-bg)',
+          borderRadius: 'var(--radius-sm)',
+          maxWidth: 640,
+          width: '100%',
+          maxHeight: '85vh',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '0 20px 60px -15px rgba(0,0,0,0.2)',
+        }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'var(--color-border)' }}>
-          <h2 className="font-display font-bold text-lg text-ink" style={{ letterSpacing: '0.02em' }}>Importar Praticantes</h2>
-          <button onClick={onClose} className="text-ink-faint hover:text-ink cursor-pointer"><X className="h-5 w-5" /></button>
+        <div className="flex items-center justify-between" style={{ padding: 24, borderBottom: '1px solid var(--color-border)' }}>
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)' }}>Importar Praticantes</h2>
+          <button onClick={onClose} className="cursor-pointer" style={{ background: 'none', border: 'none', color: 'var(--color-text-muted)' }}><X className="h-5 w-5" /></button>
         </div>
 
         {/* Body */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div style={{ padding: 24, overflowY: 'auto', flex: 1 }}>
           {rows.length === 0 ? (
-            <div className="text-center py-8">
-              <FileSpreadsheet className="h-12 w-12 mx-auto mb-4 text-ink-faint" />
-              <p className="font-body text-sm text-ink mb-1">Envie um arquivo CSV ou XLSX com os dados dos praticantes.</p>
-              <p className="font-body text-xs text-ink-muted mb-6">
-                Colunas aceitas: <code className="bg-surface px-1 rounded">nome</code>, <code className="bg-surface px-1 rounded">sobrenome</code>, <code className="bg-surface px-1 rounded">data_nascimento</code>, <code className="bg-surface px-1 rounded">sexo</code>, <code className="bg-surface px-1 rounded">cpf</code>, <code className="bg-surface px-1 rounded">nome_pai</code>, <code className="bg-surface px-1 rounded">nome_mae</code>
+            <div style={{ textAlign: 'center', padding: '32px 0' }}>
+              <FileSpreadsheet style={{ width: 48, height: 48, margin: '0 auto 16px', color: 'var(--color-text-muted)' }} />
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)', marginBottom: 4 }}>Envie um arquivo CSV ou XLSX com os dados dos praticantes.</p>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 24 }}>
+                Colunas aceitas: nome, sobrenome, data_nascimento, sexo, cpf, nome_pai, nome_mae
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col sm:flex-row justify-center" style={{ gap: 12 }}>
                 <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls,.txt" className="hidden" onChange={handleFile} />
                 <Button onClick={() => fileRef.current?.click()}>
                   <Upload className="h-4 w-4" />
@@ -237,45 +245,43 @@ export function ImportPraticantesModal({ open, onClose }: { open: boolean; onClo
           ) : (
             <>
               {/* Summary */}
-              <div className="flex items-center gap-4 mb-4 flex-wrap">
-                <span className="font-body text-sm text-ink-muted">
+              <div className="flex items-center flex-wrap" style={{ gap: 16, marginBottom: 16 }}>
+                <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>
                   📄 {fileName} — {rows.length} linha(s)
                 </span>
                 {validRows.length > 0 && (
-                  <span className="flex items-center gap-1 text-xs font-body font-medium text-verified">
-                    <CheckCircle className="h-3.5 w-3.5" /> {done ? importedRows.length + ' importado(s)' : validRows.length + ' válido(s)'}
+                  <span className="flex items-center" style={{ gap: 4, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: '#2D6A4F' }}>
+                    <CheckCircle style={{ width: 14, height: 14 }} /> {done ? importedRows.length + ' importado(s)' : validRows.length + ' válido(s)'}
                   </span>
                 )}
                 {errorRows.length > 0 && (
-                  <span className="flex items-center gap-1 text-xs font-body font-medium text-destructive">
-                    <AlertCircle className="h-3.5 w-3.5" /> {errorRows.length} erro(s)
+                  <span className="flex items-center" style={{ gap: 4, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: '#DC2626' }}>
+                    <AlertCircle style={{ width: 14, height: 14 }} /> {errorRows.length} erro(s)
                   </span>
                 )}
               </div>
 
               {/* Table preview */}
-              <div className="rounded-lg border overflow-x-auto max-h-[40vh]" style={{ borderColor: 'var(--color-border)' }}>
-                <table className="w-full min-w-[500px] text-xs">
-                  <thead className="bg-surface sticky top-0">
-                    <tr>
-                      <th className="text-left p-2 font-body font-medium text-ink-faint">#</th>
-                      <th className="text-left p-2 font-body font-medium text-ink-faint">Nome</th>
-                      <th className="text-left p-2 font-body font-medium text-ink-faint">Sobrenome</th>
-                      <th className="text-left p-2 font-body font-medium text-ink-faint">Nascimento</th>
-                      <th className="text-left p-2 font-body font-medium text-ink-faint">Status</th>
+              <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'auto', maxHeight: '40vh' }}>
+                <table style={{ width: '100%', minWidth: 500, borderCollapse: 'collapse', fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ background: 'var(--color-bg-soft)', position: 'sticky', top: 0 }}>
+                      {['#', 'Nome', 'Sobrenome', 'Nascimento', 'Status'].map(h => (
+                        <th key={h} style={{ textAlign: 'left', padding: 8, fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
                     {rows.map((r, i) => (
-                      <tr key={i} className="border-t" style={{ borderColor: 'var(--color-border)' }}>
-                        <td className="p-2 font-body text-ink-faint">{r.row}</td>
-                        <td className="p-2 font-body text-ink">{r.first_name || '—'}</td>
-                        <td className="p-2 font-body text-ink">{r.last_name || '—'}</td>
-                        <td className="p-2 font-body text-ink-muted">{r.birth_date || '—'}</td>
-                        <td className="p-2">
-                          {r.status === 'valid' && <span className="text-ink-muted">Pronto</span>}
-                          {r.status === 'imported' && <span className="text-verified font-medium">✓ Importado</span>}
-                          {r.status === 'error' && <span className="text-destructive" title={r.error}>✕ {r.error}</span>}
+                      <tr key={i} style={{ borderTop: '1px solid var(--color-border)' }}>
+                        <td style={{ padding: 8, fontFamily: 'var(--font-sans)', color: 'var(--color-text-muted)' }}>{r.row}</td>
+                        <td style={{ padding: 8, fontFamily: 'var(--font-sans)', color: 'var(--color-text)' }}>{r.first_name || '—'}</td>
+                        <td style={{ padding: 8, fontFamily: 'var(--font-sans)', color: 'var(--color-text)' }}>{r.last_name || '—'}</td>
+                        <td style={{ padding: 8, fontFamily: 'var(--font-sans)', color: 'var(--color-text-muted)' }}>{r.birth_date || '—'}</td>
+                        <td style={{ padding: 8 }}>
+                          {r.status === 'valid' && <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-text-muted)' }}>Pronto</span>}
+                          {r.status === 'imported' && <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, color: '#2D6A4F' }}>✓ Importado</span>}
+                          {r.status === 'error' && <span style={{ fontFamily: 'var(--font-sans)', color: '#DC2626' }} title={r.error}>✕ {r.error}</span>}
                         </td>
                       </tr>
                     ))}
@@ -288,7 +294,7 @@ export function ImportPraticantesModal({ open, onClose }: { open: boolean; onClo
 
         {/* Footer */}
         {rows.length > 0 && (
-          <div className="flex items-center justify-between p-6 border-t" style={{ borderColor: 'var(--color-border)' }}>
+          <div className="flex items-center justify-between" style={{ padding: 24, borderTop: '1px solid var(--color-border)' }}>
             <Button variant="ghost" onClick={handleReset} disabled={importing}>
               {done ? 'Importar outro' : 'Trocar arquivo'}
             </Button>

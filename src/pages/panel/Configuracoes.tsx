@@ -8,21 +8,42 @@ import { Upload, Loader2 } from 'lucide-react';
 
 type Tab = 'escola' | 'coach' | 'conta';
 
-const inputClass = "w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink focus:outline-none transition-all";
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  height: 48,
+  padding: '0 16px',
+  borderRadius: 'var(--radius-sm)',
+  border: '1px solid var(--color-border)',
+  background: 'var(--color-bg-soft)',
+  fontFamily: 'var(--font-sans)',
+  fontSize: 15,
+  color: 'var(--color-text)',
+  outline: 'none',
+  transition: 'var(--transition)',
+};
 
-function useInputStyle() {
-  return {
-    style: { borderColor: 'var(--color-border)' } as React.CSSProperties,
-    onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => e.currentTarget.style.borderColor = 'var(--color-border-focus)',
-    onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => e.currentTarget.style.borderColor = 'var(--color-border)',
-  };
-}
+const labelStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)',
+  fontWeight: 500,
+  fontSize: 12,
+  color: 'var(--color-text)',
+  display: 'block',
+  marginBottom: 6,
+};
+
+const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  e.currentTarget.style.borderColor = '#9A9A9A';
+  e.currentTarget.style.background = '#FFFFFF';
+};
+const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  e.currentTarget.style.borderColor = 'var(--color-border)';
+  e.currentTarget.style.background = 'var(--color-bg-soft)';
+};
 
 export default function ConfiguracoesPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<Tab>('escola');
-  const inputProps = useInputStyle();
 
   // ── School state ──
   const { data: school } = useQuery({
@@ -171,18 +192,27 @@ export default function ConfiguracoesPage() {
   ];
 
   return (
-    <div className="p-4 lg:p-8 max-w-3xl">
-      <h1 className="font-display font-bold text-2xl text-ink mb-6" style={{ letterSpacing: '0.02em' }}>Configurações</h1>
+    <div style={{ padding: '32px 32px', maxWidth: 700 }}>
+      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 28 }}>Configurações</h1>
 
-      <div className="flex gap-1 mb-8 border-b" style={{ borderColor: 'var(--color-border)' }}>
+      <div className="flex" style={{ gap: 4, marginBottom: 32, borderBottom: '1px solid var(--color-border)' }}>
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setActiveTab(t.key)}
-            className={`px-4 py-2.5 font-body text-sm transition-colors cursor-pointer border-b-2 -mb-px ${
-              activeTab === t.key ? 'text-ink font-medium' : 'text-ink-muted hover:text-ink border-transparent'
-            }`}
-            style={activeTab === t.key ? { borderColor: 'var(--color-accent)' } : {}}
+            className="cursor-pointer"
+            style={{
+              padding: '10px 16px',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 14,
+              fontWeight: activeTab === t.key ? 500 : 400,
+              color: activeTab === t.key ? 'var(--color-text)' : 'var(--color-text-muted)',
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === t.key ? '2px solid var(--color-text)' : '2px solid transparent',
+              marginBottom: -1,
+              transition: 'var(--transition)',
+            }}
           >
             {t.label}
           </button>
@@ -190,14 +220,14 @@ export default function ConfiguracoesPage() {
       </div>
 
       {activeTab === 'escola' && (
-        <form className="space-y-4" onSubmit={handleSaveSchool}>
+        <form style={{ display: 'flex', flexDirection: 'column', gap: 16 }} onSubmit={handleSaveSchool}>
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Nome da escola</label>
-            <input value={schoolName} onChange={e => setSchoolName(e.target.value)} className={inputClass} {...inputProps} />
+            <label style={labelStyle}>Nome da escola</label>
+            <input value={schoolName} onChange={e => setSchoolName(e.target.value)} style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
           </div>
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Arte marcial principal</label>
-            <select value={martialArt} onChange={e => setMartialArt(e.target.value)} className={inputClass} {...inputProps}>
+            <label style={labelStyle}>Arte marcial principal</label>
+            <select value={martialArt} onChange={e => setMartialArt(e.target.value)} style={inputStyle} onFocus={focusInput as any} onBlur={blurInput as any}>
               <option>Jiu-Jitsu</option>
               <option>Judô</option>
               <option>Karatê</option>
@@ -206,12 +236,12 @@ export default function ConfiguracoesPage() {
             </select>
           </div>
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Logo (opcional)</label>
-            <div className="flex items-center gap-4">
+            <label style={labelStyle}>Logo (opcional)</label>
+            <div className="flex items-center" style={{ gap: 16 }}>
               {logoUrl ? (
-                <img src={logoUrl} alt="Logo da escola" className="w-16 h-16 rounded-lg object-cover" />
+                <img src={logoUrl} alt="Logo da escola" style={{ width: 64, height: 64, borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} />
               ) : (
-                <div className="w-16 h-16 rounded-lg bg-surface flex items-center justify-center font-display font-bold text-ink-faint">?</div>
+                <div style={{ width: 64, height: 64, borderRadius: 'var(--radius-sm)', background: 'var(--color-bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontWeight: 500, color: 'var(--color-text-muted)' }}>?</div>
               )}
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
               <Button variant="ghost" size="sm" type="button" onClick={() => fileRef.current?.click()} disabled={uploadingLogo}>
@@ -220,44 +250,44 @@ export default function ConfiguracoesPage() {
               </Button>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2" style={{ gap: 16 }}>
             <div>
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Cidade</label>
-              <input value={city} onChange={e => setCity(e.target.value)} className={inputClass} {...inputProps} />
+              <label style={labelStyle}>Cidade</label>
+              <input value={city} onChange={e => setCity(e.target.value)} style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
             </div>
             <div>
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Estado</label>
-              <input value={state} onChange={e => setState(e.target.value)} className={inputClass} {...inputProps} />
+              <label style={labelStyle}>Estado</label>
+              <input value={state} onChange={e => setState(e.target.value)} style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
             </div>
           </div>
-          <Button disabled={savingSchool}>
+          <Button disabled={savingSchool} style={{ width: 'fit-content' }}>
             {savingSchool ? 'Salvando...' : 'Salvar alterações'}
           </Button>
         </form>
       )}
 
       {activeTab === 'coach' && (
-        <form className="space-y-4" onSubmit={handleSaveCoach}>
+        <form style={{ display: 'flex', flexDirection: 'column', gap: 16 }} onSubmit={handleSaveCoach}>
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Nome do Head Coach</label>
-            <input value={coachName} onChange={e => setCoachName(e.target.value)} className={inputClass} {...inputProps} />
+            <label style={labelStyle}>Nome do Head Coach</label>
+            <input value={coachName} onChange={e => setCoachName(e.target.value)} style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
           </div>
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Graduação</label>
-            <input value={coachGraduation} onChange={e => setCoachGraduation(e.target.value)} placeholder="Ex: Faixa Preta 3° Grau" className={inputClass} {...inputProps} />
+            <label style={labelStyle}>Graduação</label>
+            <input value={coachGraduation} onChange={e => setCoachGraduation(e.target.value)} placeholder="Ex: Faixa Preta 3° Grau" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
           </div>
-          <Button disabled={savingCoach}>
+          <Button disabled={savingCoach} style={{ width: 'fit-content' }}>
             {savingCoach ? 'Salvando...' : 'Salvar alterações'}
           </Button>
         </form>
       )}
 
       {activeTab === 'conta' && (
-        <div className="space-y-6">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">E-mail atual</label>
-            <div className="flex items-center gap-3">
-              <input value={user?.email ?? ''} readOnly className="flex-1 h-12 px-4 rounded-lg border bg-surface font-body text-base text-ink-muted cursor-not-allowed" style={{ borderColor: 'var(--color-border)' }} />
+            <label style={labelStyle}>E-mail atual</label>
+            <div className="flex items-center" style={{ gap: 12 }}>
+              <input value={user?.email ?? ''} readOnly style={{ ...inputStyle, background: 'var(--color-bg-soft)', color: 'var(--color-text-muted)', cursor: 'not-allowed', flex: 1 }} />
               <Button variant="ghost" size="sm" type="button" onClick={() => setShowEmailForm(!showEmailForm)}>
                 Alterar e-mail
               </Button>
@@ -265,10 +295,10 @@ export default function ConfiguracoesPage() {
           </div>
 
           {showEmailForm && (
-            <div className="space-y-3 p-4 rounded-lg bg-surface">
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Novo e-mail</label>
-              <input value={newEmail} onChange={e => setNewEmail(e.target.value)} type="email" placeholder="novo@email.com" className={inputClass} {...inputProps} />
-              <Button onClick={handleChangeEmail} disabled={savingAccount} size="sm">
+            <div style={{ padding: 16, borderRadius: 'var(--radius-sm)', background: 'var(--color-bg-soft)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <label style={labelStyle}>Novo e-mail</label>
+              <input value={newEmail} onChange={e => setNewEmail(e.target.value)} type="email" placeholder="novo@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
+              <Button onClick={handleChangeEmail} disabled={savingAccount} size="sm" style={{ width: 'fit-content' }}>
                 {savingAccount ? 'Salvando...' : 'Confirmar novo e-mail'}
               </Button>
             </div>
@@ -281,16 +311,16 @@ export default function ConfiguracoesPage() {
           </div>
 
           {showPasswordForm && (
-            <div className="space-y-3 p-4 rounded-lg bg-surface">
+            <div style={{ padding: 16, borderRadius: 'var(--radius-sm)', background: 'var(--color-bg-soft)', display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <label className="font-body text-sm text-ink-muted block mb-1.5">Nova senha</label>
-                <input value={newPassword} onChange={e => setNewPassword(e.target.value)} type="password" className={inputClass} {...inputProps} />
+                <label style={labelStyle}>Nova senha</label>
+                <input value={newPassword} onChange={e => setNewPassword(e.target.value)} type="password" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
               </div>
               <div>
-                <label className="font-body text-sm text-ink-muted block mb-1.5">Confirmar nova senha</label>
-                <input value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} type="password" className={inputClass} {...inputProps} />
+                <label style={labelStyle}>Confirmar nova senha</label>
+                <input value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} type="password" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
               </div>
-              <Button onClick={handleChangePassword} disabled={savingAccount} size="sm">
+              <Button onClick={handleChangePassword} disabled={savingAccount} size="sm" style={{ width: 'fit-content' }}>
                 {savingAccount ? 'Salvando...' : 'Alterar senha'}
               </Button>
             </div>

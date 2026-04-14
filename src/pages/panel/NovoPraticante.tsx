@@ -6,6 +6,38 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  height: 48,
+  padding: '0 16px',
+  borderRadius: 'var(--radius-sm)',
+  border: '1px solid var(--color-border)',
+  background: 'var(--color-bg-soft)',
+  fontFamily: 'var(--font-sans)',
+  fontSize: 15,
+  color: 'var(--color-text)',
+  outline: 'none',
+  transition: 'var(--transition)',
+};
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)',
+  fontWeight: 500,
+  fontSize: 12,
+  color: 'var(--color-text)',
+  display: 'block',
+  marginBottom: 6,
+};
+
+const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  e.currentTarget.style.borderColor = '#9A9A9A';
+  e.currentTarget.style.background = '#FFFFFF';
+};
+const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  e.currentTarget.style.borderColor = 'var(--color-border)';
+  e.currentTarget.style.background = 'var(--color-bg-soft)';
+};
+
 export default function NovoPraticantePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -37,7 +69,6 @@ export default function NovoPraticantePage() {
 
     setLoading(true);
 
-    // Generate FP-ID via database function
     const { data: fpId, error: fpError } = await supabase.rpc('generate_fp_id');
     if (fpError || !fpId) {
       toast.error('Erro ao gerar ID do praticante.');
@@ -70,28 +101,28 @@ export default function NovoPraticantePage() {
   };
 
   return (
-    <div className="p-4 lg:p-8 max-w-3xl">
-      <h1 className="font-display font-bold text-2xl text-ink mb-8" style={{ letterSpacing: '0.02em' }}>Novo Praticante</h1>
+    <div style={{ padding: '32px 32px', maxWidth: 700 }}>
+      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 24, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>Novo Praticante</h1>
 
-      <form className="space-y-8" onSubmit={handleSubmit}>
+      <form style={{ display: 'flex', flexDirection: 'column', gap: 32 }} onSubmit={handleSubmit}>
         <section>
-          <h2 className="font-display font-bold text-base text-ink mb-4 uppercase tracking-wide">Dados Pessoais</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Dados Pessoais</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 16 }}>
             <div>
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Nome</label>
-              <input value={firstName} onChange={e => setFirstName(e.target.value)} required className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} placeholder="Nome" onFocus={e => e.currentTarget.style.borderColor = 'var(--color-border-focus)'} onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'} />
+              <label style={labelStyle}>Nome</label>
+              <input value={firstName} onChange={e => setFirstName(e.target.value)} required style={inputStyle} placeholder="Nome" onFocus={focusInput} onBlur={blurInput} />
             </div>
             <div>
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Sobrenome</label>
-              <input value={lastName} onChange={e => setLastName(e.target.value)} required className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} placeholder="Sobrenome" onFocus={e => e.currentTarget.style.borderColor = 'var(--color-border-focus)'} onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'} />
+              <label style={labelStyle}>Sobrenome</label>
+              <input value={lastName} onChange={e => setLastName(e.target.value)} required style={inputStyle} placeholder="Sobrenome" onFocus={focusInput} onBlur={blurInput} />
             </div>
             <div>
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Data de nascimento</label>
-              <input type="date" value={birthDate} onChange={e => setBirthDate(e.target.value)} className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} />
+              <label style={labelStyle}>Data de nascimento</label>
+              <input type="date" value={birthDate} onChange={e => setBirthDate(e.target.value)} style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
             </div>
             <div>
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Sexo</label>
-              <select value={gender} onChange={e => setGender(e.target.value)} className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }}>
+              <label style={labelStyle}>Sexo</label>
+              <select value={gender} onChange={e => setGender(e.target.value)} style={inputStyle} onFocus={focusInput as any} onBlur={blurInput as any}>
                 <option value="">Selecione</option>
                 <option>Masculino</option>
                 <option>Feminino</option>
@@ -99,36 +130,36 @@ export default function NovoPraticantePage() {
               </select>
             </div>
             <div className="sm:col-span-2">
-              <label className="font-body text-sm text-ink-muted block mb-1.5">CPF</label>
-              <input value={cpf} onChange={e => setCpf(e.target.value)} className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} placeholder="000.000.000-00" onFocus={e => e.currentTarget.style.borderColor = 'var(--color-border-focus)'} onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'} />
-              <p className="font-body text-xs text-ink-faint mt-1">Usado apenas para evitar duplicatas — nunca exibido publicamente</p>
+              <label style={labelStyle}>CPF</label>
+              <input value={cpf} onChange={e => setCpf(e.target.value)} style={inputStyle} placeholder="000.000.000-00" onFocus={focusInput} onBlur={blurInput} />
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-muted)', marginTop: 4 }}>Usado apenas para evitar duplicatas — nunca exibido publicamente</p>
             </div>
           </div>
         </section>
 
         <section>
-          <h2 className="font-display font-bold text-base text-ink mb-4 uppercase tracking-wide">Filiação</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Filiação</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 16 }}>
             <div>
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Nome do pai</label>
-              <input value={fatherName} onChange={e => setFatherName(e.target.value)} className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} onFocus={e => e.currentTarget.style.borderColor = 'var(--color-border-focus)'} onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'} />
+              <label style={labelStyle}>Nome do pai</label>
+              <input value={fatherName} onChange={e => setFatherName(e.target.value)} style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
             </div>
             <div>
-              <label className="font-body text-sm text-ink-muted block mb-1.5">Nome da mãe</label>
-              <input value={motherName} onChange={e => setMotherName(e.target.value)} className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink placeholder:text-ink-faint focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} onFocus={e => e.currentTarget.style.borderColor = 'var(--color-border-focus)'} onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'} />
+              <label style={labelStyle}>Nome da mãe</label>
+              <input value={motherName} onChange={e => setMotherName(e.target.value)} style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
             </div>
           </div>
         </section>
 
         <section>
-          <h2 className="font-display font-bold text-base text-ink mb-4 uppercase tracking-wide">Arte Marcial</h2>
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Arte Marcial</h2>
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Arte marcial da escola</label>
-            <input className="w-full h-12 px-4 rounded-lg border bg-surface font-body text-base text-ink-muted cursor-not-allowed" style={{ borderColor: 'var(--color-border)' }} value={school?.martial_art ?? 'Jiu-Jitsu'} readOnly />
+            <label style={labelStyle}>Arte marcial da escola</label>
+            <input style={{ ...inputStyle, color: 'var(--color-text-muted)', cursor: 'not-allowed' }} value={school?.martial_art ?? 'Jiu-Jitsu'} readOnly />
           </div>
         </section>
 
-        <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
+        <div className="flex items-center" style={{ gap: 12, paddingTop: 16, borderTop: '1px solid var(--color-border)' }}>
           <Link to="/painel/praticantes">
             <Button variant="ghost" type="button">Cancelar</Button>
           </Link>
