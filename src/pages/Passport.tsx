@@ -146,8 +146,8 @@ export default function PassportPage() {
       }}
     >
       <div
-        className="flex items-center justify-between"
-        style={{ height: '100%', maxWidth: 1440, margin: '0 auto', padding: '0 60px' }}
+        className="fp-container flex items-center justify-between"
+        style={{ height: '100%' }}
       >
         <Link to="/" className="no-underline">
           <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
