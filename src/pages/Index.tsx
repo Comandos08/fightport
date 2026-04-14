@@ -26,6 +26,10 @@ function useRevealRef() {
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Todos');
+  const buscaRef = useRevealRef();
+  const comoRef = useRevealRef();
+  const provaRef = useRevealRef();
+  const ctaRef = useRevealRef();
 
   const filters = ['Todos', 'Jiu-Jitsu', 'Judô', 'Karatê', 'Muay Thai', 'Faixa Preta', 'Faixa Roxa'];
 
