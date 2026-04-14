@@ -186,6 +186,17 @@ export default function EditarPraticantePage() {
           </div>
         </section>
 
+        <section>
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 16 }}>Graduação</h2>
+          <div>
+            <label style={labelStyle}>Faixa atual</label>
+            <select value={currentBelt} onChange={e => setCurrentBelt(e.target.value)} style={inputStyle} onFocus={focusInput as any} onBlur={blurInput as any}>
+              <option value="">Selecione</option>
+              {beltOptions.map(b => <option key={b}>{b}</option>)}
+            </select>
+          </div>
+        </section>
+
         <div className="flex items-center" style={{ gap: 12, paddingTop: 16, borderTop: '1px solid var(--color-border)' }}>
           <Link to="/painel/praticantes">
             <Button variant="ghost" type="button">Cancelar</Button>
