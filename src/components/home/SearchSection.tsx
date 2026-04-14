@@ -1,13 +1,19 @@
 import { useState } from 'react';
-import { Search } from 'lucide-react';
-import { AthleteCard } from '@/components/AthleteCard';
+import { Search, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { BeltBadge } from '@/components/BeltBadge';
+import { getInitials } from '@/lib/utils';
+
+const PAGE_SIZE = 10;
 
 export function SearchSection() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(1);
 
   const { data: practitioners = [] } = useQuery({
     queryKey: ['public-practitioners'],
@@ -16,7 +22,7 @@ export function SearchSection() {
         .from('practitioners')
         .select('*, schools(name), achievements(belt)')
         .order('created_at', { ascending: false })
-        .limit(50);
+        .limit(200);
       return data ?? [];
     },
   });
@@ -26,27 +32,14 @@ export function SearchSection() {
     return `${a.first_name} ${a.last_name} ${a.fp_id} ${schoolName}`.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
-  const mappedAthletes = filtered.map((a: any) => ({
-    id: a.id,
-    publicId: a.fp_id,
-    name: a.first_name,
-    surname: a.last_name,
-    sport: a.martial_art,
-    school: (a.schools as any)?.name ?? '',
-    headCoach: '',
-    headCoachBelt: '',
-    photo: a.photo_url,
-    achievements: (a.achievements ?? []).map((ach: any, idx: number) => ({
-      id: `${a.id}-${idx}`,
-      date: '',
-      belt: ach.belt,
-      title: `Faixa ${ach.belt}`,
-      hashPartial: '',
-      hashFull: '',
-      school: '',
-      graduatedBy: '',
-    })),
-  }));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  const getLastBelt = (achievements: any[]) => {
+    if (!achievements || achievements.length === 0) return null;
+    return achievements[achievements.length - 1]?.belt;
+  };
 
   return (
     <section id="busca" style={{ background: 'var(--color-bg)' }}>
@@ -70,7 +63,7 @@ export function SearchSection() {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+                onChange={e => { setSearchQuery(e.target.value); setPage(1); }}
                 placeholder={t('search.placeholder')}
                 style={{
                   width: '100%', height: 64, paddingLeft: 56, paddingRight: 20,
@@ -84,31 +77,142 @@ export function SearchSection() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 20 }}>
-            {mappedAthletes.map((a: any) => (
-              <div key={a.id}>
-                <AthleteCard athlete={a} />
+          {/* Results count */}
+          {filtered.length > 0 && (
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 16 }}>
+              {filtered.length} {filtered.length === 1 ? 'atleta encontrado' : 'atletas encontrados'}
+            </p>
+          )}
+
+          {/* Table */}
+          {paginated.length > 0 ? (
+            <>
+              <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)' }}>
+                  <thead>
+                    <tr style={{ background: 'var(--color-bg-soft)', borderBottom: '1px solid var(--color-border)' }}>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>Atleta</th>
+                      <th className="hidden md:table-cell" style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>ID</th>
+                      <th className="hidden sm:table-cell" style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>Organização</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}>Faixa</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)' }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginated.map((a: any, idx: number) => {
+                      const belt = getLastBelt(a.achievements);
+                      const schoolName = (a.schools as any)?.name ?? '';
+                      const isLast = idx === paginated.length - 1;
+                      return (
+                        <tr
+                          key={a.id}
+                          onClick={() => navigate(`/p/${a.fp_id}`)}
+                          className="cursor-pointer"
+                          style={{
+                            borderBottom: isLast ? 'none' : '1px solid var(--color-border)',
+                            transition: 'var(--transition)',
+                          }}
+                          onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')}
+                          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                        >
+                          <td style={{ padding: '12px 16px' }}>
+                            <div className="flex items-center" style={{ gap: 10 }}>
+                              <div
+                                style={{
+                                  width: 32, height: 32, borderRadius: '50%',
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                  background: 'var(--color-text)', color: '#FFFFFF',
+                                  fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11,
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {getInitials(a.first_name, a.last_name)}
+                              </div>
+                              <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-text)' }}>
+                                {a.first_name} {a.last_name}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="hidden md:table-cell" style={{ padding: '12px 16px' }}>
+                            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, color: 'var(--color-text-muted)' }}>
+                              {a.fp_id}
+                            </span>
+                          </td>
+                          <td className="hidden sm:table-cell" style={{ padding: '12px 16px' }}>
+                            <span style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>
+                              {schoolName}
+                            </span>
+                          </td>
+                          <td style={{ padding: '12px 16px' }}>
+                            {belt ? <BeltBadge belt={belt} size="sm" /> : <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>—</span>}
+                          </td>
+                          <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                            <ExternalLink style={{ width: 14, height: 14, color: 'var(--color-text-muted)' }} />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
-            ))}
-           {mappedAthletes.length === 0 && (
-              <div className="col-span-full" style={{ margin: '64px auto', maxWidth: 400, textAlign: 'center' }}>
-                <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 22, color: 'var(--color-text)', marginBottom: 8 }}>
-                  {t('search.emptyTitle')}
-                </p>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 8, marginBottom: 24 }}>
-                  {t('search.emptyDesc')}
-                </p>
-                <a
-                  href="/cadastro"
-                  style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: '#1C1C1C', background: 'var(--color-bg-amber)', padding: '12px 24px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', transition: 'var(--transition)', display: 'inline-block' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#e09600')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-bg-amber)')}
-                >
-                  {t('search.emptyCta')}
-                </a>
-              </div>
-            )}
-          </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between" style={{ marginTop: 16, fontFamily: 'var(--font-sans)' }}>
+                  <span style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>
+                    Página {currentPage} de {totalPages}
+                  </span>
+                  <div className="flex items-center" style={{ gap: 8 }}>
+                    <button
+                      onClick={() => setPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage <= 1}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        width: 32, height: 32, borderRadius: 'var(--radius-sm)',
+                        border: '1px solid var(--color-border)', background: 'var(--color-bg)',
+                        cursor: currentPage <= 1 ? 'not-allowed' : 'pointer',
+                        opacity: currentPage <= 1 ? 0.4 : 1,
+                        transition: 'var(--transition)',
+                      }}
+                    >
+                      <ChevronLeft style={{ width: 16, height: 16, color: 'var(--color-text)' }} />
+                    </button>
+                    <button
+                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage >= totalPages}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        width: 32, height: 32, borderRadius: 'var(--radius-sm)',
+                        border: '1px solid var(--color-border)', background: 'var(--color-bg)',
+                        cursor: currentPage >= totalPages ? 'not-allowed' : 'pointer',
+                        opacity: currentPage >= totalPages ? 0.4 : 1,
+                        transition: 'var(--transition)',
+                      }}
+                    >
+                      <ChevronRight style={{ width: 16, height: 16, color: 'var(--color-text)' }} />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div style={{ margin: '64px auto', maxWidth: 400, textAlign: 'center' }}>
+              <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 22, color: 'var(--color-text)', marginBottom: 8 }}>
+                {t('search.emptyTitle')}
+              </p>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 8, marginBottom: 24 }}>
+                {t('search.emptyDesc')}
+              </p>
+              <a
+                href="/cadastro"
+                style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: '#1C1C1C', background: 'var(--color-bg-amber)', padding: '12px 24px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', transition: 'var(--transition)', display: 'inline-block' }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#e09600')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-bg-amber)')}
+              >
+                {t('search.emptyCta')}
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </section>
