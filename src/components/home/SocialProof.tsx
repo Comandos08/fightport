@@ -1,28 +1,42 @@
 export function SocialProof() {
+  const cities = 'São Paulo · Rio de Janeiro · Curitiba · Belo Horizonte · Porto Alegre · Fortaleza · Recife';
+
   return (
     <section
       style={{
-        background: 'var(--blue-deep)',
-        padding: '18px 40px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderTop: '1px solid rgba(255,255,255,0.08)',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        background: 'var(--color-bg-soft)',
+        padding: '20px 0',
+        borderTop: '1px solid var(--color-border)',
+        borderBottom: '1px solid var(--color-border)',
+        overflow: 'hidden',
       }}
     >
-      <span
-        className="font-display text-center"
-        style={{
-          fontSize: 10,
-          fontWeight: 700,
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.4)',
-        }}
-      >
-        Academias ativas em → São Paulo · Rio de Janeiro · Curitiba · Belo Horizonte · Porto Alegre · Fortaleza
-      </span>
+      <div className="flex items-center" style={{ gap: 40, paddingLeft: 'var(--section-px-sm)' }}>
+        <span
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'var(--color-text-muted)',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+          }}
+        >
+          ACADEMIAS ATIVAS EM →
+        </span>
+        <div style={{ overflow: 'hidden', flex: 1 }}>
+          <div className="marquee-track">
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 400, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
+              {cities}
+            </span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 400, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
+              {cities}
+            </span>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

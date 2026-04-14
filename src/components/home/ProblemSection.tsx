@@ -1,82 +1,105 @@
+const stats = [
+  { number: '72%', desc: 'plataformas de certificação falham por falta de padrão', source: 'FONTE: VFUNCTION, 2022' },
+  { number: '50%', desc: 'dos árbitros não têm como verificar a graduação real', source: 'ESTIMATIVA INTERNA, 2024' },
+  { number: '5 anos', desc: 'de treino que qualquer um pode falsificar com uma impressora', source: 'REALIDADE DO MERCADO' },
+];
+
 export function ProblemSection() {
   return (
     <section
-      className="px-6 md:px-10"
       style={{
-        background: 'var(--bg-2)',
-        padding: '100px 40px',
-        borderTop: '1px solid var(--border-2)',
+        background: 'var(--color-bg-amber)',
+        padding: 'var(--section-py) var(--section-px-sm)',
       }}
     >
-      <div className="container mx-auto max-w-7xl">
-        {/* Label */}
-        <div className="flex items-center" style={{ gap: 10, marginBottom: 20 }}>
-          <div style={{ width: 20, height: 1.5, background: 'var(--terra)' }} />
-          <span
-            className="font-display"
+      <div
+        className="grid grid-cols-1 md:grid-cols-2"
+        style={{ maxWidth: 1200, margin: '0 auto', gap: 64 }}
+      >
+        {/* Left */}
+        <div>
+          <p
             style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.18em',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 11,
+              fontWeight: 500,
+              letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              color: 'var(--terra)',
+              color: 'var(--color-text)',
+              marginBottom: 48,
             }}
           >
-            ◆ O PROBLEMA
-          </span>
+            O PROBLEMA
+          </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 500,
+              fontSize: 'clamp(32px, 4vw, 52px)',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.1,
+              color: 'var(--color-text)',
+              maxWidth: 460,
+              margin: 0,
+            }}
+          >
+            Certificados físicos são fáceis de falsificar.
+          </h2>
         </div>
 
-        {/* H2 */}
-        <h2
-          className="font-display"
-          style={{
-            fontWeight: 700,
-            fontSize: 'clamp(32px, 4vw, 50px)',
-            letterSpacing: '-0.02em',
-            lineHeight: 1.1,
-            color: 'var(--ink)',
-            maxWidth: 560,
-            marginBottom: 32,
-          }}
-        >
-          Certificados físicos são fáceis de falsificar.
-        </h2>
-
-        {/* Body */}
-        <div className="flex flex-col" style={{ gap: 16, maxWidth: 600 }}>
-          {[
-            'Qualquer academia emite qualquer certificado. Não existe verificação nacional.',
-            'Árbitros aceitam faixas sem questionar. Campeonatos têm atletas na categoria errada.',
-            'Seu aluno leva anos para chegar na faixa preta. E qualquer um pode imprimir uma.',
-          ].map((text, i) => (
-            <p
-              key={i}
-              className="font-body"
+        {/* Right — stat cards */}
+        <div className="flex flex-col" style={{ gap: 2 }}>
+          {stats.map((s) => (
+            <div
+              key={s.number}
               style={{
-                fontSize: 17,
-                fontWeight: 400,
-                color: 'var(--muted)',
-                lineHeight: 1.75,
+                background: 'rgba(0,0,0,0.08)',
+                padding: '28px 24px',
+                borderRadius: 'var(--radius-xs)',
               }}
             >
-              {text}
-            </p>
+              <div
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 500,
+                  fontSize: 48,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1,
+                  color: 'var(--color-text)',
+                }}
+              >
+                {s.number}
+              </div>
+              <p
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 15,
+                  fontWeight: 400,
+                  color: 'var(--color-text)',
+                  opacity: 0.75,
+                  marginTop: 8,
+                  maxWidth: 280,
+                }}
+              >
+                {s.desc}
+              </p>
+              <p
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 11,
+                  fontWeight: 400,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-text)',
+                  opacity: 0.45,
+                  marginTop: 12,
+                }}
+              >
+                {s.source}
+              </p>
+            </div>
           ))}
         </div>
-
-        {/* Closing */}
-        <p
-          className="font-display"
-          style={{
-            fontWeight: 700,
-            fontStyle: 'italic',
-            fontSize: 24,
-            color: 'var(--blue-deep)',
-            marginTop: 40,
-          }}
-        >
-          Isso acaba agora.
-        </p>
       </div>
     </section>
   );
