@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Plus, Upload, Eye, Award, Pencil, Trash2, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
+import { Search, Plus, Upload, Download, Eye, Award, Pencil, Trash2, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { BeltBadge } from '@/components/BeltBadge';
