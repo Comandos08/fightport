@@ -9,10 +9,10 @@ export function TestimonialsSection() {
     <section style={{ background: 'var(--color-bg)' }}>
       <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
         <div className="section-inner">
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
             O QUE DIZEM AS ACADEMIAS
           </p>
-          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.025em', lineHeight: 1.1, color: 'var(--color-text)', marginTop: 24, marginBottom: 64 }}>
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: 'var(--color-text)', marginTop: 24, marginBottom: 64 }}>
             Quem usa, não volta atrás.
           </h2>
 
@@ -20,7 +20,7 @@ export function TestimonialsSection() {
             {testimonials.map((t, i) => (
               <div key={i} style={{ borderTop: '2px solid var(--color-border-dark)', paddingTop: 32 }}>
                 <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 48, color: 'var(--color-border-dark)', lineHeight: 0.8, display: 'block', marginBottom: 16 }}>&ldquo;</span>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 400, fontStyle: 'italic', color: 'var(--color-text)', lineHeight: 1.7, marginBottom: 28 }}>{t.text}</p>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 300, fontStyle: 'italic', color: 'var(--color-text)', lineHeight: 1.7, marginBottom: 28 }}>{t.text}</p>
                 <div style={{ height: 1, background: 'var(--color-border)', margin: '20px 0' }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--color-bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text-muted)', flexShrink: 0 }}>{t.initials}</div>

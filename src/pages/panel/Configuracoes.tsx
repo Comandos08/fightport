@@ -193,7 +193,7 @@ export default function ConfiguracoesPage() {
 
   return (
     <div style={{ padding: '32px 32px', maxWidth: 700 }}>
-      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>Configurações</h1>
+      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>Configurações</h1>
 
       <div className="flex" style={{ gap: 4, marginBottom: 32, borderBottom: '1px solid var(--color-border)' }}>
         {tabs.map(t => (

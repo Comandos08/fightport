@@ -117,7 +117,7 @@ export default function PraticantesPage() {
   return (
     <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between" style={{ gap: 16, marginBottom: 28 }}>
-        <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>Praticantes</h1>
+        <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>Praticantes</h1>
         <div className="flex" style={{ gap: 8 }}>
           <Button variant="ghost" size="sm" onClick={handleExportCsv}><Download className="h-4 w-4" /> Exportar CSV</Button>
           <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}><Upload className="h-4 w-4" /> Importar CSV/XLSX</Button>

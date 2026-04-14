@@ -19,11 +19,11 @@
     --color-border-dark:  #D0D0CB;
 
     /* ── Tipografia ── */
-    --font-sans:  'Instrument Sans', sans-serif;
+    --font-sans:  'DM Sans', sans-serif;
     --font-mono:  'Space Mono', monospace;
 
     /* Legacy aliases */
-    --font-display: var(--font-mono);
+    --font-display: var(--font-sans);
     --font-body:    var(--font-sans);
 
     /* ── Espaçamento editorial ── */
@@ -132,11 +132,13 @@
 
   body {
     font-family: var(--font-sans);
+    font-weight: 300;
     background: var(--color-bg);
     color: var(--color-text);
-    font-size: 15px;
-    line-height: 1.65;
+    font-size: 16px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -177,56 +179,81 @@
   .t-display {
     font-family: var(--font-sans);
     font-size: clamp(40px, 5.5vw, 72px);
-    font-weight: 500;
-    line-height: 1.08;
-    letter-spacing: -0.025em;
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
     color: var(--color-text);
   }
 
   .t-heading {
     font-family: var(--font-sans);
     font-size: clamp(28px, 3.5vw, 48px);
-    font-weight: 500;
-    line-height: 1.12;
-    letter-spacing: -0.02em;
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    color: var(--color-text);
+  }
+
+  .t-subheading {
+    font-family: var(--font-sans);
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
     color: var(--color-text);
   }
 
   .t-body-lg {
     font-family: var(--font-sans);
     font-size: 18px;
-    font-weight: 400;
+    font-weight: 300;
     line-height: 1.65;
     color: var(--color-text-muted);
   }
 
   .t-body {
     font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 1.65;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .t-body-sm {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.5;
     color: var(--color-text-muted);
   }
 
   .t-label {
     font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
+  .t-ui {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-text);
+  }
+
   .t-mono {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 400;
     letter-spacing: 0.02em;
   }
 
   /* ── Legacy font utilities ── */
   .font-display {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     letter-spacing: -0.02em;
   }
   .font-body {
@@ -240,12 +267,12 @@
   .text-hero {
     font-size: clamp(42px, 5.5vw, 72px);
     line-height: 1.04;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.04em;
   }
   .text-section {
     font-size: clamp(32px, 4vw, 52px);
     line-height: 1.08;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.035em;
   }
   .text-card {
     font-size: 18px;

@@ -14,10 +14,24 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["'Instrument Sans'", 'sans-serif'],
-        mono: ["'Space Mono'", 'monospace'],
-        display: ["'Space Mono'", 'monospace'],
-        body: ["'Instrument Sans'", 'sans-serif'],
+        sans: ['"DM Sans"', 'sans-serif'],
+        mono: ['"Space Mono"', 'monospace'],
+        display: ['"DM Sans"', 'sans-serif'],
+        body: ['"DM Sans"', 'sans-serif'],
+      },
+      fontWeight: {
+        light: '300',
+        normal: '400',
+        medium: '500',
+      },
+      letterSpacing: {
+        tightest: '-0.04em',
+        tighter: '-0.035em',
+        tight: '-0.025em',
+        normal: '0em',
+        wide: '0.06em',
+        wider: '0.1em',
+        widest: '0.14em',
       },
       colors: {
         'bg-soft':      '#F7F7F5',

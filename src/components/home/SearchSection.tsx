@@ -58,13 +58,13 @@ export function SearchSection() {
       <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
         <div className="section-inner">
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 20 }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 20 }}>
               BUSCA PÚBLICA
             </p>
-            <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.025em', lineHeight: 1.1, color: 'var(--color-text)', margin: '0 0 8px' }}>
+            <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: 'var(--color-text)', margin: '0 0 8px' }}>
               Encontre um atleta
             </h2>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--color-text-muted)' }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--color-text-muted)', fontWeight: 300 }}>
               certificado pela sua academia
             </p>
           </div>

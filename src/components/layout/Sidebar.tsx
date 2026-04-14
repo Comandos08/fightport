@@ -48,7 +48,7 @@ export function Sidebar() {
                 gap: 10,
                 padding: '9px 20px',
                 fontFamily: 'var(--font-sans)',
-                fontWeight: active ? 500 : 400,
+                fontWeight: active ? 400 : 300,
                 fontSize: 14,
                 color: active ? 'var(--color-text)' : 'var(--color-text-muted)',
                 background: active ? 'var(--color-bg-soft)' : 'transparent',

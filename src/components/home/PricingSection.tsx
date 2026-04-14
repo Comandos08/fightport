@@ -21,13 +21,13 @@ export function PricingSection() {
     <section style={{ background: 'var(--color-bg-soft)' }}>
       <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
         <div className="section-inner">
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
             PREÇOS
           </p>
-          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.025em', lineHeight: 1.1, color: 'var(--color-text)', marginTop: 24 }}>
+          <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: 'var(--color-text)', marginTop: 24 }}>
             Você só paga quando graduar.
           </h2>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 17, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 16, marginBottom: 64 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 17, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 16, marginBottom: 64 }}>
             Sem mensalidade. Sem contrato. Créditos nunca expiram.
           </p>
 
@@ -78,7 +78,7 @@ export function PricingSection() {
                           <span style={{
                             fontFamily: 'var(--font-sans)',
                             fontSize: 10,
-                            fontWeight: 600,
+                            fontWeight: 500,
                             letterSpacing: '0.08em',
                             textTransform: 'uppercase',
                             background: '#1C1C1C',
@@ -110,7 +110,7 @@ export function PricingSection() {
                         ...tdBase,
                         textAlign: 'right',
                         fontSize: 13,
-                        fontWeight: 400,
+                        fontWeight: 300,
                         color: isHL ? 'var(--color-text)' : 'var(--color-text-muted)',
                         opacity: isHL ? 0.65 : 1,
                         borderBottom: isHL ? 'none' : '1px solid var(--color-border)',
@@ -128,7 +128,7 @@ export function PricingSection() {
                           to="/cadastro"
                           style={{
                             fontFamily: 'var(--font-sans)',
-                            fontWeight: 500,
+                            fontWeight: 400,
                             fontSize: 14,
                             color: 'var(--color-text)',
                             textDecoration: 'none',
@@ -163,20 +163,20 @@ export function PricingSection() {
                   <div className="flex items-center" style={{ gap: 8 }}>
                     <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 17, color: 'var(--color-text)' }}>{pkg.name}</span>
                     {pkg.highlight && (
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', background: '#1C1C1C', color: '#FFFFFF', padding: '2px 8px', borderRadius: 3 }}>MAIS POPULAR</span>
+                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', background: '#1C1C1C', color: '#FFFFFF', padding: '2px 8px', borderRadius: 3 }}>MAIS POPULAR</span>
                     )}
                   </div>
                   <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 17, color: 'var(--color-text)' }}>{pkg.price}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{pkg.credits} créditos · {pkg.unit}</span>
-                  <Link to="/cadastro" style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)', textDecoration: 'none' }}>Comprar →</Link>
+                  <Link to="/cadastro" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text)', textDecoration: 'none' }}>Comprar →</Link>
                 </div>
               </div>
             ))}
           </div>
 
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 24 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 24 }}>
             Créditos nunca expiram. Use quando quiser.
           </p>
         </div>

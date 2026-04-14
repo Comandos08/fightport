@@ -274,9 +274,9 @@ export default function PassportPage() {
           {/* Name */}
           <h1 style={{
             fontFamily: 'var(--font-sans)',
-            fontWeight: 500,
+            fontWeight: 400,
             fontSize: 'clamp(32px, 4vw, 52px)',
-            letterSpacing: '-0.025em',
+            letterSpacing: '-0.03em',
             color: 'var(--color-text)',
             marginTop: 20,
             marginBottom: 8,
@@ -286,13 +286,13 @@ export default function PassportPage() {
           </h1>
 
           {/* Modality + School */}
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--color-text-muted)', marginTop: 0, marginBottom: 0 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 0, marginBottom: 0 }}>
             {practitioner.martial_art} · {schoolData?.name}
           </p>
 
           {/* Head coach */}
           {headCoach && (
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)', marginTop: 4 }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
               Graduado por {headCoach.name}
             </p>
           )}
@@ -338,7 +338,7 @@ export default function PassportPage() {
         <div style={{ paddingTop: 48 }}>
           <h2 style={{
             fontFamily: 'var(--font-sans)',
-            fontWeight: 500,
+            fontWeight: 400,
             fontSize: 20,
             color: 'var(--color-text)',
             marginBottom: 32,
@@ -383,7 +383,7 @@ export default function PassportPage() {
                         </span>
                       )}
                     </div>
-                    <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 16, color: 'var(--color-text)', margin: '0 0 4px' }}>Faixa {ach.belt}</p>
+                    <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 16, color: 'var(--color-text)', margin: '0 0 4px' }}>Faixa {ach.belt}</p>
                     <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>{schoolData?.name} · {ach.graduated_by}</p>
                     <div style={{ marginTop: 4 }}>
                       <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: '#9A9A9A' }}>
