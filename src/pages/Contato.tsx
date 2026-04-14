@@ -54,10 +54,24 @@ export default function Contato() {
 
   const isValid = name.trim() && email.trim() && subject && message.trim();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) return;
-    setSubmitted(true);
+    setSending(true);
+    try {
+      const { error } = await supabase.functions.invoke('send-contact-email', {
+        body: { name, email, organization: org, subject, message },
+      });
+      if (error) throw error;
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Contact form error:', err);
+      toast.error(t('common.fillAllFields'));
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
