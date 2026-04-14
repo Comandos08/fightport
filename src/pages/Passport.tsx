@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Share2, QrCode } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { QRCodeSVG } from 'qrcode.react';
 import { NavbarPublic } from '@/components/layout/NavbarPublic';
 import { VerifiedBadge } from '@/components/VerifiedBadge';
