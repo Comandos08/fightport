@@ -1,5 +1,4 @@
 import { Navbar } from '@/components/layout/Navbar';
-import { Navbar } from '@/components/layout/Navbar';
 import { HeroSection } from '@/components/home/HeroSection';
 import { SocialProof } from '@/components/home/SocialProof';
 import { ProblemSection } from '@/components/home/ProblemSection';
