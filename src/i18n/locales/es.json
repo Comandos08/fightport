@@ -5,5 +5,125 @@
     "forSchools": "Para escuelas",
     "login": "Iniciar sesión",
     "registerSchool": "Registra tu escuela"
+  },
+  "hero": {
+    "badge": "CERTIFICACIÓN DEPORTIVA → ORGANIZACIONES DE ARTES MARCIALES",
+    "title": "La graduación<br />de tu atleta,<br /><accent>inmutable.</accent>",
+    "subtitle": "Cualquier persona verifica el cinturón de tu alumno en segundos — escaneando un QR Code. Para siempre. Sin posibilidad de falsificación.",
+    "ctaPrimary": "Registrar mi organización",
+    "ctaSecondary": "Verificar un atleta →",
+    "stats": {
+      "athletes": "atletas certificados",
+      "organizations": "organizaciones activas",
+      "graduations": "graduaciones registradas"
+    }
+  },
+  "problem": {
+    "badge": "EL PROBLEMA",
+    "title": "Los certificados físicos son fáciles de falsificar.",
+    "stat1": {
+      "number": "72%",
+      "desc": "de las plataformas de certificación fallan por falta de estándar",
+      "source": "FUENTE: VFUNCTION, 2022"
+    },
+    "stat2": {
+      "number": "50%",
+      "desc": "de los árbitros no pueden verificar la graduación real",
+      "source": "ESTIMACIÓN INTERNA, 2024"
+    },
+    "stat3": {
+      "number": "5 años",
+      "desc": "de entrenamiento que cualquiera puede falsificar con una impresora",
+      "source": "REALIDAD DEL MERCADO"
+    }
+  },
+  "solution": {
+    "badge": "LA SOLUCIÓN",
+    "title": "Un sprint para modernizar cómo tu organización certifica atletas.",
+    "item1": {
+      "title": "Verificación instantánea",
+      "desc": "Cualquier persona escanea el QR Code y ve el historial completo del atleta en 0,3 segundos."
+    },
+    "item2": {
+      "title": "Inmutable por criptografía",
+      "desc": "Hash SHA-256 único por graduación. Nadie puede alterarlo — ni la organización, ni nosotros."
+    },
+    "item3": {
+      "title": "Pasaporte vitalicio",
+      "desc": "El atleta conserva su link para siempre. Cambia de organización, cierra la escuela — el pasaporte permanece."
+    }
+  },
+  "process": {
+    "badge": "PROCESO",
+    "title": "Tres pasos. Para siempre.",
+    "step1": {
+      "title": "La organización registra sus atletas",
+      "desc": "Nombre, foto y documento. El sistema bloquea duplicados — ningún atleta puede tener dos perfiles.",
+      "tag": "Documento verificado"
+    },
+    "step2": {
+      "title": "Registra la graduación",
+      "desc": "Selecciona el atleta, el nuevo cinturón, la fecha y quién graduó. Hash generado automáticamente.",
+      "tag": "SHA-256 · inmutable"
+    },
+    "step3": {
+      "title": "Cualquier persona lo verifica",
+      "desc": "Escanea el QR. Ve el pasaporte digital completo del atleta. Firmado. Para siempre.",
+      "tag": "Público · auditable"
+    }
+  },
+  "search": {
+    "badge": "BÚSQUEDA PÚBLICA",
+    "title": "Encuentra un atleta",
+    "subtitle": "certificado por tu organización",
+    "placeholder": "Nombre del atleta, ID u organización...",
+    "emptyTitle": "Ningún atleta registrado aún.",
+    "emptyDesc": "Registra tu organización y emite el primer certificado.",
+    "emptyCta": "Registrar mi organización →"
+  },
+  "pricing": {
+    "badge": "PRECIOS",
+    "title": "Solo pagas cuando gradúas.",
+    "subtitle": "Sin mensualidad. Sin contrato. Los créditos nunca expiran.",
+    "neverExpire": "Los créditos nunca expiran. Úsalos cuando quieras.",
+    "mostPopular": "MÁS POPULAR",
+    "buy": "Comprar →",
+    "credits": "créditos",
+    "perGrad": "POR GRAD.",
+    "plan": {
+      "starter": "Starter",
+      "school": "Escuela",
+      "org": "Organización"
+    },
+    "tableHeaders": {
+      "plan": "PLAN",
+      "credits": "CRÉDITOS",
+      "price": "PRECIO",
+      "perGrad": "POR GRAD."
+    }
+  },
+  "testimonials": {
+    "badge": "LO QUE DICEN LAS ORGANIZACIONES",
+    "title": "Quien lo usa, no vuelve atrás."
+  },
+  "socialProof": {
+    "label": "ORGANIZACIONES ACTIVAS EN →"
+  },
+  "cta": {
+    "title": "Tu organización se lo merece.",
+    "subtitle": "Registro gratuito. Solo pagas cuando gradúas al atleta.",
+    "button": "Registrar mi organización →",
+    "disclaimer": "Sin tarjeta de crédito · Sin contrato · Cancela cuando quieras"
+  },
+  "footer": {
+    "tagline": "El pasaporte digital de tu atleta.",
+    "product": "Producto",
+    "company": "Empresa",
+    "legal": "Legal",
+    "aboutUs": "Sobre nosotros",
+    "contact": "Contacto",
+    "terms": "Términos de Uso",
+    "privacy": "Privacidad",
+    "lgpd": "LGPD"
   }
 }
