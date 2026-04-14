@@ -11,11 +11,11 @@ export default function LoginPage() {
       {/* Left */}
       <div className="lg:w-1/2 bg-dark p-8 lg:p-16 flex flex-col justify-center items-center lg:items-start">
         <Link to="/" className="flex items-baseline mb-12">
-          <span className="font-display font-bold text-2xl" style={{ color: '#fff' }}>fight</span>
-          <span className="font-display font-normal text-2xl" style={{ color: '#fff' }}>port</span>
-          <span className="font-display font-bold text-2xl text-accent-brand">.pro</span>
+          <span className="font-display font-bold text-[20px]" style={{ color: '#fff', letterSpacing: '0.05em' }}>FIGHT</span>
+          <span className="font-display font-normal text-[20px]" style={{ color: '#fff', letterSpacing: '0.05em' }}>PORT</span>
+          <span className="font-display font-bold text-[20px] text-accent-brand" style={{ letterSpacing: '0.05em' }}>.PRO</span>
         </Link>
-        <h1 className="font-display font-extrabold text-4xl lg:text-5xl leading-tight mb-4 text-center lg:text-left" style={{ color: '#fff' }}>
+        <h1 className="font-display font-bold text-3xl lg:text-4xl leading-tight mb-4 text-center lg:text-left" style={{ color: '#fff', letterSpacing: '-0.02em' }}>
           O PASSAPORTE<br />DO SEU ATLETA.
         </h1>
         <p className="font-body text-lg" style={{ color: 'rgba(255,255,255,0.5)' }}>
@@ -26,7 +26,7 @@ export default function LoginPage() {
       {/* Right */}
       <div className="lg:w-1/2 bg-main p-8 lg:p-16 flex items-center justify-center">
         <div className="w-full max-w-md">
-          <h2 className="font-display font-bold text-2xl text-ink mb-8">Entrar</h2>
+          <h2 className="font-display font-bold text-xl text-ink mb-8" style={{ letterSpacing: '0.02em' }}>Entrar</h2>
           <form className="space-y-4" onSubmit={e => { e.preventDefault(); window.location.href = '/painel'; }}>
             <div>
               <label className="font-body text-sm text-ink-muted block mb-1.5">E-mail</label>

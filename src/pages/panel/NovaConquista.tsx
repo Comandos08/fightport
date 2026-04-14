@@ -31,7 +31,7 @@ export default function NovaConquistaPage() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-verified flex items-center justify-center">
             <CheckCircle className="h-8 w-8" style={{ color: 'var(--color-verified)' }} />
           </div>
-          <h1 className="font-display font-bold text-3xl text-ink mb-2">Conquista registrada!</h1>
+          <h1 className="font-display font-bold text-2xl text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Conquista registrada!</h1>
           <p className="font-body text-ink-muted mb-8">A graduação foi registrada com sucesso.</p>
 
           <div className="rounded-xl border p-6 mb-6 text-left bg-main shadow-card max-w-md mx-auto" style={{ borderColor: 'var(--color-border)' }}>
@@ -80,7 +80,7 @@ export default function NovaConquistaPage() {
 
   return (
     <div className="p-4 lg:p-8 max-w-6xl">
-      <h1 className="font-display font-bold text-3xl text-ink mb-6">Registrar Conquista</h1>
+      <h1 className="font-display font-bold text-2xl text-ink mb-6" style={{ letterSpacing: '0.02em' }}>Registrar Conquista</h1>
 
       {/* Credit balance */}
       <div className="mb-6">
@@ -188,7 +188,7 @@ export default function NovaConquistaPage() {
                   <div className="w-3 h-3 rounded-full bg-verified" />
                   <span className="text-xs font-body font-medium text-verified">Verificado</span>
                 </div>
-                <p className="font-display font-bold text-base text-ink">{selectedAthlete.name} {selectedAthlete.surname}</p>
+                <p className="font-display font-bold text-sm text-ink">{selectedAthlete.name} {selectedAthlete.surname}</p>
                 <p className="font-body text-xs text-ink-muted mb-3">{selectedAthlete.school}</p>
                 <div className="flex items-center gap-2 mb-2">
                   <BeltBadge belt={belt as any} size="sm" />
@@ -208,7 +208,7 @@ export default function NovaConquistaPage() {
       {showConfirm && (
         <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4" onClick={() => setShowConfirm(false)}>
           <div className="bg-main rounded-xl p-6 shadow-card max-w-sm w-full" onClick={e => e.stopPropagation()}>
-            <h3 className="font-display font-bold text-xl text-ink mb-2">Confirmar registro</h3>
+            <h3 className="font-display font-bold text-lg text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Confirmar registro</h3>
             <p className="font-body text-sm text-ink-muted mb-4">
               Você está prestes a registrar uma conquista. Isso consumirá 1 crédito do seu saldo ({mockCredits.balance} restantes). Confirmar?
             </p>

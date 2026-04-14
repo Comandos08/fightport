@@ -15,7 +15,7 @@ export default function ConfiguracoesPage() {
 
   return (
     <div className="p-4 lg:p-8 max-w-3xl">
-      <h1 className="font-display font-bold text-3xl text-ink mb-6">Configurações</h1>
+      <h1 className="font-display font-bold text-2xl text-ink mb-6" style={{ letterSpacing: '0.02em' }}>Configurações</h1>
 
       {/* Tabs */}
       <div className="flex gap-1 mb-8 border-b" style={{ borderColor: 'var(--color-border)' }}>

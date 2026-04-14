@@ -17,7 +17,7 @@ export default function PraticantesPage() {
     <div className="p-4 lg:p-8 max-w-6xl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <h1 className="font-display font-bold text-3xl text-ink">Praticantes</h1>
+        <h1 className="font-display font-bold text-2xl text-ink" style={{ letterSpacing: '0.02em' }}>Praticantes</h1>
         <div className="flex gap-2">
           <Button variant="ghost" size="sm">
             <Upload className="h-4 w-4" />

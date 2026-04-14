@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/button';
 export default function NovoPraticantePage() {
   return (
     <div className="p-4 lg:p-8 max-w-3xl">
-      <h1 className="font-display font-bold text-3xl text-ink mb-8">Novo Praticante</h1>
+      <h1 className="font-display font-bold text-2xl text-ink mb-8" style={{ letterSpacing: '0.02em' }}>Novo Praticante</h1>
 
       <form className="space-y-8" onSubmit={e => e.preventDefault()}>
         {/* Dados pessoais */}
         <section>
-          <h2 className="font-display font-bold text-lg text-ink mb-4 uppercase tracking-wide">Dados Pessoais</h2>
+          <h2 className="font-display font-bold text-base text-ink mb-4 uppercase tracking-wide">Dados Pessoais</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="font-body text-sm text-ink-muted block mb-1.5">Nome</label>
@@ -39,7 +39,7 @@ export default function NovoPraticantePage() {
             <div className="sm:col-span-2">
               <label className="font-body text-sm text-ink-muted block mb-1.5">Foto (opcional)</label>
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-surface flex items-center justify-center font-display font-bold text-xl text-ink-faint">?</div>
+                <div className="w-16 h-16 rounded-full bg-surface flex items-center justify-center font-display font-bold text-lg text-ink-faint">?</div>
                 <Button variant="ghost" size="sm" type="button">Enviar foto</Button>
               </div>
             </div>
@@ -48,7 +48,7 @@ export default function NovoPraticantePage() {
 
         {/* Filiação */}
         <section>
-          <h2 className="font-display font-bold text-lg text-ink mb-4 uppercase tracking-wide">Filiação</h2>
+          <h2 className="font-display font-bold text-base text-ink mb-4 uppercase tracking-wide">Filiação</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="font-body text-sm text-ink-muted block mb-1.5">Nome do pai</label>
@@ -63,7 +63,7 @@ export default function NovoPraticantePage() {
 
         {/* Arte marcial */}
         <section>
-          <h2 className="font-display font-bold text-lg text-ink mb-4 uppercase tracking-wide">Arte Marcial</h2>
+          <h2 className="font-display font-bold text-base text-ink mb-4 uppercase tracking-wide">Arte Marcial</h2>
           <div>
             <label className="font-body text-sm text-ink-muted block mb-1.5">Arte marcial da escola</label>
             <input className="w-full h-12 px-4 rounded-lg border bg-surface font-body text-base text-ink-muted cursor-not-allowed" style={{ borderColor: 'var(--color-border)' }} value="Jiu-Jitsu" readOnly />

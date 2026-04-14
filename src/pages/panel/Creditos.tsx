@@ -13,7 +13,7 @@ const packages = [
 export default function CreditosPage() {
   return (
     <div className="p-4 lg:p-8 max-w-5xl">
-      <h1 className="font-display font-bold text-3xl text-ink mb-6">Créditos</h1>
+      <h1 className="font-display font-bold text-2xl text-ink mb-6" style={{ letterSpacing: '0.02em' }}>Créditos</h1>
 
       <div className="mb-8">
         <CreditBalance balance={mockCredits.balance} />
@@ -33,12 +33,12 @@ export default function CreditosPage() {
               </span>
             )}
             <div className="text-center">
-              <h3 className="font-display font-bold text-xl text-ink mb-1">
+              <h3 className="font-display font-bold text-lg text-ink mb-1">
                 {pkg.name} {pkg.highlight && '⭐'}
               </h3>
-              <p className="font-display font-bold text-4xl text-ink mb-1">{pkg.credits}</p>
+              <p className="font-display font-bold text-3xl text-ink mb-1">{pkg.credits}</p>
               <p className="font-body text-sm text-ink-muted mb-1">créditos</p>
-              <p className="font-display font-bold text-2xl text-ink mb-0.5">R$ {pkg.price}</p>
+              <p className="font-display font-bold text-xl text-ink mb-0.5">R$ {pkg.price}</p>
               <p className="font-body text-xs text-ink-faint mb-4">R${pkg.unit}/un</p>
               <Button
                 className="w-full"
@@ -56,7 +56,7 @@ export default function CreditosPage() {
       </p>
 
       {/* History */}
-      <h2 className="font-display font-bold text-xl text-ink mb-4 uppercase">Histórico de transações</h2>
+      <h2 className="font-display font-bold text-lg text-ink mb-4 uppercase" style={{ letterSpacing: '0.02em' }}>Histórico de transações</h2>
       <div className="rounded-xl border bg-main shadow-card overflow-x-auto" style={{ borderColor: 'var(--color-border)' }}>
         <table className="w-full min-w-[500px]">
           <thead>
