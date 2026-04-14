@@ -197,22 +197,22 @@ export default function HomePage() {
       </section>
 
       {/* COMO FUNCIONA */}
-      <section id="como-funciona" className="py-28 lg:py-32 px-4 bg-surface">
+      <section id="como-funciona" className="py-16 md:py-28 lg:py-32 px-4 bg-surface">
         <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-10">
-            <h2 className="font-display font-bold text-[40px] md:text-[48px] text-ink uppercase" style={{ lineHeight: '1' }}>Como funciona</h2>
-            <p className="font-body text-lg text-ink-muted mt-2 md:mt-0">Simples para a academia. Poderoso para a credibilidade.</p>
+          <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-8 md:mb-10">
+            <h2 className="font-display font-bold text-[32px] md:text-[48px] text-ink uppercase" style={{ lineHeight: '1' }}>Como funciona</h2>
+            <p className="font-body text-base md:text-lg text-ink-muted mt-2 md:mt-0">Simples para a academia. Poderoso para a credibilidade.</p>
           </div>
-          <div className="w-full h-px mb-12" style={{ backgroundColor: 'var(--color-border)' }} />
+          <div className="w-full h-px mb-8 md:mb-12" style={{ backgroundColor: 'var(--color-border)' }} />
           <div className="space-y-0">
             {steps.map((step, i) => (
               <div key={step.num}>
                 {i > 0 && <div className="w-full h-px" style={{ backgroundColor: 'var(--color-border)' }} />}
-                <div className="flex items-start gap-8 md:gap-12 py-10">
-                  <span className="font-display font-extrabold text-[64px] md:text-[80px] leading-none shrink-0" style={{ color: 'rgba(200,241,53,0.6)' }}>{step.num}</span>
+                <div className="flex items-start gap-4 md:gap-12 py-8 md:py-10">
+                  <span className="font-display font-extrabold text-[48px] md:text-[80px] leading-none shrink-0" style={{ color: 'rgba(200,241,53,0.6)' }}>{step.num}</span>
                   <div className="pt-3">
-                    <h3 className="font-body font-medium text-xl text-ink mb-2">{step.title}</h3>
-                    <p className="font-body text-[15px] text-ink-muted max-w-lg" style={{ lineHeight: '1.6' }}>{step.desc}</p>
+                    <h3 className="font-body font-medium text-base md:text-xl text-ink mb-2">{step.title}</h3>
+                    <p className="font-body text-[13px] md:text-[15px] text-ink-muted max-w-lg" style={{ lineHeight: '1.6' }}>{step.desc}</p>
                   </div>
                 </div>
               </div>
@@ -222,22 +222,22 @@ export default function HomePage() {
       </section>
 
       {/* PROVA SOCIAL */}
-      <section className="py-24 lg:py-28 px-4">
-        <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      <section className="py-16 md:py-24 lg:py-28 px-4">
+        <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-16 items-start">
           <div className="lg:col-span-5">
-            <h2 className="font-display font-extrabold text-[48px] md:text-[64px] text-ink uppercase" style={{ lineHeight: '0.9' }}>
+            <h2 className="font-display font-extrabold text-[36px] md:text-[48px] lg:text-[64px] text-ink uppercase" style={{ lineHeight: '0.9' }}>
               MAIS DE {mockStats.totalAthletes.toLocaleString('pt-BR')} ATLETAS CERTIFICADOS.
             </h2>
           </div>
           <div className="lg:col-span-7">
-            <div className="flex gap-12 md:gap-16 mb-12">
+            <div className="flex gap-8 md:gap-16 mb-8 md:mb-12">
               {[
                 { value: mockStats.totalAthletes.toLocaleString('pt-BR'), label: 'Atletas' },
                 { value: mockStats.totalSchools.toString(), label: 'Academias' },
                 { value: mockStats.totalCertificates.toLocaleString('pt-BR'), label: 'Certificados' },
               ].map(m => (
                 <div key={m.label}>
-                  <span className="font-display font-bold text-[40px] md:text-[48px] text-ink block" style={{ lineHeight: '1' }}>{m.value}</span>
+                  <span className="font-display font-bold text-[32px] md:text-[48px] text-ink block" style={{ lineHeight: '1' }}>{m.value}</span>
                   <span className="font-body text-sm text-ink-faint">{m.label}</span>
                 </div>
               ))}
@@ -254,7 +254,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA FINAL */}
-      <section className="py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
+      <section className="py-20 md:py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.03 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -266,7 +266,7 @@ export default function HomePage() {
           </svg>
         </div>
         <div className="container mx-auto max-w-3xl text-center relative z-10">
-          <h2 className="font-display font-extrabold text-[64px] md:text-[96px] mb-6" style={{ color: '#FFFFFF', lineHeight: '0.88' }}>
+          <h2 className="font-display font-extrabold text-[40px] md:text-[64px] lg:text-[96px] mb-4 md:mb-6" style={{ color: '#FFFFFF', lineHeight: '0.88' }}>
             SUA ACADEMIA<br />
             <span className="relative inline-block">
               MERECE ISSO.
