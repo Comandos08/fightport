@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, CheckCircle, QrCode } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { motion, useInView } from 'framer-motion';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { AthleteCard } from '@/components/AthleteCard';
