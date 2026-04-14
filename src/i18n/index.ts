@@ -21,9 +21,7 @@ i18n
       escapeValue: false,
     },
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
-      lookupLocalStorage: 'fp_lang',
-      caches: ['localStorage'],
+      order: ['navigator', 'htmlTag', 'path', 'subdomain'],
     },
   });
 

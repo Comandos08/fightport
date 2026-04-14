@@ -1,6 +1,5 @@
 import { Copy } from 'lucide-react';
 import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
 
 interface HashDisplayProps {
   hashPartial: string;
@@ -9,17 +8,21 @@ interface HashDisplayProps {
 }
 
 export function HashDisplay({ hashPartial, hashFull, showCopy = false }: HashDisplayProps) {
-  const { t } = useTranslation();
   const copy = () => {
     navigator.clipboard.writeText(hashFull);
-    toast.success(t('achievement.success.hashCopied'));
+    toast.success('Hash copiada para a área de transferência');
   };
 
   return (
-    <div className="inline-flex items-center group" style={{ gap: 8 }} title={t('achievement.success.hashLabel')}>
+    <div className="inline-flex items-center group" style={{ gap: 8 }} title="Hash de verificação — compare com o certificado físico">
       <span style={{ fontFamily: 'var(--font-mono, ui-monospace, SFMono-Regular, monospace)', fontSize: 11, color: 'var(--color-text-light)', letterSpacing: '0.04em' }}>{hashPartial}</span>
       {showCopy && (
-        <button onClick={copy} className="opacity-0 group-hover:opacity-100 cursor-pointer" style={{ background: 'none', border: 'none', transition: 'var(--transition)' }} aria-label={t('achievement.success.hashLabel')}>
+        <button
+          onClick={copy}
+          className="opacity-0 group-hover:opacity-100 cursor-pointer"
+          style={{ background: 'none', border: 'none', transition: 'var(--transition)' }}
+          aria-label="Copiar hash completa"
+        >
           <Copy style={{ width: 12, height: 12, color: 'var(--color-text-muted)' }} />
         </button>
       )}

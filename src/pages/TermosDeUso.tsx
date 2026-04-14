@@ -1,150 +1,180 @@
-import { Navbar } from '@/components/layout/Navbar';
-import { FooterSection } from '@/components/home/FooterSection';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
 import { useSeo } from '@/hooks/useSeo';
 
 const sections = [
   {
     title: '1. Aceitação dos Termos',
-    content: 'Ao acessar ou utilizar a plataforma fightport.pro ("Plataforma"), você ("Usuário") concorda integralmente com estes Termos de Uso. Caso não concorde com qualquer disposição, não utilize a Plataforma. A SportCombat reserva-se o direito de atualizar estes Termos a qualquer momento, sendo as alterações comunicadas por e-mail ou aviso na Plataforma.',
+    content: 'Ao acessar ou utilizar a plataforma fightport.pro ("Plataforma"), operada pela SportCombat, você ("Usuário") concorda integralmente com estes Termos de Uso. Se não concordar com qualquer disposição, não utilize a Plataforma.',
   },
   {
-    title: '2. Descrição do Serviço',
-    content: 'O fightport.pro é uma plataforma de certificação digital de graduações em artes marciais. O serviço permite que organizações esportivas cadastrem praticantes, registrem graduações com geração de hash criptográfico SHA-256 e emitam passaportes digitais verificáveis por QR Code. O fightport.pro não é uma entidade certificadora oficial de artes marciais e não possui vínculo com federações ou confederações esportivas, salvo quando expressamente indicado.',
+    title: '2. Definições',
+    items: [
+      'Plataforma: o sistema web fightport.pro e todos os seus serviços associados.',
+      'Usuário: a organização esportiva (academia, federação, confederação ou associação) que se cadastra na Plataforma e administra os dados de seus praticantes.',
+      'Praticante: o atleta cujos dados são inseridos pelo Usuário para fins de certificação digital.',
+      'Passaporte Digital: o documento público gerado pela Plataforma contendo as informações e graduações do praticante.',
+      'Créditos: unidades digitais adquiridas pelo Usuário para registrar graduações na Plataforma.',
+    ],
   },
   {
-    title: '3. Cadastro e Conta',
-    content: `3.1. Para utilizar os recursos da Plataforma, a organização deve criar uma conta fornecendo informações verídicas e atualizadas.
-
-3.2. O Usuário é responsável pela confidencialidade de suas credenciais de acesso e por todas as atividades realizadas em sua conta.
-
-3.3. É vedado compartilhar credenciais de acesso com terceiros não autorizados.
-
-3.4. A SportCombat pode suspender ou encerrar contas que violem estes Termos, sem aviso prévio.`,
+    title: '3. Serviço Oferecido',
+    content: 'O fightport.pro é uma plataforma de certificação esportiva digital que permite a organizações de artes marciais registrar graduações de seus praticantes, gerar passaportes digitais verificáveis e manter um histórico imutável de conquistas. O Usuário é o único responsável pela veracidade dos dados inseridos.',
   },
   {
-    title: '4. Créditos e Pagamentos',
-    content: `4.1. O fightport.pro opera em modelo pay-per-use mediante compra de créditos. Cada graduação registrada consome 1 (um) crédito.
-
-4.2. Os créditos adquiridos não possuem prazo de validade e não são reembolsáveis, salvo em caso de erro técnico comprovado da Plataforma.
-
-4.3. Os valores dos pacotes de créditos podem ser alterados a qualquer momento, sem aviso prévio, sendo garantido ao Usuário o uso dos créditos já adquiridos pelo valor vigente no momento da compra.
-
-4.4. Não há cobrança de mensalidade, taxa de adesão ou cancelamento.`,
+    title: '4. Cadastro e Conta',
+    content: 'Para utilizar a Plataforma, o Usuário deve criar uma conta informando dados válidos. O Usuário é responsável por manter a confidencialidade de suas credenciais e por todas as atividades realizadas em sua conta. A SportCombat reserva-se o direito de recusar, suspender ou encerrar contas que violem estes Termos.',
   },
   {
-    title: '5. Dados dos Praticantes e Responsabilidade da Organização',
-    content: `5.1. A organização ("Controlador de Dados") é integralmente responsável por obter o consentimento dos praticantes cadastrados para o tratamento de seus dados pessoais, incluindo nome, CPF, data de nascimento e filiação, conforme exigido pela Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
-
-5.2. A SportCombat atua como Operadora de Dados nos termos da LGPD, processando os dados exclusivamente conforme as instruções da organização e para as finalidades descritas na Política de Privacidade.
-
-5.3. A organização declara ter autorização legal para cadastrar os dados dos praticantes na Plataforma.`,
+    title: '5. Créditos e Pagamento',
+    content: 'O cadastro na Plataforma é gratuito. Para registrar graduações, o Usuário deve adquirir créditos através dos pacotes disponíveis. Cada registro de graduação consome 1 (um) crédito. Créditos adquiridos não são reembolsáveis, salvo em caso de falha técnica comprovada da Plataforma. Os preços podem ser alterados a qualquer momento, sem efeito retroativo sobre créditos já adquiridos.',
   },
   {
-    title: '6. Propriedade Intelectual',
-    content: `6.1. Todo o conteúdo da Plataforma, incluindo marca, logotipo, software, layout e textos, é de propriedade exclusiva da SportCombat ou de seus licenciantes.
-
-6.2. É vedada a reprodução, modificação, distribuição ou uso comercial de qualquer conteúdo da Plataforma sem autorização prévia e expressa da SportCombat.`,
+    title: '6. Uso Aceitável',
+    content: 'O Usuário compromete-se a:',
+    items: [
+      'Utilizar a Plataforma apenas para fins legítimos de certificação esportiva',
+      'Inserir apenas dados verdadeiros e verificáveis de seus praticantes',
+      'Obter o consentimento dos praticantes (ou de seus responsáveis legais, no caso de menores) antes de cadastrar seus dados',
+      'Não utilizar a Plataforma para qualquer atividade ilegal, fraudulenta ou que viole direitos de terceiros',
+      'Não tentar acessar áreas restritas, sistemas ou dados de outros Usuários',
+    ],
   },
   {
-    title: '7. Limitação de Responsabilidade',
-    content: 'A SportCombat não se responsabiliza por: (i) uso indevido dos certificados digitais emitidos; (ii) informações incorretas fornecidas pelas organizações; (iii) decisões tomadas por terceiros com base nos certificados; (iv) interrupções temporárias do serviço por manutenção ou falhas técnicas.',
+    title: '7. Propriedade Intelectual',
+    content: 'Todo o conteúdo da Plataforma (marca, design, código, textos e funcionalidades) é de propriedade da SportCombat e protegido pela legislação brasileira de propriedade intelectual. Os dados inseridos pelo Usuário permanecem de sua titularidade, sendo concedida à SportCombat licença para processá-los e exibi-los conforme a finalidade do serviço.',
   },
   {
-    title: '8. Rescisão',
-    content: 'O Usuário pode encerrar sua conta a qualquer momento mediante solicitação pelo e-mail de contato. Os dados serão tratados conforme a Política de Privacidade. A SportCombat pode encerrar contas em caso de violação destes Termos.',
+    title: '8. Limitação de Responsabilidade',
+    content: 'A SportCombat não se responsabiliza por: dados incorretos inseridos pelo Usuário; uso indevido das credenciais de acesso; interrupções temporárias do serviço para manutenção ou por motivos de força maior; decisões tomadas por terceiros com base nas informações do passaporte digital. A Plataforma é fornecida "como está". A responsabilidade da SportCombat é limitada ao valor pago pelo Usuário nos 12 meses anteriores ao evento que deu origem à reclamação.',
   },
   {
-    title: '9. Lei Aplicável e Foro',
+    title: '9. Privacidade e Proteção de Dados',
+    content: 'O tratamento de dados pessoais pela Plataforma é regido pela nossa Política de Privacidade. A SportCombat pode encerrar contas em caso de violação destes Termos.',
+  },
+  {
+    title: '10. Lei Aplicável e Foro',
     content: 'Estes Termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o foro da Comarca do Rio de Janeiro — RJ para dirimir quaisquer controvérsias, com renúncia a qualquer outro, por mais privilegiado que seja.',
   },
   {
-    title: '10. Contato',
+    title: '11. Contato',
     content: 'Para dúvidas sobre estes Termos, entre em contato com a SportCombat através do e-mail que será disponibilizado na página de Contato da Plataforma.',
   },
 ];
 
+const textStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)',
+  fontSize: 15,
+  lineHeight: 1.8,
+  color: 'var(--color-text-muted)',
+};
+
+const headingStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-mono)',
+  fontSize: 16,
+  fontWeight: 700,
+  color: 'var(--color-text)',
+  marginBottom: 12,
+  letterSpacing: '-0.01em',
+};
+
 export default function TermosDeUso() {
   useSeo({
     title: 'Termos de Uso — fightport.pro',
-    description: 'Termos de Uso da plataforma fightport.pro. Certificação digital de graduações em artes marciais.',
-    url: 'https://fightport.lovable.app/termos',
+    description: 'Termos de Uso do fightport.pro. Leia as condições de uso da plataforma de certificação esportiva.',
   });
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
 
       {/* Hero */}
-      <section style={{ background: 'var(--color-bg-dark)', padding: '80px 24px 64px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <p style={{
-            fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500,
-            letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.35)', marginBottom: 20,
-          }}>
-            TERMOS DE USO — FIGHTPORT.PRO
-          </p>
-          <h1 style={{
-            fontFamily: 'var(--font-sans)', fontWeight: 500,
-            fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.03em',
-            color: '#FFFFFF', marginBottom: 12,
-          }}>
+      <section
+        style={{
+          background: 'var(--color-text)',
+          padding: '80px 0 60px',
+          textAlign: 'center',
+        }}
+      >
+        <div className="fp-container">
+          <h1
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 32,
+              fontWeight: 700,
+              color: '#FFFFFF',
+              marginBottom: 12,
+              letterSpacing: '-0.02em',
+            }}
+          >
             Termos de Uso
           </h1>
-          <p style={{
-            fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 300,
-            color: 'rgba(255,255,255,0.5)',
-          }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 14,
+              color: 'rgba(255,255,255,0.5)',
+            }}
+          >
             Última atualização: abril de 2025
           </p>
         </div>
       </section>
 
       {/* Content */}
-      <section style={{ background: 'var(--color-bg)', padding: '64px 24px 96px' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+      <section style={{ flex: 1, background: '#FFFFFF', padding: '48px 0 80px' }}>
+        <div className="fp-container" style={{ maxWidth: 720, margin: '0 auto' }}>
           <Link
             to="/"
-            className="inline-flex items-center"
             style={{
-              gap: 6, fontFamily: 'var(--font-sans)', fontSize: 13,
-              fontWeight: 400, color: 'var(--color-text-muted)',
-              textDecoration: 'none', marginBottom: 48, display: 'inline-flex',
+              fontFamily: 'var(--font-sans)',
+              fontSize: 13,
+              color: 'var(--color-text-muted)',
+              textDecoration: 'none',
+              display: 'inline-block',
+              marginBottom: 40,
               transition: 'var(--transition)',
             }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}
           >
-            <ArrowLeft style={{ width: 14, height: 14 }} />
-            Voltar ao início
+            ← voltar ao início
           </Link>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
-            {sections.map((section) => (
-              <div key={section.title}>
-                <h2 style={{
-                  fontFamily: 'var(--font-sans)', fontWeight: 600,
-                  fontSize: 18, color: 'var(--color-text)',
-                  letterSpacing: '-0.01em', marginBottom: 16,
-                }}>
-                  {section.title}
-                </h2>
-                <div style={{
-                  fontFamily: 'var(--font-sans)', fontSize: 15,
-                  fontWeight: 300, color: 'var(--color-text-muted)',
-                  lineHeight: 1.75, whiteSpace: 'pre-line',
-                }}>
-                  {section.content}
-                </div>
+          <p
+            style={{
+              ...textStyle,
+              fontWeight: 600,
+              fontSize: 13,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              color: 'var(--color-text-light)',
+              marginBottom: 48,
+            }}
+          >
+            TERMOS DE USO — FIGHTPORT.PRO
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+            {sections.map((section, i) => (
+              <div key={i}>
+                <h2 style={headingStyle}>{section.title}</h2>
+                {section.content && <p style={textStyle}>{section.content}</p>}
+                {section.items && (
+                  <ul style={{ ...textStyle, paddingLeft: 20, listStyleType: 'disc', marginTop: 12 }}>
+                    {section.items.map((item, k) => (
+                      <li key={k} style={{ marginBottom: 4 }}>{item}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <FooterSection />
+      <Footer />
     </div>
   );
 }
