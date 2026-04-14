@@ -121,9 +121,11 @@ export default function PraticantesPage() {
                           <Award className="h-3.5 w-3.5" />
                         </Button>
                       </Link>
-                      <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Editar">
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
+                      <Link to={`/painel/praticantes/${a.id}/editar`}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Editar">
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                      </Link>
                     </div>
                   </td>
                 </tr>

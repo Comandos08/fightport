@@ -15,6 +15,7 @@ import Dashboard from "./pages/panel/Dashboard";
 import Praticantes from "./pages/panel/Praticantes";
 import NovoPraticante from "./pages/panel/NovoPraticante";
 import NovaConquista from "./pages/panel/NovaConquista";
+import EditarPraticante from "./pages/panel/EditarPraticante";
 import Creditos from "./pages/panel/Creditos";
 import Configuracoes from "./pages/panel/Configuracoes";
 import NotFound from "./pages/NotFound";
@@ -39,6 +40,7 @@ const App = () => (
               <Route index element={<Dashboard />} />
               <Route path="praticantes" element={<Praticantes />} />
               <Route path="praticantes/novo" element={<NovoPraticante />} />
+              <Route path="praticantes/:id/editar" element={<EditarPraticante />} />
               <Route path="conquistas/nova" element={<NovaConquista />} />
               <Route path="creditos" element={<Creditos />} />
               <Route path="configuracoes" element={<Configuracoes />} />
