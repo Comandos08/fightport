@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Plus, Upload, Eye, Award, Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Plus, Upload, Eye, Award, Pencil, Trash2, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { BeltBadge } from '@/components/BeltBadge';
@@ -15,6 +15,8 @@ const PAGE_SIZE = 20;
 export default function PraticantesPage() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [beltFilter, setBeltFilter] = useState('');
+  const [artFilter, setArtFilter] = useState('');
   const [importOpen, setImportOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -43,11 +45,17 @@ export default function PraticantesPage() {
     enabled: !!user,
   });
 
-  const filtered = practitioners.filter(a =>
-    `${a.first_name} ${a.last_name}`.toLowerCase().includes(search.toLowerCase())
-  );
+  // Derive unique belt and martial art values for filter options
+  const belts = [...new Set(practitioners.map(p => p.current_belt).filter(Boolean))] as string[];
+  const arts = [...new Set(practitioners.map(p => p.martial_art).filter(Boolean))] as string[];
 
-  // Reset to page 1 when search changes
+  const filtered = practitioners.filter(a => {
+    const matchesSearch = `${a.first_name} ${a.last_name}`.toLowerCase().includes(search.toLowerCase());
+    const matchesBelt = !beltFilter || a.current_belt === beltFilter;
+    const matchesArt = !artFilter || a.martial_art === artFilter;
+    return matchesSearch && matchesBelt && matchesArt;
+  });
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const paginatedItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -56,6 +64,13 @@ export default function PraticantesPage() {
     setSearch(value);
     setPage(1);
   };
+
+  const handleFilterChange = (setter: (v: string) => void) => (value: string) => {
+    setter(value);
+    setPage(1);
+  };
+
+  const hasActiveFilters = !!beltFilter || !!artFilter;
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -102,6 +117,42 @@ export default function PraticantesPage() {
           onFocus={e => e.currentTarget.style.borderColor = 'var(--color-border-focus)'}
           onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
         />
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <Filter className="h-4 w-4 text-ink-faint shrink-0" />
+        <select
+          value={beltFilter}
+          onChange={e => handleFilterChange(setBeltFilter)(e.target.value)}
+          className="h-9 px-3 rounded-lg border bg-popover font-body text-sm text-ink focus:outline-none"
+          style={{ borderColor: 'var(--color-border)' }}
+        >
+          <option value="">Todas as faixas</option>
+          {belts.map(b => <option key={b} value={b}>{b}</option>)}
+        </select>
+        {arts.length > 1 && (
+          <select
+            value={artFilter}
+            onChange={e => handleFilterChange(setArtFilter)(e.target.value)}
+            className="h-9 px-3 rounded-lg border bg-popover font-body text-sm text-ink focus:outline-none"
+            style={{ borderColor: 'var(--color-border)' }}
+          >
+            <option value="">Todas as artes marciais</option>
+            {arts.map(a => <option key={a} value={a}>{a}</option>)}
+          </select>
+        )}
+        {hasActiveFilters && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-9 text-xs"
+            onClick={() => { setBeltFilter(''); setArtFilter(''); setPage(1); }}
+          >
+            <X className="h-3 w-3" />
+            Limpar filtros
+          </Button>
+        )}
       </div>
 
       {isLoading ? (
