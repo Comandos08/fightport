@@ -32,7 +32,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-main">
+    <div className="min-h-screen bg-main flex flex-col">
       <Navbar />
 
       {/* HERO */}
