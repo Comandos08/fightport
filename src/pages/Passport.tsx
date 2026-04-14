@@ -128,27 +128,17 @@ export default function PassportPage() {
     }),
   };
 
+  useSeo({
+    title: pageTitle,
+    description: pageDescription,
+    url: pageUrl,
+    image: practitioner.photo_url ?? undefined,
+    type: 'profile',
+    jsonLd,
+  });
+
   return (
     <div className="min-h-screen bg-main">
-      <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <link rel="canonical" href={pageUrl} />
-
-        <meta property="og:type" content="profile" />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:url" content={pageUrl} />
-        <meta property="og:site_name" content="fightport.pro" />
-        {practitioner.photo_url && <meta property="og:image" content={practitioner.photo_url} />}
-
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta name="twitter:description" content={pageDescription} />
-        {practitioner.photo_url && <meta name="twitter:image" content={practitioner.photo_url} />}
-
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
-      </Helmet>
       <NavbarPublic />
       <div className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-2xl">
