@@ -516,5 +516,6 @@ export default function CadastroPage() {
         }
       `}</style>
     </div>
+    </div>
   );
 }
