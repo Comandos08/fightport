@@ -137,10 +137,9 @@ export default function Contato() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr',
               gap: 56,
             }}
-            className="md:!grid-cols-[2fr_3fr]"
+            className="grid-cols-1 md:grid-cols-[2fr_3fr]"
           >
             {/* Left Column */}
             <div>
