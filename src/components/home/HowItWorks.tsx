@@ -1,5 +1,5 @@
 const steps = [
-  { num: '01', title: 'A academia cadastra seus atletas', desc: 'Nome, foto e CPF. O sistema bloqueia duplicatas — nenhum atleta pode ter dois perfis.', badge: 'CPF verificado' },
+  { num: '01', title: 'A organização cadastra seus atletas', desc: 'Nome, foto e CPF. O sistema bloqueia duplicatas — nenhum atleta pode ter dois perfis.', badge: 'CPF verificado' },
   { num: '02', title: 'Registra a graduação', desc: 'Seleciona o atleta, a nova faixa, a data e quem graduou. Hash gerado automaticamente.', badge: 'SHA-256 · imutável' },
   { num: '03', title: 'Qualquer pessoa verifica', desc: 'Escaneie o QR. Veja o passaporte digital completo do atleta. Assinado. Para sempre.', badge: 'Público · auditável' },
 ];

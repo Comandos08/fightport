@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const stats = [
   { number: '1.247+', label: 'atletas certificados' },
-  { number: '89', label: 'academias ativas' },
+  { number: '89', label: 'organizações ativas' },
   { number: '3.891', label: 'graduações registradas' },
 ];
 
@@ -40,7 +40,7 @@ export function HeroSection() {
       <div className="fp-container relative">
         <div className="section-inner">
           <p className="animate-fadeup delay-100" style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 32 }}>
-            CERTIFICAÇÃO ESPORTIVA → ACADEMIAS DE ARTES MARCIAIS
+            CERTIFICAÇÃO ESPORTIVA → ORGANIZAÇÕES DE ARTES MARCIAIS
           </p>
 
           <h1 className="animate-fadeup delay-200" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(48px, 6.5vw, 80px)', lineHeight: 1.04, letterSpacing: '-0.04em', color: 'var(--color-text)', maxWidth: 680, margin: 0 }}>
@@ -53,7 +53,7 @@ export function HeroSection() {
 
           <div className="animate-fadeup delay-400 flex flex-wrap items-center" style={{ gap: 16, marginTop: 40 }}>
             <Link to="/cadastro" style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, color: 'var(--color-text)', background: 'var(--color-bg-amber)', border: 'none', borderRadius: 'var(--radius-sm)', padding: '14px 28px', textDecoration: 'none', transition: 'var(--transition)', display: 'inline-block' }} onMouseEnter={(e) => (e.currentTarget.style.background = '#e09600')} onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-bg-amber)')}>
-              Cadastrar minha academia
+              Cadastrar minha organização
             </Link>
             <a href="/#busca" style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', background: 'transparent', border: 'none', padding: '14px 0', textDecoration: 'none', transition: 'var(--transition)' }} onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}>
               Verificar um atleta →

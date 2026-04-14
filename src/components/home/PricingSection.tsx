@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const packages = [
   { name: 'Starter', credits: '10', price: 'R$ 97', unit: 'R$ 9,70/un', highlight: false },
   { name: 'Escola', credits: '50', price: 'R$ 397', unit: 'R$ 7,94/un', highlight: true },
-  { name: 'Academia', credits: '150', price: 'R$ 990', unit: 'R$ 6,60/un', highlight: false },
+  { name: 'Organização', credits: '150', price: 'R$ 990', unit: 'R$ 6,60/un', highlight: false },
 ];
 
 const thStyle: React.CSSProperties = {
