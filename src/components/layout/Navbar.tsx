@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const getNavLinks = (t: (key: string) => string) => [
   { href: '/#busca', label: t('nav.verifyAthlete') },
@@ -84,7 +85,10 @@ export function Navbar() {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center" style={{ gap: 12 }}>
+          <div className="flex items-center" style={{ gap: 16 }}>
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
             <Link
               to="/login"
               className="hidden md:inline-block"
@@ -186,6 +190,9 @@ export function Navbar() {
               )}
             </div>
             <div className="mt-auto flex flex-col" style={{ gap: 12, paddingBottom: 32 }}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+                <LanguageSwitcher />
+              </div>
               <Link to="/login" style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', textDecoration: 'none', textAlign: 'center', padding: '10px 0' }} onClick={() => setDrawerOpen(false)}>
                 {t('nav.login')}
               </Link>
