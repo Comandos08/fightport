@@ -107,13 +107,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "credit_transactions_achievement_id_fkey"
-            columns: ["achievement_id"]
-            isOneToOne: false
-            referencedRelation: "achievements"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "credit_transactions_school_id_fkey"
             columns: ["school_id"]
             isOneToOne: false
