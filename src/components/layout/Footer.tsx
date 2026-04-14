@@ -25,7 +25,7 @@ export function Footer() {
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-[13px] font-body text-ink-faint md:justify-end">
           <Link to="/privacidade" className="hover:text-ink transition-colors">Privacidade</Link>
           <Link to="/termos" className="hover:text-ink transition-colors">Termos</Link>
-          <span>© 2026 fightport.pro · SportCombat</span>
+          <span>© 2026 fightport.pro · <a href="https://sportcombat.pro" target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors underline underline-offset-2">SportCombat</a></span>
         </div>
       </div>
     </footer>
