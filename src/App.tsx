@@ -21,6 +21,7 @@ import Configuracoes from "./pages/panel/Configuracoes";
 import NotFound from "./pages/NotFound";
 import TermosDeUso from "./pages/TermosDeUso";
 import Privacidade from "./pages/Privacidade";
+import Sobre from "./pages/Sobre";
 import { VerificarRedirect } from "./components/VerificarRedirect";
 
 const queryClient = new QueryClient();
