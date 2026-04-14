@@ -19,6 +19,7 @@ import EditarPraticante from "./pages/panel/EditarPraticante";
 import Creditos from "./pages/panel/Creditos";
 import Configuracoes from "./pages/panel/Configuracoes";
 import NotFound from "./pages/NotFound";
+import TermosDeUso from "./pages/TermosDeUso";
 import { VerificarRedirect } from "./components/VerificarRedirect";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,8 @@ const App = () => (
               <Route path="configuracoes" element={<Configuracoes />} />
             </Route>
             <Route path="/verificar" element={<VerificarRedirect />} />
+            <Route path="/termos" element={<TermosDeUso />} />
+            <Route path="/terms" element={<TermosDeUso />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

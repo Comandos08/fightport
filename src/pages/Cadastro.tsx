@@ -28,6 +28,7 @@ export default function CadastroPage() {
   const [martialArt, setMartialArt] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -192,15 +193,24 @@ export default function CadastroPage() {
                     </button>
                   </div>
                 </div>
-                <button type="submit" disabled={loading} style={{ marginTop: 8, fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, background: 'var(--color-bg-amber)', color: 'var(--color-text)', padding: '14px 28px', width: '100%', borderRadius: 'var(--radius-sm)', border: 'none', cursor: loading ? 'wait' : 'pointer', opacity: loading ? 0.7 : 1, transition: 'var(--transition)' }}
-                  onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#e09600'; }} onMouseLeave={e => { e.currentTarget.style.background = 'var(--color-bg-amber)'; }}>
+                <div className="flex items-start" style={{ gap: 8, marginTop: 4 }}>
+                  <input
+                    type="checkbox"
+                    id="accept-terms"
+                    checked={acceptedTerms}
+                    onChange={e => setAcceptedTerms(e.target.checked)}
+                    style={{ marginTop: 3, accentColor: 'var(--color-bg-amber)', cursor: 'pointer' }}
+                  />
+                  <label htmlFor="accept-terms" style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', lineHeight: 1.5, cursor: 'pointer' }}>
+                    Ao criar sua conta, você concorda com os{' '}
+                    <Link to="/termos" style={{ color: 'var(--color-text)', textDecoration: 'underline', textUnderlineOffset: '2px' }}>Termos de Uso</Link>{' '}e a{' '}
+                    <Link to="/privacidade" style={{ color: 'var(--color-text)', textDecoration: 'underline', textUnderlineOffset: '2px' }}>Política de Privacidade</Link>.
+                  </label>
+                </div>
+                <button type="submit" disabled={loading || !acceptedTerms} style={{ marginTop: 8, fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500, background: 'var(--color-bg-amber)', color: 'var(--color-text)', padding: '14px 28px', width: '100%', borderRadius: 'var(--radius-sm)', border: 'none', cursor: (loading || !acceptedTerms) ? 'not-allowed' : 'pointer', opacity: (loading || !acceptedTerms) ? 0.5 : 1, transition: 'var(--transition)' }}
+                  onMouseEnter={e => { if (!loading && acceptedTerms) e.currentTarget.style.background = '#e09600'; }} onMouseLeave={e => { e.currentTarget.style.background = 'var(--color-bg-amber)'; }}>
                   {loading ? t('auth.register.submitting') : t('auth.register.submit')}
                 </button>
-                <p style={{ textAlign: 'center', fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-light)', lineHeight: 1.6 }}>
-                  {t('auth.register.termsPrefix')}{' '}
-                  <Link to="/termos" style={{ color: 'var(--color-text-light)', textDecoration: 'underline' }}>{t('auth.register.terms')}</Link> {t('auth.register.termsAnd')}{' '}
-                  <Link to="/privacidade" style={{ color: 'var(--color-text-light)', textDecoration: 'underline' }}>{t('auth.register.privacy')}</Link>
-                </p>
               </form>
             ) : (
               <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
