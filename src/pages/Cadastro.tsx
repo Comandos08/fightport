@@ -189,7 +189,7 @@ export default function CadastroPage() {
 
           <div style={{ marginTop: 64 }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 20 }}>
-              PARA ACADEMIAS
+              PARA ORGANIZAÇÕES ESPORTIVAS
             </p>
 
             <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 3.5vw, 48px)', lineHeight: 1.08, letterSpacing: '-0.025em', color: '#FFFFFF', marginBottom: 32 }}>
@@ -223,7 +223,7 @@ export default function CadastroPage() {
         {/* Testimonial */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 32, marginTop: 'auto' }}>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, fontStyle: 'italic', color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 }}>
-            "O fightport.pro trouxe credibilidade real para nossa academia."
+            "O fightport.pro trouxe credibilidade real para nossa organização."
           </p>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.35)', marginTop: 12 }}>
             — Prof. Ricardo Almeida · Faixa Preta 5° Grau
@@ -300,7 +300,7 @@ export default function CadastroPage() {
               >
                 {/* School name */}
                 <div>
-                  <label style={labelStyle}>Nome da academia</label>
+                  <label style={labelStyle}>Nome da organização</label>
                   <input value={schoolName} onChange={e => setSchoolName(e.target.value)} required placeholder="Ex: Academia Tiger BJJ" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
 
@@ -343,7 +343,7 @@ export default function CadastroPage() {
                 {/* Email */}
                 <div>
                   <label style={labelStyle}>E-mail</label>
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="academia@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="contato@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
 
                 {/* Password */}
@@ -413,7 +413,7 @@ export default function CadastroPage() {
                 {/* Email */}
                 <div>
                   <label style={labelStyle}>E-mail</label>
-                  <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} required placeholder="academia@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
+                  <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} required placeholder="contato@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
                 </div>
 
                 {/* Password */}
