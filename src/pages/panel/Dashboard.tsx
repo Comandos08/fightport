@@ -174,7 +174,7 @@ export default function DashboardPage() {
 
   return (
     <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
-      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>Dashboard</h1>
+      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>Dashboard</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 32 }}>
         {stats.map(s => (
@@ -188,7 +188,7 @@ export default function DashboardPage() {
             }}
           >
             <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
-              <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)' }}>
+              <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)' }}>
                 {s.label}
               </span>
               {s.cta && (
@@ -199,7 +199,7 @@ export default function DashboardPage() {
             </div>
             <p style={{
               fontFamily: 'var(--font-sans)',
-              fontWeight: 500,
+              fontWeight: 400,
               fontSize: (s as any).isDate ? 24 : 36,
               color: 'var(--color-text)',
               letterSpacing: '-0.025em',
