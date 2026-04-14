@@ -13,6 +13,28 @@ import type { Tables } from '@/integrations/supabase/types';
 
 type Belt = 'Branca' | 'Azul' | 'Roxa' | 'Marrom' | 'Preta' | 'Vermelha';
 
+const inputStyle: React.CSSProperties = {
+  background: 'var(--white)',
+  border: '1.5px solid var(--border-2)',
+  borderRadius: 'var(--radius-sm)',
+  padding: '11px 14px',
+  fontFamily: 'var(--font-body)',
+  fontSize: 14,
+  color: 'var(--ink)',
+  outline: 'none',
+  width: '100%',
+  transition: 'var(--transition)',
+};
+
+const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  e.currentTarget.style.borderColor = 'var(--blue-mid)';
+  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(88,131,154,0.15)';
+};
+const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  e.currentTarget.style.borderColor = 'var(--border-2)';
+  e.currentTarget.style.boxShadow = 'none';
+};
+
 export default function NovaConquistaPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -76,7 +98,6 @@ export default function NovaConquistaPage() {
     if (!selectedPractitioner || !belt || !date) return;
     setLoading(true);
 
-    // Generate hash
     const { data: hash, error: hashError } = await supabase.rpc('generate_achievement_hash', {
       p_fp_id: selectedPractitioner.fp_id,
       p_belt: belt,
@@ -118,29 +139,29 @@ export default function NovaConquistaPage() {
 
   if (showSuccess) {
     return (
-      <div className="p-4 lg:p-8 max-w-3xl">
-        <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-verified flex items-center justify-center">
-            <CheckCircle className="h-8 w-8" style={{ color: 'var(--color-verified)' }} />
+      <div style={{ padding: '24px 32px', maxWidth: 600 }}>
+        <div style={{ textAlign: 'center', padding: '48px 0' }}>
+          <div style={{ width: 64, height: 64, margin: '0 auto 16px', borderRadius: '50%', background: 'var(--blue-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CheckCircle style={{ width: 32, height: 32, color: 'var(--blue-deep)' }} />
           </div>
-          <h1 className="font-display font-bold text-2xl text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Conquista registrada!</h1>
-          <p className="font-body text-ink-muted mb-8">A graduação foi registrada com sucesso.</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 24, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 8 }}>Conquista registrada!</h1>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)', marginBottom: 32 }}>A graduação foi registrada com sucesso.</p>
 
-          <div className="rounded-xl border p-6 mb-6 text-left bg-main shadow-card max-w-md mx-auto" style={{ borderColor: 'var(--color-border)' }}>
-            <label className="font-body text-xs text-ink-faint block mb-1">Hash de verificação</label>
-            <div className="flex items-center gap-2 mb-4">
-              <code className="font-mono-hash text-xs text-ink break-all flex-1">{generatedHash}</code>
-              <button onClick={() => { navigator.clipboard.writeText(generatedHash); toast.success('Hash copiada'); }} className="shrink-0 cursor-pointer" aria-label="Copiar hash">
-                <Copy className="h-4 w-4 text-ink-faint hover:text-ink transition-colors" />
+          <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 24, marginBottom: 24, textAlign: 'left', maxWidth: 440, margin: '0 auto 24px' }}>
+            <label style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--cloud)', display: 'block', marginBottom: 4 }}>Hash de verificação</label>
+            <div className="flex items-center" style={{ gap: 8, marginBottom: 16 }}>
+              <code style={{ fontFamily: 'ui-monospace, SFMono-Regular, monospace', fontSize: 11, color: 'var(--ink)', wordBreak: 'break-all', flex: 1 }}>{generatedHash}</code>
+              <button onClick={() => { navigator.clipboard.writeText(generatedHash); toast.success('Hash copiada'); }} className="shrink-0 cursor-pointer" style={{ background: 'none', border: 'none' }} aria-label="Copiar hash">
+                <Copy style={{ width: 16, height: 16, color: 'var(--cloud)', transition: 'var(--transition)' }} />
               </button>
             </div>
           </div>
 
-          <p className="font-body text-sm text-ink-muted mb-6">
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', marginBottom: 24 }}>
             Cole a hash no certificado físico da sua academia.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row justify-center" style={{ gap: 12 }}>
             {selectedPractitioner && (
               <Link to={`/p/${selectedPractitioner.fp_id}`}>
                 <Button variant="ghost">Ver passaporte do atleta</Button>
@@ -158,46 +179,63 @@ export default function NovaConquistaPage() {
   const canSubmit = selectedPractitioner && belt && date && balance > 0;
 
   return (
-    <div className="p-4 lg:p-8 max-w-6xl">
-      <h1 className="font-display font-bold text-2xl text-ink mb-6" style={{ letterSpacing: '0.02em' }}>Registrar Conquista</h1>
+    <div style={{ padding: '24px 32px', maxWidth: 1100 }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 24, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 24 }}>Registrar Conquista</h1>
 
-      <div className="mb-6">
-        <CreditBalance balance={balance} />
-        {balance === 0 && (
-          <div className="mt-4 rounded-xl border-2 p-4 text-center" style={{ borderColor: 'var(--color-accent)', backgroundColor: 'rgba(200,241,53,0.08)' }}>
-            <p className="font-body text-sm text-ink mb-2">Sem créditos disponíveis.</p>
-            <Link to="/painel/creditos"><Button size="sm">Comprar créditos</Button></Link>
-          </div>
-        )}
+      {/* Credit banner */}
+      <div
+        style={{
+          background: 'var(--blue-light)',
+          border: '1px solid var(--blue-mid)',
+          borderRadius: 'var(--radius-sm)',
+          padding: '12px 16px',
+          marginBottom: 24,
+          fontFamily: 'var(--font-body)',
+          fontWeight: 600,
+          fontSize: 13,
+          color: 'var(--blue-deep)',
+        }}
+      >
+        Você tem {balance} créditos disponíveis. Cada graduação consome 1 crédito.
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        <div className="lg:col-span-3 space-y-4">
+      {balance === 0 && (
+        <div style={{ border: '2px solid var(--blue-deep)', borderRadius: 'var(--radius-md)', padding: 24, textAlign: 'center', marginBottom: 24, background: 'var(--blue-light)' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--blue-deep)', marginBottom: 8 }}>Sem créditos disponíveis.</p>
+          <Link to="/painel/creditos"><Button size="sm">Comprar créditos</Button></Link>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-5" style={{ gap: 32 }}>
+        <div className="lg:col-span-3" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Athlete search */}
           <div className="relative">
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Praticante</label>
+            <label style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Praticante</label>
             {selectedPractitioner ? (
-              <div className="flex items-center gap-3 h-12 px-4 rounded-lg border bg-surface" style={{ borderColor: 'var(--color-border)' }}>
-                <div className="w-7 h-7 rounded-full flex items-center justify-center font-display font-bold text-xs" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>
+              <div className="flex items-center" style={{ ...inputStyle, height: 44, display: 'flex', gap: 12, background: 'var(--bg-2)' }}>
+                <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--blue-deep)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10 }}>
                   {getInitials(selectedPractitioner.first_name, selectedPractitioner.last_name)}
                 </div>
-                <span className="font-body text-sm text-ink">{selectedPractitioner.first_name} {selectedPractitioner.last_name}</span>
-                <button onClick={() => { setSelectedPractitioner(null); setSearchText(''); }} className="ml-auto text-ink-faint hover:text-ink text-xs cursor-pointer">✕</button>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink)' }}>{selectedPractitioner.first_name} {selectedPractitioner.last_name}</span>
+                <button onClick={() => { setSelectedPractitioner(null); setSearchText(''); }} className="ml-auto cursor-pointer" style={{ background: 'none', border: 'none', color: 'var(--cloud)', fontSize: 12 }}>✕</button>
               </div>
             ) : (
               <>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-faint" />
-                  <input value={searchText} onChange={e => setSearchText(e.target.value)} className="w-full h-12 pl-10 pr-4 rounded-lg border bg-popover font-body text-sm text-ink placeholder:text-ink-faint focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} placeholder="Buscar por nome (mín. 3 letras)..." />
+                  <Search className="absolute top-1/2 -translate-y-1/2" style={{ left: 14, width: 16, height: 16, color: 'var(--cloud)' }} />
+                  <input value={searchText} onChange={e => setSearchText(e.target.value)} style={{ ...inputStyle, height: 44, paddingLeft: 40 }} placeholder="Buscar por nome (mín. 3 letras)..." onFocus={focusInput} onBlur={blurInput} />
                 </div>
                 {searchResults.length > 0 && (
-                  <div className="absolute z-10 mt-1 w-full rounded-lg border bg-popover shadow-card" style={{ borderColor: 'var(--color-border)' }}>
+                  <div className="absolute z-10 mt-1 w-full" style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', boxShadow: 'var(--shadow-card)' }}>
                     {searchResults.map(a => (
-                      <button key={a.id} onClick={() => { setSelectedPractitioner(a); setSearchText(''); }} className="flex items-center gap-3 w-full px-4 py-3 hover:bg-surface transition-colors cursor-pointer text-left">
-                        <div className="w-7 h-7 rounded-full flex items-center justify-center font-display font-bold text-xs" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>
+                      <button key={a.id} onClick={() => { setSelectedPractitioner(a); setSearchText(''); }} className="flex items-center w-full cursor-pointer" style={{ gap: 12, padding: '10px 16px', background: 'none', border: 'none', textAlign: 'left', transition: 'var(--transition)' }}
+                        onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-2)')}
+                        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                      >
+                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--blue-deep)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10 }}>
                           {getInitials(a.first_name, a.last_name)}
                         </div>
-                        <span className="font-body text-sm text-ink">{a.first_name} {a.last_name}</span>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink)' }}>{a.first_name} {a.last_name}</span>
                       </button>
                     ))}
                   </div>
@@ -207,75 +245,86 @@ export default function NovaConquistaPage() {
           </div>
 
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Faixa</label>
-            <select value={belt} onChange={e => setBelt(e.target.value as Belt)} className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }}>
+            <label style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Faixa</label>
+            <select value={belt} onChange={e => setBelt(e.target.value as Belt)} style={{ ...inputStyle, height: 44 }} onFocus={focusInput as any} onBlur={blurInput as any}>
               <option value="">Selecione a faixa</option>
-              <option>Branca</option>
-              <option>Azul</option>
-              <option>Roxa</option>
-              <option>Marrom</option>
-              <option>Preta</option>
-              <option>Vermelha</option>
+              <option>Branca</option><option>Azul</option><option>Roxa</option><option>Marrom</option><option>Preta</option><option>Vermelha</option>
             </select>
           </div>
 
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Data da graduação</label>
-            <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} />
+            <label style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Data da graduação</label>
+            <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ ...inputStyle, height: 44 }} onFocus={focusInput} onBlur={blurInput} />
           </div>
 
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Quem graduou</label>
-            <input value={graduatedBy} onChange={e => setGraduatedBy(e.target.value)} className="w-full h-12 px-4 rounded-lg border bg-popover font-body text-base text-ink focus:outline-none transition-all" style={{ borderColor: 'var(--color-border)' }} />
+            <label style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Quem graduou</label>
+            <input value={graduatedBy} onChange={e => setGraduatedBy(e.target.value)} style={{ ...inputStyle, height: 44 }} onFocus={focusInput} onBlur={blurInput} />
           </div>
 
           <div>
-            <label className="font-body text-sm text-ink-muted block mb-1.5">Texto complementar (opcional)</label>
-            <textarea value={note} onChange={e => setNote(e.target.value)} rows={3} className="w-full px-4 py-3 rounded-lg border bg-popover font-body text-sm text-ink placeholder:text-ink-faint focus:outline-none transition-all resize-none" style={{ borderColor: 'var(--color-border)' }} placeholder="Ex: Promovido a Faixa Azul pelo cumprimento de todos os requisitos técnicos..." />
+            <label style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Texto complementar (opcional)</label>
+            <textarea value={note} onChange={e => setNote(e.target.value)} rows={3} style={{ ...inputStyle, resize: 'none', padding: '12px 14px' }} placeholder="Ex: Promovido a Faixa Azul..." onFocus={focusInput as any} onBlur={blurInput as any} />
           </div>
 
-          <Button disabled={!canSubmit} className="w-full sm:w-auto" size="lg" onClick={() => setShowConfirm(true)}>
+          <button
+            disabled={!canSubmit}
+            onClick={() => setShowConfirm(true)}
+            style={{
+              background: canSubmit ? 'var(--blue-deep)' : 'var(--cloud)',
+              color: '#ffffff',
+              fontFamily: 'var(--font-display)',
+              fontWeight: 700,
+              fontSize: 11,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              padding: '15px 28px',
+              borderRadius: 'var(--radius-sm)',
+              border: 'none',
+              cursor: canSubmit ? 'pointer' : 'not-allowed',
+              transition: 'var(--transition)',
+              width: 'fit-content',
+            }}
+          >
             Registrar conquista
-          </Button>
+          </button>
         </div>
 
         <div className="lg:col-span-2">
-          <p className="font-body text-xs text-ink-faint uppercase tracking-wide mb-3">Preview</p>
-          <div className="rounded-xl border p-5 bg-main shadow-card" style={{ borderColor: 'var(--color-border)' }}>
+          <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: 12 }}>Preview</p>
+          <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 20 }}>
             {selectedPractitioner && belt ? (
               <>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-3 h-3 rounded-full bg-verified" />
-                  <span className="text-xs font-body font-medium text-verified">Verificado</span>
+                <div className="flex items-center" style={{ gap: 8, marginBottom: 12 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--blue-deep)' }} />
+                  <span style={{ fontSize: 11, fontFamily: 'var(--font-body)', fontWeight: 600, color: 'var(--blue-deep)' }}>Verificado</span>
                 </div>
-                <p className="font-display font-bold text-sm text-ink">{selectedPractitioner.first_name} {selectedPractitioner.last_name}</p>
-                <p className="font-body text-xs text-ink-muted mb-3">{school?.name}</p>
-                <div className="flex items-center gap-2 mb-2">
+                <p style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14, color: 'var(--ink)', margin: 0 }}>{selectedPractitioner.first_name} {selectedPractitioner.last_name}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--muted)', margin: '2px 0 12px' }}>{school?.name}</p>
+                <div className="flex items-center" style={{ gap: 8, marginBottom: 8 }}>
                   <BeltBadge belt={belt as any} size="sm" />
-                  <span className="font-body text-xs text-ink-faint">{date ? formatDate(date) : ''}</span>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--cloud)' }}>{date ? formatDate(date) : ''}</span>
                 </div>
-                <p className="font-body text-xs text-ink-muted">{graduatedBy}</p>
-                {note && <p className="font-body text-xs text-ink-muted italic mt-2">{note}</p>}
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--muted)', margin: 0 }}>{graduatedBy}</p>
+                {note && <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--muted)', fontStyle: 'italic', marginTop: 8 }}>{note}</p>}
               </>
             ) : (
-              <p className="font-body text-sm text-ink-faint text-center py-8">Selecione um atleta e faixa para ver o preview</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--cloud)', textAlign: 'center', padding: '32px 0' }}>Selecione um atleta e faixa para ver o preview</p>
             )}
           </div>
         </div>
       </div>
 
       {showConfirm && (
-        <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4" onClick={() => setShowConfirm(false)}>
-          <div className="bg-main rounded-xl p-6 shadow-card max-w-sm w-full" onClick={e => e.stopPropagation()}>
-            <h3 className="font-display font-bold text-lg text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Confirmar registro</h3>
-            <p className="font-body text-sm text-ink-muted mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(15,25,35,0.5)', padding: 16 }} onClick={() => setShowConfirm(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ background: 'var(--white)', borderRadius: 'var(--radius-md)', padding: 24, maxWidth: 400, width: '100%', boxShadow: 'var(--shadow-float)' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: 'var(--ink)', marginBottom: 8 }}>Confirmar registro</h3>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)', marginBottom: 16 }}>
               Isso consumirá 1 crédito do seu saldo ({balance} restantes). Confirmar?
             </p>
-            <div className="flex gap-3 justify-end">
+            <div className="flex justify-end" style={{ gap: 12 }}>
               <Button variant="ghost" onClick={() => setShowConfirm(false)}>Cancelar</Button>
-              <Button onClick={handleConfirm} disabled={loading}>
-                {loading ? 'Registrando...' : 'Confirmar'}
-              </Button>
+              <Button onClick={handleConfirm} disabled={loading}>{loading ? 'Registrando...' : 'Confirmar'}</Button>
             </div>
           </div>
         </div>

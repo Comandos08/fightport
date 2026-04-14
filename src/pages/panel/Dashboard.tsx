@@ -69,7 +69,6 @@ export default function DashboardPage() {
     enabled: !!user,
   });
 
-  // Belt distribution data
   const { data: beltDistribution = [] } = useQuery({
     queryKey: ['belt-distribution', user?.id],
     queryFn: async () => {
@@ -88,7 +87,6 @@ export default function DashboardPage() {
     enabled: !!user,
   });
 
-  // Monthly achievements (last 6 months)
   const { data: monthlyAchievements = [] } = useQuery({
     queryKey: ['monthly-achievements', user?.id],
     queryFn: async () => {
@@ -102,7 +100,6 @@ export default function DashboardPage() {
         .gte('graduation_date', sixMonthsAgo.toISOString().split('T')[0]);
       if (!data) return [];
       const counts: Record<string, number> = {};
-      // Initialize last 6 months
       for (let i = 5; i >= 0; i--) {
         const d = new Date();
         d.setMonth(d.getMonth() - i);
@@ -123,7 +120,6 @@ export default function DashboardPage() {
     enabled: !!user,
   });
 
-  // Practitioner growth (last 6 months cumulative)
   const { data: practitionerGrowth = [] } = useQuery({
     queryKey: ['practitioner-growth', user?.id],
     queryFn: async () => {
@@ -145,7 +141,6 @@ export default function DashboardPage() {
           label: monthNames[d.getMonth()],
         });
       }
-      // Count cumulative practitioners up to end of each month
       return months.map((m) => {
         const endOfMonth = new Date(`${m.key}-01`);
         endOfMonth.setMonth(endOfMonth.getMonth() + 1);
@@ -162,7 +157,7 @@ export default function DashboardPage() {
     { label: 'Total de praticantes', value: practitionerCount, icon: Users },
     { label: 'Certificados emitidos', value: achievementCount, icon: Award },
     { label: 'Saldo de créditos', value: creditBalance, icon: Coins, cta: creditBalance < 5 },
-    { label: 'Última graduação', value: lastDate, icon: Calendar },
+    { label: 'Última graduação', value: lastDate, icon: Calendar, isDate: true },
   ];
 
   const beltChartConfig: ChartConfig = {
@@ -170,63 +165,71 @@ export default function DashboardPage() {
   };
 
   const monthlyChartConfig: ChartConfig = {
-    count: { label: 'Conquistas', color: 'hsl(var(--accent))' },
+    count: { label: 'Conquistas', color: 'var(--blue-deep)' },
   };
 
   const growthChartConfig: ChartConfig = {
-    total: { label: 'Praticantes', color: 'hsl(var(--accent))' },
+    total: { label: 'Praticantes', color: 'var(--blue-deep)' },
   };
 
   return (
-    <div className="p-4 lg:p-8 max-w-6xl">
-      <h1 className="font-display font-bold text-2xl text-ink mb-8" style={{ letterSpacing: '0.02em' }}>Dashboard</h1>
+    <div style={{ padding: '24px 32px', maxWidth: 1100 }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 24, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 24 }}>Dashboard</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {/* Metric cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 32 }}>
         {stats.map(s => (
-          <div key={s.label} className="rounded-xl border p-5 bg-main shadow-card" style={{ borderColor: 'var(--color-border)' }}>
-            <div className="flex items-center justify-between mb-3">
-              <s.icon className="h-5 w-5 text-ink-faint" />
+          <div
+            key={s.label}
+            style={{
+              background: 'var(--bg)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              padding: 20,
+            }}
+          >
+            <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--muted)' }}>
+                {s.label}
+              </span>
               {s.cta && (
-                <Link to="/painel/creditos">
-                  <span className="text-xs font-body font-medium text-accent-brand hover:underline cursor-pointer">Comprar mais</span>
+                <Link to="/painel/creditos" style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 12, color: 'var(--terra)', textDecoration: 'none' }}>
+                  Comprar mais
                 </Link>
               )}
             </div>
-            <p className="font-display font-bold text-2xl text-ink">{s.value}</p>
-            <p className="font-body text-sm text-ink-muted">{s.label}</p>
+            <p style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 700,
+              fontSize: (s as any).isDate ? 24 : 32,
+              color: (s as any).isDate ? 'var(--ink)' : 'var(--blue-deep)',
+              letterSpacing: '-0.02em',
+              margin: 0,
+            }}>
+              {s.value}
+            </p>
           </div>
         ))}
       </div>
 
       {creditBalance === 0 && (
-        <div className="rounded-xl border-2 p-6 mb-8 text-center" style={{ borderColor: 'var(--color-accent)', backgroundColor: 'rgba(200,241,53,0.08)' }}>
-          <p className="font-body font-medium text-ink mb-2">Você não tem créditos.</p>
-          <p className="font-body text-sm text-ink-muted mb-4">Compre agora para registrar graduações.</p>
+        <div style={{ border: '2px solid var(--blue-deep)', borderRadius: 'var(--radius-md)', padding: 24, marginBottom: 32, textAlign: 'center', background: 'var(--blue-light)' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, color: 'var(--blue-deep)', marginBottom: 8 }}>Você não tem créditos.</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>Compre agora para registrar graduações.</p>
           <Link to="/painel/creditos"><Button>Comprar créditos</Button></Link>
         </div>
       )}
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Belt distribution */}
-        <div className="rounded-xl border bg-main shadow-card p-5" style={{ borderColor: 'var(--color-border)' }}>
-          <h2 className="font-display font-bold text-sm text-ink uppercase mb-4" style={{ letterSpacing: '0.02em' }}>Distribuição por faixa</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 16, marginBottom: 32 }}>
+        <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 20 }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: 16 }}>Distribuição por faixa</h2>
           {beltDistribution.length === 0 ? (
-            <p className="text-center font-body text-sm text-ink-muted py-8">Nenhum praticante cadastrado.</p>
+            <p style={{ textAlign: 'center', fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', padding: '32px 0' }}>Nenhum praticante cadastrado.</p>
           ) : (
             <ChartContainer config={beltChartConfig} className="aspect-square max-h-[250px] mx-auto">
               <PieChart>
-                <Pie
-                  data={beltDistribution}
-                  dataKey="count"
-                  nameKey="belt"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={90}
-                  innerRadius={40}
-                  strokeWidth={2}
-                  stroke="hsl(var(--background))"
-                >
+                <Pie data={beltDistribution} dataKey="count" nameKey="belt" cx="50%" cy="50%" outerRadius={90} innerRadius={40} strokeWidth={2} stroke="var(--white)">
                   {beltDistribution.map((entry) => (
                     <Cell key={entry.belt} fill={BELT_COLORS[entry.belt] || '#999'} />
                   ))}
@@ -236,28 +239,27 @@ export default function DashboardPage() {
             </ChartContainer>
           )}
           {beltDistribution.length > 0 && (
-            <div className="flex flex-wrap gap-3 justify-center mt-3">
+            <div className="flex flex-wrap gap-3 justify-center" style={{ marginTop: 12 }}>
               {beltDistribution.map((entry) => (
-                <div key={entry.belt} className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: BELT_COLORS[entry.belt] || '#999' }} />
-                  <span className="font-body text-xs text-ink-muted">{entry.belt} ({entry.count})</span>
+                <div key={entry.belt} className="flex items-center" style={{ gap: 6 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: BELT_COLORS[entry.belt] || '#999' }} />
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--muted)' }}>{entry.belt} ({entry.count})</span>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* Monthly achievements */}
-        <div className="rounded-xl border bg-main shadow-card p-5" style={{ borderColor: 'var(--color-border)' }}>
-          <h2 className="font-display font-bold text-sm text-ink uppercase mb-4" style={{ letterSpacing: '0.02em' }}>Conquistas por mês</h2>
+        <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 20 }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: 16 }}>Conquistas por mês</h2>
           {monthlyAchievements.every(m => m.count === 0) ? (
-            <p className="text-center font-body text-sm text-ink-muted py-8">Nenhuma conquista nos últimos 6 meses.</p>
+            <p style={{ textAlign: 'center', fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', padding: '32px 0' }}>Nenhuma conquista nos últimos 6 meses.</p>
           ) : (
             <ChartContainer config={monthlyChartConfig} className="aspect-video max-h-[250px]">
               <BarChart data={monthlyAchievements}>
-                <XAxis dataKey="month" tickLine={false} axisLine={false} className="font-body text-xs" />
-                <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={30} className="font-body text-xs" />
-                <Bar dataKey="count" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
+                <XAxis dataKey="month" tickLine={false} axisLine={false} style={{ fontFamily: 'var(--font-body)', fontSize: 11 }} />
+                <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={30} style={{ fontFamily: 'var(--font-body)', fontSize: 11 }} />
+                <Bar dataKey="count" fill="var(--blue-deep)" radius={[4, 4, 0, 0]} />
                 <ChartTooltip content={<ChartTooltipContent />} />
               </BarChart>
             </ChartContainer>
@@ -266,37 +268,37 @@ export default function DashboardPage() {
       </div>
 
       {/* Practitioner growth */}
-      <div className="rounded-xl border bg-main shadow-card p-5 mb-8" style={{ borderColor: 'var(--color-border)' }}>
-        <h2 className="font-display font-bold text-sm text-ink uppercase mb-4" style={{ letterSpacing: '0.02em' }}>Evolução de praticantes</h2>
+      <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 20, marginBottom: 32 }}>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: 16 }}>Evolução de praticantes</h2>
         {practitionerGrowth.every(m => m.total === 0) ? (
-          <p className="text-center font-body text-sm text-ink-muted py-8">Nenhum praticante cadastrado nos últimos 6 meses.</p>
+          <p style={{ textAlign: 'center', fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', padding: '32px 0' }}>Nenhum praticante cadastrado nos últimos 6 meses.</p>
         ) : (
           <ChartContainer config={growthChartConfig} className="aspect-video max-h-[250px]">
             <LineChart data={practitionerGrowth}>
-              <XAxis dataKey="month" tickLine={false} axisLine={false} className="font-body text-xs" />
-              <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={30} className="font-body text-xs" />
-              <Line type="monotone" dataKey="total" stroke="hsl(var(--accent))" strokeWidth={2} dot={{ r: 4, fill: 'hsl(var(--accent))' }} />
+              <XAxis dataKey="month" tickLine={false} axisLine={false} style={{ fontFamily: 'var(--font-body)', fontSize: 11 }} />
+              <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={30} style={{ fontFamily: 'var(--font-body)', fontSize: 11 }} />
+              <Line type="monotone" dataKey="total" stroke="var(--blue-deep)" strokeWidth={2} dot={{ r: 4, fill: 'var(--blue-deep)' }} />
               <ChartTooltip content={<ChartTooltipContent />} />
             </LineChart>
           </ChartContainer>
         )}
       </div>
 
-      <h2 className="font-display font-bold text-lg text-ink mb-4 uppercase" style={{ letterSpacing: '0.02em' }}>Últimas conquistas</h2>
-      <div className="rounded-xl border bg-main shadow-card overflow-hidden" style={{ borderColor: 'var(--color-border)' }}>
+      <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', marginBottom: 16 }}>Últimas conquistas</h2>
+      <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
         {recentAchievements.length === 0 ? (
-          <p className="p-8 text-center font-body text-sm text-ink-muted">Nenhuma conquista registrada ainda.</p>
+          <p style={{ padding: 32, textAlign: 'center', fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)' }}>Nenhuma conquista registrada ainda.</p>
         ) : (
           recentAchievements.map((ach: any, i: number) => (
-            <div key={ach.id} className={`flex items-center gap-4 p-4 ${i !== recentAchievements.length - 1 ? 'border-b' : ''}`} style={{ borderColor: 'var(--color-border)' }}>
+            <div key={ach.id} className="flex items-center" style={{ gap: 16, padding: '14px 16px', borderBottom: i !== recentAchievements.length - 1 ? '1px solid var(--border)' : 'none' }}>
               <div className="flex-1 min-w-0">
-                <p className="font-body font-medium text-sm text-ink truncate">
+                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: 14, color: 'var(--ink)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {ach.practitioners?.first_name} {ach.practitioners?.last_name}
                 </p>
-                <p className="font-body text-xs text-ink-muted">{ach.schools?.name}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--muted)', margin: 0 }}>{ach.schools?.name}</p>
               </div>
               <BeltBadge belt={ach.belt} size="sm" />
-              <span className="font-body text-xs text-ink-faint whitespace-nowrap">{formatDate(ach.graduation_date)}</span>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--cloud)', whiteSpace: 'nowrap' }}>{formatDate(ach.graduation_date)}</span>
             </div>
           ))
         )}

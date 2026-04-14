@@ -45,7 +45,6 @@ export default function PraticantesPage() {
     enabled: !!user,
   });
 
-  // Derive unique belt and martial art values for filter options
   const belts = [...new Set(practitioners.map(p => p.current_belt).filter(Boolean))] as string[];
   const arts = [...new Set(practitioners.map(p => p.martial_art).filter(Boolean))] as string[];
 
@@ -60,16 +59,8 @@ export default function PraticantesPage() {
   const currentPage = Math.min(page, totalPages);
   const paginatedItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    setPage(1);
-  };
-
-  const handleFilterChange = (setter: (v: string) => void) => (value: string) => {
-    setter(value);
-    setPage(1);
-  };
-
+  const handleSearchChange = (value: string) => { setSearch(value); setPage(1); };
+  const handleFilterChange = (setter: (v: string) => void) => (value: string) => { setter(value); setPage(1); };
   const hasActiveFilters = !!beltFilter || !!artFilter;
 
   const handleDelete = async () => {
@@ -88,23 +79,10 @@ export default function PraticantesPage() {
   };
 
   const handleExportCsv = () => {
-    if (filtered.length === 0) {
-      toast.error('Nenhum praticante para exportar.');
-      return;
-    }
+    if (filtered.length === 0) { toast.error('Nenhum praticante para exportar.'); return; }
     const headers = ['Nome', 'Sobrenome', 'Arte Marcial', 'Faixa Atual', 'FP ID', 'Data de Nascimento', 'Gênero'];
-    const rows = filtered.map(a => [
-      a.first_name,
-      a.last_name,
-      a.martial_art,
-      a.current_belt ?? '',
-      a.fp_id,
-      a.birth_date ?? '',
-      a.gender ?? '',
-    ]);
-    const csvContent = [headers, ...rows]
-      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-      .join('\n');
+    const rows = filtered.map(a => [a.first_name, a.last_name, a.martial_art, a.current_belt ?? '', a.fp_id, a.birth_date ?? '', a.gender ?? '']);
+    const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
     const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -115,50 +93,60 @@ export default function PraticantesPage() {
     toast.success(`${filtered.length} praticante(s) exportado(s).`);
   };
 
+  const inputStyle: React.CSSProperties = {
+    background: 'var(--white)',
+    border: '1.5px solid var(--border-2)',
+    borderRadius: 'var(--radius-sm)',
+    padding: '11px 14px',
+    fontFamily: 'var(--font-body)',
+    fontSize: 14,
+    color: 'var(--ink)',
+    outline: 'none',
+    transition: 'var(--transition)',
+  };
+
+  const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+    e.currentTarget.style.borderColor = 'var(--blue-mid)';
+    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(88,131,154,0.15)';
+  };
+  const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+    e.currentTarget.style.borderColor = 'var(--border-2)';
+    e.currentTarget.style.boxShadow = 'none';
+  };
+
   return (
-    <div className="p-4 lg:p-8 max-w-6xl">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <h1 className="font-display font-bold text-2xl text-ink" style={{ letterSpacing: '0.02em' }}>Praticantes</h1>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" onClick={handleExportCsv}>
-            <Download className="h-4 w-4" />
-            Exportar CSV
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}>
-            <Upload className="h-4 w-4" />
-            Importar CSV/XLSX
-          </Button>
-          <Link to="/painel/praticantes/novo">
-            <Button size="sm">
-              <Plus className="h-4 w-4" />
-              Novo praticante
-            </Button>
-          </Link>
+    <div style={{ padding: '24px 32px', maxWidth: 1100 }}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between" style={{ gap: 16, marginBottom: 24 }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 24, color: 'var(--ink)', letterSpacing: '-0.02em' }}>Praticantes</h1>
+        <div className="flex" style={{ gap: 8 }}>
+          <Button variant="ghost" size="sm" onClick={handleExportCsv}><Download className="h-4 w-4" /> Exportar CSV</Button>
+          <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}><Upload className="h-4 w-4" /> Importar CSV/XLSX</Button>
+          <Link to="/painel/praticantes/novo"><Button size="sm"><Plus className="h-4 w-4" /> Novo praticante</Button></Link>
         </div>
       </div>
 
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-faint" />
+      <div className="relative" style={{ marginBottom: 20 }}>
+        <Search className="absolute top-1/2 -translate-y-1/2" style={{ left: 14, width: 16, height: 16, color: 'var(--cloud)' }} />
         <input
           type="text"
           value={search}
           onChange={e => handleSearchChange(e.target.value)}
           placeholder="Buscar praticante..."
-          className="w-full h-12 pl-10 pr-4 rounded-lg border bg-popover font-body text-sm text-ink placeholder:text-ink-faint focus:outline-none transition-all"
-          style={{ borderColor: 'var(--color-border)' }}
-          onFocus={e => e.currentTarget.style.borderColor = 'var(--color-border-focus)'}
-          onBlur={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
+          style={{ ...inputStyle, width: '100%', height: 44, paddingLeft: 40 }}
+          onFocus={focusInput}
+          onBlur={blurInput}
         />
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3 mb-6">
-        <Filter className="h-4 w-4 text-ink-faint shrink-0" />
+      <div className="flex flex-wrap items-center" style={{ gap: 12, marginBottom: 20 }}>
+        <Filter style={{ width: 16, height: 16, color: 'var(--cloud)' }} />
         <select
           value={beltFilter}
           onChange={e => handleFilterChange(setBeltFilter)(e.target.value)}
-          className="h-9 px-3 rounded-lg border bg-popover font-body text-sm text-ink focus:outline-none"
-          style={{ borderColor: 'var(--color-border)' }}
+          style={{ ...inputStyle, height: 36, padding: '0 12px', fontSize: 13 }}
+          onFocus={focusInput as any}
+          onBlur={blurInput as any}
         >
           <option value="">Todas as faixas</option>
           {belts.map(b => <option key={b} value={b}>{b}</option>)}
@@ -167,92 +155,107 @@ export default function PraticantesPage() {
           <select
             value={artFilter}
             onChange={e => handleFilterChange(setArtFilter)(e.target.value)}
-            className="h-9 px-3 rounded-lg border bg-popover font-body text-sm text-ink focus:outline-none"
-            style={{ borderColor: 'var(--color-border)' }}
+            style={{ ...inputStyle, height: 36, padding: '0 12px', fontSize: 13 }}
+            onFocus={focusInput as any}
+            onBlur={blurInput as any}
           >
             <option value="">Todas as artes marciais</option>
             {arts.map(a => <option key={a} value={a}>{a}</option>)}
           </select>
         )}
         {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-9 text-xs"
-            onClick={() => { setBeltFilter(''); setArtFilter(''); setPage(1); }}
-          >
-            <X className="h-3 w-3" />
-            Limpar filtros
+          <Button variant="ghost" size="sm" className="h-9 text-xs" onClick={() => { setBeltFilter(''); setArtFilter(''); setPage(1); }}>
+            <X className="h-3 w-3" /> Limpar filtros
           </Button>
         )}
       </div>
 
       {isLoading ? (
-        <div className="text-center py-20">
-          <div className="animate-spin h-8 w-8 border-4 border-accent-brand border-t-transparent rounded-full mx-auto" />
+        <div style={{ textAlign: 'center', padding: '80px 0' }}>
+          <div className="animate-spin" style={{ width: 32, height: 32, border: '4px solid var(--blue-deep)', borderTopColor: 'transparent', borderRadius: '50%', margin: '0 auto' }} />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface flex items-center justify-center">
-            <Search className="h-6 w-6 text-ink-faint" />
+        <div style={{ textAlign: 'center', padding: '80px 0' }}>
+          <div style={{ width: 64, height: 64, margin: '0 auto 16px', borderRadius: '50%', background: 'var(--bg-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Search style={{ width: 24, height: 24, color: 'var(--cloud)' }} />
           </div>
-          <p className="font-body font-medium text-ink mb-1">Nenhum praticante cadastrado.</p>
-          <p className="font-body text-sm text-ink-muted mb-4">Adicione o primeiro.</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, color: 'var(--ink)', marginBottom: 4 }}>Nenhum praticante cadastrado.</p>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>Adicione o primeiro.</p>
           <Link to="/painel/praticantes/novo"><Button>Novo praticante</Button></Link>
         </div>
       ) : (
         <>
-          <div className="rounded-xl border bg-main shadow-card overflow-x-auto" style={{ borderColor: 'var(--color-border)' }}>
-            <table className="w-full min-w-[600px]">
+          <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'auto' }}>
+            <table style={{ width: '100%', minWidth: 600, borderCollapse: 'collapse' }}>
               <thead>
-                <tr className="border-b" style={{ borderColor: 'var(--color-border)' }}>
-                  <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Nome</th>
-                  <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Arte Marcial</th>
-                  <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Última Faixa</th>
-                  <th className="text-left font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Escola</th>
-                  <th className="text-right font-body text-xs font-medium text-ink-faint uppercase tracking-wide p-4">Ações</th>
+                <tr style={{ background: 'var(--bg-2)' }}>
+                  {['Nome', 'Arte Marcial', 'Última Faixa', 'Escola', ''].map((h, i) => (
+                    <th
+                      key={i}
+                      style={{
+                        textAlign: i === 4 ? 'right' : 'left',
+                        fontFamily: 'var(--font-display)',
+                        fontWeight: 700,
+                        fontSize: 10,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.12em',
+                        color: 'var(--muted)',
+                        padding: '10px 16px',
+                      }}
+                    >
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {paginatedItems.map((a, i) => (
-                  <tr key={a.id} className={i !== paginatedItems.length - 1 ? 'border-b' : ''} style={{ borderColor: 'var(--color-border)' }}>
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-display font-bold text-xs shrink-0" style={{ backgroundColor: '#C9A84C', color: '#fff' }}>
+                  <tr
+                    key={a.id}
+                    style={{ borderBottom: i !== paginatedItems.length - 1 ? '1px solid var(--border)' : 'none', transition: 'var(--transition)' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-2)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <td style={{ padding: '14px 16px' }}>
+                      <div className="flex items-center" style={{ gap: 12 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--blue-deep)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 11, flexShrink: 0 }}>
                           {getInitials(a.first_name, a.last_name)}
                         </div>
-                        <span className="font-body text-sm font-medium text-ink">{a.first_name} {a.last_name}</span>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500, color: 'var(--ink)' }}>{a.first_name} {a.last_name}</span>
                       </div>
                     </td>
-                    <td className="p-4 font-body text-sm text-ink-muted">{a.martial_art}</td>
-                    <td className="p-4">{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span className="font-body text-xs text-ink-faint">—</span>}</td>
-                    <td className="p-4 font-body text-sm text-ink-muted">{school?.name ?? '...'}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center gap-1 justify-end">
-                        <Link to={`/p/${a.fp_id}`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Ver passaporte">
-                            <Eye className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        <Link to="/painel/conquistas/nova">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Registrar conquista">
-                            <Award className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        <Link to={`/painel/praticantes/${a.id}/editar`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Editar">
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-destructive hover:text-destructive"
+                    <td style={{ padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)' }}>{a.martial_art}</td>
+                    <td style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--cloud)' }}>—</span>}</td>
+                    <td style={{ padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)' }}>{school?.name ?? '...'}</td>
+                    <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                      <div className="flex items-center justify-end" style={{ gap: 8 }}>
+                        {[
+                          { to: `/p/${a.fp_id}`, icon: Eye, label: 'Ver passaporte' },
+                          { to: '/painel/conquistas/nova', icon: Award, label: 'Registrar conquista' },
+                          { to: `/painel/praticantes/${a.id}/editar`, icon: Pencil, label: 'Editar' },
+                        ].map(act => (
+                          <Link key={act.label} to={act.to}>
+                            <button
+                              className="cursor-pointer"
+                              aria-label={act.label}
+                              style={{ background: 'none', border: 'none', padding: 4, color: 'var(--muted)', transition: 'var(--transition)' }}
+                              onMouseEnter={e => (e.currentTarget.style.color = 'var(--blue-mid)')}
+                              onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
+                            >
+                              <act.icon style={{ width: 16, height: 16 }} />
+                            </button>
+                          </Link>
+                        ))}
+                        <button
+                          className="cursor-pointer"
                           aria-label="Excluir"
                           onClick={() => setDeleteTarget({ id: a.id, name: `${a.first_name} ${a.last_name}` })}
+                          style={{ background: 'none', border: 'none', padding: 4, color: 'var(--terra)', transition: 'var(--transition)' }}
+                          onMouseEnter={e => (e.currentTarget.style.color = '#b83515')}
+                          onMouseLeave={e => (e.currentTarget.style.color = 'var(--terra)')}
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
+                          <Trash2 style={{ width: 16, height: 16 }} />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -262,20 +265,13 @@ export default function PraticantesPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between mt-4">
-            <p className="font-body text-sm text-ink-muted">
+          <div className="flex items-center justify-between" style={{ marginTop: 16 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--muted)', margin: 0 }}>
               {filtered.length} praticante{filtered.length !== 1 ? 's' : ''} · Página {currentPage} de {totalPages}
             </p>
             {totalPages > 1 && (
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  disabled={currentPage <= 1}
-                  onClick={() => setPage(p => p - 1)}
-                  aria-label="Página anterior"
-                >
+              <div className="flex items-center" style={{ gap: 4 }}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage <= 1} onClick={() => setPage(p => p - 1)} aria-label="Página anterior">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -287,27 +283,12 @@ export default function PraticantesPage() {
                   }, [])
                   .map((item, idx) =>
                     item === 'ellipsis' ? (
-                      <span key={`e-${idx}`} className="font-body text-sm text-ink-faint px-1">…</span>
+                      <span key={`e-${idx}`} style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--cloud)', padding: '0 4px' }}>…</span>
                     ) : (
-                      <Button
-                        key={item}
-                        variant={item === currentPage ? 'default' : 'ghost'}
-                        size="icon"
-                        className="h-8 w-8 text-sm"
-                        onClick={() => setPage(item)}
-                      >
-                        {item}
-                      </Button>
+                      <Button key={item} variant={item === currentPage ? 'default' : 'ghost'} size="icon" className="h-8 w-8 text-sm" onClick={() => setPage(item)}>{item}</Button>
                     )
                   )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  disabled={currentPage >= totalPages}
-                  onClick={() => setPage(p => p + 1)}
-                  aria-label="Próxima página"
-                >
+                <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage >= totalPages} onClick={() => setPage(p => p + 1)} aria-label="Próxima página">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -317,17 +298,15 @@ export default function PraticantesPage() {
       )}
 
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4" onClick={() => setDeleteTarget(null)}>
-          <div className="bg-main rounded-xl p-6 shadow-card max-w-sm w-full" onClick={e => e.stopPropagation()}>
-            <h3 className="font-display font-bold text-lg text-ink mb-2" style={{ letterSpacing: '0.02em' }}>Excluir praticante</h3>
-            <p className="font-body text-sm text-ink-muted mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(15,25,35,0.5)', padding: 16 }} onClick={() => setDeleteTarget(null)}>
+          <div onClick={e => e.stopPropagation()} style={{ background: 'var(--white)', borderRadius: 'var(--radius-md)', padding: 24, maxWidth: 400, width: '100%', boxShadow: 'var(--shadow-float)' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: 'var(--ink)', marginBottom: 8 }}>Excluir praticante</h3>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--muted)', marginBottom: 16 }}>
               Tem certeza que deseja excluir <strong>{deleteTarget.name}</strong>? Esta ação não pode ser desfeita.
             </p>
-            <div className="flex gap-3 justify-end">
+            <div className="flex justify-end" style={{ gap: 12 }}>
               <Button variant="ghost" onClick={() => setDeleteTarget(null)}>Cancelar</Button>
-              <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
-                {deleting ? 'Excluindo...' : 'Excluir'}
-              </Button>
+              <Button variant="destructive" onClick={handleDelete} disabled={deleting}>{deleting ? 'Excluindo...' : 'Excluir'}</Button>
             </div>
           </div>
         </div>
