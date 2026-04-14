@@ -334,9 +334,27 @@ export default function ConfiguracoesPage() {
             <div style={{ padding: 16, borderRadius: 'var(--radius-sm)', background: 'var(--color-bg-soft)', display: 'flex', flexDirection: 'column', gap: 12 }}>
               <label style={labelStyle}>Novo e-mail</label>
               <input value={newEmail} onChange={e => setNewEmail(e.target.value)} type="email" placeholder="novo@email.com" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
-              <Button onClick={handleChangeEmail} disabled={savingAccount} size="sm" style={{ width: 'fit-content' }}>
+              <button
+                onClick={handleChangeEmail}
+                disabled={savingAccount}
+                style={{
+                  width: 'fit-content',
+                  background: savingAccount ? '#E8E8E5' : '#F5A623',
+                  color: savingAccount ? '#9A9A9A' : '#1C1C1C',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  padding: '10px 24px',
+                  borderRadius: 6,
+                  border: 'none',
+                  cursor: savingAccount ? 'not-allowed' : 'pointer',
+                  transition: 'var(--transition)',
+                }}
+                onMouseEnter={e => { if (!savingAccount) e.currentTarget.style.background = '#e09600'; }}
+                onMouseLeave={e => { if (!savingAccount) e.currentTarget.style.background = '#F5A623'; }}
+              >
                 {savingAccount ? 'Salvando...' : 'Confirmar novo e-mail'}
-              </Button>
+              </button>
             </div>
           )}
 
@@ -356,9 +374,27 @@ export default function ConfiguracoesPage() {
                 <label style={labelStyle}>Confirmar nova senha</label>
                 <input value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} type="password" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
               </div>
-              <Button onClick={handleChangePassword} disabled={savingAccount} size="sm" style={{ width: 'fit-content' }}>
+              <button
+                onClick={handleChangePassword}
+                disabled={savingAccount}
+                style={{
+                  width: 'fit-content',
+                  background: savingAccount ? '#E8E8E5' : '#F5A623',
+                  color: savingAccount ? '#9A9A9A' : '#1C1C1C',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  padding: '10px 24px',
+                  borderRadius: 6,
+                  border: 'none',
+                  cursor: savingAccount ? 'not-allowed' : 'pointer',
+                  transition: 'var(--transition)',
+                }}
+                onMouseEnter={e => { if (!savingAccount) e.currentTarget.style.background = '#e09600'; }}
+                onMouseLeave={e => { if (!savingAccount) e.currentTarget.style.background = '#F5A623'; }}
+              >
                 {savingAccount ? 'Salvando...' : 'Alterar senha'}
-              </Button>
+              </button>
             </div>
           )}
         </div>
