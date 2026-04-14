@@ -147,10 +147,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div style={{ backgroundColor: 'red', color: 'white', padding: '40px', fontSize: '32px' }}>DEBUG - THIS SHOULD BE VISIBLE</div>
-
       {/* BUSCA */}
-      <section id="busca" className="py-24 px-4 relative" style={{ border: '3px solid red' }}>
+      <section id="busca" className="py-16 md:py-24 px-4 relative">
         <div className="absolute top-0 left-0 right-0 h-10" style={{ background: 'linear-gradient(to bottom, var(--color-bg-surface), var(--color-bg))' }} />
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-10">
