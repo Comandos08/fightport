@@ -148,7 +148,7 @@ export default function HomePage() {
       </section>
 
       {/* BUSCA */}
-      <section ref={buscaRef} id="busca" className="section-reveal py-16 md:py-24 px-4 relative">
+      <section id="busca" className="py-16 md:py-24 px-4 relative">
         <div className="absolute top-0 left-0 right-0 h-10" style={{ background: 'linear-gradient(to bottom, var(--color-bg-surface), var(--color-bg))' }} />
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-10">
@@ -197,7 +197,7 @@ export default function HomePage() {
       </section>
 
       {/* COMO FUNCIONA */}
-      <section ref={comoRef} id="como-funciona" className="section-reveal py-16 md:py-28 lg:py-32 px-4 bg-surface">
+      <section id="como-funciona" className="py-16 md:py-28 lg:py-32 px-4 bg-surface">
         <div className="container mx-auto max-w-7xl">
           <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-8 md:mb-10">
             <h2 className="font-display font-bold text-[32px] md:text-[48px] text-ink uppercase" style={{ lineHeight: '1' }}>Como funciona</h2>
@@ -222,7 +222,7 @@ export default function HomePage() {
       </section>
 
       {/* PROVA SOCIAL */}
-      <section ref={provaRef} className="section-reveal py-16 md:py-24 lg:py-28 px-4">
+      <section className="py-16 md:py-24 lg:py-28 px-4">
         <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-16 items-start">
           <div className="lg:col-span-5">
             <h2 className="font-display font-extrabold text-[36px] md:text-[48px] lg:text-[64px] text-ink uppercase" style={{ lineHeight: '0.9' }}>
@@ -254,7 +254,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA FINAL */}
-      <section ref={ctaRef} className="section-reveal py-20 md:py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
+      <section className="py-20 md:py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.03 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
