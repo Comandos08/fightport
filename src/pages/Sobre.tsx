@@ -252,7 +252,7 @@ export default function Sobre() {
         </div>
       </section>
 
-      <Footer />
+      <FooterSection />
     </div>
   );
 }

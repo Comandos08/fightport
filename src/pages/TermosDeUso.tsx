@@ -174,7 +174,7 @@ export default function TermosDeUso() {
         </div>
       </section>
 
-      <Footer />
+      <FooterSection />
     </div>
   );
 }

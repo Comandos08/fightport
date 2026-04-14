@@ -407,7 +407,7 @@ export default function Contato() {
         </div>
       </section>
 
-      <Footer />
+      <FooterSection />
     </div>
   );
 }

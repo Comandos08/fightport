@@ -238,7 +238,7 @@ export default function Privacidade() {
         </div>
       </section>
 
-      <Footer />
+      <FooterSection />
     </div>
   );
 }
