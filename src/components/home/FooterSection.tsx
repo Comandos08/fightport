@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const linkStyle: React.CSSProperties = {
   fontFamily: 'var(--font-sans)',
   fontSize: 14,
-  fontWeight: 400,
+  fontWeight: 300,
   color: 'rgba(255,255,255,0.5)',
   textDecoration: 'none',
   transition: 'var(--transition)',
@@ -20,7 +20,7 @@ export function FooterSection() {
             <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: '#FFFFFF' }}>
               fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
             </span>
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.4)', marginTop: 8 }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.4)', marginTop: 8 }}>
               O passaporte digital do seu atleta.
             </p>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, color: 'rgba(255,255,255,0.2)', marginTop: 32 }}>
