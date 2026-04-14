@@ -9,7 +9,8 @@ const getNavLinks = (t: (key: string) => string) => [
   { href: '/cadastro', label: t('nav.forSchools'), isRoute: true },
 ];
 
-export function Navbar() {
+  const { t } = useTranslation();
+  const navLinks = getNavLinks(t);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
