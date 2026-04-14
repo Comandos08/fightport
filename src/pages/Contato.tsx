@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Building2, Shield } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
+import { FooterSection } from '@/components/home/FooterSection';
 import { useSeo } from '@/hooks/useSeo';
 
 const inputStyle: React.CSSProperties = {

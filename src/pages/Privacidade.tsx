@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
+import { FooterSection } from '@/components/home/FooterSection';
 import { useSeo } from '@/hooks/useSeo';
 
 const sections = [
