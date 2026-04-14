@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const packages = [
-  { name: 'Starter', credits: '10', price: 'R$ 97', unit: 'R$ 9,70/un', highlight: false },
-  { name: 'Escola', credits: '50', price: 'R$ 397', unit: 'R$ 7,94/un', highlight: true },
-  { name: 'Organização', credits: '150', price: 'R$ 990', unit: 'R$ 6,60/un', highlight: false },
+  { nameKey: 'pricing.plan.starter', credits: '10', price: 'R$ 97', unit: 'R$ 9,70/un', highlight: false },
+  { nameKey: 'pricing.plan.school', credits: '50', price: 'R$ 397', unit: 'R$ 7,94/un', highlight: true },
+  { nameKey: 'pricing.plan.org', credits: '150', price: 'R$ 990', unit: 'R$ 6,60/un', highlight: false },
 ];
 
 const thStyle: React.CSSProperties = {
@@ -17,18 +18,20 @@ const thStyle: React.CSSProperties = {
 };
 
 export function PricingSection() {
+  const { t } = useTranslation();
+
   return (
     <section style={{ background: 'var(--color-bg-soft)' }}>
       <div className="fp-container" style={{ padding: 'var(--section-py) 0' }}>
         <div className="section-inner">
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
-            PREÇOS
+            {t('pricing.badge')}
           </p>
           <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: 'var(--color-text)', marginTop: 24 }}>
-            Você só paga quando graduar.
+            {t('pricing.title')}
           </h2>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 17, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 16, marginBottom: 64 }}>
-            Sem mensalidade. Sem contrato. Créditos nunca expiram.
+            {t('pricing.subtitle')}
           </p>
 
           {/* Desktop table */}
@@ -43,16 +46,17 @@ export function PricingSection() {
               </colgroup>
               <thead>
                 <tr style={{ borderBottom: '2px solid var(--color-text)' }}>
-                  <th style={{ ...thStyle, textAlign: 'left' }}>PLANO</th>
-                  <th style={{ ...thStyle, textAlign: 'right' }}>CRÉDITOS</th>
-                  <th style={{ ...thStyle, textAlign: 'right' }}>PREÇO</th>
-                  <th style={{ ...thStyle, textAlign: 'right' }}>POR GRAD.</th>
+                  <th style={{ ...thStyle, textAlign: 'left' }}>{t('pricing.tableHeaders.plan')}</th>
+                  <th style={{ ...thStyle, textAlign: 'right' }}>{t('pricing.tableHeaders.credits')}</th>
+                  <th style={{ ...thStyle, textAlign: 'right' }}>{t('pricing.tableHeaders.price')}</th>
+                  <th style={{ ...thStyle, textAlign: 'right' }}>{t('pricing.tableHeaders.perGrad')}</th>
                   <th style={{ padding: '0 0 16px 0' }}></th>
                 </tr>
               </thead>
               <tbody>
                 {packages.map((pkg) => {
                   const isHL = pkg.highlight;
+                  const name = t(pkg.nameKey);
                   const tdBase: React.CSSProperties = {
                     padding: '24px 0',
                     fontFamily: 'var(--font-sans)',
@@ -62,7 +66,7 @@ export function PricingSection() {
                   };
                   return (
                     <tr
-                      key={pkg.name}
+                      key={pkg.nameKey}
                       style={{
                         background: isHL ? 'var(--color-bg-amber)' : 'transparent',
                       }}
@@ -73,7 +77,7 @@ export function PricingSection() {
                         borderBottom: isHL ? 'none' : '1px solid var(--color-border)',
                         borderRadius: isHL ? '6px 0 0 6px' : 0,
                       }}>
-                        {pkg.name}
+                        {name}
                         {isHL && (
                           <span style={{
                             fontFamily: 'var(--font-sans)',
@@ -88,7 +92,7 @@ export function PricingSection() {
                             marginLeft: 10,
                             verticalAlign: 'middle',
                           }}>
-                            MAIS POPULAR
+                            {t('pricing.mostPopular')}
                           </span>
                         )}
                       </td>
@@ -137,7 +141,7 @@ export function PricingSection() {
                           onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
                           onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
                         >
-                          Comprar →
+                          {t('pricing.buy')}
                         </Link>
                       </td>
                     </tr>
@@ -149,35 +153,38 @@ export function PricingSection() {
 
           {/* Mobile cards */}
           <div className="md:hidden flex flex-col" style={{ gap: 12 }}>
-            {packages.map((pkg) => (
-              <div
-                key={pkg.name}
-                style={{
-                  padding: '20px',
-                  background: pkg.highlight ? 'var(--color-bg-amber)' : 'transparent',
-                  border: pkg.highlight ? 'none' : '1px solid var(--color-border)',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-              >
-                <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
-                  <div className="flex items-center" style={{ gap: 8 }}>
-                    <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 17, color: 'var(--color-text)' }}>{pkg.name}</span>
-                    {pkg.highlight && (
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', background: '#1C1C1C', color: '#FFFFFF', padding: '2px 8px', borderRadius: 3 }}>MAIS POPULAR</span>
-                    )}
+            {packages.map((pkg) => {
+              const name = t(pkg.nameKey);
+              return (
+                <div
+                  key={pkg.nameKey}
+                  style={{
+                    padding: '20px',
+                    background: pkg.highlight ? 'var(--color-bg-amber)' : 'transparent',
+                    border: pkg.highlight ? 'none' : '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-sm)',
+                  }}
+                >
+                  <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
+                    <div className="flex items-center" style={{ gap: 8 }}>
+                      <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 17, color: 'var(--color-text)' }}>{name}</span>
+                      {pkg.highlight && (
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', background: '#1C1C1C', color: '#FFFFFF', padding: '2px 8px', borderRadius: 3 }}>{t('pricing.mostPopular')}</span>
+                      )}
+                    </div>
+                    <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 17, color: 'var(--color-text)' }}>{pkg.price}</span>
                   </div>
-                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 17, color: 'var(--color-text)' }}>{pkg.price}</span>
+                  <div className="flex items-center justify-between">
+                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{pkg.credits} {t('pricing.credits')} · {pkg.unit}</span>
+                    <Link to="/cadastro" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text)', textDecoration: 'none' }}>{t('pricing.buy')}</Link>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{pkg.credits} créditos · {pkg.unit}</span>
-                  <Link to="/cadastro" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text)', textDecoration: 'none' }}>Comprar →</Link>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 24 }}>
-            Créditos nunca expiram. Use quando quiser.
+            {t('pricing.neverExpire')}
           </p>
         </div>
       </div>

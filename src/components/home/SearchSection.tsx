@@ -3,8 +3,10 @@ import { Search } from 'lucide-react';
 import { AthleteCard } from '@/components/AthleteCard';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useTranslation } from 'react-i18next';
 
 export function SearchSection() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data: practitioners = [] } = useQuery({
@@ -52,13 +54,13 @@ export function SearchSection() {
         <div className="section-inner">
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 20 }}>
-              BUSCA PÚBLICA
+              {t('search.badge')}
             </p>
             <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.035em', lineHeight: 1.08, color: 'var(--color-text)', margin: '0 0 8px' }}>
-              Encontre um atleta
+              {t('search.title')}
             </h2>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--color-text-muted)', fontWeight: 300 }}>
-              certificado pela sua organização
+              {t('search.subtitle')}
             </p>
           </div>
 
@@ -69,7 +71,7 @@ export function SearchSection() {
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Nome do atleta, ID ou organização..."
+                placeholder={t('search.placeholder')}
                 style={{
                   width: '100%', height: 64, paddingLeft: 56, paddingRight: 20,
                   borderRadius: 'var(--radius-sm)', background: 'var(--color-bg-soft)',
@@ -82,7 +84,6 @@ export function SearchSection() {
             </div>
           </div>
 
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ gap: 20 }}>
             {mappedAthletes.map((a: any) => (
               <div key={a.id}>
@@ -92,10 +93,10 @@ export function SearchSection() {
            {mappedAthletes.length === 0 && (
               <div className="col-span-full" style={{ margin: '64px auto', maxWidth: 400, textAlign: 'center' }}>
                 <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 22, color: 'var(--color-text)', marginBottom: 8 }}>
-                  Nenhum atleta cadastrado ainda.
+                  {t('search.emptyTitle')}
                 </p>
                 <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 8, marginBottom: 24 }}>
-                  Cadastre sua organização e emita o primeiro certificado.
+                  {t('search.emptyDesc')}
                 </p>
                 <a
                   href="/cadastro"
@@ -103,7 +104,7 @@ export function SearchSection() {
                   onMouseEnter={e => (e.currentTarget.style.background = '#e09600')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-bg-amber)')}
                 >
-                  Cadastrar minha organização →
+                  {t('search.emptyCta')}
                 </a>
               </div>
             )}

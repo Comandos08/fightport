@@ -5,5 +5,125 @@
     "forSchools": "For schools",
     "login": "Sign in",
     "registerSchool": "Register your school"
+  },
+  "hero": {
+    "badge": "SPORTS CERTIFICATION → MARTIAL ARTS ORGANIZATIONS",
+    "title": "Your athlete's<br />rank,<br /><accent>immutable.</accent>",
+    "subtitle": "Anyone can verify your student's belt in seconds — just scan a QR Code. Forever. No forgery possible.",
+    "ctaPrimary": "Register my organization",
+    "ctaSecondary": "Verify an athlete →",
+    "stats": {
+      "athletes": "certified athletes",
+      "organizations": "active organizations",
+      "graduations": "recorded graduations"
+    }
+  },
+  "problem": {
+    "badge": "THE PROBLEM",
+    "title": "Paper certificates are easy to forge.",
+    "stat1": {
+      "number": "72%",
+      "desc": "of certification platforms fail due to lack of standards",
+      "source": "SOURCE: VFUNCTION, 2022"
+    },
+    "stat2": {
+      "number": "50%",
+      "desc": "of referees have no way to verify real rank",
+      "source": "INTERNAL ESTIMATE, 2024"
+    },
+    "stat3": {
+      "number": "5 years",
+      "desc": "of training anyone can fake with a printer",
+      "source": "MARKET REALITY"
+    }
+  },
+  "solution": {
+    "badge": "THE SOLUTION",
+    "title": "A sprint to modernize how your organization certifies athletes.",
+    "item1": {
+      "title": "Instant verification",
+      "desc": "Anyone scans the QR Code and sees the athlete's full history in 0.3 seconds."
+    },
+    "item2": {
+      "title": "Cryptographically immutable",
+      "desc": "Unique SHA-256 hash per graduation. No one can alter it — not even the organization, not even us."
+    },
+    "item3": {
+      "title": "Lifetime passport",
+      "desc": "The athlete keeps their link forever. Switch organizations, close the school — the passport remains."
+    }
+  },
+  "process": {
+    "badge": "PROCESS",
+    "title": "Three steps. Forever.",
+    "step1": {
+      "title": "The organization registers its athletes",
+      "desc": "Name, photo, and ID. The system blocks duplicates — no athlete can have two profiles.",
+      "tag": "ID verified"
+    },
+    "step2": {
+      "title": "Record the graduation",
+      "desc": "Select the athlete, the new belt, the date, and who graded. Hash generated automatically.",
+      "tag": "SHA-256 · immutable"
+    },
+    "step3": {
+      "title": "Anyone can verify",
+      "desc": "Scan the QR. See the athlete's complete digital passport. Signed. Forever.",
+      "tag": "Public · auditable"
+    }
+  },
+  "search": {
+    "badge": "PUBLIC SEARCH",
+    "title": "Find an athlete",
+    "subtitle": "certified by your organization",
+    "placeholder": "Athlete name, ID, or organization...",
+    "emptyTitle": "No athletes registered yet.",
+    "emptyDesc": "Register your organization and issue the first certificate.",
+    "emptyCta": "Register my organization →"
+  },
+  "pricing": {
+    "badge": "PRICING",
+    "title": "You only pay when you grade.",
+    "subtitle": "No monthly fee. No contract. Credits never expire.",
+    "neverExpire": "Credits never expire. Use them anytime.",
+    "mostPopular": "MOST POPULAR",
+    "buy": "Buy →",
+    "credits": "credits",
+    "perGrad": "PER GRAD.",
+    "plan": {
+      "starter": "Starter",
+      "school": "School",
+      "org": "Organization"
+    },
+    "tableHeaders": {
+      "plan": "PLAN",
+      "credits": "CREDITS",
+      "price": "PRICE",
+      "perGrad": "PER GRAD."
+    }
+  },
+  "testimonials": {
+    "badge": "WHAT ORGANIZATIONS SAY",
+    "title": "Once you try it, there's no going back."
+  },
+  "socialProof": {
+    "label": "ACTIVE ORGANIZATIONS IN →"
+  },
+  "cta": {
+    "title": "Your organization deserves this.",
+    "subtitle": "Free signup. You only pay when you grade an athlete.",
+    "button": "Register my organization →",
+    "disclaimer": "No credit card · No contract · Cancel anytime"
+  },
+  "footer": {
+    "tagline": "Your athlete's digital passport.",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "aboutUs": "About us",
+    "contact": "Contact",
+    "terms": "Terms of Use",
+    "privacy": "Privacy",
+    "lgpd": "LGPD"
   }
 }
