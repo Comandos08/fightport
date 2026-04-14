@@ -8,8 +8,9 @@ const getNavLinks = (t: (key: string) => string) => [
   { href: '/#busca', label: t('nav.verifyAthlete') },
   { href: '/#como-funciona', label: t('nav.howItWorks') },
   { href: '/sobre', label: t('footer.aboutUs'), isRoute: true },
+  { href: '/cadastro', label: t('nav.organizations'), isRoute: true },
+  { href: '/#precos', label: t('footer.pricing') },
   { href: '/contato', label: t('footer.contact'), isRoute: true },
-  { href: '/cadastro', label: t('nav.forSchools'), isRoute: true },
 ];
 
 export function Navbar() {
