@@ -71,6 +71,45 @@ export default function PassportPage() {
     enabled: !!practitioner?.school_id,
   });
 
+  const schoolData = practitioner?.schools as any;
+  const fullName = practitioner ? `${practitioner.first_name} ${practitioner.last_name}` : '';
+  const pageTitle = practitioner
+    ? `${fullName} — Passaporte ${practitioner.martial_art} | fightport.pro`
+    : 'Carregando... | fightport.pro';
+  const pageDescription = practitioner
+    ? `Passaporte verificado de ${fullName}. ${practitioner.martial_art} na ${schoolData?.name}. Graduações autenticadas com hash SHA-256.`
+    : 'Carregando passaporte do praticante...';
+  const pageUrl = practitioner ? `https://fightport.lovable.app/p/${practitioner.fp_id}` : '';
+
+  const jsonLd = practitioner ? {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: fullName,
+    url: pageUrl,
+    description: pageDescription,
+    memberOf: {
+      '@type': 'SportsOrganization',
+      name: schoolData?.name,
+      sport: practitioner.martial_art,
+    },
+    ...(practitioner.current_belt && {
+      hasCredential: {
+        '@type': 'EducationalOccupationalCredential',
+        name: `Faixa ${practitioner.current_belt} — ${practitioner.martial_art}`,
+        credentialCategory: 'Belt Rank',
+      },
+    }),
+  } : undefined;
+
+  useSeo({
+    title: pageTitle,
+    description: pageDescription,
+    url: pageUrl || undefined,
+    image: practitioner?.photo_url ?? undefined,
+    type: 'profile',
+    jsonLd,
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-main">
@@ -97,45 +136,10 @@ export default function PassportPage() {
     );
   }
 
-  const schoolData = practitioner.schools as any;
   const share = () => {
     navigator.clipboard.writeText(window.location.href);
     toast.success('Link copiado para a área de transferência');
   };
-
-  const fullName = `${practitioner.first_name} ${practitioner.last_name}`;
-  const pageTitle = `${fullName} — Passaporte ${practitioner.martial_art} | fightport.pro`;
-  const pageDescription = `Passaporte verificado de ${fullName}. ${practitioner.martial_art} na ${schoolData?.name}. Graduações autenticadas com hash SHA-256.`;
-  const pageUrl = `https://fightport.lovable.app/p/${practitioner.fp_id}`;
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: fullName,
-    url: pageUrl,
-    description: pageDescription,
-    memberOf: {
-      '@type': 'SportsOrganization',
-      name: schoolData?.name,
-      sport: practitioner.martial_art,
-    },
-    ...(practitioner.current_belt && {
-      hasCredential: {
-        '@type': 'EducationalOccupationalCredential',
-        name: `Faixa ${practitioner.current_belt} — ${practitioner.martial_art}`,
-        credentialCategory: 'Belt Rank',
-      },
-    }),
-  };
-
-  useSeo({
-    title: pageTitle,
-    description: pageDescription,
-    url: pageUrl,
-    image: practitioner.photo_url ?? undefined,
-    type: 'profile',
-    jsonLd,
-  });
 
   return (
     <div className="min-h-screen bg-main">
