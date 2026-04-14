@@ -14,8 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
+        sans: ["'Instrument Sans'", 'sans-serif'],
+        mono: ["'Space Mono'", 'monospace'],
         display: ["'Space Mono'", 'monospace'],
-        body: ["'Plus Jakarta Sans'", 'sans-serif'],
+        body: ["'Instrument Sans'", 'sans-serif'],
       },
       colors: {
         'blue-deep': '#134C73',
