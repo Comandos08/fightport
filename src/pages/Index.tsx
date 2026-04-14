@@ -241,7 +241,7 @@ export default function HomePage() {
       </section>
 
       {/* PROVA SOCIAL */}
-      <section className="py-16 md:py-24 lg:py-28 px-4">
+      <section ref={provaRef} className="section-reveal py-16 md:py-24 lg:py-28 px-4">
         <div className="container mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-16 items-start">
           <div className="lg:col-span-5">
             <h2 className="font-display font-extrabold text-[36px] md:text-[48px] lg:text-[64px] text-ink uppercase" style={{ lineHeight: '0.9' }}>
@@ -255,7 +255,7 @@ export default function HomePage() {
                 { value: mockStats.totalSchools.toString(), label: 'Academias' },
                 { value: mockStats.totalCertificates.toLocaleString('pt-BR'), label: 'Certificados' },
               ].map(m => (
-                <div key={m.label}>
+                <div key={m.label} className="stat-block">
                   <span className="font-display font-bold text-[32px] md:text-[48px] text-ink block" style={{ lineHeight: '1' }}>{m.value}</span>
                   <span className="font-body text-sm text-ink-faint">{m.label}</span>
                 </div>
@@ -273,7 +273,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA FINAL */}
-      <section className="py-20 md:py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
+      <section ref={ctaRef} className="section-reveal py-20 md:py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.03 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
