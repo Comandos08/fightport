@@ -1,147 +1,57 @@
 const testimonials = [
   {
-    text: 'O fightport.pro trouxe credibilidade real para a nossa academia. Os pais dos alunos pedem o link antes de matricular.',
+    text: 'O fightport.pro trouxe credibilidade para a nossa academia. Os pais pedem o link antes de matricular.',
     name: 'Prof. Ricardo Almeida',
     role: 'Faixa Preta 5° Grau · Academia Tiger BJJ, SP',
     initials: 'RA',
-    accent: 'var(--blue-deep)',
   },
   {
-    text: 'Na hora de registrar para o campeonato, o árbitro escaneou o QR e aceitou na hora. Zero burocracia.',
+    text: 'O árbitro escaneou o QR na hora do check-in do campeonato e aceitou na hora. Zero burocracia.',
     name: 'Carlos Mendes',
     role: 'Atleta Faixa Roxa · Gracie Barra RJ',
     initials: 'CM',
-    accent: 'var(--terra)',
   },
   {
-    text: 'Implantei em 20 minutos. Agora cada graduação vira um momento especial — o aluno recebe o link na hora.',
+    text: 'Implantei em 20 minutos. Cada graduação virou um momento especial — o aluno recebe o link na hora.',
     name: 'Prof. Ana Freitas',
     role: 'Head Coach · Alliance SP',
     initials: 'AF',
-    accent: 'var(--blue-deep)',
   },
 ];
 
 export function TestimonialsSection() {
   return (
     <section
-      className="px-6 md:px-10"
       style={{
-        background: 'var(--bg-2)',
-        padding: '100px 40px',
-        borderTop: '1px solid var(--border-2)',
+        background: 'var(--color-bg)',
+        padding: 'var(--section-py) var(--section-px-sm)',
       }}
     >
-      <div className="container mx-auto max-w-7xl">
-        {/* Label */}
-        <div className="flex items-center" style={{ gap: 10, marginBottom: 20 }}>
-          <div style={{ width: 20, height: 1.5, background: 'var(--terra)' }} />
-          <span
-            className="font-display"
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: 'var(--terra)',
-            }}
-          >
-            ◆ O QUE DIZEM NOSSAS ACADEMIAS
-          </span>
-        </div>
-
-        {/* H2 */}
-        <h2
-          className="font-display"
-          style={{
-            fontWeight: 700,
-            fontSize: 'clamp(32px, 4vw, 50px)',
-            letterSpacing: '-0.02em',
-            lineHeight: 1.1,
-            color: 'var(--ink)',
-            marginBottom: 48,
-          }}
-        >
-          Quem usa, confia.
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+          O QUE DIZEM AS ACADEMIAS
+        </p>
+        <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 4vw, 48px)', letterSpacing: '-0.025em', lineHeight: 1.1, color: 'var(--color-text)', marginTop: 24, marginBottom: 64 }}>
+          Quem usa, não volta atrás.
         </h2>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 16 }}>
+        <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 48 }}>
           {testimonials.map((t, i) => (
-            <div
-              key={i}
-              style={{
-                background: 'var(--white)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '28px 24px',
-                borderTop: `3px solid ${t.accent}`,
-              }}
-            >
-              {/* Quote mark */}
-              <span
-                className="font-display block"
-                style={{
-                  fontSize: 48,
-                  fontWeight: 700,
-                  color: 'var(--blue-light)',
-                  lineHeight: 1,
-                  marginBottom: 8,
-                }}
-              >
+            <div key={i} style={{ borderTop: '2px solid var(--color-border-dark)', paddingTop: 32 }}>
+              <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 48, color: 'var(--color-border-dark)', lineHeight: 0.8, display: 'block', marginBottom: 16 }}>
                 &ldquo;
               </span>
-
-              {/* Text */}
-              <p
-                className="font-body"
-                style={{
-                  fontSize: 15,
-                  fontWeight: 400,
-                  fontStyle: 'italic',
-                  color: 'var(--muted)',
-                  lineHeight: 1.72,
-                }}
-              >
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 400, fontStyle: 'italic', color: 'var(--color-text)', lineHeight: 1.7, marginBottom: 28 }}>
                 {t.text}
               </p>
-
-              {/* Separator */}
-              <div style={{ height: 1, background: 'var(--border)', margin: '20px 0' }} />
-
-              {/* Author */}
+              <div style={{ height: 1, background: 'var(--color-border)', margin: '20px 0' }} />
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div
-                  className="font-display"
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: '50%',
-                    background: `linear-gradient(135deg, var(--terra-soft), var(--terra))`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: '#fff',
-                    flexShrink: 0,
-                  }}
-                >
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--color-bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text-muted)', flexShrink: 0 }}>
                   {t.initials}
                 </div>
                 <div>
-                  <p
-                    className="font-display"
-                    style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)' }}
-                  >
-                    {t.name}
-                  </p>
-                  <p
-                    className="font-body"
-                    style={{ fontSize: 11, fontWeight: 400, color: 'var(--muted)' }}
-                  >
-                    {t.role}
-                  </p>
+                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text)' }}>{t.name}</p>
+                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 400, color: 'var(--color-text-muted)' }}>{t.role}</p>
                 </div>
               </div>
             </div>

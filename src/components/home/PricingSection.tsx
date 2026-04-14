@@ -1,236 +1,108 @@
 import { Link } from 'react-router-dom';
 
 const packages = [
-  {
-    name: 'Starter',
-    credits: 10,
-    price: 'R$ 49',
-    unit: 'R$ 4,90 / crédito',
-    highlight: false,
-  },
-  {
-    name: 'Escola',
-    credits: 30,
-    price: 'R$ 119',
-    unit: 'R$ 3,97 / crédito',
-    highlight: true,
-  },
-  {
-    name: 'Academia',
-    credits: 80,
-    price: 'R$ 249',
-    unit: 'R$ 3,11 / crédito',
-    highlight: false,
-  },
+  { name: 'Starter', credits: '10', price: 'R$ 97', unit: 'R$ 9,70', highlight: false },
+  { name: 'Escola', credits: '30', price: 'R$ 119', unit: 'R$ 3,97', highlight: true },
+  { name: 'Academia', credits: '80', price: 'R$ 249', unit: 'R$ 3,11', highlight: false },
 ];
 
 export function PricingSection() {
   return (
     <section
-      className="px-6 md:px-10"
       style={{
-        background: 'var(--bg)',
-        padding: '100px 40px',
-        borderTop: '1px solid var(--border-2)',
+        background: 'var(--color-bg-soft)',
+        padding: 'var(--section-py) var(--section-px-sm)',
       }}
     >
-      <div className="container mx-auto max-w-7xl text-center">
-        {/* Label */}
-        <div className="flex items-center justify-center" style={{ gap: 10, marginBottom: 20 }}>
-          <div style={{ width: 20, height: 1.5, background: 'var(--terra)' }} />
-          <span
-            className="font-display"
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: 'var(--terra)',
-            }}
-          >
-            ◆ PREÇOS
-          </span>
-        </div>
-
-        {/* H2 */}
-        <h2
-          className="font-display"
-          style={{
-            fontWeight: 700,
-            fontSize: 'clamp(32px, 4vw, 50px)',
-            letterSpacing: '-0.02em',
-            lineHeight: 1.1,
-            color: 'var(--ink)',
-            marginBottom: 16,
-          }}
-        >
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+          PREÇOS
+        </p>
+        <h2 style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.025em', lineHeight: 1.1, color: 'var(--color-text)', marginTop: 24 }}>
           Você só paga quando graduar.
         </h2>
-
-        {/* Subtitle */}
-        <p
-          className="font-body mx-auto"
-          style={{
-            fontSize: 17,
-            fontWeight: 400,
-            color: 'var(--muted)',
-            maxWidth: 440,
-            marginBottom: 56,
-          }}
-        >
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 17, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 16, marginBottom: 64 }}>
           Sem mensalidade. Sem contrato. Créditos nunca expiram.
         </p>
 
-        {/* Cards */}
+        {/* Table header — desktop */}
         <div
-          className="grid grid-cols-1 md:grid-cols-3 mx-auto"
-          style={{ gap: 16, maxWidth: 860 }}
+          className="hidden md:grid"
+          style={{
+            gridTemplateColumns: '1fr 120px 120px 120px 120px',
+            borderBottom: '2px solid var(--color-border-dark)',
+            paddingBottom: 16,
+          }}
         >
-          {packages.map((pkg) => (
-            <div
-              key={pkg.name}
-              className="relative"
-              style={{
-                background: 'var(--white)',
-                border: pkg.highlight
-                  ? '2px solid var(--blue-deep)'
-                  : '1px solid var(--border-2)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '32px 28px',
-                transform: pkg.highlight ? 'scale(1.04)' : 'none',
-                boxShadow: pkg.highlight ? 'var(--shadow-btn)' : 'none',
-              }}
-            >
-              {/* Popular badge */}
-              {pkg.highlight && (
-                <span
-                  className="font-display absolute"
-                  style={{
-                    top: -14,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: 'var(--terra)',
-                    color: '#ffffff',
-                    fontSize: 9,
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.12em',
-                    padding: '5px 16px',
-                    borderRadius: 100,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  Mais popular
-                </span>
-              )}
-
-              {/* Plan name */}
-              <p
-                className="font-display"
-                style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  color: 'var(--muted)',
-                  marginBottom: 16,
-                }}
-              >
-                {pkg.name}
-              </p>
-
-              {/* Credits */}
-              <p
-                className="font-display"
-                style={{
-                  fontSize: 52,
-                  fontWeight: 700,
-                  color: 'var(--blue-deep)',
-                  letterSpacing: '-0.025em',
-                  lineHeight: 1,
-                }}
-              >
-                {pkg.credits}
-              </p>
-              <p
-                className="font-body"
-                style={{ fontSize: 13, fontWeight: 400, color: 'var(--muted)', marginBottom: 16 }}
-              >
-                créditos
-              </p>
-
-              {/* Price */}
-              <p
-                className="font-display"
-                style={{
-                  fontSize: 26,
-                  fontWeight: 700,
-                  color: 'var(--ink)',
-                  marginTop: 16,
-                }}
-              >
-                {pkg.price}
-              </p>
-              <p
-                className="font-body"
-                style={{ fontSize: 12, fontWeight: 400, color: 'var(--muted)', marginBottom: 24 }}
-              >
-                {pkg.unit}
-              </p>
-
-              {/* CTA */}
-              <Link
-                to="/cadastro"
-                className="font-display block text-center"
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  padding: '12px 20px',
-                  borderRadius: 'var(--radius-sm)',
-                  textDecoration: 'none',
-                  transition: 'var(--transition)',
-                  ...(pkg.highlight
-                    ? {
-                        background: 'var(--terra)',
-                        color: '#ffffff',
-                        border: 'none',
-                      }
-                    : {
-                        background: 'transparent',
-                        color: 'var(--blue-deep)',
-                        border: '1.5px solid var(--border-2)',
-                      }),
-                }}
-                onMouseEnter={(e) => {
-                  if (pkg.highlight) {
-                    e.currentTarget.style.background = '#b83515';
-                  } else {
-                    e.currentTarget.style.background = 'var(--blue-light)';
-                    e.currentTarget.style.borderColor = 'var(--blue-mid)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (pkg.highlight) {
-                    e.currentTarget.style.background = 'var(--terra)';
-                  } else {
-                    e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.borderColor = 'var(--border-2)';
-                  }
-                }}
-              >
-                Começar agora
-              </Link>
-            </div>
+          {['PLANO', 'CRÉDITOS', 'PREÇO', 'POR GRADUAÇÃO', ''].map((h) => (
+            <span key={h} style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+              {h}
+            </span>
           ))}
         </div>
 
-        {/* Fine print */}
-        <p
-          className="font-body"
-          style={{ fontSize: 13, fontWeight: 400, color: 'var(--muted)', marginTop: 28 }}
-        >
+        {/* Rows */}
+        {packages.map((pkg) => (
+          <div
+            key={pkg.name}
+            className="grid grid-cols-2 md:grid-cols-[1fr_120px_120px_120px_120px]"
+            style={{
+              padding: pkg.highlight ? '24px 20px' : '24px 0',
+              borderBottom: pkg.highlight ? 'none' : '1px solid var(--color-border)',
+              background: pkg.highlight ? 'var(--color-bg-amber)' : 'transparent',
+              borderRadius: pkg.highlight ? 'var(--radius-sm)' : 0,
+              alignItems: 'center',
+              gap: '8px 0',
+            }}
+          >
+            {/* Name */}
+            <div className="flex items-center" style={{ gap: 10 }}>
+              <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)' }}>
+                {pkg.name}
+              </span>
+              {pkg.highlight && (
+                <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase', background: '#1C1C1C', color: '#FFFFFF', padding: '2px 8px', borderRadius: 'var(--radius-xs)' }}>
+                  Mais popular
+                </span>
+              )}
+            </div>
+
+            {/* Credits */}
+            <span className="hidden md:block" style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)' }}>
+              {pkg.credits}
+            </span>
+
+            {/* Price */}
+            <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 18, color: 'var(--color-text)', textAlign: 'right' }} className="md:text-left">
+              {pkg.price}
+            </span>
+
+            {/* Per unit */}
+            <span className="hidden md:block" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text-muted)' }}>
+              {pkg.unit}
+            </span>
+
+            {/* CTA */}
+            <Link
+              to="/cadastro"
+              className="hidden md:inline-block"
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
+                fontSize: 14,
+                color: 'var(--color-text)',
+                textDecoration: 'none',
+                transition: 'var(--transition)',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+              onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
+            >
+              Comprar →
+            </Link>
+          </div>
+        ))}
+
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 400, color: 'var(--color-text-muted)', marginTop: 24 }}>
           Créditos nunca expiram. Use quando quiser.
         </p>
       </div>

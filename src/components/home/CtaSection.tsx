@@ -1,50 +1,69 @@
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 
 export function CtaSection() {
   return (
-    <section className="py-32 lg:py-36 px-4 bg-dark relative overflow-hidden">
-      {/* Decorative grid lines */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.03 }}>
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="ctaGrid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="0.5" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#ctaGrid)" />
-        </svg>
-      </div>
-
-      <div className="container mx-auto max-w-3xl text-center relative z-10">
+    <section
+      style={{
+        background: 'var(--color-bg-dark)',
+        padding: 'var(--section-py) var(--section-px-sm)',
+      }}
+    >
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <h2
-          className="font-display font-bold text-[36px] md:text-[56px] mb-6"
-          style={{ color: '#FFFFFF', lineHeight: '1.05', letterSpacing: '-0.01em' }}
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 500,
+            fontSize: 'clamp(40px, 5.5vw, 68px)',
+            letterSpacing: '-0.03em',
+            lineHeight: 1.06,
+            color: '#FFFFFF',
+            maxWidth: 600,
+          }}
         >
-          SUA ACADEMIA<br />
-          <span className="relative inline-block">
-            MERECE ISSO.
-            <span
-              className="absolute left-0 w-full"
-              style={{ height: '3px', backgroundColor: 'var(--color-accent)', bottom: '-4px' }}
-            />
-          </span>
+          Sua academia merece isso.
         </h2>
-
-        <p className="font-body text-lg mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          Cadastro gratuito. Você só paga quando graduar.
+        <p
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 17,
+            fontWeight: 400,
+            color: 'rgba(255,255,255,0.55)',
+            lineHeight: 1.65,
+            maxWidth: 460,
+            marginTop: 24,
+          }}
+        >
+          Cadastro gratuito. Você só paga quando graduar o atleta.
         </p>
-
-        <Link to="/cadastro">
-          <Button
-            className="font-body font-semibold text-base px-12 py-5 h-auto rounded-lg transition-all duration-200 hover:scale-[1.02]"
-            style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink)' }}
-          >
-            Cadastre sua escola
-          </Button>
+        <Link
+          to="/cadastro"
+          style={{
+            display: 'inline-block',
+            fontFamily: 'var(--font-sans)',
+            fontSize: 15,
+            fontWeight: 500,
+            color: '#1C1C1C',
+            background: 'var(--color-bg-amber)',
+            padding: '14px 28px',
+            borderRadius: 'var(--radius-sm)',
+            textDecoration: 'none',
+            marginTop: 40,
+            transition: 'var(--transition)',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = '#e09600')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-bg-amber)')}
+        >
+          Cadastrar minha academia →
         </Link>
-
-        <p className="mt-6 font-body text-[13px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <p
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 13,
+            fontWeight: 400,
+            color: 'rgba(255,255,255,0.3)',
+            marginTop: 20,
+          }}
+        >
           Sem cartão de crédito · Sem contrato · Cancele quando quiser
         </p>
       </div>
