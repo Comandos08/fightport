@@ -14,7 +14,8 @@ export function AthleteCard({ athlete }: AthleteCardProps) {
   return (
     <button
       onClick={() => navigate(`/p/${athlete.publicId}`)}
-      className="flex flex-col items-start gap-3 rounded-xl border border-brand p-5 bg-main shadow-card transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer text-left w-full"
+      className="flex flex-col items-start gap-3 rounded-xl border p-5 bg-main shadow-card transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer text-left w-full"
+      style={{ borderColor: 'var(--color-border)' }}
     >
       <div className="flex items-center gap-3 w-full">
         <div
