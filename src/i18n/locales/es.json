@@ -57,7 +57,7 @@
     "buy": "Comprar →",
     "credits": "créditos",
     "perGrad": "POR GRAD.",
-    "plan": { "starter": "Starter", "school": "Escuela", "org": "Organización" },
+    "plan": { "starter": "Starter", "school": "Equipo", "org": "Organización" },
     "tableHeaders": { "plan": "PLAN", "credits": "CRÉDITOS", "price": "PRECIO", "perGrad": "POR GRAD." }
   },
   "testimonials": { "badge": "LO QUE DICEN LAS ORGANIZACIONES", "title": "Quien lo usa, no vuelve atrás." },
