@@ -286,7 +286,11 @@
     "confirmNewEmail": "Confirmar novo e-mail",
     "changePassword": "Alterar senha",
     "newPassword": "Nova senha",
-    "confirmPassword": "Confirmar nova senha"
+    "confirmPassword": "Confirmar nova senha",
+    "passwordMinLength": "A senha deve ter pelo menos 8 caracteres",
+    "passwordMismatch": "As senhas não coincidem",
+    "emailConfirmSent": "Um e-mail de confirmação foi enviado para o novo endereço. Verifique sua caixa de entrada.",
+    "passwordChanged": "Senha alterada com sucesso"
   },
   "auth": {
     "login": {
