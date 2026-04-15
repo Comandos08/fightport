@@ -63,6 +63,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "achievements_practitioner_id_fkey"
+            columns: ["practitioner_id"]
+            isOneToOne: false
+            referencedRelation: "practitioners_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "achievements_school_id_fkey"
             columns: ["school_id"]
             isOneToOne: false
@@ -312,7 +319,31 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      practitioners_public: {
+        Row: {
+          created_at: string | null
+          current_belt: string | null
+          first_name: string | null
+          fp_id: string | null
+          id: string | null
+          last_name: string | null
+          martial_art: string | null
+          photo_url: string | null
+          school_id: string | null
+          school_martial_art: string | null
+          school_name: string | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "practitioners_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       generate_achievement_hash: {

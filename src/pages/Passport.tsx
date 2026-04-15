@@ -1,11 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
-import { Share2, QrCode, Search, CheckCircle } from 'lucide-react';
+import { Share2, QrCode, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { useSeo } from '@/hooks/useSeo';
 import { QRCodeSVG } from 'qrcode.react';
 import { BeltBadge } from '@/components/BeltBadge';
-import { HashDisplay } from '@/components/HashDisplay';
+
 import { getInitials, formatDate, beltColor } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -47,11 +47,11 @@ export default function PassportPage() {
     queryKey: ['public-practitioner', id],
     queryFn: async () => {
       const { data } = await supabase
-        .from('practitioners')
-        .select('*, schools(name, martial_art)')
+        .from('practitioners_public' as any)
+        .select('*')
         .eq('fp_id', id!)
         .single();
-      return data;
+      return data as any;
     },
     enabled: !!id,
   });
@@ -82,13 +82,14 @@ export default function PassportPage() {
     enabled: !!practitioner?.school_id,
   });
 
-  const schoolData = practitioner?.schools as any;
+  const schoolName = practitioner?.school_name;
+  const schoolMartialArt = practitioner?.school_martial_art;
   const fullName = practitioner ? `${practitioner.first_name} ${practitioner.last_name}` : '';
   const pageTitle = practitioner
     ? `${fullName} — Passaporte ${practitioner.martial_art} | fightport.pro`
     : 'Carregando... | fightport.pro';
   const pageDescription = practitioner
-    ? `Passaporte verificado de ${fullName}. ${practitioner.martial_art} na ${schoolData?.name}. Graduações autenticadas com hash SHA-256.`
+    ? `Passaporte verificado de ${fullName}. ${practitioner.martial_art} na ${schoolName}. Graduações autenticadas com hash SHA-256.`
     : 'Carregando passaporte do praticante...';
   const pageUrl = practitioner ? `https://fightport.lovable.app/p/${practitioner.fp_id}` : '';
 
@@ -100,7 +101,7 @@ export default function PassportPage() {
     description: pageDescription,
     memberOf: {
       '@type': 'SportsOrganization',
-      name: schoolData?.name,
+      name: schoolName,
       sport: practitioner.martial_art,
     },
     ...(practitioner.current_belt && {
@@ -202,7 +203,7 @@ export default function PassportPage() {
             {practitioner.first_name} {practitioner.last_name}
           </h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 0, marginBottom: 0 }}>
-            {practitioner.martial_art} · {schoolData?.name}
+            {practitioner.martial_art} · {schoolName}
           </p>
           {headCoach && (
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
@@ -254,7 +255,7 @@ export default function PassportPage() {
                       )}
                     </div>
                     <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 16, color: 'var(--color-text)', margin: '0 0 4px' }}>{t('passport.beltLabel', { belt: ach.belt })}</p>
-                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>{schoolData?.name} · {ach.graduated_by}</p>
+                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>{schoolName} · {ach.graduated_by}</p>
                     <div style={{ marginTop: 4 }}>
                       <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: '#9A9A9A' }}>{hashPartial}</span>
                     </div>
@@ -271,7 +272,7 @@ export default function PassportPage() {
 
         <div style={{ borderTop: '1px solid #E8E8E5', padding: '32px 0', textAlign: 'center', marginTop: 48 }}>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#9A9A9A', margin: 0 }}>
-            {t('passport.footer', { school: schoolData?.name })}
+            {t('passport.footer', { school: schoolName })}
           </p>
           <Link to="/#busca" style={{ display: 'block', marginTop: 8, fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: '#1C1C1C', textDecoration: 'none' }}>
             {t('passport.verifyAnother')} →

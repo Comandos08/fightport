@@ -19,8 +19,8 @@ export function SearchSection() {
     queryKey: ['public-practitioners'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('practitioners')
-        .select('*, schools(name), achievements(belt)')
+        .from('practitioners_public' as any)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(1000);
       return data ?? [];
@@ -28,7 +28,7 @@ export function SearchSection() {
   });
 
   const filtered = practitioners.filter((a: any) => {
-    const schoolName = (a.schools as any)?.name ?? '';
+    const schoolName = a.school_name ?? '';
     return `${a.first_name} ${a.last_name} ${a.fp_id} ${schoolName}`.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
@@ -36,10 +36,7 @@ export function SearchSection() {
   const currentPage = Math.min(page, totalPages);
   const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const getLastBelt = (achievements: any[]) => {
-    if (!achievements || achievements.length === 0) return null;
-    return achievements[achievements.length - 1]?.belt;
-  };
+  // View doesn't include achievements; use current_belt from the view directly
 
   return (
     <section id="busca" style={{ background: 'var(--color-bg)' }}>
@@ -100,8 +97,8 @@ export function SearchSection() {
                   </thead>
                   <tbody>
                     {paginated.map((a: any, idx: number) => {
-                      const belt = getLastBelt(a.achievements);
-                      const schoolName = (a.schools as any)?.name ?? '';
+                      const belt = a.current_belt;
+                      const schoolName = a.school_name ?? '';
                       const isLast = idx === paginated.length - 1;
                       return (
                         <tr
