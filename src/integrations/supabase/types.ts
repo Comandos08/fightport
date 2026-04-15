@@ -118,6 +118,7 @@ export type Database = {
           created_at: string | null
           id: string
           package_name: string | null
+          payment_id: string | null
           price_brl: number | null
           school_id: string
           status: string
@@ -129,6 +130,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           package_name?: string | null
+          payment_id?: string | null
           price_brl?: number | null
           school_id: string
           status?: string
@@ -140,6 +142,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           package_name?: string | null
+          payment_id?: string | null
           price_brl?: number | null
           school_id?: string
           status?: string

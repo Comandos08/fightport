@@ -1,0 +1,1 @@
+ALTER TABLE public.credit_transactions ADD COLUMN IF NOT EXISTS payment_id text UNIQUE;
