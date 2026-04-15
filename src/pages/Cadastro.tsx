@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import logoFightport from '@/assets/logo-fightport.png';
 
 // ── Input style helpers ──
 const inputStyle: React.CSSProperties = {
@@ -143,8 +144,8 @@ export default function CadastroPage() {
       {/* LEFT PANEL */}
       <div className="hidden md:flex flex-col justify-between" style={{ background: 'var(--color-bg-dark)', padding: '64px 52px' }}>
         <div>
-          <Link to="/" style={{ textDecoration: 'none', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: '#FFFFFF' }}>
-            fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
+          <Link to="/">
+            <img src={logoFightport} alt="Fightport" style={{ height: 24, filter: 'brightness(0) invert(1)' }} />
           </Link>
           <div style={{ marginTop: 64 }}>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 20 }}>
@@ -180,8 +181,8 @@ export default function CadastroPage() {
       <div className="flex flex-col justify-center cadastro-form-panel" style={{ background: 'var(--color-bg)', padding: '64px 72px' }}>
         <div className="w-full" style={{ maxWidth: 460, margin: '0 auto' }}>
           <div className="md:hidden mb-8">
-            <Link to="/" style={{ textDecoration: 'none', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: 'var(--color-text)' }}>
-              fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
+            <Link to="/">
+              <img src={logoFightport} alt="Fightport" style={{ height: 24 }} />
             </Link>
           </div>
 
