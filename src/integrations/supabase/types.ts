@@ -330,31 +330,9 @@ export type Database = {
           martial_art: string | null
           photo_url: string | null
           school_id: string | null
+          school_martial_art: string | null
+          school_name: string | null
           updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          current_belt?: string | null
-          first_name?: string | null
-          fp_id?: string | null
-          id?: string | null
-          last_name?: string | null
-          martial_art?: string | null
-          photo_url?: string | null
-          school_id?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          current_belt?: string | null
-          first_name?: string | null
-          fp_id?: string | null
-          id?: string | null
-          last_name?: string | null
-          martial_art?: string | null
-          photo_url?: string | null
-          school_id?: string | null
-          updated_at?: string | null
         }
         Relationships: [
           {
