@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logoFightport from '@/assets/logo-fightport.png';
 
 export function NavbarPublic() {
   return (
@@ -16,10 +17,8 @@ export function NavbarPublic() {
         zIndex: 50,
       }}
     >
-      <Link to="/" className="flex items-baseline no-underline">
-        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>FIGHT</span>
-        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--blue-deep)' }}>PORT</span>
-        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--terra)' }}>.PRO</span>
+      <Link to="/" className="flex items-center">
+        <img src={logoFightport} alt="Fightport" style={{ height: 24 }} />
       </Link>
       <Link to="/#busca">
         <button

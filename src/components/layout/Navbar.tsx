@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import logoFightport from '@/assets/logo-fightport.png';
 
 const getNavLinks = (t: (key: string) => string) => [
   { href: '/#busca', label: t('nav.verifyAthlete') },
@@ -32,18 +33,8 @@ export function Navbar() {
       >
         <div className="fp-container flex items-center justify-between" style={{ height: '100%' }}>
           {/* Logo */}
-          <Link
-            to="/"
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 500,
-              fontSize: 15,
-              letterSpacing: '-0.02em',
-              textDecoration: 'none',
-              color: 'var(--color-text)',
-            }}
-          >
-            fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
+          <Link to="/" className="flex items-center">
+            <img src={logoFightport} alt="Fightport" style={{ height: 28 }} />
           </Link>
 
           {/* Center nav links — hidden on mobile */}
