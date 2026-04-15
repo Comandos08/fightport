@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Award, Coins, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import logoFightport from '@/assets/logo-fightport.png';
 
 export function Sidebar() {
   const { t } = useTranslation();
@@ -34,8 +35,8 @@ export function Sidebar() {
       }}
     >
       <div style={{ padding: '24px 20px' }}>
-        <Link to="/" className="no-underline">
-          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
+        <Link to="/" className="flex items-center">
+          <img src={logoFightport} alt="Fightport" style={{ height: 20 }} />
         </Link>
       </div>
       <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>

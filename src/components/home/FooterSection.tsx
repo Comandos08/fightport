@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import logoFightport from '@/assets/logo-fightport.png';
 
 const linkStyle: React.CSSProperties = {
   fontFamily: 'var(--font-sans)',
@@ -20,9 +21,9 @@ export function FooterSection() {
         <div className="section-inner flex flex-col md:flex-row md:justify-between md:items-start" style={{ gap: 48 }}>
           {/* Left */}
           <div>
-            <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, color: '#FFFFFF' }}>
-              fightport<span style={{ color: 'var(--color-accent)' }}>.pro</span>
-            </span>
+            <Link to="/">
+              <img src={logoFightport} alt="Fightport" style={{ height: 22, filter: 'brightness(0) invert(1)' }} />
+            </Link>
             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.4)', marginTop: 8 }}>
               {t('footer.tagline')}
             </p>

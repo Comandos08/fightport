@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import logoFightport from '@/assets/logo-fightport.png';
 
 export function NavbarPanel() {
   const { t } = useTranslation();
@@ -65,8 +66,8 @@ export function NavbarPanel() {
           <Menu className="h-5 w-5" />
         </button>
         <div className="lg:hidden mr-3">
-          <Link to="/" className="no-underline">
-            <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
+          <Link to="/" className="flex items-center">
+            <img src={logoFightport} alt="Fightport" style={{ height: 20 }} />
           </Link>
         </div>
 
