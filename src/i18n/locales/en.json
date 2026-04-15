@@ -242,7 +242,7 @@
     "confirmPassword": "Confirm new password",
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordMismatch": "Passwords do not match",
-    "emailConfirmSent": "A confirmation email was sent to the new address. Please check your inbox.",
+    "emailConfirmSent": "We sent a confirmation link to {{email}}. Click the link to confirm the change. Your current email remains active until confirmation.",
     "passwordChanged": "Password changed successfully"
   },
   "auth": {
