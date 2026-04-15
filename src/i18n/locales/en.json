@@ -239,7 +239,11 @@
     "confirmNewEmail": "Confirm new e-mail",
     "changePassword": "Change password",
     "newPassword": "New password",
-    "confirmPassword": "Confirm new password"
+    "confirmPassword": "Confirm new password",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "passwordMismatch": "Passwords do not match",
+    "emailConfirmSent": "A confirmation email was sent to the new address. Please check your inbox.",
+    "passwordChanged": "Password changed successfully"
   },
   "auth": {
     "login": { "title": "Welcome back", "submit": "Sign in", "submitting": "Signing in...", "noAccount": "Don't have an account yet?", "register": "Sign up →" },
