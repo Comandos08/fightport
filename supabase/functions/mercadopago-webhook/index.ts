@@ -108,23 +108,20 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Check for duplicate (idempotency)
+    // Idempotency: check by payment_id
+    const mpPaymentId = String(paymentId);
     const { data: existing } = await supabase
       .from("credit_transactions")
       .select("id")
-      .eq("school_id", ref.school_id)
-      .eq("type", "purchase")
-      .eq("package_name", ref.package_name)
-      .eq("amount", ref.credits)
-      .gte("created_at", new Date(Date.now() - 60000).toISOString())
+      .eq("payment_id", mpPaymentId)
       .limit(1);
 
     if (existing && existing.length > 0) {
-      console.log("Duplicate payment, skipping");
+      console.log("Duplicate payment, skipping:", mpPaymentId);
       return new Response(JSON.stringify({ status: "duplicate" }), { status: 200 });
     }
 
-    // Insert transaction
+    // Insert transaction with payment_id for idempotency
     const { error: txError } = await supabase.from("credit_transactions").insert({
       school_id: ref.school_id,
       type: "purchase",
@@ -132,32 +129,31 @@ Deno.serve(async (req) => {
       package_name: ref.package_name,
       price_brl: ref.price_brl,
       status: "completed",
+      payment_id: mpPaymentId,
     });
 
     if (txError) {
+      // Unique constraint violation = duplicate, safe to ignore
+      if (txError.code === "23505") {
+        console.log("Duplicate payment (constraint), skipping:", mpPaymentId);
+        return new Response(JSON.stringify({ status: "duplicate" }), { status: 200 });
+      }
       console.error("Transaction insert error:", txError);
       throw txError;
     }
 
-    // Update credit balance
-    const { data: currentCredits } = await supabase
-      .from("credits")
-      .select("balance")
-      .eq("school_id", ref.school_id)
-      .single();
-
-    const newBalance = (currentCredits?.balance ?? 0) + ref.credits;
-    const { error: creditError } = await supabase
-      .from("credits")
-      .update({ balance: newBalance, updated_at: new Date().toISOString() })
-      .eq("school_id", ref.school_id);
+    // Atomic credit balance update
+    const { error: creditError } = await supabase.rpc("add_credits", {
+      p_school_id: ref.school_id,
+      p_amount: ref.credits,
+    });
 
     if (creditError) {
       console.error("Credit update error:", creditError);
       throw creditError;
     }
 
-    console.log(`Credits added: ${ref.credits} for school ${ref.school_id}. New balance: ${newBalance}`);
+    console.log(`Credits added: ${ref.credits} for school ${ref.school_id}`);
 
     return new Response(JSON.stringify({ status: "ok", credits_added: ref.credits }), { status: 200 });
   } catch (error) {
