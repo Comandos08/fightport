@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import logoFightport from '@/assets/logo-fightport.png';
 import { Share2, QrCode, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
