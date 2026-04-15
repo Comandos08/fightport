@@ -47,8 +47,8 @@ export default function PassportPage() {
     queryKey: ['public-practitioner', id],
     queryFn: async () => {
       const { data } = await supabase
-        .from('practitioners')
-        .select('*, schools(name, martial_art)')
+        .from('practitioners_public' as any)
+        .select('*')
         .eq('fp_id', id!)
         .single();
       return data;
@@ -82,7 +82,8 @@ export default function PassportPage() {
     enabled: !!practitioner?.school_id,
   });
 
-  const schoolData = practitioner?.schools as any;
+  const schoolName = practitioner?.school_name;
+  const schoolMartialArt = practitioner?.school_martial_art;
   const fullName = practitioner ? `${practitioner.first_name} ${practitioner.last_name}` : '';
   const pageTitle = practitioner
     ? `${fullName} — Passaporte ${practitioner.martial_art} | fightport.pro`
