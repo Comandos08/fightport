@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import logoFightport from '@/assets/logo-fightport.png';
 import { Share2, QrCode, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
@@ -126,7 +127,9 @@ export default function PassportPage() {
     <header style={{ height: 60, background: '#FFFFFF', borderBottom: '1px solid var(--color-border)' }}>
       <div className="fp-container flex items-center justify-between" style={{ height: '100%' }}>
         <Link to="/" className="no-underline">
-          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>fightport.pro</span>
+          <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, color: 'var(--color-text)' }}>
+            <img src={logoFightport} alt="Fightport" style={{ height: 24 }} />
+          </span>
         </Link>
         <Link
           to="/#busca"
