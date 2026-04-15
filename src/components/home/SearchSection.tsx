@@ -19,8 +19,8 @@ export function SearchSection() {
     queryKey: ['public-practitioners'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('practitioners')
-        .select('*, schools(name), achievements(belt)')
+        .from('practitioners_public' as any)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(1000);
       return data ?? [];
@@ -28,7 +28,7 @@ export function SearchSection() {
   });
 
   const filtered = practitioners.filter((a: any) => {
-    const schoolName = (a.schools as any)?.name ?? '';
+    const schoolName = a.school_name ?? '';
     return `${a.first_name} ${a.last_name} ${a.fp_id} ${schoolName}`.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
