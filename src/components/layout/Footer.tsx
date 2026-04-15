@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logoFightport from '@/assets/logo-fightport.png';
 
 export function Footer() {
   return (
@@ -6,10 +7,10 @@ export function Footer() {
       <div className="container mx-auto px-4 max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
         {/* Logo + tagline */}
         <div>
-          <div className="flex items-baseline gap-0 mb-2">
-            <span className="font-display font-bold text-[16px] text-ink" style={{ letterSpacing: '0.05em' }}>FIGHT</span>
-            <span className="font-display font-normal text-[16px] text-ink" style={{ letterSpacing: '0.05em' }}>PORT</span>
-            <span className="font-display font-bold text-[16px] text-accent-brand" style={{ letterSpacing: '0.05em' }}>.PRO</span>
+          <div className="mb-2">
+            <Link to="/">
+              <img src={logoFightport} alt="Fightport" style={{ height: 22 }} />
+            </Link>
           </div>
           <p className="font-body text-[13px] text-ink-faint">O passaporte do seu atleta.</p>
         </div>
