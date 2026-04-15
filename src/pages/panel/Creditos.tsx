@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 const packages = [
   { nameKey: 'pricing.plan.starter', credits: 10, price: 97, unit: '9,70', highlight: false, rawName: 'Starter' },
-  { nameKey: 'pricing.plan.school', credits: 50, price: 397, unit: '7,94', highlight: true, { nameKey: 'pricing.plan.school', credits: 50, price: 397, unit: '7,94', highlight: true, rawName: 'Equipe' },
+  { nameKey: 'pricing.plan.school', credits: 50, price: 397, unit: '7,94', highlight: true, rawName: 'Equipe' },
   { nameKey: 'pricing.plan.org', credits: 150, price: 990, unit: '6,60', highlight: false, rawName: 'Organização' },
 ];
 
