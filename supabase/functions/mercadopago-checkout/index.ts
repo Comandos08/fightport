@@ -39,21 +39,38 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { package_name } = await req.json();
-    const pkg = PACKAGES[package_name];
-    if (!pkg) {
-      return new Response(JSON.stringify({ error: "Invalid package" }), {
+    let body: { package_name?: unknown };
+    try {
+      body = await req.json();
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Get school name
-    const { data: school } = await supabase
+    const { package_name } = body;
+    if (typeof package_name !== "string" || !PACKAGES[package_name]) {
+      return new Response(
+        JSON.stringify({ error: `Invalid package. Accepted: ${Object.keys(PACKAGES).join(", ")}` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    const pkg = PACKAGES[package_name];
+
+    // Validate school exists for this user
+    const { data: school, error: schoolError } = await supabase
       .from("schools")
       .select("name")
       .eq("id", user.id)
       .single();
+
+    if (schoolError || !school) {
+      return new Response(
+        JSON.stringify({ error: "No school found for this user" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const preference = {
       items: [
