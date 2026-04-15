@@ -3,7 +3,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
 const PACKAGES: Record<string, { credits: number; price: number }> = {
   Starter: { credits: 10, price: 9700 },
-  Escola: { credits: 50, price: 39700 },
+  Equipe: { credits: 50, price: 39700 },
   "Organização": { credits: 150, price: 99000 },
 };
 

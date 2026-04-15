@@ -57,7 +57,7 @@
     "buy": "Buy →",
     "credits": "credits",
     "perGrad": "PER GRAD.",
-    "plan": { "starter": "Starter", "school": "School", "org": "Organization" },
+    "plan": { "starter": "Starter", "school": "Team", "org": "Organization" },
     "tableHeaders": { "plan": "PLAN", "credits": "CREDITS", "price": "PRICE", "perGrad": "PER GRAD." }
   },
   "testimonials": { "badge": "WHAT ORGANIZATIONS SAY", "title": "Once you try it, there's no going back." },
