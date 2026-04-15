@@ -64,18 +64,29 @@ Deno.serve(async (req) => {
     const MP_TOKEN = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN");
     if (!MP_TOKEN) throw new Error("MERCADOPAGO_ACCESS_TOKEN not configured");
 
-    const body = JSON.parse(rawBody);
+    let body: Record<string, unknown>;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
+    }
     console.log("Webhook received:", JSON.stringify(body));
 
-    // Only process payment notifications
-    if (body.type !== "payment" && body.action !== "payment.created" && body.action !== "payment.updated") {
-      return new Response(JSON.stringify({ status: "ignored" }), { status: 200 });
+    // Validate required fields
+    const eventType = body.type;
+    const action = body.action;
+    const dataId = (body.data as Record<string, unknown> | undefined)?.id;
+
+    if (typeof eventType !== "string" || typeof action !== "string" || !dataId) {
+      return new Response(JSON.stringify({ status: "ignored", reason: "missing fields" }), { status: 200 });
     }
 
-    const paymentId = body.data?.id;
-    if (!paymentId) {
-      return new Response(JSON.stringify({ status: "no payment id" }), { status: 200 });
+    // Only process payment.updated events
+    if (eventType !== "payment" || action !== "payment.updated") {
+      return new Response(JSON.stringify({ status: "ignored", reason: `${eventType}/${action}` }), { status: 200 });
     }
+
+    const paymentId = dataId;
 
     // Fetch payment details from MercadoPago
     const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
