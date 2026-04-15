@@ -1,16 +1,70 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
+async function verifyMPSignature(req: Request, body: string): Promise<boolean> {
+  const xSignature = req.headers.get("x-signature");
+  const xRequestId = req.headers.get("x-request-id");
+  const secret = Deno.env.get("MERCADOPAGO_WEBHOOK_SECRET");
+
+  if (!xSignature || !xRequestId || !secret) return false;
+
+  // Parse ts and v1 from x-signature: "ts=...,v1=..."
+  const parts: Record<string, string> = {};
+  for (const part of xSignature.split(",")) {
+    const [key, ...val] = part.split("=");
+    parts[key.trim()] = val.join("=").trim();
+  }
+
+  const ts = parts["ts"];
+  const v1 = parts["v1"];
+  if (!ts || !v1) return false;
+
+  // Parse data.id from the body
+  let dataId: string | undefined;
+  try {
+    const parsed = JSON.parse(body);
+    dataId = parsed.data?.id?.toString();
+  } catch {
+    return false;
+  }
+
+  // Build the signed template
+  const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(manifest));
+  const computed = Array.from(new Uint8Array(signature))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return computed === v1;
+}
+
 Deno.serve(async (req) => {
   // Webhook doesn't need CORS since it's server-to-server
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200 });
   }
 
+  const rawBody = await req.text();
+
+  // Validate MercadoPago webhook signature
+  const isValid = await verifyMPSignature(req, rawBody);
+  if (!isValid) {
+    console.error("Invalid webhook signature — rejecting request");
+    return new Response(JSON.stringify({ error: "Invalid signature" }), { status: 401 });
+  }
+
   try {
     const MP_TOKEN = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN");
     if (!MP_TOKEN) throw new Error("MERCADOPAGO_ACCESS_TOKEN not configured");
 
-    const body = await req.json();
+    const body = JSON.parse(rawBody);
     console.log("Webhook received:", JSON.stringify(body));
 
     // Only process payment notifications
