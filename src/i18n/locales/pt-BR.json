@@ -289,7 +289,7 @@
     "confirmPassword": "Confirmar nova senha",
     "passwordMinLength": "A senha deve ter pelo menos 8 caracteres",
     "passwordMismatch": "As senhas não coincidem",
-    "emailConfirmSent": "Um e-mail de confirmação foi enviado para o novo endereço. Verifique sua caixa de entrada.",
+    "emailConfirmSent": "Enviamos um link de confirmação para {{email}}. Clique no link para confirmar a troca. Seu e-mail atual permanece ativo até a confirmação.",
     "passwordChanged": "Senha alterada com sucesso"
   },
   "auth": {
