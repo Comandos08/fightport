@@ -349,6 +349,10 @@ export type Database = {
       }
     }
     Functions: {
+      add_credits: {
+        Args: { p_amount: number; p_school_id: string }
+        Returns: undefined
+      }
       generate_achievement_hash: {
         Args: {
           p_belt: string
