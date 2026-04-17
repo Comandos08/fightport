@@ -18,6 +18,10 @@ export function getInitials(name: string, surname: string): string {
 export function beltColor(belt: Belt): string {
   const map: Record<Belt, string> = {
     'Branca': 'var(--belt-white)',
+    'Cinza': 'var(--belt-gray)',
+    'Amarela': 'var(--belt-yellow)',
+    'Laranja': 'var(--belt-orange)',
+    'Verde': 'var(--belt-green)',
     'Azul': 'var(--belt-blue)',
     'Roxa': 'var(--belt-purple)',
     'Marrom': 'var(--belt-brown)',
