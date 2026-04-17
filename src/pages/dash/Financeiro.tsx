@@ -172,7 +172,7 @@ export default function Financeiro() {
         head: [['Pacote', 'Transações', 'Receita']],
         body: breakdown.map(b => [b.package, String(b.count), fmtBRL(b.revenue)]),
         theme: 'grid',
-        headStyles: { fillColor: [200, 241, 53], textColor: [13, 13, 13] },
+        headStyles: { fillColor: [13, 13, 13], textColor: [255, 255, 255] },
         styles: { font: 'helvetica', fontSize: 10 },
         margin: { left: margin, right: margin },
       });
