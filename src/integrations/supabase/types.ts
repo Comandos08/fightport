@@ -409,6 +409,11 @@ export type Database = {
         }[]
       }
       admin_get_overview: { Args: never; Returns: Json }
+      admin_get_school: { Args: { p_school_id: string }; Returns: Json }
+      admin_grant_bonus_credits: {
+        Args: { p_amount: number; p_reason: string; p_school_id: string }
+        Returns: undefined
+      }
       admin_growth_monthly: {
         Args: never
         Returns: {
@@ -417,7 +422,41 @@ export type Database = {
           schools_count: number
         }[]
       }
+      admin_list_schools: {
+        Args: {
+          p_credits?: string
+          p_date_from?: string
+          p_date_to?: string
+          p_dir?: string
+          p_limit?: number
+          p_martial_art?: string
+          p_offset?: number
+          p_search?: string
+          p_sort?: string
+          p_state?: string
+          p_status?: string
+        }
+        Returns: {
+          balance: number
+          city: string
+          created_at: string
+          email: string
+          head_coach: string
+          id: string
+          is_admin: boolean
+          is_suspended: boolean
+          martial_art: string
+          name: string
+          state: string
+          total_count: number
+          total_spent: number
+        }[]
+      }
       admin_open_tickets_count: { Args: never; Returns: number }
+      admin_reactivate_school: {
+        Args: { p_reason: string; p_school_id: string }
+        Returns: undefined
+      }
       admin_recent_schools: {
         Args: never
         Returns: {
@@ -435,6 +474,71 @@ export type Database = {
           month: string
           revenue: number
         }[]
+      }
+      admin_school_achievements: {
+        Args: { p_school_id: string }
+        Returns: {
+          belt: string
+          created_at: string
+          degree: number
+          fp_id: string
+          graduated_by: string
+          graduation_date: string
+          id: string
+          practitioner_name: string
+        }[]
+      }
+      admin_school_audit: {
+        Args: { p_school_id: string }
+        Returns: {
+          action: string
+          admin_id: string
+          admin_name: string
+          created_at: string
+          id: string
+          metadata: Json
+        }[]
+      }
+      admin_school_practitioners: {
+        Args: { p_school_id: string }
+        Returns: {
+          created_at: string
+          current_belt: string
+          first_name: string
+          fp_id: string
+          id: string
+          last_name: string
+          martial_art: string
+        }[]
+      }
+      admin_school_tickets: {
+        Args: { p_school_id: string }
+        Returns: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          status: string
+          subject: string
+        }[]
+      }
+      admin_school_transactions: {
+        Args: { p_school_id: string }
+        Returns: {
+          amount: number
+          created_at: string
+          id: string
+          package_name: string
+          payment_id: string
+          price_brl: number
+          status: string
+          type: string
+        }[]
+      }
+      admin_suspend_school: {
+        Args: { p_reason: string; p_school_id: string }
+        Returns: undefined
       }
       admin_zero_balance_schools: {
         Args: never

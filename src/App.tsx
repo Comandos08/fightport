@@ -27,6 +27,8 @@ import { VerificarRedirect } from "./components/VerificarRedirect";
 import { AdminProtectedRoute } from "./components/AdminProtectedRoute";
 import DashLayout from "./components/layout/DashLayout";
 import DashDashboard from "./pages/dash/Dashboard";
+import Organizacoes from "./pages/dash/Organizacoes";
+import OrganizacaoDetalhe from "./pages/dash/OrganizacaoDetalhe";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +57,8 @@ const App = () => (
             </Route>
             <Route path="/dash" element={<AdminProtectedRoute><DashLayout /></AdminProtectedRoute>}>
               <Route index element={<DashDashboard />} />
+              <Route path="organizacoes" element={<Organizacoes />} />
+              <Route path="organizacoes/:id" element={<OrganizacaoDetalhe />} />
             </Route>
             <Route path="/termos" element={<TermosDeUso />} />
             <Route path="/privacidade" element={<Privacidade />} />
