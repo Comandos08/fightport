@@ -34,7 +34,7 @@ export function DashHeader() {
               fontWeight: 600,
               fontSize: 10,
               letterSpacing: '0.05em',
-              color: '#1C1C1C',
+              color: '#FFFFFF',
               background: '#D8421A',
               padding: '2px 8px',
               borderRadius: 4,
