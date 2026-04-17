@@ -1,4 +1,4 @@
-export type Belt = 'Branca' | 'Azul' | 'Roxa' | 'Marrom' | 'Preta' | 'Vermelha'
+export type Belt = 'Branca' | 'Cinza' | 'Amarela' | 'Laranja' | 'Verde' | 'Azul' | 'Roxa' | 'Marrom' | 'Preta' | 'Vermelha'
 export type Sport = 'Jiu-Jitsu' | 'Judô' | 'Karatê' | 'Muay Thai' | 'Boxe'
 
 export interface Achievement {
