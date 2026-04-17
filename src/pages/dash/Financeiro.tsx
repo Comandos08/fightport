@@ -335,7 +335,7 @@ export default function Financeiro() {
                 <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} tickFormatter={(v) => fmtBRL(Number(v))} />
                 <YAxis dataKey="school_name" type="category" width={160} tick={{ fontSize: 11, fill: 'var(--color-text)' }} />
                 <RTooltip formatter={(v: any) => fmtBRL(Number(v))} />
-                <Bar dataKey="total_revenue" fill="#C8F135" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="total_revenue" fill={CHART_ACCENT} radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
