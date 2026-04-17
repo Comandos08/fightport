@@ -104,12 +104,16 @@
     --radius: 0.375rem;
 
     /* Belt colors */
-    --belt-white: #F0EFE8;
-    --belt-blue: #1A6FBF;
-    --belt-purple: #6B3FA0;
-    --belt-brown: #7B4A2D;
-    --belt-black: #1A1A1A;
-    --belt-red: #C0392B;
+    --belt-white: #F7F7F5;
+    --belt-gray: #B3B3B3;
+    --belt-yellow: #F4B400;
+    --belt-orange: #FF9900;
+    --belt-green: #0F9D58;
+    --belt-blue: #4285F4;
+    --belt-purple: #833AB4;
+    --belt-brown: #653819;
+    --belt-black: #333333;
+    --belt-red: #DC2626;
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
