@@ -450,6 +450,35 @@ export type Database = {
       }
     }
     Views: {
+      head_coaches_public: {
+        Row: {
+          graduation: string | null
+          id: string | null
+          name: string | null
+          school_id: string | null
+        }
+        Insert: {
+          graduation?: string | null
+          id?: string | null
+          name?: string | null
+          school_id?: string | null
+        }
+        Update: {
+          graduation?: string | null
+          id?: string | null
+          name?: string | null
+          school_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "head_coaches_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       practitioners_public: {
         Row: {
           created_at: string | null

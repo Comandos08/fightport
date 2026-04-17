@@ -74,7 +74,7 @@ export default function PassportPage() {
     queryKey: ['public-head-coach', practitioner?.school_id],
     queryFn: async () => {
       const { data } = await supabase
-        .from('head_coaches')
+        .from('head_coaches_public')
         .select('name, graduation')
         .eq('school_id', practitioner!.school_id)
         .single();
