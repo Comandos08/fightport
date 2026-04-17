@@ -76,6 +76,13 @@ export type Database = {
             referencedRelation: "schools"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "achievements_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       admin_audit_log: {
@@ -192,6 +199,13 @@ export type Database = {
             referencedRelation: "schools"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "credit_transactions_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       credits: {
@@ -219,6 +233,13 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: true
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credits_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: true
+            referencedRelation: "schools_public"
             referencedColumns: ["id"]
           },
         ]
@@ -254,6 +275,13 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "head_coaches_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
             referencedColumns: ["id"]
           },
         ]
@@ -316,6 +344,13 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "practitioners_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
             referencedColumns: ["id"]
           },
         ]
@@ -477,6 +512,13 @@ export type Database = {
             referencedRelation: "schools"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "head_coaches_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       practitioners_public: {
@@ -502,7 +544,44 @@ export type Database = {
             referencedRelation: "schools"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "practitioners_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      schools_public: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          id: string | null
+          logo_url: string | null
+          martial_art: string | null
+          name: string | null
+          state: string | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          id?: string | null
+          logo_url?: string | null
+          martial_art?: string | null
+          name?: string | null
+          state?: string | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          id?: string | null
+          logo_url?: string | null
+          martial_art?: string | null
+          name?: string | null
+          state?: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {
