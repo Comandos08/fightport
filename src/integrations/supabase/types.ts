@@ -78,6 +78,42 @@ export type Database = {
           },
         ]
       }
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_id: string
+          created_at: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          target_id: string | null
+          target_type: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           created_at: string
@@ -290,10 +326,14 @@ export type Database = {
           created_at: string | null
           email: string
           id: string
+          is_admin: boolean
+          is_suspended: boolean
           logo_url: string | null
           martial_art: string
           name: string
           state: string | null
+          suspended_at: string | null
+          suspended_reason: string | null
           updated_at: string | null
         }
         Insert: {
@@ -301,10 +341,14 @@ export type Database = {
           created_at?: string | null
           email: string
           id?: string
+          is_admin?: boolean
+          is_suspended?: boolean
           logo_url?: string | null
           martial_art?: string
           name: string
           state?: string | null
+          suspended_at?: string | null
+          suspended_reason?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -312,10 +356,14 @@ export type Database = {
           created_at?: string | null
           email?: string
           id?: string
+          is_admin?: boolean
+          is_suspended?: boolean
           logo_url?: string | null
           martial_art?: string
           name?: string
           state?: string | null
+          suspended_at?: string | null
+          suspended_reason?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -364,6 +412,7 @@ export type Database = {
         Returns: string
       }
       generate_fp_id: { Args: never; Returns: string }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
