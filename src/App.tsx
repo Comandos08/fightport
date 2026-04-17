@@ -31,6 +31,7 @@ import Organizacoes from "./pages/dash/Organizacoes";
 import OrganizacaoDetalhe from "./pages/dash/OrganizacaoDetalhe";
 import Atletas from "./pages/dash/Atletas";
 import AtletaDetalhe from "./pages/dash/AtletaDetalhe";
+import Graduacoes from "./pages/dash/Graduacoes";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => (
               <Route path="organizacoes/:id" element={<OrganizacaoDetalhe />} />
               <Route path="atletas" element={<Atletas />} />
               <Route path="atletas/:id" element={<AtletaDetalhe />} />
+              <Route path="graduacoes" element={<Graduacoes />} />
             </Route>
             <Route path="/termos" element={<TermosDeUso />} />
             <Route path="/privacidade" element={<Privacidade />} />
