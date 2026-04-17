@@ -487,18 +487,21 @@ export type Database = {
     Views: {
       head_coaches_public: {
         Row: {
+          created_at: string | null
           graduation: string | null
           id: string | null
           name: string | null
           school_id: string | null
         }
         Insert: {
+          created_at?: string | null
           graduation?: string | null
           id?: string | null
           name?: string | null
           school_id?: string | null
         }
         Update: {
+          created_at?: string | null
           graduation?: string | null
           id?: string | null
           name?: string | null
