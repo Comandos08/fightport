@@ -426,6 +426,34 @@ export type Database = {
           schools_count: number
         }[]
       }
+      admin_list_achievements: {
+        Args: {
+          p_belt?: string
+          p_date_from?: string
+          p_date_to?: string
+          p_limit?: number
+          p_martial_art?: string
+          p_offset?: number
+          p_school_id?: string
+          p_search?: string
+        }
+        Returns: {
+          belt: string
+          created_at: string
+          degree: number
+          fp_id: string
+          graduated_by: string
+          graduation_date: string
+          hash: string
+          id: string
+          martial_art: string
+          practitioner_id: string
+          practitioner_name: string
+          school_id: string
+          school_name: string
+          total_count: number
+        }[]
+      }
       admin_list_practitioners: {
         Args: {
           p_belt?: string
