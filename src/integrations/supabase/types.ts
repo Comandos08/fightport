@@ -401,6 +401,51 @@ export type Database = {
         Args: { p_amount: number; p_school_id: string }
         Returns: undefined
       }
+      admin_achievements_by_art: {
+        Args: { p_end: string; p_start: string }
+        Returns: {
+          martial_art: string
+          total: number
+        }[]
+      }
+      admin_get_overview: { Args: never; Returns: Json }
+      admin_growth_monthly: {
+        Args: never
+        Returns: {
+          month: string
+          practitioners_count: number
+          schools_count: number
+        }[]
+      }
+      admin_open_tickets_count: { Args: never; Returns: number }
+      admin_recent_schools: {
+        Args: never
+        Returns: {
+          city: string
+          created_at: string
+          email: string
+          name: string
+          school_id: string
+          state: string
+        }[]
+      }
+      admin_revenue_monthly: {
+        Args: never
+        Returns: {
+          month: string
+          revenue: number
+        }[]
+      }
+      admin_zero_balance_schools: {
+        Args: never
+        Returns: {
+          balance: number
+          email: string
+          name: string
+          school_id: string
+          updated_at: string
+        }[]
+      }
       generate_achievement_hash: {
         Args: {
           p_belt: string
