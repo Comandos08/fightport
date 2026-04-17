@@ -64,6 +64,14 @@
     --border:       rgba(28, 28, 28, 0.08);
     --border-2:     rgba(28, 28, 28, 0.14);
 
+    /* ── Admin dashboard chart palette ── */
+    --admin-chart-primary: #0D0D0D;
+    --admin-chart-accent:  #1E3A5F;
+    --admin-chart-gray-1:  #475569;
+    --admin-chart-gray-2:  #94A3B8;
+    --admin-chart-gray-3:  #CBD5E1;
+    --admin-chart-gray-4:  #E2E8F0;
+
     /* ── Shadcn semantic tokens (HSL) ── */
     --background: 0 0% 100%;
     --foreground: 0 0% 11%;

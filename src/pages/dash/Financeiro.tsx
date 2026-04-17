@@ -34,9 +34,17 @@ const ipt: React.CSSProperties = {
 
 // Paleta sóbria para BI administrativo — neutros + azul-petróleo
 // (o verde neon #C8F135 é reservado para o produto/painel da escola)
-const CHART_PRIMARY = '#0D0D0D';
-const CHART_ACCENT = '#1E3A5F';
-const PIE_COLORS = ['#0D0D0D', '#1E3A5F', '#475569', '#94A3B8', '#CBD5E1', '#E2E8F0'];
+// Usando variáveis CSS para consistência com o /dash
+const CHART_PRIMARY = 'var(--admin-chart-primary)';
+const CHART_ACCENT = 'var(--admin-chart-accent)';
+const PIE_COLORS = [
+  'var(--admin-chart-primary)',
+  'var(--admin-chart-accent)',
+  'var(--admin-chart-gray-1)',
+  'var(--admin-chart-gray-2)',
+  'var(--admin-chart-gray-3)',
+  'var(--admin-chart-gray-4)',
+];
 
 function getRange(preset: Preset, customFrom?: string, customTo?: string): { start: Date; end: Date } {
   const now = new Date();
