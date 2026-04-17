@@ -1,19 +1,33 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Building2, Users, Award, DollarSign, LifeBuoy, ScrollText } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import logoFightport from '@/assets/logo-fightport.png';
 
 const links = [
-  { to: '/dash', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { to: '/dash/organizacoes', label: 'Organizações', icon: Building2, exact: false },
-  { to: '/dash/atletas', label: 'Atletas', icon: Users, exact: false },
-  { to: '/dash/graduacoes', label: 'Graduações', icon: Award, exact: false },
-  { to: '/dash/financeiro', label: 'Financeiro', icon: DollarSign, exact: false },
-  { to: '/dash/suporte', label: 'Suporte', icon: LifeBuoy, exact: false },
-  { to: '/dash/auditoria', label: 'Auditoria', icon: ScrollText, exact: false },
+  { to: '/dash', label: 'Dashboard', icon: LayoutDashboard, exact: true, key: 'dash' },
+  { to: '/dash/organizacoes', label: 'Organizações', icon: Building2, exact: false, key: 'org' },
+  { to: '/dash/atletas', label: 'Atletas', icon: Users, exact: false, key: 'ath' },
+  { to: '/dash/graduacoes', label: 'Graduações', icon: Award, exact: false, key: 'grad' },
+  { to: '/dash/financeiro', label: 'Financeiro', icon: DollarSign, exact: false, key: 'fin' },
+  { to: '/dash/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, key: 'sup' },
+  { to: '/dash/auditoria', label: 'Auditoria', icon: ScrollText, exact: false, key: 'aud' },
 ];
 
 export function DashSidebar() {
   const location = useLocation();
+  const { user } = useAuth();
+
+  const { data: awaiting = 0 } = useQuery({
+    queryKey: ['admin-awaiting-count'],
+    queryFn: async () => {
+      const { data } = await supabase.rpc('admin_awaiting_admin_count');
+      return Number(data ?? 0);
+    },
+    enabled: !!user,
+    refetchOnWindowFocus: true,
+  });
 
   const isActive = (to: string, exact: boolean) => {
     if (exact) return location.pathname === to;
@@ -55,8 +69,9 @@ export function DashSidebar() {
         </Link>
       </div>
       <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>
-        {links.map(({ to, label, icon: Icon, exact }) => {
+        {links.map(({ to, label, icon: Icon, exact, key }) => {
           const active = isActive(to, exact);
+          const badge = key === 'sup' ? awaiting : 0;
           return (
             <Link
               key={to}
@@ -88,7 +103,16 @@ export function DashSidebar() {
               }}
             >
               <Icon style={{ width: 16, height: 16 }} />
-              {label}
+              <span style={{ flex: 1 }}>{label}</span>
+              {badge > 0 && (
+                <span style={{
+                  fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
+                  padding: '1px 6px', borderRadius: 999,
+                  background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
+                }}>
+                  {badge}
+                </span>
+              )}
             </Link>
           );
         })}

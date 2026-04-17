@@ -18,6 +18,7 @@ import NovaConquista from "./pages/panel/NovaConquista";
 import EditarPraticante from "./pages/panel/EditarPraticante";
 import Creditos from "./pages/panel/Creditos";
 import Configuracoes from "./pages/panel/Configuracoes";
+import PainelSuporte from "./pages/panel/Suporte";
 import NotFound from "./pages/NotFound";
 import TermosDeUso from "./pages/TermosDeUso";
 import Privacidade from "./pages/Privacidade";
@@ -33,6 +34,7 @@ import Atletas from "./pages/dash/Atletas";
 import AtletaDetalhe from "./pages/dash/AtletaDetalhe";
 import Graduacoes from "./pages/dash/Graduacoes";
 import Financeiro from "./pages/dash/Financeiro";
+import DashSuporte from "./pages/dash/Suporte";
 
 const queryClient = new QueryClient();
 

@@ -1,18 +1,33 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Award, Coins, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import logoFightport from '@/assets/logo-fightport.png';
 
 export function Sidebar() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { user } = useAuth();
+
+  const { data: unread = 0 } = useQuery({
+    queryKey: ['school-unread-count', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.rpc('school_unread_messages_count');
+      return Number(data ?? 0);
+    },
+    enabled: !!user,
+    refetchOnWindowFocus: true,
+  });
 
   const links = [
-    { to: '/painel', label: t('app.nav.dashboard'), icon: LayoutDashboard, exact: true },
-    { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false },
-    { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true },
-    { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true },
-    { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true },
+    { to: '/painel', label: t('app.nav.dashboard'), icon: LayoutDashboard, exact: true, badge: 0 },
+    { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false, badge: 0 },
+    { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true, badge: 0 },
+    { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true, badge: 0 },
+    { to: '/painel/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, badge: unread },
+    { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true, badge: 0 },
   ];
 
   const isActive = (to: string, exact: boolean) => {
@@ -40,7 +55,7 @@ export function Sidebar() {
         </Link>
       </div>
       <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>
-        {links.map(({ to, label, icon: Icon, exact }) => {
+        {links.map(({ to, label, icon: Icon, exact, badge }) => {
           const active = isActive(to, exact);
           return (
             <Link
@@ -73,7 +88,16 @@ export function Sidebar() {
               }}
             >
               <Icon style={{ width: 16, height: 16 }} />
-              {label}
+              <span style={{ flex: 1 }}>{label}</span>
+              {badge > 0 && (
+                <span style={{
+                  fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
+                  padding: '1px 6px', borderRadius: 999,
+                  background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
+                }}>
+                  {badge}
+                </span>
+              )}
             </Link>
           );
         })}
