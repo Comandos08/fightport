@@ -7,7 +7,6 @@ import logoFightport from '@/assets/logo-fightport.png';
 
 const links = [
   { to: '/dash', label: 'Dashboard', icon: LayoutDashboard, exact: true, key: 'dash' },
-  { to: '/dash/organizacoes', label: 'Organizações', icon: Building2, exact: false, key: 'org' },
   { to: '/dash/atletas', label: 'Atletas', icon: Users, exact: false, key: 'ath' },
   { to: '/dash/graduacoes', label: 'Graduações', icon: Award, exact: false, key: 'grad' },
   { to: '/dash/financeiro', label: 'Financeiro', icon: DollarSign, exact: false, key: 'fin' },
