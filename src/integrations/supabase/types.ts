@@ -923,11 +923,11 @@ export type Database = {
       admin_school_tickets: {
         Args: { p_school_id: string }
         Returns: {
+          category: string
           created_at: string
-          email: string
           id: string
-          message: string
-          name: string
+          last_message_at: string
+          priority: string
           status: string
           subject: string
         }[]

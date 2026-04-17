@@ -24,7 +24,7 @@ export default function CreditosPage() {
   const [loadingPkg, setLoadingPkg] = useState<string | null>(null);
 
   useEffect(() => {
-    const status = searchParams.get('status');
+    const status = searchParams.get('collection_status') || searchParams.get('status');
     if (status === 'success') { toast.success(t('credits.toast.success')); queryClient.invalidateQueries({ queryKey: ['credits'] }); queryClient.invalidateQueries({ queryKey: ['credit-transactions'] }); }
     else if (status === 'failure') { toast.error(t('credits.toast.failure')); }
     else if (status === 'pending') { toast.info(t('credits.toast.pending')); }
@@ -38,7 +38,7 @@ export default function CreditosPage() {
     try {
       const { data, error } = await supabase.functions.invoke('mercadopago-checkout', { body: { package_name: pkgRawName } });
       if (error) throw error;
-      if (data?.init_point) { window.location.href = data.init_point; } else { throw new Error('Nenhum link de checkout retornado'); }
+      if (data?.init_point) { setTimeout(() => setLoadingPkg(null), 10000); window.location.href = data.init_point; } else { throw new Error('Nenhum link de checkout retornado'); }
     } catch (err: any) { toast.error('Erro ao iniciar checkout: ' + (err.message || 'Tente novamente')); setLoadingPkg(null); }
   };
 
