@@ -488,6 +488,12 @@ export type Database = {
           total: number
         }[]
       }
+      admin_audit_log_actions: {
+        Args: never
+        Returns: {
+          action: string
+        }[]
+      }
       admin_awaiting_admin_count: { Args: never; Returns: number }
       admin_finance_overview: {
         Args: { p_end: string; p_start: string }
@@ -546,6 +552,32 @@ export type Database = {
           school_id: string
           school_name: string
           total_count: number
+        }[]
+      }
+      admin_list_audit_log: {
+        Args: {
+          p_action?: string
+          p_date_from?: string
+          p_date_to?: string
+          p_limit?: number
+          p_offset?: number
+          p_search?: string
+          p_target_id?: string
+          p_target_type?: string
+        }
+        Returns: {
+          action: string
+          admin_id: string
+          admin_name: string
+          created_at: string
+          id: string
+          ip_address: string
+          metadata: Json
+          target_id: string
+          target_name: string
+          target_type: string
+          total_count: number
+          user_agent: string
         }[]
       }
       admin_list_practitioners: {
