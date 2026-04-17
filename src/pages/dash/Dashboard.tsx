@@ -9,6 +9,11 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
+// Admin palette - consistent with /dash/financeiro
+const CHART_PRIMARY = '#0D0D0D';
+const CHART_ACCENT = '#1E3A5F';
+const CHART_GRAY = '#475569';
+
 type PeriodKey = 'today' | '7d' | '30d' | 'month' | 'year' | 'custom';
 
 const periods: { key: PeriodKey; label: string }[] = [
@@ -249,7 +254,7 @@ export default function DashDashboard() {
                 <XAxis dataKey="month" stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
                 <YAxis stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 6, fontSize: 12 }} />
-                <Line type="monotone" dataKey="schools" stroke="var(--color-text)" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="schools" stroke={CHART_PRIMARY} strokeWidth={2} dot={{ r: 3, fill: CHART_PRIMARY }} />
               </LineChart>
             </ChartCard>
 
@@ -259,7 +264,7 @@ export default function DashDashboard() {
                 <XAxis dataKey="month" stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
                 <YAxis stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 6, fontSize: 12 }} />
-                <Line type="monotone" dataKey="practitioners" stroke="var(--color-text)" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="practitioners" stroke={CHART_ACCENT} strokeWidth={2} dot={{ r: 3, fill: CHART_ACCENT }} />
               </LineChart>
             </ChartCard>
 
@@ -272,7 +277,7 @@ export default function DashDashboard() {
                   contentStyle={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 6, fontSize: 12 }}
                   formatter={(v: any) => fmtBRL(Number(v))}
                 />
-                <Bar dataKey="revenue" fill="var(--color-text)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" fill={CHART_PRIMARY} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ChartCard>
 
@@ -282,7 +287,7 @@ export default function DashDashboard() {
                 <XAxis dataKey="art" stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
                 <YAxis stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 6, fontSize: 12 }} />
-                <Bar dataKey="total" fill="var(--color-text)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="total" fill={CHART_ACCENT} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ChartCard>
           </div>
