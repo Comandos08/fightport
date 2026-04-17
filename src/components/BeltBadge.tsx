@@ -2,6 +2,7 @@ import type { Belt } from '@/lib/mock-data';
 
 interface BeltBadgeProps {
   belt: Belt;
+  degree?: number | null;
   size?: 'sm' | 'md';
 }
 
@@ -15,11 +16,15 @@ const BELT_STYLES: Record<string, { bg: string; color: string; border?: string }
   Roxa: { bg: '#833AB4', color: '#FFFFFF' },
   Marrom: { bg: '#653819', color: '#FFFFFF' },
   Preta: { bg: '#333333', color: '#FFFFFF' },
+  'Preta-7+': { bg: '#DA291C', color: '#FFFFFF' },
   Vermelha: { bg: '#DC2626', color: '#FFFFFF' },
 };
 
-export function BeltBadge({ belt, size = 'md' }: BeltBadgeProps) {
-  const s = BELT_STYLES[belt] || { bg: '#999', color: '#fff' };
+export function BeltBadge({ belt, degree, size = 'md' }: BeltBadgeProps) {
+  // Lógica para faixa preta com grau 7+ usar vermelho
+  const isBlackHighDegree = belt === 'Preta' && degree !== null && degree >= 7;
+  const styleKey = isBlackHighDegree ? 'Preta-7+' : belt;
+  const s = BELT_STYLES[styleKey] || { bg: '#999', color: '#fff' };
 
   return (
     <span
@@ -39,6 +44,9 @@ export function BeltBadge({ belt, size = 'md' }: BeltBadgeProps) {
       }}
     >
       Faixa {belt}
+      {degree !== null && degree !== undefined && (
+        <span style={{ marginLeft: 4, opacity: 0.9 }}>{degree}º</span>
+      )}
     </span>
   );
 }
