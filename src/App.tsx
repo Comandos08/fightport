@@ -59,6 +59,7 @@ const App = () => (
               <Route path="praticantes/:id/editar" element={<EditarPraticante />} />
               <Route path="conquistas/nova" element={<NovaConquista />} />
               <Route path="creditos" element={<Creditos />} />
+              <Route path="suporte" element={<PainelSuporte />} />
               <Route path="configuracoes" element={<Configuracoes />} />
             </Route>
             <Route path="/dash" element={<AdminProtectedRoute><DashLayout /></AdminProtectedRoute>}>
@@ -69,6 +70,7 @@ const App = () => (
               <Route path="atletas/:id" element={<AtletaDetalhe />} />
               <Route path="graduacoes" element={<Graduacoes />} />
               <Route path="financeiro" element={<Financeiro />} />
+              <Route path="suporte" element={<DashSuporte />} />
             </Route>
             <Route path="/termos" element={<TermosDeUso />} />
             <Route path="/privacidade" element={<Privacidade />} />
