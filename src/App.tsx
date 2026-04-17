@@ -18,6 +18,7 @@ import NovaConquista from "./pages/panel/NovaConquista";
 import EditarPraticante from "./pages/panel/EditarPraticante";
 import Creditos from "./pages/panel/Creditos";
 import Configuracoes from "./pages/panel/Configuracoes";
+import PainelSuporte from "./pages/panel/Suporte";
 import NotFound from "./pages/NotFound";
 import TermosDeUso from "./pages/TermosDeUso";
 import Privacidade from "./pages/Privacidade";
@@ -33,6 +34,7 @@ import Atletas from "./pages/dash/Atletas";
 import AtletaDetalhe from "./pages/dash/AtletaDetalhe";
 import Graduacoes from "./pages/dash/Graduacoes";
 import Financeiro from "./pages/dash/Financeiro";
+import DashSuporte from "./pages/dash/Suporte";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +59,7 @@ const App = () => (
               <Route path="praticantes/:id/editar" element={<EditarPraticante />} />
               <Route path="conquistas/nova" element={<NovaConquista />} />
               <Route path="creditos" element={<Creditos />} />
+              <Route path="suporte" element={<PainelSuporte />} />
               <Route path="configuracoes" element={<Configuracoes />} />
             </Route>
             <Route path="/dash" element={<AdminProtectedRoute><DashLayout /></AdminProtectedRoute>}>
@@ -67,6 +70,7 @@ const App = () => (
               <Route path="atletas/:id" element={<AtletaDetalhe />} />
               <Route path="graduacoes" element={<Graduacoes />} />
               <Route path="financeiro" element={<Financeiro />} />
+              <Route path="suporte" element={<DashSuporte />} />
             </Route>
             <Route path="/termos" element={<TermosDeUso />} />
             <Route path="/privacidade" element={<Privacidade />} />

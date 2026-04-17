@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings } from 'lucide-react';
+import { LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,6 +18,7 @@ export function NavbarPanel() {
     { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false },
     { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true },
     { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true },
+    { to: '/painel/suporte', label: 'Suporte', icon: LifeBuoy, exact: false },
     { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true },
   ];
 
