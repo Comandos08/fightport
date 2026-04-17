@@ -16,7 +16,16 @@ import {
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
 const BELT_COLORS: Record<string, string> = {
-  Branca: '#E8E8E5', Azul: '#134C73', Roxa: '#5B21B6', Marrom: '#78350F', Preta: '#1C1C1C', Vermelha: '#DC2626',
+  Branca: '#F7F7F5',
+  Cinza: '#B3B3B3',
+  Amarela: '#F4B400',
+  Laranja: '#FF9900',
+  Verde: '#0F9D58',
+  Azul: '#4285F4',
+  Roxa: '#833AB4',
+  Marrom: '#653819',
+  Preta: '#333333',
+  Vermelha: '#DC2626',
 };
 
 export default function DashboardPage() {
