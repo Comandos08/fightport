@@ -11,7 +11,7 @@ const BELT_STYLES: Record<string, { bg: string; color: string; border?: string }
   Amarela: { bg: '#EAB308', color: '#1C1C1C' },
   Laranja: { bg: '#EA580C', color: '#FFFFFF' },
   Verde: { bg: '#14532D', color: '#FFFFFF' },
-  Azul: { bg: '#134C73', color: '#FFFFFF' },
+  Azul: { bg: '#4285F4', color: '#FFFFFF' },
   Roxa: { bg: '#5B21B6', color: '#FFFFFF' },
   Marrom: { bg: '#78350F', color: '#FFFFFF' },
   Preta: { bg: '#1C1C1C', color: '#FFFFFF' },
