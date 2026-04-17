@@ -408,6 +408,19 @@ export type Database = {
           total: number
         }[]
       }
+      admin_finance_overview: {
+        Args: { p_end: string; p_start: string }
+        Returns: Json
+      }
+      admin_finance_top_schools: {
+        Args: { p_end: string; p_limit?: number; p_start: string }
+        Returns: {
+          school_id: string
+          school_name: string
+          total_revenue: number
+          tx_count: number
+        }[]
+      }
       admin_get_overview: { Args: never; Returns: Json }
       admin_get_practitioner: {
         Args: { p_practitioner_id: string }
