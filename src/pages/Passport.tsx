@@ -61,7 +61,7 @@ export default function PassportPage() {
     queryKey: ['public-achievements', practitioner?.id],
     queryFn: async () => {
       const { data } = await supabase
-        .from('achievements')
+        .from('achievements_public' as any)
         .select('*')
         .eq('practitioner_id', practitioner!.id)
         .order('graduation_date', { ascending: false });
