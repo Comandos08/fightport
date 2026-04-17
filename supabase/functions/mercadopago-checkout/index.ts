@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
       notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/mercadopago-webhook`,
     };
 
-    const mpResponse = await fetch("https://api.mercadopago.com/checkout/preferences", {
+    let mpResponse = await fetch("https://api.mercadopago.com/checkout/preferences", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${MP_TOKEN}`,
@@ -105,6 +105,20 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify(preference),
     });
+
+    // Retry uma vez se 503 (MP indisponível)
+    if (mpResponse.status === 503) {
+      console.log("MercadoPago returned 503, retrying in 2s...");
+      await new Promise((r) => setTimeout(r, 2000));
+      mpResponse = await fetch("https://api.mercadopago.com/checkout/preferences", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${MP_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(preference),
+      });
+    }
 
     const mpData = await mpResponse.json();
     if (!mpResponse.ok) {
