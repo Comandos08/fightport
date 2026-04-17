@@ -34,11 +34,11 @@ export function DashHeader() {
               fontWeight: 600,
               fontSize: 10,
               letterSpacing: '0.05em',
-              color: '#C8F135',
-              background: 'rgba(200, 241, 53, 0.15)',
+              color: '#1C1C1C',
+              background: '#D8421A',
               padding: '2px 8px',
               borderRadius: 4,
-              border: '1px solid rgba(200, 241, 53, 0.3)',
+              border: '1px solid rgba(216, 66, 26, 0.3)',
             }}
           >
             ADMIN
