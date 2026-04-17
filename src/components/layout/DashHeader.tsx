@@ -9,7 +9,7 @@ export function DashHeader() {
   const { data: school } = useQuery({
     queryKey: ['school-admin-name', user?.id],
     queryFn: async () => {
-      const { data } = await supabase.from('schools').select('name').eq('id', user!.id).maybeSingle();
+      const { data } = await supabase.from('schools').select('name,is_admin').eq('id', user!.id).maybeSingle();
       return data;
     },
     enabled: !!user,
@@ -27,6 +27,23 @@ export function DashHeader() {
     >
       <div className="flex-1" />
       <div className="flex items-center" style={{ gap: 12 }}>
+        {school?.is_admin && (
+          <span
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 600,
+              fontSize: 10,
+              letterSpacing: '0.05em',
+              color: '#C8F135',
+              background: 'rgba(200, 241, 53, 0.15)',
+              padding: '2px 8px',
+              borderRadius: 4,
+              border: '1px solid rgba(200, 241, 53, 0.3)',
+            }}
+          >
+            ADMIN
+          </span>
+        )}
         <span
           style={{
             fontFamily: 'var(--font-sans)',
