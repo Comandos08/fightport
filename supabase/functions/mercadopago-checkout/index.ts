@@ -89,9 +89,9 @@ Deno.serve(async (req) => {
         price_brl: pkg.price / 100,
       }),
       back_urls: {
-        success: `${req.headers.get("origin") || "https://fightport.lovable.app"}/painel/creditos?status=success`,
-        failure: `${req.headers.get("origin") || "https://fightport.lovable.app"}/painel/creditos?status=failure`,
-        pending: `${req.headers.get("origin") || "https://fightport.lovable.app"}/painel/creditos?status=pending`,
+        success: `${req.headers.get("origin") || "https://fightport.pro"}/painel/creditos`,
+        failure: `${req.headers.get("origin") || "https://fightport.pro"}/painel/creditos`,
+        pending: `${req.headers.get("origin") || "https://fightport.pro"}/painel/creditos`,
       },
       auto_return: "approved",
       notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/mercadopago-webhook`,
