@@ -485,6 +485,74 @@ export type Database = {
       }
     }
     Views: {
+      achievements_public: {
+        Row: {
+          belt: string | null
+          created_at: string | null
+          degree: number | null
+          graduated_by: string | null
+          graduation_date: string | null
+          hash: string | null
+          id: string | null
+          notes: string | null
+          practitioner_id: string | null
+          school_id: string | null
+        }
+        Insert: {
+          belt?: string | null
+          created_at?: string | null
+          degree?: number | null
+          graduated_by?: string | null
+          graduation_date?: string | null
+          hash?: string | null
+          id?: string | null
+          notes?: string | null
+          practitioner_id?: string | null
+          school_id?: string | null
+        }
+        Update: {
+          belt?: string | null
+          created_at?: string | null
+          degree?: number | null
+          graduated_by?: string | null
+          graduation_date?: string | null
+          hash?: string | null
+          id?: string | null
+          notes?: string | null
+          practitioner_id?: string | null
+          school_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "achievements_practitioner_id_fkey"
+            columns: ["practitioner_id"]
+            isOneToOne: false
+            referencedRelation: "practitioners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achievements_practitioner_id_fkey"
+            columns: ["practitioner_id"]
+            isOneToOne: false
+            referencedRelation: "practitioners_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achievements_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achievements_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       head_coaches_public: {
         Row: {
           created_at: string | null
