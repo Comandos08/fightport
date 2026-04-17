@@ -9,10 +9,10 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
-// Admin palette - consistent with /dash/financeiro
-const CHART_PRIMARY = '#0D0D0D';
-const CHART_ACCENT = '#1E3A5F';
-const CHART_GRAY = '#475569';
+// Admin palette - uses CSS variables for consistency across /dash pages
+const CHART_PRIMARY = 'var(--admin-chart-primary)';
+const CHART_ACCENT = 'var(--admin-chart-accent)';
+const CHART_GRAY = 'var(--admin-chart-gray-1)';
 
 type PeriodKey = 'today' | '7d' | '30d' | 'month' | 'year' | 'custom';
 
