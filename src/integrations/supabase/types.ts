@@ -409,6 +409,10 @@ export type Database = {
         }[]
       }
       admin_get_overview: { Args: never; Returns: Json }
+      admin_get_practitioner: {
+        Args: { p_practitioner_id: string }
+        Returns: Json
+      }
       admin_get_school: { Args: { p_school_id: string }; Returns: Json }
       admin_grant_bonus_credits: {
         Args: { p_amount: number; p_reason: string; p_school_id: string }
@@ -420,6 +424,34 @@ export type Database = {
           month: string
           practitioners_count: number
           schools_count: number
+        }[]
+      }
+      admin_list_practitioners: {
+        Args: {
+          p_belt?: string
+          p_date_from?: string
+          p_date_to?: string
+          p_dir?: string
+          p_limit?: number
+          p_martial_art?: string
+          p_offset?: number
+          p_school_id?: string
+          p_search?: string
+          p_sort?: string
+        }
+        Returns: {
+          achievements_count: number
+          cpf: string
+          created_at: string
+          current_belt: string
+          first_name: string
+          fp_id: string
+          id: string
+          last_name: string
+          martial_art: string
+          school_id: string
+          school_name: string
+          total_count: number
         }[]
       }
       admin_list_schools: {
@@ -452,7 +484,31 @@ export type Database = {
           total_spent: number
         }[]
       }
+      admin_log_action: {
+        Args: {
+          p_action: string
+          p_metadata?: Json
+          p_target_id: string
+          p_target_type: string
+        }
+        Returns: undefined
+      }
       admin_open_tickets_count: { Args: never; Returns: number }
+      admin_practitioner_achievements: {
+        Args: { p_practitioner_id: string }
+        Returns: {
+          belt: string
+          created_at: string
+          degree: number
+          graduated_by: string
+          graduation_date: string
+          hash: string
+          id: string
+          notes: string
+          school_id: string
+          school_name: string
+        }[]
+      }
       admin_reactivate_school: {
         Args: { p_reason: string; p_school_id: string }
         Returns: undefined
@@ -538,6 +594,10 @@ export type Database = {
       }
       admin_suspend_school: {
         Args: { p_reason: string; p_school_id: string }
+        Returns: undefined
+      }
+      admin_update_practitioner: {
+        Args: { p_changes: Json; p_practitioner_id: string; p_reason: string }
         Returns: undefined
       }
       admin_zero_balance_schools: {
