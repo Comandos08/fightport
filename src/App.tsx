@@ -24,6 +24,9 @@ import Privacidade from "./pages/Privacidade";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
 import { VerificarRedirect } from "./components/VerificarRedirect";
+import { AdminProtectedRoute } from "./components/AdminProtectedRoute";
+import DashLayout from "./components/layout/DashLayout";
+import DashDashboard from "./pages/dash/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +52,9 @@ const App = () => (
               <Route path="conquistas/nova" element={<NovaConquista />} />
               <Route path="creditos" element={<Creditos />} />
               <Route path="configuracoes" element={<Configuracoes />} />
+            </Route>
+            <Route path="/dash" element={<AdminProtectedRoute><DashLayout /></AdminProtectedRoute>}>
+              <Route index element={<DashDashboard />} />
             </Route>
             <Route path="/termos" element={<TermosDeUso />} />
             <Route path="/privacidade" element={<Privacidade />} />
