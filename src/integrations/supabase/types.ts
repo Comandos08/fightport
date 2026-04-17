@@ -368,6 +368,86 @@ export type Database = {
         }
         Relationships: []
       }
+      support_messages: {
+        Row: {
+          author_id: string
+          author_type: string
+          content: string
+          created_at: string
+          id: string
+          read_by_recipient: boolean
+          ticket_id: string
+        }
+        Insert: {
+          author_id: string
+          author_type: string
+          content: string
+          created_at?: string
+          id?: string
+          read_by_recipient?: boolean
+          ticket_id: string
+        }
+        Update: {
+          author_id?: string
+          author_type?: string
+          content?: string
+          created_at?: string
+          id?: string
+          read_by_recipient?: boolean
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          category: string
+          closed_at: string | null
+          created_at: string
+          id: string
+          last_message_at: string
+          priority: string
+          resolved_at: string | null
+          school_id: string
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          closed_at?: string | null
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          priority?: string
+          resolved_at?: string | null
+          school_id: string
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          closed_at?: string | null
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          priority?: string
+          resolved_at?: string | null
+          school_id?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       practitioners_public: {
@@ -408,6 +488,7 @@ export type Database = {
           total: number
         }[]
       }
+      admin_awaiting_admin_count: { Args: never; Returns: number }
       admin_finance_overview: {
         Args: { p_end: string; p_start: string }
         Returns: Json
@@ -525,6 +606,22 @@ export type Database = {
           total_spent: number
         }[]
       }
+      admin_list_support_tickets: {
+        Args: { p_status?: string }
+        Returns: {
+          category: string
+          created_at: string
+          id: string
+          last_message_at: string
+          preview: string
+          priority: string
+          school_id: string
+          school_name: string
+          status: string
+          subject: string
+          unread_for_admin: number
+        }[]
+      }
       admin_log_action: {
         Args: {
           p_action: string
@@ -564,6 +661,10 @@ export type Database = {
           school_id: string
           state: string
         }[]
+      }
+      admin_resolve_ticket: {
+        Args: { p_ticket_id: string }
+        Returns: undefined
       }
       admin_revenue_monthly: {
         Args: never
@@ -663,6 +764,11 @@ export type Database = {
       }
       generate_fp_id: { Args: never; Returns: string }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      mark_messages_read: {
+        Args: { p_role: string; p_ticket_id: string }
+        Returns: undefined
+      }
+      school_unread_messages_count: { Args: never; Returns: number }
     }
     Enums: {
       [_ in never]: never
