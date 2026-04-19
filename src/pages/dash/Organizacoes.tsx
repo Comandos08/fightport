@@ -2,21 +2,20 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, Download, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Search, Download, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import {
+  DashFiltersBar,
+  dashInputStyle as ipt,
+  dashLabelStyle as lbl,
+  dashOutlineButtonStyle,
+  dashClearButtonStyle,
+} from '@/components/dash/DashFiltersBar';
 
 type SortKey = 'name' | 'email' | 'city' | 'martial_art' | 'created_at' | 'balance' | 'total_spent';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
-const ipt: React.CSSProperties = {
-  height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
-  background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
-};
-const lbl: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
-  letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
-};
 
 export default function Organizacoes() {
   const navigate = useNavigate();
