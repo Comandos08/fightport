@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Search, Download, ChevronUp, ChevronDown, X, Building2 } from 'lucide-react';
-import { DashPagination } from '@/components/dash/DashPagination';
-import { DashTableSkeleton } from '@/components/dash/DashTableSkeleton';
-import { DashEmptyState } from '@/components/dash/DashEmptyState';
+import { DashTable } from '@/components/dash/DashTable';
 import { supabase } from '@/integrations/supabase/client';
 
 type SortKey = 'name' | 'email' | 'city' | 'martial_art' | 'created_at' | 'balance' | 'total_spent';
@@ -203,73 +201,54 @@ export default function Organizacoes() {
       </div>
 
       {/* Tabela */}
-      <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden' }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                {headerCell('name', 'Nome')}
-                <th style={{ textAlign: 'left', padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)' }}>Responsável</th>
-                {headerCell('email', 'Email')}
-                {headerCell('city', 'Cidade/UF')}
-                {headerCell('martial_art', 'Arte')}
-                {headerCell('created_at', 'Cadastro')}
-                {headerCell('balance', 'Saldo', 'right')}
-                {headerCell('total_spent', 'Total gasto', 'right')}
-                <th style={{ textAlign: 'left', padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)' }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading && <DashTableSkeleton columns={9} />}
-              {!isLoading && rows.length === 0 && (
-                <DashEmptyState
-                  columns={9}
-                  icon={Building2}
-                  title="Nenhuma organização encontrada"
-                  description="Ajuste os filtros para ver mais resultados."
-                />
-              )}
-              {rows.map((r: any) => (
-                <tr
-                  key={r.id}
-                  onClick={() => navigate(`/dash/organizacoes/${r.id}`)}
-                  style={{ cursor: 'pointer', transition: 'var(--transition)' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                >
-                  <td style={{ ...td, fontWeight: 500 }}>{r.name}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{r.head_coach ?? '—'}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{r.email}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{[r.city, r.state].filter(Boolean).join(' / ') || '—'}</td>
-                  <td style={td}>{r.martial_art}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{format(new Date(r.created_at), 'dd/MM/yyyy')}</td>
-                  <td style={{ ...td, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{r.balance}</td>
-                  <td style={{ ...td, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtBRL(r.total_spent)}</td>
-                  <td style={td}>
-                    <span style={{
-                      display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500,
-                      borderRadius: 4,
-                      color: r.is_suspended ? '#dc2626' : '#16a34a',
-                      background: r.is_suspended ? 'rgba(220,38,38,0.08)' : 'rgba(22,163,74,0.08)',
-                    }}>
-                      {r.is_suspended ? 'Suspensa' : 'Ativa'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Paginação */}
-      <DashPagination
-        page={page}
-        totalPages={totalPages}
-        total={total}
-        limit={limit}
-        onPageChange={setPage}
-      />
+      <DashTable
+        headers={[
+          <span onClick={() => toggleSort('name')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Nome <SortIcon k="name" /></span>,
+          'Responsável',
+          <span onClick={() => toggleSort('email')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Email <SortIcon k="email" /></span>,
+          <span onClick={() => toggleSort('city')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Cidade/UF <SortIcon k="city" /></span>,
+          <span onClick={() => toggleSort('martial_art')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Arte <SortIcon k="martial_art" /></span>,
+          <span onClick={() => toggleSort('created_at')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Cadastro <SortIcon k="created_at" /></span>,
+          <span onClick={() => toggleSort('balance')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Saldo <SortIcon k="balance" /></span>,
+          <span onClick={() => toggleSort('total_spent')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Total gasto <SortIcon k="total_spent" /></span>,
+          'Status',
+        ]}
+        isLoading={isLoading}
+        isEmpty={!isLoading && rows.length === 0}
+        emptyIcon={Building2}
+        emptyTitle="Nenhuma organização encontrada"
+        emptyDescription="Ajuste os filtros para ver mais resultados."
+        pagination={{ page, totalPages, total, limit, onPageChange: setPage }}
+      >
+        {rows.map((r: any) => (
+          <tr
+            key={r.id}
+            onClick={() => navigate(`/dash/organizacoes/${r.id}`)}
+            style={{ cursor: 'pointer', transition: 'var(--transition)' }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+          >
+            <td style={{ ...td, fontWeight: 500 }}>{r.name}</td>
+            <td style={{ ...td, color: 'var(--color-text-muted)' }}>{r.head_coach ?? '—'}</td>
+            <td style={{ ...td, color: 'var(--color-text-muted)' }}>{r.email}</td>
+            <td style={{ ...td, color: 'var(--color-text-muted)' }}>{[r.city, r.state].filter(Boolean).join(' / ') || '—'}</td>
+            <td style={td}>{r.martial_art}</td>
+            <td style={{ ...td, color: 'var(--color-text-muted)' }}>{format(new Date(r.created_at), 'dd/MM/yyyy')}</td>
+            <td style={{ ...td, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{r.balance}</td>
+            <td style={{ ...td, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtBRL(r.total_spent)}</td>
+            <td style={td}>
+              <span style={{
+                display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500,
+                borderRadius: 4,
+                color: r.is_suspended ? '#dc2626' : '#16a34a',
+                background: r.is_suspended ? 'rgba(220,38,38,0.08)' : 'rgba(22,163,74,0.08)',
+              }}>
+                {r.is_suspended ? 'Suspensa' : 'Ativa'}
+              </span>
+            </td>
+          </tr>
+        ))}
+      </DashTable>
     </div>
   );
 }

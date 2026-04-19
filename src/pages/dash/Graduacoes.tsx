@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Search, Download, Copy, Building2, User, Award } from 'lucide-react';
-import { DashPagination } from '@/components/dash/DashPagination';
-import { DashTableSkeleton } from '@/components/dash/DashTableSkeleton';
-import { DashEmptyState } from '@/components/dash/DashEmptyState';
+import { DashTable } from '@/components/dash/DashTable';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
@@ -203,89 +201,59 @@ export default function Graduacoes() {
       </div>
 
       {/* Tabela */}
-      <div style={{
-        background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden',
-      }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)', fontSize: 13 }}>
-            <thead>
-              <tr>
-                {['Data/hora', 'Atleta', 'Escola', 'Arte marcial', 'Faixa', 'Graduado por', 'Hash'].map(h => (
-                  <th key={h} style={{
-                    textAlign: 'left', padding: '10px', fontWeight: 600, fontSize: 11,
-                    textTransform: 'uppercase', letterSpacing: '0.06em',
-                    color: 'var(--color-text-muted)', whiteSpace: 'nowrap',
-                    background: 'var(--color-bg-soft)', borderBottom: '1px solid var(--color-border)',
-                  }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading && <DashTableSkeleton columns={7} />}
-              {!isLoading && rows.length === 0 && (
-                <DashEmptyState
-                  columns={7}
-                  icon={Award}
-                  title="Nenhuma graduação encontrada"
-                  description="Ajuste os filtros para ver mais resultados."
-                />
-              )}
-              {(rows as any[]).map(r => (
-                <tr key={r.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
-                    {format(new Date(r.created_at), 'dd/MM/yyyy HH:mm')}
-                  </td>
-                  <td style={{ padding: '8px 12px' }}>
-                    {r.practitioner_id ? (
-                      <Link to={`/dash/atletas/${r.practitioner_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                        <User style={{ width: 12, height: 12 }} />
-                        {r.practitioner_name}
-                      </Link>
-                    ) : '—'}
-                    <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 11, color: 'var(--color-text-muted)' }}>{r.fp_id}</div>
-                  </td>
-                  <td style={{ padding: '8px 12px' }}>
-                    {r.school_id ? (
-                      <Link to={`/dash/organizacoes/${r.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                        <Building2 style={{ width: 12, height: 12 }} />
-                        {r.school_name}
-                      </Link>
-                    ) : '—'}
-                  </td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art ?? '—'}</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>
-                    {r.belt}{r.degree ? ` · ${r.degree}°` : ''}
-                  </td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>{r.graduated_by}</td>
-                  <td style={{ padding: '8px 12px' }}>
-                    <button
-                      onClick={() => copyHash(r.hash)}
-                      title="Clique para copiar o hash completo"
-                      style={{
-                        background: 'transparent', border: '1px solid var(--color-border)',
-                        borderRadius: 'var(--radius-sm, 6px)', padding: '4px 8px', cursor: 'pointer',
-                        fontFamily: 'var(--font-mono, monospace)', fontSize: 11,
-                        color: 'var(--color-text)', display: 'inline-flex', alignItems: 'center', gap: 6,
-                      }}
-                    >
-                      {shortHash(r.hash)} <Copy style={{ width: 11, height: 11 }} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <DashPagination
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          limit={limit}
-          onPageChange={setPage}
-        />
-      </div>
+      <DashTable
+        headers={['Data/hora', 'Atleta', 'Escola', 'Arte marcial', 'Faixa', 'Graduado por', 'Hash']}
+        isLoading={isLoading}
+        isEmpty={!isLoading && rows.length === 0}
+        emptyIcon={Award}
+        emptyTitle="Nenhuma graduação encontrada"
+        emptyDescription="Ajuste os filtros para ver mais resultados."
+        pagination={{ page, totalPages, total, limit, onPageChange: setPage }}
+      >
+        {(rows as any[]).map(r => (
+          <tr key={r.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
+              {format(new Date(r.created_at), 'dd/MM/yyyy HH:mm')}
+            </td>
+            <td style={{ padding: '10px 12px' }}>
+              {r.practitioner_id ? (
+                <Link to={`/dash/atletas/${r.practitioner_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <User style={{ width: 12, height: 12 }} />
+                  {r.practitioner_name}
+                </Link>
+              ) : '—'}
+              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 11, color: 'var(--color-text-muted)' }}>{r.fp_id}</div>
+            </td>
+            <td style={{ padding: '10px 12px' }}>
+              {r.school_id ? (
+                <Link to={`/dash/organizacoes/${r.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <Building2 style={{ width: 12, height: 12 }} />
+                  {r.school_name}
+                </Link>
+              ) : '—'}
+            </td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art ?? '—'}</td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>
+              {r.belt}{r.degree ? ` · ${r.degree}°` : ''}
+            </td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.graduated_by}</td>
+            <td style={{ padding: '10px 12px' }}>
+              <button
+                onClick={() => copyHash(r.hash)}
+                title="Clique para copiar o hash completo"
+                style={{
+                  background: 'transparent', border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-sm, 6px)', padding: '4px 8px', cursor: 'pointer',
+                  fontFamily: 'var(--font-mono, monospace)', fontSize: 11,
+                  color: 'var(--color-text)', display: 'inline-flex', alignItems: 'center', gap: 6,
+                }}
+              >
+                {shortHash(r.hash)} <Copy style={{ width: 11, height: 11 }} />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </DashTable>
     </div>
   );
 }
