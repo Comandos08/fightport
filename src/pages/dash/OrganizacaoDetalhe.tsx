@@ -147,7 +147,14 @@ export default function OrganizacaoDetalhe() {
           <RefreshCw style={{ width: 14, height: 14 }} /> Reativar
         </button>
       ) : (
-        <button onClick={() => setShowSuspend(true)} style={dashOutlineButtonStyle}>
+        <button
+          onClick={() => setShowSuspend(true)}
+          style={{
+            ...dashOutlineButtonStyle,
+            color: '#dc2626',
+            borderColor: 'rgba(220,38,38,0.4)',
+          }}
+        >
           <Ban style={{ width: 14, height: 14 }} /> Suspender
         </button>
       )}
