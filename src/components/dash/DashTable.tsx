@@ -57,6 +57,8 @@ type Props = {
     limit: number;
     onPageChange: (page: number) => void;
   };
+  /** Remove o container externo (borda + radius) — útil quando a tabela está dentro de DashSection. */
+  bare?: boolean;
 };
 
 /**
@@ -76,18 +78,21 @@ export function DashTable({
   emptyTitle,
   emptyDescription,
   pagination,
+  bare = false,
 }: Props) {
   const columns = headers.length;
 
-  return (
-    <div
-      style={{
+  const containerStyle: CSSProperties = bare
+    ? { overflow: 'hidden' }
+    : {
         background: 'var(--color-bg)',
         border: '1px solid var(--color-border)',
         borderRadius: 'var(--radius-md, 8px)',
         overflow: 'hidden',
-      }}
-    >
+      };
+
+  return (
+    <div style={containerStyle}>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
