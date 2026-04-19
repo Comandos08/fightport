@@ -246,7 +246,7 @@ export default function Financeiro() {
       </div>
 
       {/* Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 20 }}>
         <Metric label="Receita do período" value={fmtBRL(overview?.revenue ?? 0)} />
         <Metric label="Transações" value={String(overview?.tx_count ?? 0)} />
         <Metric label="Ticket médio" value={fmtBRL(overview?.avg_ticket ?? 0)} />
@@ -258,7 +258,7 @@ export default function Financeiro() {
       </div>
 
       {/* Breakdown por pacote (cards) */}
-      <div style={card}>
+      <div style={{ ...card, marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
           Receita por pacote
         </h2>
@@ -278,7 +278,7 @@ export default function Financeiro() {
       </div>
 
       {/* Gráficos */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16, marginBottom: 20 }}>
         <div style={card}>
           <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
             Receita mensal (12 meses)
