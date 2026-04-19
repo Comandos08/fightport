@@ -78,6 +78,7 @@ export function DashTable({
   emptyTitle,
   emptyDescription,
   pagination,
+  bare = false,
 }: Props) {
   const columns = headers.length;
 
@@ -85,8 +86,8 @@ export function DashTable({
     <div
       style={{
         background: 'var(--color-bg)',
-        border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-md, 8px)',
+        border: bare ? 'none' : '1px solid var(--color-border)',
+        borderRadius: bare ? 0 : 'var(--radius-md, 8px)',
         overflow: 'hidden',
       }}
     >
