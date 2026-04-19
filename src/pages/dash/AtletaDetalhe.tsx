@@ -13,13 +13,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { maskCpf, maskBirthDate, formatCpf, formatBirthDate } from '@/lib/sensitive';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import { DashSection } from '@/components/dash/DashSection';
+import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 
 const REVEAL_MS = 60_000;
 
-const card: React.CSSProperties = {
-  background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-md, 8px)', padding: 20,
-};
 const lbl: React.CSSProperties = {
   fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
   letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
@@ -156,46 +155,49 @@ export default function AtletaDetalhe() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Cabeçalho */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <button onClick={() => navigate('/dash/atletas')} style={{
-          background: 'transparent', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-sm, 6px)', padding: '6px 10px', cursor: 'pointer',
-          display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--color-text)',
-          fontFamily: 'var(--font-sans)', fontSize: 13,
-        }}>
-          <ArrowLeft style={{ width: 14, height: 14 }} /> Atletas
-        </button>
-        <div style={{ flex: 1 }}>
-          <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 22, fontWeight: 600, margin: 0, color: 'var(--color-text)' }}>
-            {p.first_name} {p.last_name}
-          </h1>
-          <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 12, color: 'var(--color-text-muted)', margin: '2px 0 0' }}>
-            {p.fp_id}
-          </p>
-        </div>
-        <Button variant="outline" size="sm" onClick={openEdit}>
-          <Pencil className="w-4 h-4 mr-2" /> Editar
-        </Button>
-      </div>
+      {/* Voltar */}
+      <button
+        onClick={() => navigate('/dash/atletas')}
+        style={{
+          background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12,
+          alignSelf: 'flex-start',
+        }}
+      >
+        <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar para atletas
+      </button>
+
+      {/* Cabeçalho padrão */}
+      <DashPageHeader
+        title={`${p.first_name} ${p.last_name}`}
+        subtitle={
+          <span style={{ fontFamily: 'var(--font-mono, monospace)' }}>{p.fp_id}</span>
+        }
+        actions={
+          <button onClick={openEdit} style={dashOutlineButtonStyle}>
+            <Pencil style={{ width: 14, height: 14 }} /> Editar
+          </button>
+        }
+      />
 
       {/* Dados cadastrais + sensíveis */}
-      <div style={card}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
-            Dados cadastrais
-          </h2>
-          <Button
-            variant={revealed ? 'destructive' : 'outline'}
-            size="sm"
+      <DashSection
+        title="Dados cadastrais"
+        actions={
+          <button
             onClick={() => revealed ? setRevealed(false) : setRevealOpen(true)}
+            style={{
+              ...dashOutlineButtonStyle,
+              ...(revealed ? { color: '#dc2626', borderColor: '#dc2626' } : {}),
+            }}
           >
             {revealed
-              ? (<><EyeOff className="w-4 h-4 mr-2" /> Re-mascarar</>)
-              : (<><Eye className="w-4 h-4 mr-2" /> Revelar dados sensíveis</>)}
-          </Button>
-        </div>
-
+              ? (<><EyeOff style={{ width: 14, height: 14 }} /> Re-mascarar</>)
+              : (<><Eye style={{ width: 14, height: 14 }} /> Revelar dados sensíveis</>)}
+          </button>
+        }
+      >
         <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 20 }}>
           {p.photo_url ? (
             <img src={p.photo_url} alt={`${p.first_name}`} style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 'var(--radius-md, 8px)', border: '1px solid var(--color-border)' }} />
@@ -235,17 +237,19 @@ export default function AtletaDetalhe() {
             </div>
           </div>
         </div>
-      </div>
+      </DashSection>
 
       {/* Histórico de graduações */}
-      <div style={card}>
-        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <Award style={{ width: 16, height: 16 }} /> Histórico de graduações
-          <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
-            (imutáveis — somente leitura)
-          </span>
-        </h2>
-
+      <DashSection
+        title={
+          <>
+            <Award style={{ width: 16, height: 16 }} /> Histórico de graduações
+            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
+              (imutáveis — somente leitura)
+            </span>
+          </>
+        }
+      >
         {achievements.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', fontSize: 13, fontFamily: 'var(--font-sans)' }}>Nenhuma graduação registrada.</p>
         ) : (
@@ -282,7 +286,7 @@ export default function AtletaDetalhe() {
             ))}
           </div>
         )}
-      </div>
+      </DashSection>
 
       {/* Dialog: Revelar */}
       <Dialog open={revealOpen} onOpenChange={setRevealOpen}>
