@@ -205,7 +205,7 @@ export default function Graduacoes() {
               <tr style={{ background: 'var(--color-bg-soft)', borderBottom: '1px solid var(--color-border)' }}>
                 {['Data/hora', 'Atleta', 'Escola', 'Arte marcial', 'Faixa', 'Graduado por', 'Hash'].map(h => (
                   <th key={h} style={{
-                    textAlign: 'left', padding: '10px 12px', fontWeight: 500, fontSize: 11,
+                    textAlign: 'left', padding: '8px 12px', fontWeight: 500, fontSize: 11,
                     textTransform: 'uppercase', letterSpacing: '0.04em',
                     color: 'var(--color-text-muted)', whiteSpace: 'nowrap',
                   }}>{h}</th>
@@ -221,10 +221,10 @@ export default function Graduacoes() {
               )}
               {(rows as any[]).map(r => (
                 <tr key={r.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
                     {format(new Date(r.created_at), 'dd/MM/yyyy HH:mm')}
                   </td>
-                  <td style={{ padding: '10px 12px' }}>
+                  <td style={{ padding: '8px 12px' }}>
                     {r.practitioner_id ? (
                       <Link to={`/dash/atletas/${r.practitioner_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                         <User style={{ width: 12, height: 12 }} />
@@ -233,7 +233,7 @@ export default function Graduacoes() {
                     ) : '—'}
                     <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 11, color: 'var(--color-text-muted)' }}>{r.fp_id}</div>
                   </td>
-                  <td style={{ padding: '10px 12px' }}>
+                  <td style={{ padding: '8px 12px' }}>
                     {r.school_id ? (
                       <Link to={`/dash/organizacoes/${r.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                         <Building2 style={{ width: 12, height: 12 }} />
@@ -241,12 +241,12 @@ export default function Graduacoes() {
                       </Link>
                     ) : '—'}
                   </td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art ?? '—'}</td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art ?? '—'}</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>
                     {r.belt}{r.degree ? ` · ${r.degree}°` : ''}
                   </td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.graduated_by}</td>
-                  <td style={{ padding: '10px 12px' }}>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>{r.graduated_by}</td>
+                  <td style={{ padding: '8px 12px' }}>
                     <button
                       onClick={() => copyHash(r.hash)}
                       title="Clique para copiar o hash completo"

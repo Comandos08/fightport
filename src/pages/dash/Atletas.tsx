@@ -173,7 +173,7 @@ export default function Atletas() {
                   [null, 'Arte'], ['belt', 'Faixa'], ['achievements', 'Graduações'], ['created_at', 'Cadastro'],
                 ] as [SortKey | null, string][]).map(([k, label]) => (
                   <th key={label} onClick={() => k && toggleSort(k)} style={{
-                    textAlign: 'left', padding: '10px 12px', fontWeight: 500, fontSize: 11,
+                    textAlign: 'left', padding: '8px 12px', fontWeight: 500, fontSize: 11,
                     textTransform: 'uppercase', letterSpacing: '0.04em',
                     color: 'var(--color-text-muted)', cursor: k ? 'pointer' : 'default',
                     userSelect: 'none', whiteSpace: 'nowrap',
@@ -200,20 +200,20 @@ export default function Atletas() {
                   onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.first_name} {r.last_name}</td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{r.fp_id}</td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{maskCpf(r.cpf)}</td>
-                  <td style={{ padding: '10px 12px' }} onClick={e => e.stopPropagation()}>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>{r.first_name} {r.last_name}</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{r.fp_id}</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{maskCpf(r.cpf)}</td>
+                  <td style={{ padding: '8px 12px' }} onClick={e => e.stopPropagation()}>
                     {r.school_id ? (
                       <Link to={`/dash/organizacoes/${r.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline' }}>
                         {r.school_name}
                       </Link>
                     ) : '—'}
                   </td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art}</td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.current_belt ?? '—'}</td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.achievements_count}</td>
-                  <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)' }}>{format(new Date(r.created_at), 'dd/MM/yyyy')}</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art}</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>{r.current_belt ?? '—'}</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>{r.achievements_count}</td>
+                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)' }}>{format(new Date(r.created_at), 'dd/MM/yyyy')}</td>
                 </tr>
               ))}
             </tbody>
