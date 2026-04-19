@@ -173,7 +173,7 @@ export default function Atletas() {
                   [null, 'Arte'], ['belt', 'Faixa'], ['achievements', 'Graduações'], ['created_at', 'Cadastro'],
                 ] as [SortKey | null, string][]).map(([k, label]) => (
                   <th key={label} onClick={() => k && toggleSort(k)} style={{
-                    textAlign: 'left', padding: '10px 12px', fontWeight: 500, fontSize: 11,
+                    textAlign: 'left', padding: '8px 12px', fontWeight: 500, fontSize: 11,
                     textTransform: 'uppercase', letterSpacing: '0.04em',
                     color: 'var(--color-text-muted)', cursor: k ? 'pointer' : 'default',
                     userSelect: 'none', whiteSpace: 'nowrap',
