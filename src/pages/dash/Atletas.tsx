@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { maskCpf } from '@/lib/sensitive';
 
@@ -151,11 +151,11 @@ export default function Atletas() {
 
         <div style={{ display: 'flex', alignItems: 'flex-end' }}>
           <button onClick={clearFilters} style={{
-            ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'transparent',
-          }}>
-            <X style={{ width: 12, height: 12 }} /> Limpar
-          </button>
+            padding: '9px 14px', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+            color: 'var(--color-text-muted)', cursor: 'pointer', width: '100%',
+          }}>Limpar</button>
         </div>
       </div>
 
