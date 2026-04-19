@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Ban, RefreshCw, Gift, X } from 'lucide-react';
+import { Ban, RefreshCw, Gift, X, Users, Award, DollarSign, FileSearch, MessageSquare } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 import { DashBackLink } from '@/components/dash/DashBackLink';
+import { DashTable, dashTd } from '@/components/dash/DashTable';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
@@ -18,8 +19,6 @@ const ipt: React.CSSProperties = {
   background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
 };
-const td: React.CSSProperties = { padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' };
-const th: React.CSSProperties = { textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' };
 
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
@@ -221,74 +220,81 @@ export default function OrganizacaoDetalhe() {
       </div>
 
       {/* Atletas */}
-      <DashSection title={`Atletas (${practitioners.length})`}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>FP-ID</th><th style={th}>Nome</th><th style={th}>Faixa</th><th style={th}>Modalidade</th><th style={th}>Cadastro</th></tr></thead>
-            <tbody>
-              {practitioners.length === 0 && <tr><td colSpan={5} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhum atleta cadastrado</td></tr>}
-              {practitioners.slice(0, 20).map((p: any) => (
-                <tr key={p.id}>
-                  <td style={td}>{p.fp_id}</td>
-                  <td style={td}>{p.first_name} {p.last_name}</td>
-                  <td style={td}>{p.current_belt ?? '—'}</td>
-                  <td style={td}>{p.martial_art}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{format(new Date(p.created_at), 'dd/MM/yyyy')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {practitioners.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {practitioners.length}</p>}
-        </div>
+      <DashSection title={`Atletas (${practitioners.length})`} flush>
+        <DashTable
+          bare
+          headers={['FP-ID', 'Nome', 'Faixa', 'Modalidade', 'Cadastro']}
+          isEmpty={practitioners.length === 0}
+          emptyIcon={Users}
+          emptyTitle="Nenhum atleta cadastrado"
+        >
+          {practitioners.slice(0, 20).map((p: any) => (
+            <tr key={p.id}>
+              <td style={dashTd}>{p.fp_id}</td>
+              <td style={dashTd}>{p.first_name} {p.last_name}</td>
+              <td style={dashTd}>{p.current_belt ?? '—'}</td>
+              <td style={dashTd}>{p.martial_art}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{format(new Date(p.created_at), 'dd/MM/yyyy')}</td>
+            </tr>
+          ))}
+        </DashTable>
+        {practitioners.length > 20 && <p style={{ ...muted, padding: '8px 20px 16px' }}>Mostrando 20 de {practitioners.length}</p>}
       </DashSection>
 
       {/* Graduações */}
-      <DashSection title={`Graduações emitidas (${achievements.length})`}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Atleta</th><th style={th}>Faixa</th><th style={th}>Grau</th><th style={th}>Graduado por</th></tr></thead>
-            <tbody>
-              {achievements.length === 0 && <tr><td colSpan={5} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma graduação emitida</td></tr>}
-              {achievements.slice(0, 20).map((a: any) => (
-                <tr key={a.id}>
-                  <td style={td}>{format(new Date(a.graduation_date), 'dd/MM/yyyy')}</td>
-                  <td style={td}>{a.practitioner_name}</td>
-                  <td style={td}>{a.belt}</td>
-                  <td style={td}>{a.degree ?? 0}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{a.graduated_by}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {achievements.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {achievements.length}</p>}
-        </div>
+      <DashSection title={`Graduações emitidas (${achievements.length})`} flush>
+        <DashTable
+          bare
+          headers={['Data', 'Atleta', 'Faixa', 'Grau', 'Graduado por']}
+          isEmpty={achievements.length === 0}
+          emptyIcon={Award}
+          emptyTitle="Nenhuma graduação emitida"
+        >
+          {achievements.slice(0, 20).map((a: any) => (
+            <tr key={a.id}>
+              <td style={dashTd}>{format(new Date(a.graduation_date), 'dd/MM/yyyy')}</td>
+              <td style={dashTd}>{a.practitioner_name}</td>
+              <td style={dashTd}>{a.belt}</td>
+              <td style={dashTd}>{a.degree ?? 0}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{a.graduated_by}</td>
+            </tr>
+          ))}
+        </DashTable>
+        {achievements.length > 20 && <p style={{ ...muted, padding: '8px 20px 16px' }}>Mostrando 20 de {achievements.length}</p>}
       </DashSection>
 
       {/* Histórico financeiro */}
-      <DashSection title="Histórico financeiro">
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Tipo</th><th style={th}>Pacote</th><th style={th}>Quantidade</th><th style={th}>Valor</th><th style={th}>Status</th></tr></thead>
-            <tbody>
-              {txs.length === 0 && <tr><td colSpan={6} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma transação</td></tr>}
-              {txs.map((t: any) => (
-                <tr key={t.id}>
-                  <td style={td}>{format(new Date(t.created_at), 'dd/MM/yyyy HH:mm')}</td>
-                  <td style={td}>{t.type === 'purchase' ? 'Compra' : t.type === 'usage' ? 'Uso' : t.type === 'bonus' ? 'Cortesia' : t.type}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{t.package_name ?? '—'}</td>
-                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{t.amount > 0 ? '+' : ''}{t.amount}</td>
-                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{t.price_brl ? fmtBRL(t.price_brl) : '—'}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{t.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <DashSection title="Histórico financeiro" flush>
+        <DashTable
+          bare
+          headers={['Data', 'Tipo', 'Pacote', 'Quantidade', 'Valor', 'Status']}
+          isEmpty={txs.length === 0}
+          emptyIcon={DollarSign}
+          emptyTitle="Nenhuma transação"
+        >
+          {txs.map((t: any) => (
+            <tr key={t.id}>
+              <td style={dashTd}>{format(new Date(t.created_at), 'dd/MM/yyyy HH:mm')}</td>
+              <td style={dashTd}>{t.type === 'purchase' ? 'Compra' : t.type === 'usage' ? 'Uso' : t.type === 'bonus' ? 'Cortesia' : t.type}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{t.package_name ?? '—'}</td>
+              <td style={{ ...dashTd, fontVariantNumeric: 'tabular-nums' }}>{t.amount > 0 ? '+' : ''}{t.amount}</td>
+              <td style={{ ...dashTd, fontVariantNumeric: 'tabular-nums' }}>{t.price_brl ? fmtBRL(t.price_brl) : '—'}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{t.status}</td>
+            </tr>
+          ))}
+        </DashTable>
       </DashSection>
 
-      {/* Tickets */}
+      {/* Tickets — mantém formato de lista (cards) que é diferente de tabela */}
       <DashSection title={`Tickets de suporte abertos (${tickets.length})`}>
-        {tickets.length === 0 ? <p style={muted}>Nenhum ticket em aberto.</p> : (
+        {tickets.length === 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '24px 0', color: 'var(--color-text-muted)' }}>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <MessageSquare style={{ width: 16, height: 16 }} />
+            </div>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13 }}>Nenhum ticket em aberto</span>
+          </div>
+        ) : (
           <ul className="flex flex-col" style={{ gap: 10, listStyle: 'none', padding: 0, margin: 0 }}>
             {tickets.map((t: any) => (
               <li key={t.id} style={{ padding: 12, border: '1px solid var(--color-border)', borderRadius: 6 }}>
@@ -303,25 +309,25 @@ export default function OrganizacaoDetalhe() {
       </DashSection>
 
       {/* Audit log */}
-      <DashSection title="Histórico de ações administrativas">
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Admin</th><th style={th}>Ação</th><th style={th}>Detalhes</th></tr></thead>
-            <tbody>
-              {audit.length === 0 && <tr><td colSpan={4} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma ação registrada</td></tr>}
-              {audit.map((a: any) => (
-                <tr key={a.id}>
-                  <td style={td}>{format(new Date(a.created_at), 'dd/MM/yyyy HH:mm')}</td>
-                  <td style={td}>{a.admin_name}</td>
-                  <td style={td}>{a.action}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)', whiteSpace: 'normal' }}>
-                    {a.metadata ? Object.entries(a.metadata).map(([k, v]) => `${k}: ${v}`).join(' · ') : '—'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <DashSection title="Histórico de ações administrativas" flush>
+        <DashTable
+          bare
+          headers={['Data', 'Admin', 'Ação', 'Detalhes']}
+          isEmpty={audit.length === 0}
+          emptyIcon={FileSearch}
+          emptyTitle="Nenhuma ação registrada"
+        >
+          {audit.map((a: any) => (
+            <tr key={a.id}>
+              <td style={dashTd}>{format(new Date(a.created_at), 'dd/MM/yyyy HH:mm')}</td>
+              <td style={dashTd}>{a.admin_name}</td>
+              <td style={dashTd}>{a.action}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)', whiteSpace: 'normal' }}>
+                {a.metadata ? Object.entries(a.metadata).map(([k, v]) => `${k}: ${v}`).join(' · ') : '—'}
+              </td>
+            </tr>
+          ))}
+        </DashTable>
       </DashSection>
 
       {/* MODAIS */}
