@@ -230,16 +230,7 @@ export default function AtletaDetalhe() {
       </DashSection>
 
       {/* Histórico de graduações */}
-      <DashSection
-        title={
-          <>
-            <Award style={{ width: 16, height: 16 }} /> Histórico de graduações
-            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
-              (imutáveis — somente leitura)
-            </span>
-          </>
-        }
-      >
+      <DashSection title="Histórico de graduações">
         {achievements.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', fontSize: 13, fontFamily: 'var(--font-sans)' }}>Nenhuma graduação registrada.</p>
         ) : (
