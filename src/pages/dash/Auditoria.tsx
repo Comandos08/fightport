@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, Download, Eye, X, FileSearch } from 'lucide-react';
-import { DashPagination } from '@/components/dash/DashPagination';
-import { DashTableSkeleton } from '@/components/dash/DashTableSkeleton';
-import { DashEmptyState } from '@/components/dash/DashEmptyState';
+import { DashTable } from '@/components/dash/DashTable';
 
 const ipt: React.CSSProperties = {
   fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300,
@@ -211,83 +209,58 @@ export default function Auditoria() {
       </div>
 
       {/* Tabela */}
-      <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th style={th}>Data/Hora</th>
-                <th style={th}>Admin</th>
-                <th style={th}>Ação</th>
-                <th style={th}>Alvo</th>
-                <th style={th}>IP</th>
-                <th style={{ ...th, textAlign: 'center' }}>Detalhes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading ? (
-                <DashTableSkeleton columns={6} />
-              ) : rows.length === 0 ? (
-                <DashEmptyState
-                  columns={6}
-                  icon={FileSearch}
-                  title="Nenhum registro encontrado"
-                  description="Ajuste os filtros ou amplie o intervalo de datas para ver mais resultados."
-                />
-              ) : rows.map(r => {
-                const link = targetLink(r);
-                return (
-                  <tr key={r.id}>
-                    <td style={{ ...td, whiteSpace: 'nowrap' }}>{fmtDateTime(r.created_at)}</td>
-                    <td style={td}>
-                      <span title={r.user_agent ?? ''} style={{ borderBottom: r.user_agent ? '1px dotted var(--color-text-muted)' : 'none', cursor: r.user_agent ? 'help' : 'default' }}>
-                        {r.admin_name}
-                      </span>
-                    </td>
-                    <td style={td}>{friendlyAction(r.action)}</td>
-                    <td style={td}>
-                      {r.target_type && r.target_id ? (
-                        link ? (
-                          <Link to={link} style={{ color: 'var(--color-text)', textDecoration: 'underline' }}>
-                            {r.target_name ?? r.target_id.slice(0, 8)}
-                          </Link>
-                        ) : (
-                          <span style={{ color: 'var(--color-text-muted)' }}>
-                            {r.target_type}: {r.target_name ?? r.target_id.slice(0, 8)}
-                          </span>
-                        )
-                      ) : <span style={{ color: 'var(--color-text-muted)' }}>—</span>}
-                    </td>
-                    <td style={{ ...td, fontFamily: 'monospace', fontSize: 12 }}>{r.ip_address ?? '—'}</td>
-                    <td style={{ ...td, textAlign: 'center' }}>
-                      <button
-                        onClick={() => setDetail(r)}
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', gap: 4,
-                          padding: '4px 10px', border: '1px solid var(--color-border)',
-                          borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-                          fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500,
-                          color: 'var(--color-text)', cursor: 'pointer',
-                        }}
-                      >
-                        <Eye style={{ width: 12, height: 12 }} /> Ver
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <DashPagination
-          page={page}
-          totalPages={totalPages}
-          total={Number(total)}
-          limit={limit}
-          onPageChange={setPage}
-        />
-      </div>
+      <DashTable
+        headers={['Data/Hora', 'Admin', 'Ação', 'Alvo', 'IP', <span style={{ display: 'block', textAlign: 'center' }}>Detalhes</span>]}
+        isLoading={isLoading}
+        isEmpty={!isLoading && rows.length === 0}
+        emptyIcon={FileSearch}
+        emptyTitle="Nenhum registro encontrado"
+        emptyDescription="Ajuste os filtros ou amplie o intervalo de datas para ver mais resultados."
+        pagination={{ page, totalPages, total: Number(total), limit, onPageChange: setPage }}
+      >
+        {rows.map(r => {
+          const link = targetLink(r);
+          return (
+            <tr key={r.id}>
+              <td style={{ ...td, whiteSpace: 'nowrap' }}>{fmtDateTime(r.created_at)}</td>
+              <td style={td}>
+                <span title={r.user_agent ?? ''} style={{ borderBottom: r.user_agent ? '1px dotted var(--color-text-muted)' : 'none', cursor: r.user_agent ? 'help' : 'default' }}>
+                  {r.admin_name}
+                </span>
+              </td>
+              <td style={td}>{friendlyAction(r.action)}</td>
+              <td style={td}>
+                {r.target_type && r.target_id ? (
+                  link ? (
+                    <Link to={link} style={{ color: 'var(--color-text)', textDecoration: 'underline' }}>
+                      {r.target_name ?? r.target_id.slice(0, 8)}
+                    </Link>
+                  ) : (
+                    <span style={{ color: 'var(--color-text-muted)' }}>
+                      {r.target_type}: {r.target_name ?? r.target_id.slice(0, 8)}
+                    </span>
+                  )
+                ) : <span style={{ color: 'var(--color-text-muted)' }}>—</span>}
+              </td>
+              <td style={{ ...td, fontFamily: 'monospace', fontSize: 12 }}>{r.ip_address ?? '—'}</td>
+              <td style={{ ...td, textAlign: 'center' }}>
+                <button
+                  onClick={() => setDetail(r)}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    padding: '4px 10px', border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+                    fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500,
+                    color: 'var(--color-text)', cursor: 'pointer',
+                  }}
+                >
+                  <Eye style={{ width: 12, height: 12 }} /> Ver
+                </button>
+              </td>
+            </tr>
+          );
+        })}
+      </DashTable>
 
       {/* Modal de detalhes */}
       {detail && (

@@ -3,9 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Search, ChevronUp, ChevronDown, X, Users } from 'lucide-react';
-import { DashPagination } from '@/components/dash/DashPagination';
-import { DashTableSkeleton } from '@/components/dash/DashTableSkeleton';
-import { DashEmptyState } from '@/components/dash/DashEmptyState';
+import { DashTable } from '@/components/dash/DashTable';
 import { supabase } from '@/integrations/supabase/client';
 import { maskCpf } from '@/lib/sensitive';
 
@@ -163,77 +161,51 @@ export default function Atletas() {
       </div>
 
       {/* Tabela */}
-      <div style={{
-        background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden',
-      }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)', fontSize: 13 }}>
-            <thead>
-              <tr style={{ background: 'var(--color-bg-soft)', borderBottom: '1px solid var(--color-border)' }}>
-                {([
-                  ['name', 'Nome'], ['fp_id', 'FP-ID'], [null, 'CPF'], [null, 'Escola'],
-                  [null, 'Arte'], ['belt', 'Faixa'], ['achievements', 'Graduações'], ['created_at', 'Cadastro'],
-                ] as [SortKey | null, string][]).map(([k, label]) => (
-                  <th key={label} onClick={() => k && toggleSort(k)} style={{
-                    textAlign: 'left', padding: '8px 12px', fontWeight: 500, fontSize: 11,
-                    textTransform: 'uppercase', letterSpacing: '0.04em',
-                    color: 'var(--color-text-muted)', cursor: k ? 'pointer' : 'default',
-                    userSelect: 'none', whiteSpace: 'nowrap',
-                  }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                      {label} {k && sortIcon(k)}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading && <DashTableSkeleton columns={8} />}
-              {!isLoading && rows.length === 0 && (
-                <DashEmptyState
-                  columns={8}
-                  icon={Users}
-                  title="Nenhum atleta encontrado"
-                  description="Ajuste os filtros para ver mais resultados."
-                />
-              )}
-              {(rows as any[]).map(r => (
-                <tr
-                  key={r.id}
-                  onClick={() => navigate(`/dash/atletas/${r.id}`)}
-                  style={{ borderBottom: '1px solid var(--color-border)', cursor: 'pointer' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                >
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>{r.first_name} {r.last_name}</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{r.fp_id}</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{maskCpf(r.cpf)}</td>
-                  <td style={{ padding: '8px 12px' }} onClick={e => e.stopPropagation()}>
-                    {r.school_id ? (
-                      <Link to={`/dash/organizacoes/${r.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline' }}>
-                        {r.school_name}
-                      </Link>
-                    ) : '—'}
-                  </td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art}</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>{r.current_belt ?? '—'}</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text)' }}>{r.achievements_count}</td>
-                  <td style={{ padding: '8px 12px', color: 'var(--color-text-muted)' }}>{format(new Date(r.created_at), 'dd/MM/yyyy')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <DashPagination
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          limit={limit}
-          onPageChange={setPage}
-        />
-      </div>
+      <DashTable
+        headers={(([
+          ['name', 'Nome'], ['fp_id', 'FP-ID'], [null, 'CPF'], [null, 'Escola'],
+          [null, 'Arte'], ['belt', 'Faixa'], ['achievements', 'Graduações'], ['created_at', 'Cadastro'],
+        ] as [SortKey | null, string][]).map(([k, label]) => (
+          <span
+            key={label}
+            onClick={() => k && toggleSort(k)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: k ? 'pointer' : 'default', userSelect: 'none' }}
+          >
+            {label} {k && sortIcon(k)}
+          </span>
+        )))}
+        isLoading={isLoading}
+        isEmpty={!isLoading && rows.length === 0}
+        emptyIcon={Users}
+        emptyTitle="Nenhum atleta encontrado"
+        emptyDescription="Ajuste os filtros para ver mais resultados."
+        pagination={{ page, totalPages, total, limit, onPageChange: setPage }}
+      >
+        {(rows as any[]).map(r => (
+          <tr
+            key={r.id}
+            onClick={() => navigate(`/dash/atletas/${r.id}`)}
+            style={{ borderBottom: '1px solid var(--color-border)', cursor: 'pointer' }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+          >
+            <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.first_name} {r.last_name}</td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{r.fp_id}</td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{maskCpf(r.cpf)}</td>
+            <td style={{ padding: '10px 12px' }} onClick={e => e.stopPropagation()}>
+              {r.school_id ? (
+                <Link to={`/dash/organizacoes/${r.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline' }}>
+                  {r.school_name}
+                </Link>
+              ) : '—'}
+            </td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art}</td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.current_belt ?? '—'}</td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.achievements_count}</td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)' }}>{format(new Date(r.created_at), 'dd/MM/yyyy')}</td>
+          </tr>
+        ))}
+      </DashTable>
     </div>
   );
 }
