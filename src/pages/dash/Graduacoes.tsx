@@ -2,18 +2,20 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, Download, ChevronLeft, ChevronRight, X, Copy, Building2, User } from 'lucide-react';
+import { Search, Download, ChevronLeft, ChevronRight, Copy, Building2, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
 const ipt: React.CSSProperties = {
-  height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
-  background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
+  fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300,
+  padding: '8px 10px', border: '1px solid var(--color-border)',
+  borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+  color: 'var(--color-text)', width: '100%',
 };
 const lbl: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
-  letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
+  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500,
+  textTransform: 'uppercase', letterSpacing: '0.06em',
+  color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
 };
 
 const shortHash = (h?: string | null) => {
@@ -120,25 +122,28 @@ export default function Graduacoes() {
           </p>
         </div>
         <button onClick={exportCsv} style={{
-          ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6,
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '9px 14px', border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+          fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+          color: 'var(--color-text)', cursor: 'pointer',
         }}>
           <Download style={{ width: 14, height: 14 }} /> Exportar CSV
         </button>
       </div>
 
-      {/* Filtros */}
+      {/* Filtros — padrão Auditoria */}
       <div style={{
-        background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-md, 8px)', padding: 16, marginBottom: 20,
-        display: 'grid', gap: 12,
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12,
+        background: 'var(--color-bg-soft)', padding: 16, borderRadius: 'var(--radius)',
+        border: '1px solid var(--color-border)', marginBottom: 20,
       }}>
-        <div style={{ gridColumn: '1 / -1' }}>
+        <div style={{ gridColumn: 'span 2' }}>
           <label style={lbl}>Buscar</label>
           <div style={{ position: 'relative' }}>
             <Search style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: 'var(--color-text-muted)' }} />
             <input
-              style={{ ...ipt, width: '100%', paddingLeft: 32 }}
+              style={{ ...ipt, paddingLeft: 32 }}
               placeholder="Nome do atleta, FP-ID ou hash…"
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
@@ -148,7 +153,7 @@ export default function Graduacoes() {
 
         <div>
           <label style={lbl}>Escola</label>
-          <select style={{ ...ipt, width: '100%' }} value={schoolId} onChange={e => { setSchoolId(e.target.value); setPage(0); }}>
+          <select style={ipt} value={schoolId} onChange={e => { setSchoolId(e.target.value); setPage(0); }}>
             <option value="">Todas</option>
             {(schools as any[]).map(s => (
               <option key={s.id} value={s.id}>{s.name}</option>
@@ -158,7 +163,7 @@ export default function Graduacoes() {
 
         <div>
           <label style={lbl}>Arte marcial</label>
-          <select style={{ ...ipt, width: '100%' }} value={martialArt} onChange={e => { setMartialArt(e.target.value); setPage(0); }}>
+          <select style={ipt} value={martialArt} onChange={e => { setMartialArt(e.target.value); setPage(0); }}>
             <option value="">Todas</option>
             <option value="Jiu-Jitsu">Jiu-Jitsu</option>
             <option value="Judô">Judô</option>
@@ -171,26 +176,26 @@ export default function Graduacoes() {
 
         <div>
           <label style={lbl}>Faixa</label>
-          <input style={{ ...ipt, width: '100%' }} placeholder="Ex: Azul" value={belt} onChange={e => { setBelt(e.target.value); setPage(0); }} />
+          <input style={ipt} placeholder="Ex: Azul" value={belt} onChange={e => { setBelt(e.target.value); setPage(0); }} />
         </div>
 
         <div>
           <label style={lbl}>De</label>
-          <input type="date" style={{ ...ipt, width: '100%' }} value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(0); }} />
+          <input type="date" style={ipt} value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(0); }} />
         </div>
 
         <div>
           <label style={lbl}>Até</label>
-          <input type="date" style={{ ...ipt, width: '100%' }} value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} />
+          <input type="date" style={ipt} value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-end' }}>
           <button onClick={clearFilters} style={{
-            ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'transparent',
-          }}>
-            <X style={{ width: 12, height: 12 }} /> Limpar
-          </button>
+            padding: '9px 14px', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+            color: 'var(--color-text-muted)', cursor: 'pointer', width: '100%',
+          }}>Limpar</button>
         </div>
       </div>
 
@@ -202,12 +207,13 @@ export default function Graduacoes() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-sans)', fontSize: 13 }}>
             <thead>
-              <tr style={{ background: 'var(--color-bg-soft)', borderBottom: '1px solid var(--color-border)' }}>
+              <tr>
                 {['Data/hora', 'Atleta', 'Escola', 'Arte marcial', 'Faixa', 'Graduado por', 'Hash'].map(h => (
                   <th key={h} style={{
-                    textAlign: 'left', padding: '8px 12px', fontWeight: 500, fontSize: 11,
-                    textTransform: 'uppercase', letterSpacing: '0.04em',
+                    textAlign: 'left', padding: '10px', fontWeight: 600, fontSize: 11,
+                    textTransform: 'uppercase', letterSpacing: '0.06em',
                     color: 'var(--color-text-muted)', whiteSpace: 'nowrap',
+                    background: 'var(--color-bg-soft)', borderBottom: '1px solid var(--color-border)',
                   }}>{h}</th>
                 ))}
               </tr>
