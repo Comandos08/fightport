@@ -3,18 +3,15 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, Download, ChevronLeft, ChevronRight, Eye, X } from 'lucide-react';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import {
+  DashFiltersBar,
+  dashInputStyle as ipt,
+  dashLabelStyle as lbl,
+  dashOutlineButtonStyle,
+  dashClearButtonStyle,
+} from '@/components/dash/DashFiltersBar';
 
-const ipt: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300,
-  padding: '8px 10px', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-  color: 'var(--color-text)', width: '100%',
-};
-const lbl: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500,
-  textTransform: 'uppercase', letterSpacing: '0.06em',
-  color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
-};
 const td: React.CSSProperties = { padding: '12px 10px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)', verticalAlign: 'top' };
 const th: React.CSSProperties = { padding: '10px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)', textAlign: 'left', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)' };
 
@@ -131,36 +128,18 @@ export default function Auditoria() {
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: 'var(--color-text)' }}>
-            Auditoria
-          </h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
-            Registro imutável de todas as ações administrativas. Somente leitura.
-          </p>
-        </div>
-        <button
-          onClick={exportCsv}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '9px 14px', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-text)', cursor: 'pointer',
-          }}
-        >
-          <Download style={{ width: 14, height: 14 }} />
-          Exportar CSV
-        </button>
-      </div>
+      <DashPageHeader
+        title="Auditoria"
+        subtitle="Registro imutável de todas as ações administrativas. Somente leitura."
+        actions={
+          <button onClick={exportCsv} style={dashOutlineButtonStyle}>
+            <Download style={{ width: 14, height: 14 }} />
+            Exportar CSV
+          </button>
+        }
+      />
 
-      {/* Filtros */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12,
-        background: 'var(--color-bg-soft)', padding: 16, borderRadius: 'var(--radius)',
-        border: '1px solid var(--color-border)', marginBottom: 20,
-      }}>
+      <DashFiltersBar>
         <div style={{ gridColumn: 'span 2' }}>
           <label style={lbl}>Buscar</label>
           <div style={{ position: 'relative' }}>
@@ -198,14 +177,9 @@ export default function Auditoria() {
           <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} style={ipt} />
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-          <button onClick={clearFilters} style={{
-            padding: '9px 14px', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-text-muted)', cursor: 'pointer', width: '100%',
-          }}>Limpar</button>
+          <button onClick={clearFilters} style={dashClearButtonStyle}>Limpar</button>
         </div>
-      </div>
+      </DashFiltersBar>
 
       {/* Tabela */}
       <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
