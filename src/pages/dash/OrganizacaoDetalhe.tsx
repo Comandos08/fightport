@@ -19,8 +19,6 @@ const ipt: React.CSSProperties = {
   background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
 };
-const td: React.CSSProperties = { padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' };
-const th: React.CSSProperties = { textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' };
 
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
