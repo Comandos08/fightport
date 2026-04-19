@@ -5,17 +5,12 @@ import { format } from 'date-fns';
 import { ArrowLeft, Ban, RefreshCw, Gift, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import { DashSection } from '@/components/dash/DashSection';
+import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
-const card: React.CSSProperties = {
-  background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-md, 8px)', padding: 20,
-};
-const sectionTitle: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500,
-  color: 'var(--color-text)', marginBottom: 12,
-};
 const muted: React.CSSProperties = { fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' };
 const ipt: React.CSSProperties = {
   width: '100%', padding: '8px 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
@@ -142,73 +137,72 @@ export default function OrganizacaoDetalhe() {
   const s = detail.school;
   const hc = detail.head_coach;
 
+  const headerActions = (
+    <>
+      <button onClick={() => setShowBonus(true)} style={dashOutlineButtonStyle}>
+        <Gift style={{ width: 14, height: 14 }} /> Conceder cortesia
+      </button>
+      {s.is_suspended ? (
+        <button onClick={() => setShowReactivate(true)} style={{ ...dashOutlineButtonStyle, color: '#16a34a', borderColor: '#16a34a' }}>
+          <RefreshCw style={{ width: 14, height: 14 }} /> Reativar
+        </button>
+      ) : (
+        <button onClick={() => setShowSuspend(true)} style={{ ...dashOutlineButtonStyle, color: '#dc2626', borderColor: '#dc2626' }}>
+          <Ban style={{ width: 14, height: 14 }} /> Suspender
+        </button>
+      )}
+    </>
+  );
+
+  const subtitle = (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+      <span style={{
+        display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500,
+        borderRadius: 4,
+        color: s.is_suspended ? '#dc2626' : '#16a34a',
+        background: s.is_suspended ? 'rgba(220,38,38,0.08)' : 'rgba(22,163,74,0.08)',
+      }}>{s.is_suspended ? 'Suspensa' : 'Ativa'}</span>
+      {s.is_admin && <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, background: 'var(--color-text)', color: 'var(--color-bg)' }}>Admin</span>}
+      <span>{s.martial_art}</span>
+      {(s.city || s.state) && <span>· {[s.city, s.state].filter(Boolean).join(' / ')}</span>}
+      {s.is_suspended && s.suspended_reason && <span>· Motivo: {s.suspended_reason}</span>}
+    </span>
+  );
+
   return (
-    <div style={{ padding: 32, maxWidth: 1400, margin: '0 auto' }}>
-      <Link to="/dash/organizacoes" className="inline-flex items-center no-underline" style={{ gap: 6, color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12, marginBottom: 16 }}>
-        <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Voltar */}
+      <Link to="/dash/organizacoes" className="inline-flex items-center no-underline" style={{ gap: 6, color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12, alignSelf: 'flex-start' }}>
+        <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar para organizações
       </Link>
 
-      {/* 1. Cabeçalho */}
-      <div style={{ ...card, marginBottom: 16 }}>
-        <div className="flex items-start justify-between flex-wrap" style={{ gap: 16 }}>
-          <div className="flex items-center" style={{ gap: 16 }}>
-            {s.logo_url ? (
-              <img src={s.logo_url} alt={s.name} style={{ width: 56, height: 56, borderRadius: 8, objectFit: 'cover', border: '1px solid var(--color-border)' }} />
-            ) : (
-              <div style={{ width: 56, height: 56, borderRadius: 8, background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)' }} />
-            )}
-            <div>
-              <h1 style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{s.name}</h1>
-              <div className="flex items-center" style={{ gap: 8, marginTop: 4 }}>
-                <span style={{
-                  display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500,
-                  borderRadius: 4,
-                  color: s.is_suspended ? '#dc2626' : '#16a34a',
-                  background: s.is_suspended ? 'rgba(220,38,38,0.08)' : 'rgba(22,163,74,0.08)',
-                }}>{s.is_suspended ? 'Suspensa' : 'Ativa'}</span>
-                {s.is_admin && <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, background: 'var(--color-text)', color: 'var(--color-bg)' }}>Admin</span>}
-              </div>
-              {s.is_suspended && s.suspended_reason && (
-                <p style={{ ...muted, marginTop: 6 }}>Motivo: {s.suspended_reason}</p>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center" style={{ gap: 8 }}>
-            {s.is_suspended ? (
-              <button onClick={() => setShowReactivate(true)} className="flex items-center" style={{ gap: 6, height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-bg)', background: '#16a34a', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>
-                <RefreshCw style={{ width: 14, height: 14 }} /> Reativar
-              </button>
-            ) : (
-              <button onClick={() => setShowSuspend(true)} className="flex items-center" style={{ gap: 6, height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: '#fff', background: '#dc2626', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>
-                <Ban style={{ width: 14, height: 14 }} /> Suspender
-              </button>
-            )}
-          </div>
+      {/* Cabeçalho padrão com logo opcional */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+        {s.logo_url ? (
+          <img src={s.logo_url} alt={s.name} style={{ width: 56, height: 56, borderRadius: 8, objectFit: 'cover', border: '1px solid var(--color-border)', flexShrink: 0 }} />
+        ) : (
+          <div style={{ width: 56, height: 56, borderRadius: 8, background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)', flexShrink: 0 }} />
+        )}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <DashPageHeader title={s.name} subtitle={subtitle} actions={headerActions} />
         </div>
       </div>
 
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, marginBottom: 16 }}>
-        {/* 2. Dados cadastrais */}
-        <div style={card}>
-          <h2 style={sectionTitle}>Dados cadastrais</h2>
-          <dl className="grid" style={{ gridTemplateColumns: '1fr 2fr', gap: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 13 }}>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Nome</dt><dd style={{ color: 'var(--color-text)' }}>{s.name}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Arte marcial</dt><dd style={{ color: 'var(--color-text)' }}>{s.martial_art}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Cidade/UF</dt><dd style={{ color: 'var(--color-text)' }}>{[s.city, s.state].filter(Boolean).join(' / ') || '—'}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Email</dt><dd style={{ color: 'var(--color-text)' }}>{s.email}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Cadastro</dt><dd style={{ color: 'var(--color-text)' }}>{format(new Date(s.created_at), 'dd/MM/yyyy')}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Head coach</dt><dd style={{ color: 'var(--color-text)' }}>{hc ? `${hc.name} · ${hc.graduation}` : '—'}</dd>
+      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
+        {/* Dados cadastrais */}
+        <DashSection title="Dados cadastrais">
+          <dl className="grid" style={{ gridTemplateColumns: '1fr 2fr', gap: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, margin: 0 }}>
+            <dt style={{ color: 'var(--color-text-muted)' }}>Nome</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.name}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>Arte marcial</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.martial_art}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>Cidade/UF</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{[s.city, s.state].filter(Boolean).join(' / ') || '—'}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>Email</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.email}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>Cadastro</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{format(new Date(s.created_at), 'dd/MM/yyyy')}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>Head coach</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{hc ? `${hc.name} · ${hc.graduation}` : '—'}</dd>
           </dl>
-        </div>
+        </DashSection>
 
-        {/* 3. Créditos */}
-        <div style={card}>
-          <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
-            <h2 style={{ ...sectionTitle, marginBottom: 0 }}>Créditos</h2>
-            <button onClick={() => setShowBonus(true)} className="flex items-center" style={{ gap: 6, height: 28, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>
-              <Gift style={{ width: 12, height: 12 }} /> Conceder cortesia
-            </button>
-          </div>
+        {/* Créditos */}
+        <DashSection title="Créditos">
           <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             <div>
               <div style={muted}>Saldo</div>
@@ -224,12 +218,11 @@ export default function OrganizacaoDetalhe() {
             </div>
           </div>
           <div style={{ ...muted, marginTop: 12 }}>Total gasto: {fmtBRL(Number(detail.total_spent_brl))}</div>
-        </div>
+        </DashSection>
       </div>
 
-      {/* 4. Atletas */}
-      <div style={{ ...card, marginBottom: 16 }}>
-        <h2 style={sectionTitle}>Atletas ({practitioners.length})</h2>
+      {/* Atletas */}
+      <DashSection title={`Atletas (${practitioners.length})`}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr><th style={th}>FP-ID</th><th style={th}>Nome</th><th style={th}>Faixa</th><th style={th}>Modalidade</th><th style={th}>Cadastro</th></tr></thead>
@@ -248,11 +241,10 @@ export default function OrganizacaoDetalhe() {
           </table>
           {practitioners.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {practitioners.length}</p>}
         </div>
-      </div>
+      </DashSection>
 
-      {/* 5. Graduações */}
-      <div style={{ ...card, marginBottom: 16 }}>
-        <h2 style={sectionTitle}>Graduações emitidas ({achievements.length})</h2>
+      {/* Graduações */}
+      <DashSection title={`Graduações emitidas (${achievements.length})`}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr><th style={th}>Data</th><th style={th}>Atleta</th><th style={th}>Faixa</th><th style={th}>Grau</th><th style={th}>Graduado por</th></tr></thead>
@@ -271,11 +263,10 @@ export default function OrganizacaoDetalhe() {
           </table>
           {achievements.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {achievements.length}</p>}
         </div>
-      </div>
+      </DashSection>
 
-      {/* 6. Histórico financeiro */}
-      <div style={{ ...card, marginBottom: 16 }}>
-        <h2 style={sectionTitle}>Histórico financeiro</h2>
+      {/* Histórico financeiro */}
+      <DashSection title="Histórico financeiro">
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr><th style={th}>Data</th><th style={th}>Tipo</th><th style={th}>Pacote</th><th style={th}>Quantidade</th><th style={th}>Valor</th><th style={th}>Status</th></tr></thead>
@@ -294,29 +285,26 @@ export default function OrganizacaoDetalhe() {
             </tbody>
           </table>
         </div>
-      </div>
+      </DashSection>
 
-      {/* 7. Tickets */}
-      <div style={{ ...card, marginBottom: 16 }}>
-        <h2 style={sectionTitle}>Tickets de suporte abertos ({tickets.length})</h2>
+      {/* Tickets */}
+      <DashSection title={`Tickets de suporte abertos (${tickets.length})`}>
         {tickets.length === 0 ? <p style={muted}>Nenhum ticket em aberto.</p> : (
-          <ul className="flex flex-col" style={{ gap: 10 }}>
+          <ul className="flex flex-col" style={{ gap: 10, listStyle: 'none', padding: 0, margin: 0 }}>
             {tickets.map((t: any) => (
               <li key={t.id} style={{ padding: 12, border: '1px solid var(--color-border)', borderRadius: 6 }}>
                 <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
                   <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)' }}>{t.subject}</span>
                   <span style={muted}>{format(new Date(t.created_at), 'dd/MM/yyyy')}</span>
                 </div>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', whiteSpace: 'pre-wrap' }}>{t.message}</p>
               </li>
             ))}
           </ul>
         )}
-      </div>
+      </DashSection>
 
-      {/* 8. Audit log */}
-      <div style={card}>
-        <h2 style={sectionTitle}>Histórico de ações administrativas</h2>
+      {/* Audit log */}
+      <DashSection title="Histórico de ações administrativas">
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr><th style={th}>Data</th><th style={th}>Admin</th><th style={th}>Ação</th><th style={th}>Detalhes</th></tr></thead>
@@ -335,7 +323,7 @@ export default function OrganizacaoDetalhe() {
             </tbody>
           </table>
         </div>
-      </div>
+      </DashSection>
 
       {/* MODAIS */}
       {showSuspend && (
