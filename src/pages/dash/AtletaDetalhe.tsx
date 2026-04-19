@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ArrowLeft, Eye, EyeOff, Pencil, Award, Hash, Building2 } from 'lucide-react';
+import { Eye, EyeOff, Pencil, Award, Hash, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import {
@@ -16,6 +16,7 @@ import { maskCpf, maskBirthDate, formatCpf, formatBirthDate } from '@/lib/sensit
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
+import { DashBackLink } from '@/components/dash/DashBackLink';
 
 const REVEAL_MS = 60_000;
 
@@ -42,7 +43,6 @@ const EDITABLE_FIELDS: { key: string; label: string; type?: string }[] = [
 
 export default function AtletaDetalhe() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const qc = useQueryClient();
 
   const [revealed, setRevealed] = useState(false);
@@ -156,17 +156,7 @@ export default function AtletaDetalhe() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Voltar */}
-      <button
-        onClick={() => navigate('/dash/atletas')}
-        style={{
-          background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12,
-          alignSelf: 'flex-start',
-        }}
-      >
-        <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar para atletas
-      </button>
+      <DashBackLink to="/dash/atletas" label="Voltar para atletas" />
 
       {/* Cabeçalho padrão */}
       <DashPageHeader
