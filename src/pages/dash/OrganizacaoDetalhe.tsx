@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Ban, RefreshCw, Gift, X, Users, Award, DollarSign, FileSearch, MessageSquare } from 'lucide-react';
+import { Ban, RefreshCw, Gift, Users, Award, DollarSign, FileSearch, MessageSquare } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
@@ -10,17 +10,20 @@ import { DashSection } from '@/components/dash/DashSection';
 import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 import { DashBackLink } from '@/components/dash/DashBackLink';
 import { DashTable, dashTd } from '@/components/dash/DashTable';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
-const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
+const fmtBRL = (n: number) =>
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
-const muted: React.CSSProperties = { fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' };
-const ipt: React.CSSProperties = {
-  width: '100%', padding: '8px 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
-  background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
+const muted: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)',
 };
-
-/** Label uppercase 11px muted — mesmo padrão de AtletaDetalhe. */
 const lbl: React.CSSProperties = {
   fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
   letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
@@ -28,20 +31,6 @@ const lbl: React.CSSProperties = {
 const val: React.CSSProperties = {
   fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)',
 };
-
-function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-      <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md, 8px)', width: '90%', maxWidth: 420, padding: 24 }}>
-        <div className="flex items-center justify-between" style={{ marginBottom: 16 }}>
-          <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 16, fontWeight: 600, color: 'var(--color-text)' }}>{title}</h3>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}><X style={{ width: 16, height: 16 }} /></button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-}
 
 export default function OrganizacaoDetalhe() {
   const { id } = useParams<{ id: string }>();
@@ -156,7 +145,10 @@ export default function OrganizacaoDetalhe() {
           <RefreshCw style={{ width: 14, height: 14 }} /> Reativar
         </button>
       ) : (
-        <button onClick={() => setShowSuspend(true)} style={dashOutlineButtonStyle}>
+        <button
+          onClick={() => setShowSuspend(true)}
+          style={{ ...dashOutlineButtonStyle, color: '#dc2626', borderColor: 'rgba(220,38,38,0.4)' }}
+        >
           <Ban style={{ width: 14, height: 14 }} /> Suspender
         </button>
       )}
@@ -180,10 +172,8 @@ export default function OrganizacaoDetalhe() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Voltar */}
       <DashBackLink to="/dash/organizacoes" label="Voltar para organizações" />
 
-      {/* Cabeçalho padrão com logo opcional */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
         {s.logo_url ? (
           <img src={s.logo_url} alt={s.name} style={{ width: 56, height: 56, borderRadius: 8, objectFit: 'cover', border: '1px solid var(--color-border)', flexShrink: 0 }} />
@@ -196,7 +186,6 @@ export default function OrganizacaoDetalhe() {
       </div>
 
       <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
-        {/* Dados cadastrais */}
         <DashSection title="Dados cadastrais">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
             <div><span style={lbl}>Nome</span><span style={val}>{s.name}</span></div>
@@ -208,7 +197,6 @@ export default function OrganizacaoDetalhe() {
           </div>
         </DashSection>
 
-        {/* Créditos */}
         <DashSection title="Créditos">
           <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             <div>
@@ -228,7 +216,6 @@ export default function OrganizacaoDetalhe() {
         </DashSection>
       </div>
 
-      {/* Atletas */}
       <DashSection title={`Atletas (${practitioners.length})`} flush>
         <DashTable
           bare
@@ -250,7 +237,6 @@ export default function OrganizacaoDetalhe() {
         {practitioners.length > 20 && <p style={{ ...muted, padding: '8px 20px 16px' }}>Mostrando 20 de {practitioners.length}</p>}
       </DashSection>
 
-      {/* Graduações */}
       <DashSection title={`Graduações emitidas (${achievements.length})`} flush>
         <DashTable
           bare
@@ -272,7 +258,6 @@ export default function OrganizacaoDetalhe() {
         {achievements.length > 20 && <p style={{ ...muted, padding: '8px 20px 16px' }}>Mostrando 20 de {achievements.length}</p>}
       </DashSection>
 
-      {/* Histórico financeiro */}
       <DashSection title="Histórico financeiro" flush>
         <DashTable
           bare
@@ -294,7 +279,6 @@ export default function OrganizacaoDetalhe() {
         </DashTable>
       </DashSection>
 
-      {/* Tickets — mantém formato de lista (cards) que é diferente de tabela */}
       <DashSection title={`Tickets de suporte abertos (${tickets.length})`}>
         {tickets.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '24px 0', color: 'var(--color-text-muted)' }}>
@@ -317,7 +301,6 @@ export default function OrganizacaoDetalhe() {
         )}
       </DashSection>
 
-      {/* Audit log */}
       <DashSection title="Histórico de ações administrativas" flush>
         <DashTable
           bare
@@ -339,42 +322,121 @@ export default function OrganizacaoDetalhe() {
         </DashTable>
       </DashSection>
 
-      {/* MODAIS */}
-      {showSuspend && (
-        <Modal title="Suspender organização" onClose={() => { setShowSuspend(false); setReason(''); }}>
-          <p style={{ ...muted, marginBottom: 12 }}>A organização perderá acesso ao painel. Os dados são preservados.</p>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Descreva o motivo da suspensão" />
-          <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowSuspend(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => suspendMut.mutate()} disabled={!reason.trim() || suspendMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: '#fff', background: '#dc2626', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>Suspender</button>
+      {/* Dialog: Suspender */}
+      <Dialog
+        open={showSuspend}
+        onOpenChange={(o) => { setShowSuspend(o); if (!o) setReason(''); }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Suspender organização</DialogTitle>
+            <DialogDescription>
+              A organização perderá acesso ao painel. Os dados são preservados e a ação fica registrada no audit log.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="suspend-reason">Motivo *</Label>
+            <Textarea
+              id="suspend-reason"
+              value={reason}
+              onChange={e => setReason(e.target.value)}
+              placeholder="Descreva o motivo da suspensão"
+              rows={3}
+            />
           </div>
-        </Modal>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setShowSuspend(false); setReason(''); }}>Cancelar</Button>
+            <Button
+              variant="destructive"
+              onClick={() => suspendMut.mutate()}
+              disabled={!reason.trim() || suspendMut.isPending}
+            >
+              Suspender
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      {showReactivate && (
-        <Modal title="Reativar organização" onClose={() => { setShowReactivate(false); setReason(''); }}>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Descreva o motivo da reativação" />
-          <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowReactivate(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => reactivateMut.mutate()} disabled={!reason.trim() || reactivateMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: '#fff', background: '#16a34a', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>Reativar</button>
+      {/* Dialog: Reativar */}
+      <Dialog
+        open={showReactivate}
+        onOpenChange={(o) => { setShowReactivate(o); if (!o) setReason(''); }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reativar organização</DialogTitle>
+            <DialogDescription>
+              A organização voltará a ter acesso ao painel. A ação fica registrada no audit log.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="reactivate-reason">Motivo *</Label>
+            <Textarea
+              id="reactivate-reason"
+              value={reason}
+              onChange={e => setReason(e.target.value)}
+              placeholder="Descreva o motivo da reativação"
+              rows={3}
+            />
           </div>
-        </Modal>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setShowReactivate(false); setReason(''); }}>Cancelar</Button>
+            <Button
+              onClick={() => reactivateMut.mutate()}
+              disabled={!reason.trim() || reactivateMut.isPending}
+            >
+              Reativar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      {showBonus && (
-        <Modal title="Conceder créditos de cortesia" onClose={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }}>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Quantidade *</label>
-          <input type="number" min={1} value={bonusAmount} onChange={e => setBonusAmount(e.target.value)} style={ipt} placeholder="Ex.: 10" />
-          <label style={{ display: 'block', marginTop: 12, marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={bonusReason} onChange={e => setBonusReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Justificativa para o bônus" />
-          <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => bonusMut.mutate()} disabled={!bonusAmount || !bonusReason.trim() || bonusMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: (!bonusAmount || !bonusReason.trim()) ? 'not-allowed' : 'pointer', opacity: (!bonusAmount || !bonusReason.trim()) ? 0.5 : 1 }}>Conceder</button>
+      {/* Dialog: Conceder créditos de cortesia */}
+      <Dialog
+        open={showBonus}
+        onOpenChange={(o) => { setShowBonus(o); if (!o) { setBonusAmount(''); setBonusReason(''); } }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Conceder créditos de cortesia</DialogTitle>
+            <DialogDescription>
+              Os créditos serão adicionados ao saldo da organização. A ação fica registrada no audit log.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="bonus-amount">Quantidade *</Label>
+              <Input
+                id="bonus-amount"
+                type="number"
+                min={1}
+                value={bonusAmount}
+                onChange={e => setBonusAmount(e.target.value)}
+                placeholder="Ex.: 10"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bonus-reason">Motivo *</Label>
+              <Textarea
+                id="bonus-reason"
+                value={bonusReason}
+                onChange={e => setBonusReason(e.target.value)}
+                placeholder="Justificativa para o bônus"
+                rows={3}
+              />
+            </div>
           </div>
-        </Modal>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }}>Cancelar</Button>
+            <Button
+              onClick={() => bonusMut.mutate()}
+              disabled={!bonusAmount || !bonusReason.trim() || bonusMut.isPending}
+            >
+              Conceder
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
