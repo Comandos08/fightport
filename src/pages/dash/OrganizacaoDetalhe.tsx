@@ -18,9 +18,19 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
-const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
+const fmtBRL = (n: number) =>
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
-const muted: React.CSSProperties = { fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' };
+const muted: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)',
+};
+const lbl: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
+  letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
+};
+const val: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)',
+};
 
 export default function OrganizacaoDetalhe() {
   const { id } = useParams<{ id: string }>();
@@ -135,7 +145,10 @@ export default function OrganizacaoDetalhe() {
           <RefreshCw style={{ width: 14, height: 14 }} /> Reativar
         </button>
       ) : (
-        <button onClick={() => setShowSuspend(true)} style={dashOutlineButtonStyle}>
+        <button
+          onClick={() => setShowSuspend(true)}
+          style={{ ...dashOutlineButtonStyle, color: '#dc2626', borderColor: 'rgba(220,38,38,0.4)' }}
+        >
           <Ban style={{ width: 14, height: 14 }} /> Suspender
         </button>
       )}
@@ -159,10 +172,8 @@ export default function OrganizacaoDetalhe() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Voltar */}
       <DashBackLink to="/dash/organizacoes" label="Voltar para organizações" />
 
-      {/* Cabeçalho padrão com logo opcional */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
         {s.logo_url ? (
           <img src={s.logo_url} alt={s.name} style={{ width: 56, height: 56, borderRadius: 8, objectFit: 'cover', border: '1px solid var(--color-border)', flexShrink: 0 }} />
@@ -175,7 +186,6 @@ export default function OrganizacaoDetalhe() {
       </div>
 
       <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
-        {/* Dados cadastrais */}
         <DashSection title="Dados cadastrais">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
             <div><span style={lbl}>Nome</span><span style={val}>{s.name}</span></div>
@@ -187,7 +197,6 @@ export default function OrganizacaoDetalhe() {
           </div>
         </DashSection>
 
-        {/* Créditos */}
         <DashSection title="Créditos">
           <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             <div>
@@ -207,75 +216,78 @@ export default function OrganizacaoDetalhe() {
         </DashSection>
       </div>
 
-      {/* Atletas */}
-      <DashSection title={`Atletas (${practitioners.length})`}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>FP-ID</th><th style={th}>Nome</th><th style={th}>Faixa</th><th style={th}>Modalidade</th><th style={th}>Cadastro</th></tr></thead>
-            <tbody>
-              {practitioners.length === 0 && <tr><td colSpan={5} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhum atleta cadastrado</td></tr>}
-              {practitioners.slice(0, 20).map((p: any) => (
-                <tr key={p.id}>
-                  <td style={td}>{p.fp_id}</td>
-                  <td style={td}>{p.first_name} {p.last_name}</td>
-                  <td style={td}>{p.current_belt ?? '—'}</td>
-                  <td style={td}>{p.martial_art}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{format(new Date(p.created_at), 'dd/MM/yyyy')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {practitioners.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {practitioners.length}</p>}
-        </div>
+      <DashSection title={`Atletas (${practitioners.length})`} flush>
+        <DashTable
+          bare
+          headers={['FP-ID', 'Nome', 'Faixa', 'Modalidade', 'Cadastro']}
+          isEmpty={practitioners.length === 0}
+          emptyIcon={Users}
+          emptyTitle="Nenhum atleta cadastrado"
+        >
+          {practitioners.slice(0, 20).map((p: any) => (
+            <tr key={p.id}>
+              <td style={dashTd}>{p.fp_id}</td>
+              <td style={dashTd}>{p.first_name} {p.last_name}</td>
+              <td style={dashTd}>{p.current_belt ?? '—'}</td>
+              <td style={dashTd}>{p.martial_art}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{format(new Date(p.created_at), 'dd/MM/yyyy')}</td>
+            </tr>
+          ))}
+        </DashTable>
+        {practitioners.length > 20 && <p style={{ ...muted, padding: '8px 20px 16px' }}>Mostrando 20 de {practitioners.length}</p>}
       </DashSection>
 
-      {/* Graduações */}
-      <DashSection title={`Graduações emitidas (${achievements.length})`}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Atleta</th><th style={th}>Faixa</th><th style={th}>Grau</th><th style={th}>Graduado por</th></tr></thead>
-            <tbody>
-              {achievements.length === 0 && <tr><td colSpan={5} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma graduação emitida</td></tr>}
-              {achievements.slice(0, 20).map((a: any) => (
-                <tr key={a.id}>
-                  <td style={td}>{format(new Date(a.graduation_date), 'dd/MM/yyyy')}</td>
-                  <td style={td}>{a.practitioner_name}</td>
-                  <td style={td}>{a.belt}</td>
-                  <td style={td}>{a.degree ?? 0}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{a.graduated_by}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {achievements.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {achievements.length}</p>}
-        </div>
+      <DashSection title={`Graduações emitidas (${achievements.length})`} flush>
+        <DashTable
+          bare
+          headers={['Data', 'Atleta', 'Faixa', 'Grau', 'Graduado por']}
+          isEmpty={achievements.length === 0}
+          emptyIcon={Award}
+          emptyTitle="Nenhuma graduação emitida"
+        >
+          {achievements.slice(0, 20).map((a: any) => (
+            <tr key={a.id}>
+              <td style={dashTd}>{format(new Date(a.graduation_date), 'dd/MM/yyyy')}</td>
+              <td style={dashTd}>{a.practitioner_name}</td>
+              <td style={dashTd}>{a.belt}</td>
+              <td style={dashTd}>{a.degree ?? 0}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{a.graduated_by}</td>
+            </tr>
+          ))}
+        </DashTable>
+        {achievements.length > 20 && <p style={{ ...muted, padding: '8px 20px 16px' }}>Mostrando 20 de {achievements.length}</p>}
       </DashSection>
 
-      {/* Histórico financeiro */}
-      <DashSection title="Histórico financeiro">
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Tipo</th><th style={th}>Pacote</th><th style={th}>Quantidade</th><th style={th}>Valor</th><th style={th}>Status</th></tr></thead>
-            <tbody>
-              {txs.length === 0 && <tr><td colSpan={6} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma transação</td></tr>}
-              {txs.map((t: any) => (
-                <tr key={t.id}>
-                  <td style={td}>{format(new Date(t.created_at), 'dd/MM/yyyy HH:mm')}</td>
-                  <td style={td}>{t.type === 'purchase' ? 'Compra' : t.type === 'usage' ? 'Uso' : t.type === 'bonus' ? 'Cortesia' : t.type}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{t.package_name ?? '—'}</td>
-                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{t.amount > 0 ? '+' : ''}{t.amount}</td>
-                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{t.price_brl ? fmtBRL(t.price_brl) : '—'}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{t.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <DashSection title="Histórico financeiro" flush>
+        <DashTable
+          bare
+          headers={['Data', 'Tipo', 'Pacote', 'Quantidade', 'Valor', 'Status']}
+          isEmpty={txs.length === 0}
+          emptyIcon={DollarSign}
+          emptyTitle="Nenhuma transação"
+        >
+          {txs.map((t: any) => (
+            <tr key={t.id}>
+              <td style={dashTd}>{format(new Date(t.created_at), 'dd/MM/yyyy HH:mm')}</td>
+              <td style={dashTd}>{t.type === 'purchase' ? 'Compra' : t.type === 'usage' ? 'Uso' : t.type === 'bonus' ? 'Cortesia' : t.type}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{t.package_name ?? '—'}</td>
+              <td style={{ ...dashTd, fontVariantNumeric: 'tabular-nums' }}>{t.amount > 0 ? '+' : ''}{t.amount}</td>
+              <td style={{ ...dashTd, fontVariantNumeric: 'tabular-nums' }}>{t.price_brl ? fmtBRL(t.price_brl) : '—'}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{t.status}</td>
+            </tr>
+          ))}
+        </DashTable>
       </DashSection>
 
-      {/* Tickets */}
       <DashSection title={`Tickets de suporte abertos (${tickets.length})`}>
-        {tickets.length === 0 ? <p style={muted}>Nenhum ticket em aberto.</p> : (
+        {tickets.length === 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '24px 0', color: 'var(--color-text-muted)' }}>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <MessageSquare style={{ width: 16, height: 16 }} />
+            </div>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13 }}>Nenhum ticket em aberto</span>
+          </div>
+        ) : (
           <ul className="flex flex-col" style={{ gap: 10, listStyle: 'none', padding: 0, margin: 0 }}>
             {tickets.map((t: any) => (
               <li key={t.id} style={{ padding: 12, border: '1px solid var(--color-border)', borderRadius: 6 }}>
@@ -289,64 +301,142 @@ export default function OrganizacaoDetalhe() {
         )}
       </DashSection>
 
-      {/* Audit log */}
-      <DashSection title="Histórico de ações administrativas">
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Admin</th><th style={th}>Ação</th><th style={th}>Detalhes</th></tr></thead>
-            <tbody>
-              {audit.length === 0 && <tr><td colSpan={4} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma ação registrada</td></tr>}
-              {audit.map((a: any) => (
-                <tr key={a.id}>
-                  <td style={td}>{format(new Date(a.created_at), 'dd/MM/yyyy HH:mm')}</td>
-                  <td style={td}>{a.admin_name}</td>
-                  <td style={td}>{a.action}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)', whiteSpace: 'normal' }}>
-                    {a.metadata ? Object.entries(a.metadata).map(([k, v]) => `${k}: ${v}`).join(' · ') : '—'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <DashSection title="Histórico de ações administrativas" flush>
+        <DashTable
+          bare
+          headers={['Data', 'Admin', 'Ação', 'Detalhes']}
+          isEmpty={audit.length === 0}
+          emptyIcon={FileSearch}
+          emptyTitle="Nenhuma ação registrada"
+        >
+          {audit.map((a: any) => (
+            <tr key={a.id}>
+              <td style={dashTd}>{format(new Date(a.created_at), 'dd/MM/yyyy HH:mm')}</td>
+              <td style={dashTd}>{a.admin_name}</td>
+              <td style={dashTd}>{a.action}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)', whiteSpace: 'normal' }}>
+                {a.metadata ? Object.entries(a.metadata).map(([k, v]) => `${k}: ${v}`).join(' · ') : '—'}
+              </td>
+            </tr>
+          ))}
+        </DashTable>
       </DashSection>
 
-      {/* MODAIS */}
-      {showSuspend && (
-        <Modal title="Suspender organização" onClose={() => { setShowSuspend(false); setReason(''); }}>
-          <p style={{ ...muted, marginBottom: 12 }}>A organização perderá acesso ao painel. Os dados são preservados.</p>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Descreva o motivo da suspensão" />
-          <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowSuspend(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => suspendMut.mutate()} disabled={!reason.trim() || suspendMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: '#fff', background: '#dc2626', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>Suspender</button>
+      {/* Dialog: Suspender */}
+      <Dialog
+        open={showSuspend}
+        onOpenChange={(o) => { setShowSuspend(o); if (!o) setReason(''); }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Suspender organização</DialogTitle>
+            <DialogDescription>
+              A organização perderá acesso ao painel. Os dados são preservados e a ação fica registrada no audit log.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="suspend-reason">Motivo *</Label>
+            <Textarea
+              id="suspend-reason"
+              value={reason}
+              onChange={e => setReason(e.target.value)}
+              placeholder="Descreva o motivo da suspensão"
+              rows={3}
+            />
           </div>
-        </Modal>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setShowSuspend(false); setReason(''); }}>Cancelar</Button>
+            <Button
+              variant="destructive"
+              onClick={() => suspendMut.mutate()}
+              disabled={!reason.trim() || suspendMut.isPending}
+            >
+              Suspender
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      {showReactivate && (
-        <Modal title="Reativar organização" onClose={() => { setShowReactivate(false); setReason(''); }}>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Descreva o motivo da reativação" />
-          <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowReactivate(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => reactivateMut.mutate()} disabled={!reason.trim() || reactivateMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: '#fff', background: '#16a34a', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>Reativar</button>
+      {/* Dialog: Reativar */}
+      <Dialog
+        open={showReactivate}
+        onOpenChange={(o) => { setShowReactivate(o); if (!o) setReason(''); }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reativar organização</DialogTitle>
+            <DialogDescription>
+              A organização voltará a ter acesso ao painel. A ação fica registrada no audit log.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="reactivate-reason">Motivo *</Label>
+            <Textarea
+              id="reactivate-reason"
+              value={reason}
+              onChange={e => setReason(e.target.value)}
+              placeholder="Descreva o motivo da reativação"
+              rows={3}
+            />
           </div>
-        </Modal>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setShowReactivate(false); setReason(''); }}>Cancelar</Button>
+            <Button
+              onClick={() => reactivateMut.mutate()}
+              disabled={!reason.trim() || reactivateMut.isPending}
+            >
+              Reativar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      {showBonus && (
-        <Modal title="Conceder créditos de cortesia" onClose={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }}>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Quantidade *</label>
-          <input type="number" min={1} value={bonusAmount} onChange={e => setBonusAmount(e.target.value)} style={ipt} placeholder="Ex.: 10" />
-          <label style={{ display: 'block', marginTop: 12, marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={bonusReason} onChange={e => setBonusReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Justificativa para o bônus" />
-          <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => bonusMut.mutate()} disabled={!bonusAmount || !bonusReason.trim() || bonusMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: (!bonusAmount || !bonusReason.trim()) ? 'not-allowed' : 'pointer', opacity: (!bonusAmount || !bonusReason.trim()) ? 0.5 : 1 }}>Conceder</button>
+      {/* Dialog: Conceder créditos de cortesia */}
+      <Dialog
+        open={showBonus}
+        onOpenChange={(o) => { setShowBonus(o); if (!o) { setBonusAmount(''); setBonusReason(''); } }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Conceder créditos de cortesia</DialogTitle>
+            <DialogDescription>
+              Os créditos serão adicionados ao saldo da organização. A ação fica registrada no audit log.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="bonus-amount">Quantidade *</Label>
+              <Input
+                id="bonus-amount"
+                type="number"
+                min={1}
+                value={bonusAmount}
+                onChange={e => setBonusAmount(e.target.value)}
+                placeholder="Ex.: 10"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bonus-reason">Motivo *</Label>
+              <Textarea
+                id="bonus-reason"
+                value={bonusReason}
+                onChange={e => setBonusReason(e.target.value)}
+                placeholder="Justificativa para o bônus"
+                rows={3}
+              />
+            </div>
           </div>
-        </Modal>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }}>Cancelar</Button>
+            <Button
+              onClick={() => bonusMut.mutate()}
+              disabled={!bonusAmount || !bonusReason.trim() || bonusMut.isPending}
+            >
+              Conceder
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
