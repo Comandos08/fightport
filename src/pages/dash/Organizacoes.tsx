@@ -265,7 +265,6 @@ export default function Organizacoes() {
         limit={limit}
         onPageChange={setPage}
       />
-      </div>
     </div>
   );
 }
