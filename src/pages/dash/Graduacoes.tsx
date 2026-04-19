@@ -112,10 +112,10 @@ export default function Graduacoes() {
     <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, margin: 0, color: 'var(--color-text)' }}>
+          <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
             Graduações
           </h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
             Histórico global de todas as graduações registradas (somente leitura — imutáveis).
           </p>
         </div>
@@ -128,7 +128,7 @@ export default function Graduacoes() {
 
       {/* Filtros */}
       <div style={{
-        background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+        background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)',
         borderRadius: 'var(--radius-md, 8px)', padding: 16, marginBottom: 20,
         display: 'grid', gap: 12,
         gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
