@@ -236,11 +236,23 @@ export default function Financeiro() {
               <div><label style={lbl}>Até</label><input type="date" style={ipt} value={to} onChange={e => setTo(e.target.value)} /></div>
             </>
           )}
-          <button onClick={exportCsv} style={{ ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <FileSpreadsheet style={{ width: 14, height: 14 }} /> CSV
+          <button onClick={exportCsv} style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '9px 14px', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+            color: 'var(--color-text)', cursor: 'pointer',
+          }}>
+            <FileSpreadsheet style={{ width: 14, height: 14 }} /> Exportar CSV
           </button>
-          <button onClick={exportPdf} style={{ ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <FileText style={{ width: 14, height: 14 }} /> PDF
+          <button onClick={exportPdf} style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '9px 14px', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+            color: 'var(--color-text)', cursor: 'pointer',
+          }}>
+            <FileText style={{ width: 14, height: 14 }} /> Exportar PDF
           </button>
         </div>
       </div>
