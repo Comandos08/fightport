@@ -156,17 +156,7 @@ export default function AtletaDetalhe() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Voltar */}
-      <button
-        onClick={() => navigate('/dash/atletas')}
-        style={{
-          background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12,
-          alignSelf: 'flex-start',
-        }}
-      >
-        <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar para atletas
-      </button>
+      <DashBackLink to="/dash/atletas" label="Voltar para atletas" />
 
       {/* Cabeçalho padrão */}
       <DashPageHeader
