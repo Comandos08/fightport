@@ -217,11 +217,11 @@ export default function OrganizacaoDetalhe() {
               <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{detail.balance}</div>
             </div>
             <div>
-              <div style={muted}>Total comprado</div>
+              <span style={lbl}>Total comprado</span>
               <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{detail.total_purchased_credits}</div>
             </div>
             <div>
-              <div style={muted}>Total consumido</div>
+              <span style={lbl}>Total consumido</span>
               <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{detail.total_used_credits}</div>
             </div>
           </div>
