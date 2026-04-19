@@ -10,6 +10,12 @@ import { Download, FileText, FileSpreadsheet, Building2 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/integrations/supabase/client';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import {
+  dashInputStyle as ipt,
+  dashLabelStyle as lbl,
+  dashOutlineButtonStyle,
+} from '@/components/dash/DashFiltersBar';
 
 type Preset = 'today' | '7d' | '30d' | 'month' | 'year' | 'custom';
 
@@ -21,15 +27,6 @@ const fmtPct = (n: number) => `${(Number(n) || 0).toFixed(1)}%`;
 const card: React.CSSProperties = {
   background: 'var(--color-bg)', border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-md, 8px)', padding: 16,
-};
-const lbl: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
-  letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 6, display: 'block',
-};
-const ipt: React.CSSProperties = {
-  height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
-  background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
 };
 
 // Paleta sóbria para BI administrativo — neutros + azul-petróleo
@@ -208,54 +205,37 @@ export default function Financeiro() {
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
-      {/* Header + período + exports */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
-            Financeiro
-          </h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            Receita, MRR, LTV e recompra calculados em tempo real sobre as transações de compra.
-          </p>
-        </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'flex-end' }}>
-          <div>
-            <label style={lbl}>Período</label>
-            <select style={{ ...ipt }} value={preset} onChange={e => setPreset(e.target.value as Preset)}>
-              <option value="today">Hoje</option>
-              <option value="7d">7 dias</option>
-              <option value="30d">30 dias</option>
-              <option value="month">Mês atual</option>
-              <option value="year">Ano atual</option>
-              <option value="custom">Personalizado</option>
-            </select>
-          </div>
-          {preset === 'custom' && (
-            <>
-              <div><label style={lbl}>De</label><input type="date" style={ipt} value={from} onChange={e => setFrom(e.target.value)} /></div>
-              <div><label style={lbl}>Até</label><input type="date" style={ipt} value={to} onChange={e => setTo(e.target.value)} /></div>
-            </>
-          )}
-          <button onClick={exportCsv} style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '9px 14px', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-text)', cursor: 'pointer',
-          }}>
-            <FileSpreadsheet style={{ width: 14, height: 14 }} /> Exportar CSV
-          </button>
-          <button onClick={exportPdf} style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '9px 14px', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-text)', cursor: 'pointer',
-          }}>
-            <FileText style={{ width: 14, height: 14 }} /> Exportar PDF
-          </button>
-        </div>
-      </div>
+      <DashPageHeader
+        title="Financeiro"
+        subtitle="Receita, MRR, LTV e recompra calculados em tempo real sobre as transações de compra."
+        actions={
+          <>
+            <div>
+              <label style={lbl}>Período</label>
+              <select style={{ ...ipt, width: 'auto' }} value={preset} onChange={e => setPreset(e.target.value as Preset)}>
+                <option value="today">Hoje</option>
+                <option value="7d">7 dias</option>
+                <option value="30d">30 dias</option>
+                <option value="month">Mês atual</option>
+                <option value="year">Ano atual</option>
+                <option value="custom">Personalizado</option>
+              </select>
+            </div>
+            {preset === 'custom' && (
+              <>
+                <div><label style={lbl}>De</label><input type="date" style={{ ...ipt, width: 'auto' }} value={from} onChange={e => setFrom(e.target.value)} /></div>
+                <div><label style={lbl}>Até</label><input type="date" style={{ ...ipt, width: 'auto' }} value={to} onChange={e => setTo(e.target.value)} /></div>
+              </>
+            )}
+            <button onClick={exportCsv} style={dashOutlineButtonStyle}>
+              <FileSpreadsheet style={{ width: 14, height: 14 }} /> Exportar CSV
+            </button>
+            <button onClick={exportPdf} style={dashOutlineButtonStyle}>
+              <FileText style={{ width: 14, height: 14 }} /> Exportar PDF
+            </button>
+          </>
+        }
+      />
 
       {/* Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 20 }}>

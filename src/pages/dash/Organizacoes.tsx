@@ -2,21 +2,20 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, Download, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Search, Download, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import {
+  DashFiltersBar,
+  dashInputStyle as ipt,
+  dashLabelStyle as lbl,
+  dashOutlineButtonStyle,
+  dashClearButtonStyle,
+} from '@/components/dash/DashFiltersBar';
 
 type SortKey = 'name' | 'email' | 'city' | 'martial_art' | 'created_at' | 'balance' | 'total_spent';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
-const ipt: React.CSSProperties = {
-  height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
-  background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
-};
-const lbl: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
-  letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
-};
 
 export default function Organizacoes() {
   const navigate = useNavigate();
@@ -113,36 +112,17 @@ export default function Organizacoes() {
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 1600, margin: '0 auto' }}>
-      <div className="flex items-center justify-between flex-wrap" style={{ gap: 16, marginBottom: 24 }}>
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: 'var(--color-text)' }}>Organizações</h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
-            {total} {total === 1 ? 'organização cadastrada' : 'organizações cadastradas'}
-          </p>
-        </div>
-        <button
-          onClick={exportCsv}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '9px 14px', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-text)', cursor: 'pointer',
-          }}
-        >
-          <Download style={{ width: 14, height: 14 }} /> Exportar CSV
-        </button>
-      </div>
+      <DashPageHeader
+        title="Organizações"
+        subtitle={`${total} ${total === 1 ? 'organização cadastrada' : 'organizações cadastradas'}`}
+        actions={
+          <button onClick={exportCsv} style={dashOutlineButtonStyle}>
+            <Download style={{ width: 14, height: 14 }} /> Exportar CSV
+          </button>
+        }
+      />
 
-      {/* Filtros */}
-      <div
-        className="grid"
-        style={{
-          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12,
-          background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md, 8px)', padding: 16, marginBottom: 20,
-        }}
-      >
+      <DashFiltersBar minColumnWidth={160}>
         <div style={{ gridColumn: 'span 2' }}>
           <label style={lbl}>Busca</label>
           <div style={{ position: 'relative' }}>
@@ -151,13 +131,13 @@ export default function Organizacoes() {
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
               placeholder="Nome, email ou cidade"
-              style={{ ...ipt, width: '100%', paddingLeft: 32 }}
+              style={{ ...ipt, paddingLeft: 32 }}
             />
           </div>
         </div>
         <div>
           <label style={lbl}>Arte marcial</label>
-          <select value={martialArt} onChange={e => { setMartialArt(e.target.value); setPage(0); }} style={{ ...ipt, width: '100%' }}>
+          <select value={martialArt} onChange={e => { setMartialArt(e.target.value); setPage(0); }} style={ipt}>
             <option value="">Todas</option>
             <option value="Jiu-Jitsu">Jiu-Jitsu</option>
             <option value="Judô">Judô</option>
@@ -170,11 +150,11 @@ export default function Organizacoes() {
         </div>
         <div>
           <label style={lbl}>Estado</label>
-          <input value={stateF} onChange={e => { setStateF(e.target.value.toUpperCase()); setPage(0); }} placeholder="UF" maxLength={2} style={{ ...ipt, width: '100%' }} />
+          <input value={stateF} onChange={e => { setStateF(e.target.value.toUpperCase()); setPage(0); }} placeholder="UF" maxLength={2} style={ipt} />
         </div>
         <div>
           <label style={lbl}>Status</label>
-          <select value={status} onChange={e => { setStatus(e.target.value); setPage(0); }} style={{ ...ipt, width: '100%' }}>
+          <select value={status} onChange={e => { setStatus(e.target.value); setPage(0); }} style={ipt}>
             <option value="">Todos</option>
             <option value="active">Ativas</option>
             <option value="suspended">Suspensas</option>
@@ -182,7 +162,7 @@ export default function Organizacoes() {
         </div>
         <div>
           <label style={lbl}>Créditos</label>
-          <select value={credits} onChange={e => { setCredits(e.target.value); setPage(0); }} style={{ ...ipt, width: '100%' }}>
+          <select value={credits} onChange={e => { setCredits(e.target.value); setPage(0); }} style={ipt}>
             <option value="">Todos</option>
             <option value="with">Com créditos</option>
             <option value="without">Sem créditos</option>
@@ -190,21 +170,16 @@ export default function Organizacoes() {
         </div>
         <div>
           <label style={lbl}>Cadastro de</label>
-          <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(0); }} style={{ ...ipt, width: '100%' }} />
+          <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(0); }} style={ipt} />
         </div>
         <div>
           <label style={lbl}>Cadastro até</label>
-          <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} style={{ ...ipt, width: '100%' }} />
+          <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} style={ipt} />
         </div>
-        <div className="flex items-end">
-          <button onClick={clearFilters} style={{
-            padding: '9px 14px', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-text-muted)', cursor: 'pointer', width: '100%',
-          }}>Limpar</button>
+        <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <button onClick={clearFilters} style={dashClearButtonStyle}>Limpar</button>
         </div>
-      </div>
+      </DashFiltersBar>
 
       {/* Tabela */}
       <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden' }}>

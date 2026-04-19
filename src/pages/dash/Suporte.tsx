@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import { dashInputStyle as ipt } from '@/components/dash/DashFiltersBar';
 
 const STATUS_LABEL: Record<string, string> = {
   open: 'Aberto',
@@ -21,11 +23,6 @@ const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
   awaiting_school: { bg: '#bfdbfe', fg: '#1e40af' },
   resolved:        { bg: '#bbf7d0', fg: '#166534' },
   closed:          { bg: '#e5e7eb', fg: '#374151' },
-};
-const ipt: React.CSSProperties = {
-  height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
-  background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
 };
 
 export default function DashSuporte() {
@@ -109,22 +106,18 @@ export default function DashSuporte() {
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
-            Suporte
-          </h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            Tickets de todas as escolas. Selecione um para responder.
-          </p>
-        </div>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={ipt}>
-          <option value="open">Abertos</option>
-          <option value="awaiting_school">Aguardando escola</option>
-          <option value="resolved">Resolvidos</option>
-          <option value="all">Todos</option>
-        </select>
-      </div>
+      <DashPageHeader
+        title="Suporte"
+        subtitle="Tickets de todas as escolas. Selecione um para responder."
+        actions={
+          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ ...ipt, width: 'auto' }}>
+            <option value="open">Abertos</option>
+            <option value="awaiting_school">Aguardando escola</option>
+            <option value="resolved">Resolvidos</option>
+            <option value="all">Todos</option>
+          </select>
+        }
+      />
 
       <div style={{
         display: 'grid', gridTemplateColumns: 'minmax(300px, 380px) 1fr', gap: 16,

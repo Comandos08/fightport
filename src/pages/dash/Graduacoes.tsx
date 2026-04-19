@@ -5,18 +5,14 @@ import { format } from 'date-fns';
 import { Search, Download, ChevronLeft, ChevronRight, Copy, Building2, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-
-const ipt: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300,
-  padding: '8px 10px', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-  color: 'var(--color-text)', width: '100%',
-};
-const lbl: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500,
-  textTransform: 'uppercase', letterSpacing: '0.06em',
-  color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
-};
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import {
+  DashFiltersBar,
+  dashInputStyle as ipt,
+  dashLabelStyle as lbl,
+  dashOutlineButtonStyle,
+  dashClearButtonStyle,
+} from '@/components/dash/DashFiltersBar';
 
 const shortHash = (h?: string | null) => {
   if (!h) return '—';
@@ -112,32 +108,17 @@ export default function Graduacoes() {
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
-            Graduações
-          </h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            Histórico global de todas as graduações registradas (somente leitura — imutáveis).
-          </p>
-        </div>
-        <button onClick={exportCsv} style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '9px 14px', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-          fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-          color: 'var(--color-text)', cursor: 'pointer',
-        }}>
-          <Download style={{ width: 14, height: 14 }} /> Exportar CSV
-        </button>
-      </div>
+      <DashPageHeader
+        title="Graduações"
+        subtitle="Histórico global de todas as graduações registradas (somente leitura — imutáveis)."
+        actions={
+          <button onClick={exportCsv} style={dashOutlineButtonStyle}>
+            <Download style={{ width: 14, height: 14 }} /> Exportar CSV
+          </button>
+        }
+      />
 
-      {/* Filtros — padrão Auditoria */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12,
-        background: 'var(--color-bg-soft)', padding: 16, borderRadius: 'var(--radius)',
-        border: '1px solid var(--color-border)', marginBottom: 20,
-      }}>
+      <DashFiltersBar>
         <div style={{ gridColumn: 'span 2' }}>
           <label style={lbl}>Buscar</label>
           <div style={{ position: 'relative' }}>
@@ -190,14 +171,9 @@ export default function Graduacoes() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-          <button onClick={clearFilters} style={{
-            padding: '9px 14px', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-text-muted)', cursor: 'pointer', width: '100%',
-          }}>Limpar</button>
+          <button onClick={clearFilters} style={dashClearButtonStyle}>Limpar</button>
         </div>
-      </div>
+      </DashFiltersBar>
 
       {/* Tabela */}
       <div style={{
