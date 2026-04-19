@@ -112,19 +112,23 @@ export default function Organizacoes() {
   };
 
   return (
-    <div style={{ padding: 32, maxWidth: 1600, margin: '0 auto' }}>
+    <div style={{ padding: '32px 40px', maxWidth: 1600, margin: '0 auto' }}>
       <div className="flex items-center justify-between flex-wrap" style={{ gap: 16, marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)' }}>Organizações</h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4 }}>
+          <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: 'var(--color-text)' }}>Organizações</h1>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
             {total} {total === 1 ? 'organização cadastrada' : 'organizações cadastradas'}
           </p>
         </div>
         <button
           onClick={exportCsv}
-          className="flex items-center"
-          style={{ gap: 6, height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '9px 14px', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+            color: 'var(--color-text)', cursor: 'pointer',
+          }}
         >
           <Download style={{ width: 14, height: 14 }} /> Exportar CSV
         </button>
@@ -135,19 +139,19 @@ export default function Organizacoes() {
         className="grid"
         style={{
           gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12,
-          background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md, 8px)', padding: 16, marginBottom: 16,
+          background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-md, 8px)', padding: 16, marginBottom: 20,
         }}
       >
         <div style={{ gridColumn: 'span 2' }}>
           <label style={lbl}>Busca</label>
           <div style={{ position: 'relative' }}>
-            <Search style={{ position: 'absolute', left: 10, top: 9, width: 14, height: 14, color: 'var(--color-text-muted)' }} />
+            <Search style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: 'var(--color-text-muted)' }} />
             <input
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
               placeholder="Nome, email ou cidade"
-              style={{ ...ipt, width: '100%', paddingLeft: 30 }}
+              style={{ ...ipt, width: '100%', paddingLeft: 32 }}
             />
           </div>
         </div>
@@ -193,9 +197,12 @@ export default function Organizacoes() {
           <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} style={{ ...ipt, width: '100%' }} />
         </div>
         <div className="flex items-end">
-          <button onClick={clearFilters} className="flex items-center" style={{ gap: 4, height: 32, padding: '0 12px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>
-            <X style={{ width: 12, height: 12 }} /> Limpar
-          </button>
+          <button onClick={clearFilters} style={{
+            padding: '9px 14px', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
+            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+            color: 'var(--color-text-muted)', cursor: 'pointer', width: '100%',
+          }}>Limpar</button>
         </div>
       </div>
 
