@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, Download, ChevronLeft, ChevronRight, Eye, X } from 'lucide-react';
+import { Search, Download, Eye, X } from 'lucide-react';
+import { DashPagination } from '@/components/dash/DashPagination';
 
 const ipt: React.CSSProperties = {
   fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300,
@@ -272,31 +273,13 @@ export default function Auditoria() {
           </table>
         </div>
 
-        {/* Paginação */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '12px 16px', borderTop: '1px solid var(--color-border)',
-          fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)',
-        }}>
-          <span>
-            {total > 0
-              ? `Mostrando ${page * limit + 1}–${Math.min((page + 1) * limit, Number(total))} de ${total}`
-              : 'Nenhum registro'}
-          </span>
-          <div style={{ display: 'flex', gap: 6 }}>
-            <button
-              onClick={() => setPage(p => Math.max(0, p - 1))}
-              disabled={page === 0}
-              style={{ padding: '6px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)', cursor: page === 0 ? 'not-allowed' : 'pointer', opacity: page === 0 ? 0.4 : 1, color: 'var(--color-text)' }}
-            ><ChevronLeft style={{ width: 14, height: 14 }} /></button>
-            <span style={{ padding: '6px 12px' }}>{page + 1} / {totalPages}</span>
-            <button
-              onClick={() => setPage(p => p + 1)}
-              disabled={page + 1 >= totalPages}
-              style={{ padding: '6px 10px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)', cursor: page + 1 >= totalPages ? 'not-allowed' : 'pointer', opacity: page + 1 >= totalPages ? 0.4 : 1, color: 'var(--color-text)' }}
-            ><ChevronRight style={{ width: 14, height: 14 }} /></button>
-          </div>
-        </div>
+        <DashPagination
+          page={page}
+          totalPages={totalPages}
+          total={Number(total)}
+          limit={limit}
+          onPageChange={setPage}
+        />
       </div>
 
       {/* Modal de detalhes */}

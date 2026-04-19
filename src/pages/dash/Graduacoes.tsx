@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, Download, ChevronLeft, ChevronRight, Copy, Building2, User } from 'lucide-react';
+import { Search, Download, Copy, Building2, User } from 'lucide-react';
+import { DashPagination } from '@/components/dash/DashPagination';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
@@ -272,31 +273,13 @@ export default function Graduacoes() {
           </table>
         </div>
 
-        {/* Paginação */}
-        <div style={{
-          padding: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          borderTop: '1px solid var(--color-border)', fontFamily: 'var(--font-sans)', fontSize: 12,
-          color: 'var(--color-text-muted)',
-        }}>
-          <span>Total: {total} graduaç{total === 1 ? 'ão' : 'ões'}</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button
-              onClick={() => setPage(p => Math.max(0, p - 1))}
-              disabled={page === 0}
-              style={{ ...ipt, padding: '0 8px', cursor: page === 0 ? 'not-allowed' : 'pointer', opacity: page === 0 ? 0.4 : 1 }}
-            >
-              <ChevronLeft style={{ width: 14, height: 14 }} />
-            </button>
-            <span>{page + 1} / {totalPages}</span>
-            <button
-              onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
-              disabled={page + 1 >= totalPages}
-              style={{ ...ipt, padding: '0 8px', cursor: page + 1 >= totalPages ? 'not-allowed' : 'pointer', opacity: page + 1 >= totalPages ? 0.4 : 1 }}
-            >
-              <ChevronRight style={{ width: 14, height: 14 }} />
-            </button>
-          </div>
-        </div>
+        <DashPagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          limit={limit}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );
