@@ -9,13 +9,13 @@ type SortKey = 'name' | 'email' | 'city' | 'martial_art' | 'created_at' | 'balan
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 const ipt: React.CSSProperties = {
-  height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
+  height: 36, padding: '0 12px', fontFamily: 'var(--font-sans)', fontSize: 13,
   background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
 };
 const lbl: React.CSSProperties = {
   fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
-  letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
+  letterSpacing: '0.06em', color: 'var(--color-text-muted)', marginBottom: 6, display: 'block',
 };
 
 export default function Organizacoes() {
@@ -92,7 +92,7 @@ export default function Organizacoes() {
       onClick={() => toggleSort(k)}
       style={{
         textAlign: align, padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 11,
-        fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em',
+        fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em',
         color: 'var(--color-text-muted)', cursor: 'pointer', userSelect: 'none',
         borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)',
         whiteSpace: 'nowrap',
@@ -115,15 +115,15 @@ export default function Organizacoes() {
     <div style={{ padding: 32, maxWidth: 1600, margin: '0 auto' }}>
       <div className="flex items-center justify-between flex-wrap" style={{ gap: 16, marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)' }}>Organizações</h1>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4 }}>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)', letterSpacing: '0.02em' }}>Organizações</h1>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
             {total} {total === 1 ? 'organização cadastrada' : 'organizações cadastradas'}
           </p>
         </div>
         <button
           onClick={exportCsv}
           className="flex items-center"
-          style={{ gap: 6, height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
+          style={{ gap: 6, height: 36, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
             color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}
         >
           <Download style={{ width: 14, height: 14 }} /> Exportar CSV
@@ -135,19 +135,19 @@ export default function Organizacoes() {
         className="grid"
         style={{
           gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12,
-          background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+          background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-md, 8px)', padding: 16, marginBottom: 16,
         }}
       >
         <div style={{ gridColumn: 'span 2' }}>
           <label style={lbl}>Busca</label>
           <div style={{ position: 'relative' }}>
-            <Search style={{ position: 'absolute', left: 10, top: 9, width: 14, height: 14, color: 'var(--color-text-muted)' }} />
+            <Search style={{ position: 'absolute', left: 10, top: 11, width: 14, height: 14, color: 'var(--color-text-muted)' }} />
             <input
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
               placeholder="Nome, email ou cidade"
-              style={{ ...ipt, width: '100%', paddingLeft: 30 }}
+              style={{ ...ipt, width: '100%', paddingLeft: 32 }}
             />
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function Organizacoes() {
           <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} style={{ ...ipt, width: '100%' }} />
         </div>
         <div className="flex items-end">
-          <button onClick={clearFilters} className="flex items-center" style={{ gap: 4, height: 32, padding: '0 12px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>
+          <button onClick={clearFilters} className="flex items-center" style={{ gap: 4, height: 36, padding: '0 12px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>
             <X style={{ width: 12, height: 12 }} /> Limpar
           </button>
         </div>
@@ -206,14 +206,14 @@ export default function Organizacoes() {
             <thead>
               <tr>
                 {headerCell('name', 'Nome')}
-                <th style={{ textAlign: 'left', padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)' }}>Responsável</th>
+                <th style={{ textAlign: 'left', padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)' }}>Responsável</th>
                 {headerCell('email', 'Email')}
                 {headerCell('city', 'Cidade/UF')}
                 {headerCell('martial_art', 'Arte')}
                 {headerCell('created_at', 'Cadastro')}
                 {headerCell('balance', 'Saldo', 'right')}
                 {headerCell('total_spent', 'Total gasto', 'right')}
-                <th style={{ textAlign: 'left', padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)' }}>Status</th>
+                <th style={{ textAlign: 'left', padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)' }}>Status</th>
               </tr>
             </thead>
             <tbody>
