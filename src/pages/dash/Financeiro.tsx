@@ -10,6 +10,12 @@ import { Download, FileText, FileSpreadsheet, Building2 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/integrations/supabase/client';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import {
+  dashInputStyle as ipt,
+  dashLabelStyle as lbl,
+  dashOutlineButtonStyle,
+} from '@/components/dash/DashFiltersBar';
 
 type Preset = 'today' | '7d' | '30d' | 'month' | 'year' | 'custom';
 
@@ -21,15 +27,6 @@ const fmtPct = (n: number) => `${(Number(n) || 0).toFixed(1)}%`;
 const card: React.CSSProperties = {
   background: 'var(--color-bg)', border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-md, 8px)', padding: 16,
-};
-const lbl: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
-  letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 6, display: 'block',
-};
-const ipt: React.CSSProperties = {
-  height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
-  background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
 };
 
 // Paleta sóbria para BI administrativo — neutros + azul-petróleo
