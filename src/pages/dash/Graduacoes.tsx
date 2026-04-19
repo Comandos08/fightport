@@ -129,7 +129,7 @@ export default function Graduacoes() {
       {/* Filtros */}
       <div style={{
         background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-md, 8px)', padding: 16,
+        borderRadius: 'var(--radius-md, 8px)', padding: 16, marginBottom: 20,
         display: 'grid', gap: 12,
         gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
       }}>
