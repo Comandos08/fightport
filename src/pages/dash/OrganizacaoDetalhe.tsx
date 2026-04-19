@@ -21,6 +21,15 @@ const ipt: React.CSSProperties = {
 const td: React.CSSProperties = { padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' };
 const th: React.CSSProperties = { textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' };
 
+/** Label uppercase 11px muted — mesmo padrão de AtletaDetalhe. */
+const lbl: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
+  letterSpacing: '0.04em', color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
+};
+const val: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)',
+};
+
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
@@ -190,21 +199,21 @@ export default function OrganizacaoDetalhe() {
       <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
         {/* Dados cadastrais */}
         <DashSection title="Dados cadastrais">
-          <dl className="grid" style={{ gridTemplateColumns: '1fr 2fr', gap: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, margin: 0 }}>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Nome</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.name}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Arte marcial</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.martial_art}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Cidade/UF</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{[s.city, s.state].filter(Boolean).join(' / ') || '—'}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Email</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.email}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Cadastro</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{format(new Date(s.created_at), 'dd/MM/yyyy')}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Head coach</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{hc ? `${hc.name} · ${hc.graduation}` : '—'}</dd>
-          </dl>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
+            <div><span style={lbl}>Nome</span><span style={val}>{s.name}</span></div>
+            <div><span style={lbl}>Arte marcial</span><span style={val}>{s.martial_art}</span></div>
+            <div><span style={lbl}>Cidade/UF</span><span style={val}>{[s.city, s.state].filter(Boolean).join(' / ') || '—'}</span></div>
+            <div><span style={lbl}>Email</span><span style={val}>{s.email}</span></div>
+            <div><span style={lbl}>Cadastro</span><span style={val}>{format(new Date(s.created_at), 'dd/MM/yyyy')}</span></div>
+            <div><span style={lbl}>Head coach</span><span style={val}>{hc ? `${hc.name} · ${hc.graduation}` : '—'}</span></div>
+          </div>
         </DashSection>
 
         {/* Créditos */}
         <DashSection title="Créditos">
           <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             <div>
-              <div style={muted}>Saldo</div>
+              <span style={lbl}>Saldo</span>
               <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{detail.balance}</div>
             </div>
             <div>
