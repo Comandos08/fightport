@@ -5,18 +5,14 @@ import { format } from 'date-fns';
 import { Search, Download, ChevronLeft, ChevronRight, Copy, Building2, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-
-const ipt: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300,
-  padding: '8px 10px', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-  color: 'var(--color-text)', width: '100%',
-};
-const lbl: React.CSSProperties = {
-  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500,
-  textTransform: 'uppercase', letterSpacing: '0.06em',
-  color: 'var(--color-text-muted)', marginBottom: 4, display: 'block',
-};
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import {
+  DashFiltersBar,
+  dashInputStyle as ipt,
+  dashLabelStyle as lbl,
+  dashOutlineButtonStyle,
+  dashClearButtonStyle,
+} from '@/components/dash/DashFiltersBar';
 
 const shortHash = (h?: string | null) => {
   if (!h) return '—';

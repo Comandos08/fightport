@@ -79,28 +79,18 @@ export default function Atletas() {
 
   return (
     <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
-          Atletas
-        </h1>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-          Visão global de todos os praticantes cadastrados na plataforma.
-        </p>
-      </div>
+      <DashPageHeader
+        title="Atletas"
+        subtitle="Visão global de todos os praticantes cadastrados na plataforma."
+      />
 
-      {/* Filtros */}
-      <div style={{
-        background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-md, 8px)', padding: 16, marginBottom: 20,
-        display: 'grid', gap: 12,
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-      }}>
+      <DashFiltersBar minColumnWidth={160}>
         <div style={{ gridColumn: '1 / -1' }}>
           <label style={lbl}>Buscar</label>
           <div style={{ position: 'relative' }}>
             <Search style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: 'var(--color-text-muted)' }} />
             <input
-              style={{ ...ipt, width: '100%', paddingLeft: 32 }}
+              style={{ ...ipt, paddingLeft: 32 }}
               placeholder="Nome, FP-ID ou CPF…"
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
@@ -110,7 +100,7 @@ export default function Atletas() {
 
         <div>
           <label style={lbl}>Escola</label>
-          <select style={{ ...ipt, width: '100%' }} value={schoolId} onChange={e => { setSchoolId(e.target.value); setPage(0); }}>
+          <select style={ipt} value={schoolId} onChange={e => { setSchoolId(e.target.value); setPage(0); }}>
             <option value="">Todas</option>
             {(schools as any[]).map(s => (
               <option key={s.id} value={s.id}>{s.name}</option>
@@ -120,7 +110,7 @@ export default function Atletas() {
 
         <div>
           <label style={lbl}>Arte marcial</label>
-          <select style={{ ...ipt, width: '100%' }} value={martialArt} onChange={e => { setMartialArt(e.target.value); setPage(0); }}>
+          <select style={ipt} value={martialArt} onChange={e => { setMartialArt(e.target.value); setPage(0); }}>
             <option value="">Todas</option>
             <option value="Jiu-Jitsu">Jiu-Jitsu</option>
             <option value="Judô">Judô</option>
@@ -133,28 +123,23 @@ export default function Atletas() {
 
         <div>
           <label style={lbl}>Faixa</label>
-          <input style={{ ...ipt, width: '100%' }} placeholder="Ex: Azul" value={belt} onChange={e => { setBelt(e.target.value); setPage(0); }} />
+          <input style={ipt} placeholder="Ex: Azul" value={belt} onChange={e => { setBelt(e.target.value); setPage(0); }} />
         </div>
 
         <div>
           <label style={lbl}>De</label>
-          <input type="date" style={{ ...ipt, width: '100%' }} value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(0); }} />
+          <input type="date" style={ipt} value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(0); }} />
         </div>
 
         <div>
           <label style={lbl}>Até</label>
-          <input type="date" style={{ ...ipt, width: '100%' }} value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} />
+          <input type="date" style={ipt} value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(0); }} />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-          <button onClick={clearFilters} style={{
-            padding: '9px 14px', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
-            fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
-            color: 'var(--color-text-muted)', cursor: 'pointer', width: '100%',
-          }}>Limpar</button>
+          <button onClick={clearFilters} style={dashClearButtonStyle}>Limpar</button>
         </div>
-      </div>
+      </DashFiltersBar>
 
       {/* Tabela */}
       <div style={{
