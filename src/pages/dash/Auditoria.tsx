@@ -2,8 +2,10 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, Download, Eye, X } from 'lucide-react';
+import { Search, Download, Eye, X, FileSearch } from 'lucide-react';
 import { DashPagination } from '@/components/dash/DashPagination';
+import { DashTableSkeleton } from '@/components/dash/DashTableSkeleton';
+import { DashEmptyState } from '@/components/dash/DashEmptyState';
 
 const ipt: React.CSSProperties = {
   fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300,
@@ -224,9 +226,14 @@ export default function Auditoria() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td style={td} colSpan={6}>Carregando…</td></tr>
+                <DashTableSkeleton columns={6} />
               ) : rows.length === 0 ? (
-                <tr><td style={td} colSpan={6}>Nenhum registro encontrado.</td></tr>
+                <DashEmptyState
+                  columns={6}
+                  icon={FileSearch}
+                  title="Nenhum registro encontrado"
+                  description="Ajuste os filtros ou amplie o intervalo de datas para ver mais resultados."
+                />
               ) : rows.map(r => {
                 const link = targetLink(r);
                 return (

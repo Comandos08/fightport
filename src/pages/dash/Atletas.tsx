@@ -2,8 +2,10 @@ import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, ChevronUp, ChevronDown, X } from 'lucide-react';
+import { Search, ChevronUp, ChevronDown, X, Users } from 'lucide-react';
 import { DashPagination } from '@/components/dash/DashPagination';
+import { DashTableSkeleton } from '@/components/dash/DashTableSkeleton';
+import { DashEmptyState } from '@/components/dash/DashEmptyState';
 import { supabase } from '@/integrations/supabase/client';
 import { maskCpf } from '@/lib/sensitive';
 
@@ -187,11 +189,14 @@ export default function Atletas() {
               </tr>
             </thead>
             <tbody>
-              {isLoading && (
-                <tr><td colSpan={8} style={{ padding: 24, textAlign: 'center', color: 'var(--color-text-muted)' }}>Carregando…</td></tr>
-              )}
+              {isLoading && <DashTableSkeleton columns={8} />}
               {!isLoading && rows.length === 0 && (
-                <tr><td colSpan={8} style={{ padding: 24, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhum atleta encontrado.</td></tr>
+                <DashEmptyState
+                  columns={8}
+                  icon={Users}
+                  title="Nenhum atleta encontrado"
+                  description="Ajuste os filtros para ver mais resultados."
+                />
               )}
               {(rows as any[]).map(r => (
                 <tr
