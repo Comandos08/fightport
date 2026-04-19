@@ -2,8 +2,10 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, Download, Copy, Building2, User } from 'lucide-react';
+import { Search, Download, Copy, Building2, User, Award } from 'lucide-react';
 import { DashPagination } from '@/components/dash/DashPagination';
+import { DashTableSkeleton } from '@/components/dash/DashTableSkeleton';
+import { DashEmptyState } from '@/components/dash/DashEmptyState';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
@@ -220,11 +222,14 @@ export default function Graduacoes() {
               </tr>
             </thead>
             <tbody>
-              {isLoading && (
-                <tr><td colSpan={7} style={{ padding: 24, textAlign: 'center', color: 'var(--color-text-muted)' }}>Carregando…</td></tr>
-              )}
+              {isLoading && <DashTableSkeleton columns={7} />}
               {!isLoading && rows.length === 0 && (
-                <tr><td colSpan={7} style={{ padding: 24, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma graduação encontrada.</td></tr>
+                <DashEmptyState
+                  columns={7}
+                  icon={Award}
+                  title="Nenhuma graduação encontrada"
+                  description="Ajuste os filtros para ver mais resultados."
+                />
               )}
               {(rows as any[]).map(r => (
                 <tr key={r.id} style={{ borderBottom: '1px solid var(--color-border)' }}>

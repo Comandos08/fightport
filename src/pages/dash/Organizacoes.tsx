@@ -2,8 +2,10 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, Download, ChevronUp, ChevronDown, X } from 'lucide-react';
+import { Search, Download, ChevronUp, ChevronDown, X, Building2 } from 'lucide-react';
 import { DashPagination } from '@/components/dash/DashPagination';
+import { DashTableSkeleton } from '@/components/dash/DashTableSkeleton';
+import { DashEmptyState } from '@/components/dash/DashEmptyState';
 import { supabase } from '@/integrations/supabase/client';
 
 type SortKey = 'name' | 'email' | 'city' | 'martial_art' | 'created_at' | 'balance' | 'total_spent';
@@ -218,11 +220,14 @@ export default function Organizacoes() {
               </tr>
             </thead>
             <tbody>
-              {isLoading && (
-                <tr><td colSpan={9} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)', padding: 40 }}>Carregando...</td></tr>
-              )}
+              {isLoading && <DashTableSkeleton columns={9} />}
               {!isLoading && rows.length === 0 && (
-                <tr><td colSpan={9} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)', padding: 40 }}>Nenhuma organização encontrada</td></tr>
+                <DashEmptyState
+                  columns={9}
+                  icon={Building2}
+                  title="Nenhuma organização encontrada"
+                  description="Ajuste os filtros para ver mais resultados."
+                />
               )}
               {rows.map((r: any) => (
                 <tr
