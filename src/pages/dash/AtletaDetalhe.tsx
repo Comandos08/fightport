@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Eye, EyeOff, Pencil, Award, Hash, Building2 } from 'lucide-react';
+import { Eye, EyeOff, Pencil, Hash, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import {
@@ -230,16 +230,7 @@ export default function AtletaDetalhe() {
       </DashSection>
 
       {/* Histórico de graduações */}
-      <DashSection
-        title={
-          <>
-            <Award style={{ width: 16, height: 16 }} /> Histórico de graduações
-            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
-              (imutáveis — somente leitura)
-            </span>
-          </>
-        }
-      >
+      <DashSection title="Histórico de graduações">
         {achievements.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', fontSize: 13, fontFamily: 'var(--font-sans)' }}>Nenhuma graduação registrada.</p>
         ) : (
