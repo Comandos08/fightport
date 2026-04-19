@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Ban, RefreshCw, Gift, X } from 'lucide-react';
+import { Ban, RefreshCw, Gift, X, Users, Award, DollarSign, FileSearch, MessageSquare } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 import { DashBackLink } from '@/components/dash/DashBackLink';
+import { DashTable, dashTd } from '@/components/dash/DashTable';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
@@ -221,25 +222,25 @@ export default function OrganizacaoDetalhe() {
       </div>
 
       {/* Atletas */}
-      <DashSection title={`Atletas (${practitioners.length})`}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>FP-ID</th><th style={th}>Nome</th><th style={th}>Faixa</th><th style={th}>Modalidade</th><th style={th}>Cadastro</th></tr></thead>
-            <tbody>
-              {practitioners.length === 0 && <tr><td colSpan={5} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhum atleta cadastrado</td></tr>}
-              {practitioners.slice(0, 20).map((p: any) => (
-                <tr key={p.id}>
-                  <td style={td}>{p.fp_id}</td>
-                  <td style={td}>{p.first_name} {p.last_name}</td>
-                  <td style={td}>{p.current_belt ?? '—'}</td>
-                  <td style={td}>{p.martial_art}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{format(new Date(p.created_at), 'dd/MM/yyyy')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {practitioners.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {practitioners.length}</p>}
-        </div>
+      <DashSection title={`Atletas (${practitioners.length})`} flush>
+        <DashTable
+          bare
+          headers={['FP-ID', 'Nome', 'Faixa', 'Modalidade', 'Cadastro']}
+          isEmpty={practitioners.length === 0}
+          emptyIcon={Users}
+          emptyTitle="Nenhum atleta cadastrado"
+        >
+          {practitioners.slice(0, 20).map((p: any) => (
+            <tr key={p.id}>
+              <td style={dashTd}>{p.fp_id}</td>
+              <td style={dashTd}>{p.first_name} {p.last_name}</td>
+              <td style={dashTd}>{p.current_belt ?? '—'}</td>
+              <td style={dashTd}>{p.martial_art}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{format(new Date(p.created_at), 'dd/MM/yyyy')}</td>
+            </tr>
+          ))}
+        </DashTable>
+        {practitioners.length > 20 && <p style={{ ...muted, padding: '8px 20px 16px' }}>Mostrando 20 de {practitioners.length}</p>}
       </DashSection>
 
       {/* Graduações */}
