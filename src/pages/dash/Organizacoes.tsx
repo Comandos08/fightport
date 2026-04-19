@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, Download, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Search, Download, ChevronUp, ChevronDown, X } from 'lucide-react';
+import { DashPagination } from '@/components/dash/DashPagination';
 import { supabase } from '@/integrations/supabase/client';
 
 type SortKey = 'name' | 'email' | 'city' | 'martial_art' | 'created_at' | 'balance' | 'total_spent';
@@ -257,20 +258,13 @@ export default function Organizacoes() {
       </div>
 
       {/* Paginação */}
-      <div className="flex items-center justify-between" style={{ marginTop: 16 }}>
-        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>
-          Página {page + 1} de {totalPages} · {total} {total === 1 ? 'resultado' : 'resultados'}
-        </span>
-        <div className="flex items-center" style={{ gap: 8 }}>
-          <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
-            style={{ height: 30, padding: '0 10px', display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: page === 0 ? 'not-allowed' : 'pointer', opacity: page === 0 ? 0.5 : 1 }}>
-            <ChevronLeft style={{ width: 14, height: 14 }} /> Anterior
-          </button>
-          <button onClick={() => setPage(Math.min(totalPages - 1, page + 1))} disabled={page >= totalPages - 1}
-            style={{ height: 30, padding: '0 10px', display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer', opacity: page >= totalPages - 1 ? 0.5 : 1 }}>
-            Próxima <ChevronRight style={{ width: 14, height: 14 }} />
-          </button>
-        </div>
+      <DashPagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        limit={limit}
+        onPageChange={setPage}
+      />
       </div>
     </div>
   );
