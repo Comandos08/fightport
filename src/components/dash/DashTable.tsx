@@ -57,6 +57,8 @@ type Props = {
     limit: number;
     onPageChange: (page: number) => void;
   };
+  /** Remove borda externa e radius — útil quando aninhada dentro de DashSection flush. */
+  bare?: boolean;
 };
 
 /**
