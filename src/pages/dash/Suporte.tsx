@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
+import { DashPageHeader } from '@/components/dash/DashPageHeader';
+import { dashInputStyle as ipt } from '@/components/dash/DashFiltersBar';
 
 const STATUS_LABEL: Record<string, string> = {
   open: 'Aberto',
@@ -21,11 +23,6 @@ const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
   awaiting_school: { bg: '#bfdbfe', fg: '#1e40af' },
   resolved:        { bg: '#bbf7d0', fg: '#166534' },
   closed:          { bg: '#e5e7eb', fg: '#374151' },
-};
-const ipt: React.CSSProperties = {
-  height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
-  background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
 };
 
 export default function DashSuporte() {
