@@ -16,6 +16,7 @@ import { maskCpf, maskBirthDate, formatCpf, formatBirthDate } from '@/lib/sensit
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
+import { DashBackLink } from '@/components/dash/DashBackLink';
 
 const REVEAL_MS = 60_000;
 
@@ -42,7 +43,6 @@ const EDITABLE_FIELDS: { key: string; label: string; type?: string }[] = [
 
 export default function AtletaDetalhe() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const qc = useQueryClient();
 
   const [revealed, setRevealed] = useState(false);
