@@ -172,9 +172,7 @@ export default function OrganizacaoDetalhe() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Voltar */}
-      <Link to="/dash/organizacoes" className="inline-flex items-center no-underline" style={{ gap: 6, color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12, alignSelf: 'flex-start' }}>
-        <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar para organizações
-      </Link>
+      <DashBackLink to="/dash/organizacoes" label="Voltar para organizações" />
 
       {/* Cabeçalho padrão com logo opcional */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
