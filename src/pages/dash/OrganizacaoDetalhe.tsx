@@ -143,11 +143,11 @@ export default function OrganizacaoDetalhe() {
         <Gift style={{ width: 14, height: 14 }} /> Conceder cortesia
       </button>
       {s.is_suspended ? (
-        <button onClick={() => setShowReactivate(true)} style={{ ...dashOutlineButtonStyle, color: '#16a34a', borderColor: '#16a34a' }}>
+        <button onClick={() => setShowReactivate(true)} style={dashOutlineButtonStyle}>
           <RefreshCw style={{ width: 14, height: 14 }} /> Reativar
         </button>
       ) : (
-        <button onClick={() => setShowSuspend(true)} style={{ ...dashOutlineButtonStyle, color: '#dc2626', borderColor: '#dc2626' }}>
+        <button onClick={() => setShowSuspend(true)} style={dashOutlineButtonStyle}>
           <Ban style={{ width: 14, height: 14 }} /> Suspender
         </button>
       )}
