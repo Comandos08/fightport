@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LogOut, Menu, X,
@@ -24,6 +24,41 @@ export function DashHeader() {
   const { user, signOut } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const isHorizontalSwipe = useRef<boolean>(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    isHorizontalSwipe.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    const dy = e.touches[0].clientY - touchStartY.current;
+
+    // Determina direção dominante na primeira movimentação relevante
+    if (!isHorizontalSwipe.current && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      isHorizontalSwipe.current = Math.abs(dx) > Math.abs(dy);
+    }
+    if (!isHorizontalSwipe.current) return;
+
+    // Apenas swipe à esquerda (dx negativo) move o drawer
+    if (dx < 0) setDragOffset(dx);
+  };
+
+  const handleTouchEnd = () => {
+    if (isHorizontalSwipe.current && dragOffset < -70) {
+      setMobileOpen(false);
+    }
+    setDragOffset(0);
+    touchStartX.current = null;
+    touchStartY.current = null;
+    isHorizontalSwipe.current = false;
+  };
 
   const { data: school } = useQuery({
     queryKey: ['school-admin-name', user?.id],
@@ -136,7 +171,17 @@ export function DashHeader() {
           />
           <aside
             className="absolute left-0 top-0 bottom-0 flex flex-col animate-in slide-in-from-left duration-200"
-            style={{ width: 280, background: 'var(--color-bg)' }}
+            style={{
+              width: 280,
+              background: 'var(--color-bg)',
+              transform: dragOffset < 0 ? `translateX(${dragOffset}px)` : undefined,
+              transition: dragOffset === 0 ? 'transform 200ms ease-out' : 'none',
+              touchAction: 'pan-y',
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
           >
             <div
               className="flex items-center justify-between"
