@@ -10,12 +10,12 @@ import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { sendNotification } from '@/lib/notifications';
 
-const STATUS_LABEL: Record<string, string> = {
-  open: 'Aberto',
-  awaiting_admin: 'Aguardando suporte',
-  awaiting_school: 'Aguardando escola',
-  resolved: 'Resolvido',
-  closed: 'Encerrado',
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  open: 'dash.support.status.open',
+  awaiting_admin: 'dash.support.status.awaitingAdmin',
+  awaiting_school: 'dash.support.status.awaitingSchool',
+  resolved: 'dash.support.status.resolved',
+  closed: 'dash.support.status.closed',
 };
 const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
   open:            { bg: '#fde68a', fg: '#92400e' },
@@ -134,7 +134,7 @@ export default function DashSuporte() {
         </div>
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ ...ipt, width: '100%', maxWidth: 240 }}>
           <option value="open">{t('dash.support.filters.open')}</option>
-          <option value="awaiting_school">Aguardando escola</option>
+          <option value="awaiting_school">{t('dash.support.filters.awaitingSchool')}</option>
           <option value="resolved">{t('dash.support.filters.resolved')}</option>
           <option value="all">{t('dash.support.filters.all')}</option>
         </select>
@@ -202,7 +202,7 @@ export default function DashSuporte() {
                       fontFamily: 'var(--font-sans)', fontSize: 10, padding: '2px 6px', borderRadius: 4,
                       background: sc.bg, color: sc.fg,
                     }}>
-                      {STATUS_LABEL[t.status]}
+                      {t(STATUS_LABEL_KEYS[t.status] ?? STATUS_LABEL_KEYS.open)}
                     </span>
                     <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)' }}>
                       {format(new Date(t.last_message_at), 'dd/MM HH:mm')}
@@ -251,7 +251,7 @@ export default function DashSuporte() {
                       <Link to={`/dash/organizacoes/${selected.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                         <Building2 style={{ width: 12, height: 12 }} /> {selected.school_name}
                       </Link>
-                      <span>· {selected.category} · {STATUS_LABEL[selected.status]}</span>
+                      <span>· {selected.category} · {t(STATUS_LABEL_KEYS[selected.status] ?? STATUS_LABEL_KEYS.open)}</span>
                     </div>
                   </div>
                 </div>

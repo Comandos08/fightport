@@ -206,7 +206,7 @@ export default function Auditoria() {
             borderRadius: 'var(--radius-sm)', background: 'var(--color-bg)',
             fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
             color: 'var(--color-text-muted)', cursor: 'pointer', width: '100%',
-          }}>Limpar</button>
+          }}>{t('dash.common.clear')}</button>
         </div>
       </div>
 
