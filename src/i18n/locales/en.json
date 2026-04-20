@@ -492,5 +492,223 @@
     "recoveryEmailSent": "Recovery email sent. Check your inbox.",
     "linkCopied": "Optimized link copied to clipboard",
     "select": "Select"
+  },
+  "dash": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "organizations": "Organizations",
+      "athletes": "Athletes",
+      "graduations": "Graduations",
+      "financial": "Financial",
+      "support": "Support",
+      "audit": "Audit"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Platform overview",
+      "metrics": {
+        "totalSchools": "Registered schools",
+        "totalAthletes": "Registered athletes",
+        "totalGraduations": "Recorded graduations",
+        "totalRevenue": "Total revenue",
+        "activeSchools": "Active schools",
+        "suspendedSchools": "Suspended schools",
+        "creditsConsumed": "Credits consumed",
+        "creditsPurchased": "Credits purchased"
+      },
+      "charts": {
+        "revenuePerMonth": "Monthly revenue (12 months)",
+        "graduationsPerMonth": "Graduations per month",
+        "schoolsPerMonth": "New schools per month"
+      },
+      "alerts": {
+        "title": "Alerts",
+        "pendingTickets": "{{count}} ticket(s) awaiting response",
+        "noAlerts": "No alerts at the moment"
+      }
+    },
+    "organizations": {
+      "title": "Organizations",
+      "subtitle": "List of all schools registered on the platform.",
+      "exportCsv": "Export CSV",
+      "searchPlaceholder": "Search by name, email or city...",
+      "filters": {
+        "all": "All",
+        "active": "Active",
+        "suspended": "Suspended"
+      },
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "city": "City",
+        "martialArt": "Martial Art",
+        "balance": "Balance",
+        "status": "Status",
+        "createdAt": "Registered"
+      },
+      "status": {
+        "active": "Active",
+        "suspended": "Suspended"
+      },
+      "empty": "No organization found.",
+      "detail": {
+        "back": "Back to organizations",
+        "suspend": "Suspend",
+        "reactivate": "Reactivate",
+        "grantCourtesy": "Grant courtesy",
+        "sections": {
+          "registrationData": "Registration data",
+          "credits": "Credits",
+          "athletes": "Athletes",
+          "graduations": "Issued graduations",
+          "financialHistory": "Financial history",
+          "supportTickets": "Open support tickets",
+          "adminActions": "Admin action history",
+          "schoolActions": "School action history"
+        },
+        "fields": {
+          "name": "Name",
+          "martialArt": "Martial art",
+          "cityState": "City/State",
+          "email": "Email",
+          "createdAt": "Registered",
+          "headCoach": "Head coach",
+          "balance": "Balance",
+          "totalPurchased": "Total purchased",
+          "totalConsumed": "Total consumed",
+          "totalSpent": "Total spent"
+        },
+        "modals": {
+          "suspend": {
+            "title": "Suspend organization",
+            "desc": "The organization will lose access to the panel. Data is preserved.",
+            "reason": "Reason *",
+            "reasonPlaceholder": "Describe the reason for suspension",
+            "confirm": "Suspend",
+            "cancel": "Cancel"
+          },
+          "reactivate": {
+            "title": "Reactivate organization",
+            "reason": "Reason *",
+            "reasonPlaceholder": "Describe the reason for reactivation",
+            "confirm": "Reactivate",
+            "cancel": "Cancel"
+          },
+          "courtesy": {
+            "title": "Grant courtesy credits",
+            "amount": "Amount *",
+            "amountPlaceholder": "E.g. 10",
+            "reason": "Reason *",
+            "reasonPlaceholder": "Justification for the bonus",
+            "confirm": "Grant",
+            "cancel": "Cancel"
+          }
+        }
+      }
+    },
+    "athletes": {
+      "title": "Athletes",
+      "subtitle": "Global view of all practitioners registered on the platform.",
+      "searchPlaceholder": "Name, FP-ID or CPF...",
+      "filters": {
+        "allSchools": "All",
+        "allArts": "All",
+        "allBelts": "All belts"
+      },
+      "table": {
+        "name": "Name",
+        "fpId": "FP-ID",
+        "cpf": "CPF",
+        "school": "School",
+        "art": "Art",
+        "belt": "Belt",
+        "graduations": "Graduations",
+        "createdAt": "Registered"
+      },
+      "empty": "No athlete found."
+    },
+    "graduations": {
+      "title": "Graduations",
+      "subtitle": "Global history of all recorded graduations (read-only — immutable).",
+      "exportCsv": "Export CSV",
+      "searchPlaceholder": "Athlete name, FP-ID or hash...",
+      "table": {
+        "dateTime": "Date/Time",
+        "athlete": "Athlete",
+        "school": "School",
+        "martialArt": "Martial Art",
+        "belt": "Belt",
+        "graduatedBy": "Graduated by",
+        "hash": "Hash"
+      },
+      "empty": "No graduation found."
+    },
+    "financial": {
+      "title": "Financial",
+      "subtitle": "Revenue, MRR, LTV and repurchase calculated in real time from purchase transactions.",
+      "exportCsv": "CSV",
+      "exportPdf": "PDF",
+      "period": "Period",
+      "periods": {
+        "30": "30 days",
+        "90": "90 days",
+        "365": "1 year",
+        "all": "All"
+      },
+      "metrics": {
+        "periodRevenue": "Period revenue",
+        "transactions": "Transactions",
+        "avgTicket": "Avg. ticket",
+        "uniqueSchools": "Unique schools",
+        "mrr": "MRR (3-month avg)",
+        "ltv": "Estimated LTV",
+        "repurchaseRate": "Repurchase rate",
+        "purchasesPerSchool": "Purchases / School"
+      },
+      "charts": {
+        "revenueByPackage": "Revenue by package",
+        "monthlyRevenue": "Monthly revenue (12 months)",
+        "distributionByPackage": "Distribution by package",
+        "topSchools": "Top schools by revenue"
+      }
+    },
+    "support": {
+      "title": "Support",
+      "subtitle": "Tickets from all schools. Select one to reply.",
+      "filters": {
+        "open": "Open",
+        "resolved": "Resolved",
+        "all": "All"
+      },
+      "empty": "No ticket in this category.",
+      "selectTicket": "Select a ticket to see the conversation.",
+      "reply": {
+        "placeholder": "Type your reply...",
+        "send": "Send"
+      }
+    },
+    "audit": {
+      "title": "Audit",
+      "subtitle": "Immutable record of all administrative actions. Read-only.",
+      "exportCsv": "Export CSV",
+      "filters": {
+        "allActions": "All",
+        "allTypes": "All"
+      },
+      "searchPlaceholder": "ID, target name or admin",
+      "table": {
+        "dateTime": "Date/Time",
+        "admin": "Admin",
+        "action": "Action",
+        "target": "Target",
+        "ip": "IP",
+        "details": "Details"
+      },
+      "empty": "No action recorded.",
+      "modal": {
+        "title": "Action details",
+        "close": "Close"
+      }
+    }
   }
 }

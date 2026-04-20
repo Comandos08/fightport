@@ -568,5 +568,223 @@
     "recoveryEmailSent": "E-mail de recuperação enviado. Verifique sua caixa de entrada.",
     "linkCopied": "Link otimizado copiado para a área de transferência",
     "select": "Selecione"
+  },
+  "dash": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "organizations": "Organizações",
+      "athletes": "Atletas",
+      "graduations": "Graduações",
+      "financial": "Financeiro",
+      "support": "Suporte",
+      "audit": "Auditoria"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Visão geral da plataforma",
+      "metrics": {
+        "totalSchools": "Escolas cadastradas",
+        "totalAthletes": "Atletas cadastrados",
+        "totalGraduations": "Graduações registradas",
+        "totalRevenue": "Receita total",
+        "activeSchools": "Escolas ativas",
+        "suspendedSchools": "Escolas suspensas",
+        "creditsConsumed": "Créditos consumidos",
+        "creditsPurchased": "Créditos comprados"
+      },
+      "charts": {
+        "revenuePerMonth": "Receita mensal (12 meses)",
+        "graduationsPerMonth": "Graduações por mês",
+        "schoolsPerMonth": "Novas escolas por mês"
+      },
+      "alerts": {
+        "title": "Alertas",
+        "pendingTickets": "{{count}} ticket(s) aguardando resposta",
+        "noAlerts": "Nenhum alerta no momento"
+      }
+    },
+    "organizations": {
+      "title": "Organizações",
+      "subtitle": "Lista de todas as escolas cadastradas na plataforma.",
+      "exportCsv": "Exportar CSV",
+      "searchPlaceholder": "Buscar por nome, email ou cidade...",
+      "filters": {
+        "all": "Todas",
+        "active": "Ativas",
+        "suspended": "Suspensas"
+      },
+      "table": {
+        "name": "Nome",
+        "email": "E-mail",
+        "city": "Cidade",
+        "martialArt": "Arte Marcial",
+        "balance": "Saldo",
+        "status": "Status",
+        "createdAt": "Cadastro"
+      },
+      "status": {
+        "active": "Ativa",
+        "suspended": "Suspensa"
+      },
+      "empty": "Nenhuma organização encontrada.",
+      "detail": {
+        "back": "Voltar para organizações",
+        "suspend": "Suspender",
+        "reactivate": "Reativar",
+        "grantCourtesy": "Conceder cortesia",
+        "sections": {
+          "registrationData": "Dados cadastrais",
+          "credits": "Créditos",
+          "athletes": "Atletas",
+          "graduations": "Graduações emitidas",
+          "financialHistory": "Histórico financeiro",
+          "supportTickets": "Tickets de suporte abertos",
+          "adminActions": "Histórico de ações administrativas",
+          "schoolActions": "Histórico de ações da escola"
+        },
+        "fields": {
+          "name": "Nome",
+          "martialArt": "Arte marcial",
+          "cityState": "Cidade/UF",
+          "email": "Email",
+          "createdAt": "Cadastro",
+          "headCoach": "Head coach",
+          "balance": "Saldo",
+          "totalPurchased": "Total comprado",
+          "totalConsumed": "Total consumido",
+          "totalSpent": "Total gasto"
+        },
+        "modals": {
+          "suspend": {
+            "title": "Suspender organização",
+            "desc": "A organização perderá acesso ao painel. Os dados são preservados.",
+            "reason": "Motivo *",
+            "reasonPlaceholder": "Descreva o motivo da suspensão",
+            "confirm": "Suspender",
+            "cancel": "Cancelar"
+          },
+          "reactivate": {
+            "title": "Reativar organização",
+            "reason": "Motivo *",
+            "reasonPlaceholder": "Descreva o motivo da reativação",
+            "confirm": "Reativar",
+            "cancel": "Cancelar"
+          },
+          "courtesy": {
+            "title": "Conceder créditos de cortesia",
+            "amount": "Quantidade *",
+            "amountPlaceholder": "Ex.: 10",
+            "reason": "Motivo *",
+            "reasonPlaceholder": "Justificativa para o bônus",
+            "confirm": "Conceder",
+            "cancel": "Cancelar"
+          }
+        }
+      }
+    },
+    "athletes": {
+      "title": "Atletas",
+      "subtitle": "Visão global de todos os praticantes cadastrados na plataforma.",
+      "searchPlaceholder": "Nome, FP-ID ou CPF...",
+      "filters": {
+        "allSchools": "Todas",
+        "allArts": "Todas",
+        "allBelts": "Todas as faixas"
+      },
+      "table": {
+        "name": "Nome",
+        "fpId": "FP-ID",
+        "cpf": "CPF",
+        "school": "Escola",
+        "art": "Arte",
+        "belt": "Faixa",
+        "graduations": "Graduações",
+        "createdAt": "Cadastro"
+      },
+      "empty": "Nenhum atleta encontrado."
+    },
+    "graduations": {
+      "title": "Graduações",
+      "subtitle": "Histórico global de todas as graduações registradas (somente leitura — imutáveis).",
+      "exportCsv": "Exportar CSV",
+      "searchPlaceholder": "Nome do atleta, FP-ID ou hash...",
+      "table": {
+        "dateTime": "Data/Hora",
+        "athlete": "Atleta",
+        "school": "Escola",
+        "martialArt": "Arte Marcial",
+        "belt": "Faixa",
+        "graduatedBy": "Graduado por",
+        "hash": "Hash"
+      },
+      "empty": "Nenhuma graduação encontrada."
+    },
+    "financial": {
+      "title": "Financeiro",
+      "subtitle": "Receita, MRR, LTV e recompra calculados em tempo real sobre as transações de compra.",
+      "exportCsv": "CSV",
+      "exportPdf": "PDF",
+      "period": "Período",
+      "periods": {
+        "30": "30 dias",
+        "90": "90 dias",
+        "365": "1 ano",
+        "all": "Tudo"
+      },
+      "metrics": {
+        "periodRevenue": "Receita do período",
+        "transactions": "Transações",
+        "avgTicket": "Ticket médio",
+        "uniqueSchools": "Escolas únicas",
+        "mrr": "MRR (Média 3 meses)",
+        "ltv": "LTV estimado",
+        "repurchaseRate": "Taxa de recompra",
+        "purchasesPerSchool": "Compras / Escola"
+      },
+      "charts": {
+        "revenueByPackage": "Receita por pacote",
+        "monthlyRevenue": "Receita mensal (12 meses)",
+        "distributionByPackage": "Distribuição por pacote",
+        "topSchools": "Top escolas por receita"
+      }
+    },
+    "support": {
+      "title": "Suporte",
+      "subtitle": "Tickets de todas as escolas. Selecione um para responder.",
+      "filters": {
+        "open": "Abertos",
+        "resolved": "Resolvidos",
+        "all": "Todos"
+      },
+      "empty": "Nenhum ticket nesta categoria.",
+      "selectTicket": "Selecione um ticket para ver a conversa.",
+      "reply": {
+        "placeholder": "Digite sua resposta...",
+        "send": "Enviar"
+      }
+    },
+    "audit": {
+      "title": "Auditoria",
+      "subtitle": "Registro imutável de todas as ações administrativas. Somente leitura.",
+      "exportCsv": "Exportar CSV",
+      "filters": {
+        "allActions": "Todas",
+        "allTypes": "Todos"
+      },
+      "searchPlaceholder": "ID, nome do alvo ou admin",
+      "table": {
+        "dateTime": "Data/Hora",
+        "admin": "Admin",
+        "action": "Ação",
+        "target": "Alvo",
+        "ip": "IP",
+        "details": "Detalhes"
+      },
+      "empty": "Nenhuma ação registrada.",
+      "modal": {
+        "title": "Detalhes da ação",
+        "close": "Fechar"
+      }
+    }
   }
 }
