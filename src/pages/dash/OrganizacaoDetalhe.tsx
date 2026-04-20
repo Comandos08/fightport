@@ -44,6 +44,9 @@ export default function OrganizacaoDetalhe() {
   const [reason, setReason] = useState('');
   const [bonusAmount, setBonusAmount] = useState('');
   const [bonusReason, setBonusReason] = useState('');
+  const [pracPage, setPracPage] = useState(0);
+  const [achPage, setAchPage] = useState(0);
+  const PAGE_SIZE = 20;
 
   const { data: detail, isLoading } = useQuery({
     queryKey: ['admin-school', id],
