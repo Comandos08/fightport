@@ -336,41 +336,59 @@ export default function Financeiro() {
         {topSchools.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', fontSize: 13 }}>Nenhuma compra no período.</p>
         ) : (
-          <div style={{ width: '100%', height: Math.max(220, topSchools.length * 32) }}>
-            <ResponsiveContainer>
-              <BarChart data={topSchools as any[]} layout="vertical" margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" />
-                <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} tickFormatter={(v) => fmtBRL(Number(v))} />
-                <YAxis dataKey="school_name" type="category" width={160} tick={{ fontSize: 11, fill: 'var(--color-text)' }} />
-                <RTooltip formatter={(v: any) => fmtBRL(Number(v))} />
-                <Bar dataKey="total_revenue" fill={CHART_ACCENT} radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-        {topSchools.length > 0 && (
-          <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {(topSchools as any[]).map((s, i) => (
-              <Link
-                key={s.school_id}
-                to={`/dash/organizacoes/${s.school_id}`}
-                style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '6px 8px', borderRadius: 'var(--radius-sm, 6px)',
-                  fontFamily: 'var(--font-sans)', fontSize: 12,
-                  color: 'var(--color-text)', textDecoration: 'none',
-                  border: '1px solid var(--color-border)',
-                }}
-              >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ color: 'var(--color-text-muted)', minWidth: 18 }}>{i + 1}.</span>
-                  <Building2 style={{ width: 12, height: 12 }} />
-                  {s.school_name}
-                </span>
-                <span style={{ color: 'var(--color-text-muted)' }}>{fmtBRL(s.total_revenue)}</span>
-              </Link>
-            ))}
-          </div>
+          <>
+            {/* BarChart: oculto em mobile, visível em lg+ */}
+            <div
+              className="hidden lg:block"
+              style={{ width: '100%', height: Math.max(220, topSchools.length * 32) }}
+            >
+              <ResponsiveContainer>
+                <BarChart data={topSchools as any[]} layout="vertical" margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+                  <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" />
+                  <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} tickFormatter={(v) => fmtBRL(Number(v))} />
+                  <YAxis dataKey="school_name" type="category" width={160} tick={{ fontSize: 11, fill: 'var(--color-text)' }} />
+                  <RTooltip formatter={(v: any) => fmtBRL(Number(v))} />
+                  <Bar dataKey="total_revenue" fill={CHART_ACCENT} radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Lista compacta: sempre visível (substitui o gráfico em mobile) */}
+            <div className="lg:mt-3" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {(topSchools as any[]).map((s, i) => (
+                <Link
+                  key={s.school_id}
+                  to={`/dash/organizacoes/${s.school_id}`}
+                  style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8,
+                    padding: '10px 12px', borderRadius: 'var(--radius-sm, 6px)',
+                    fontFamily: 'var(--font-sans)', fontSize: 13,
+                    color: 'var(--color-text)', textDecoration: 'none',
+                    border: '1px solid var(--color-border)',
+                    background: 'var(--color-bg)',
+                  }}
+                >
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 }}>
+                    <span style={{ color: 'var(--color-text-muted)', minWidth: 20, fontVariantNumeric: 'tabular-nums', fontSize: 12 }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <Building2 style={{ width: 14, height: 14, flexShrink: 0, color: 'var(--color-text-muted)' }} />
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {s.school_name}
+                    </span>
+                  </span>
+                  <span style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-end', flexShrink: 0 }}>
+                    <span style={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+                      {fmtBRL(s.total_revenue)}
+                    </span>
+                    <span style={{ color: 'var(--color-text-muted)', fontSize: 11 }}>
+                      {s.tx_count} {s.tx_count === 1 ? 'transação' : 'transações'}
+                    </span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
