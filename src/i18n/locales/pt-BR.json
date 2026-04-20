@@ -150,7 +150,16 @@
     "clearFilters": "Limpar filtros",
     "viewPassport": "Ver passaporte",
     "registerAchievement": "Registrar conquista",
-    "edit": "Editar"
+    "edit": "Editar",
+    "achievements": {
+      "date": "Data",
+      "belt": "Faixa",
+      "graduatedBy": "Graduado por",
+      "hash": "Hash",
+      "empty": "Nenhuma conquista registrada ainda.",
+      "loading": "Carregando conquistas...",
+      "copied": "Hash copiada para a área de transferência"
+    }
   },
   "newPractitioner": {
     "title": "Novo Praticante",
