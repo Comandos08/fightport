@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
+import { LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy, Clock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
