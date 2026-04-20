@@ -47,6 +47,8 @@ export default function OrganizacaoDetalhe() {
   const [bonusReason, setBonusReason] = useState('');
   const [pracPage, setPracPage] = useState(0);
   const [achPage, setAchPage] = useState(0);
+  const [schoolAuditPage, setSchoolAuditPage] = useState(0);
+  const [schoolAuditFilter, setSchoolAuditFilter] = useState<string>('');
   const PAGE_SIZE = 20;
 
   const { data: detail, isLoading } = useQuery({
