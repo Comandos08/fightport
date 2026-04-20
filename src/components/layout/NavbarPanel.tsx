@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import logoFightport from '@/assets/logo-fightport.png';
@@ -12,15 +12,40 @@ export function NavbarPanel() {
   const { t } = useTranslation();
   const { user, signOut } = useAuth();
   const location = useLocation();
+  const qc = useQueryClient();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const { data: unread = 0 } = useQuery({
+    queryKey: ['school-unread-count', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.rpc('school_unread_messages_count');
+      return Number(data ?? 0);
+    },
+    enabled: !!user,
+    refetchOnWindowFocus: true,
+  });
+
+  // Realtime global: badge de Suporte sempre atualizado
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`navbar-school-unread-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'support_messages' },
+        () => { qc.invalidateQueries({ queryKey: ['school-unread-count'] }); }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user?.id, qc]);
+
   const links = [
-    { to: '/painel', label: t('app.nav.dashboard'), icon: LayoutDashboard, exact: true },
-    { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false },
-    { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true },
-    { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true },
-    { to: '/painel/suporte', label: 'Suporte', icon: LifeBuoy, exact: false },
-    { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true },
+    { to: '/painel', label: t('app.nav.dashboard'), icon: LayoutDashboard, exact: true, badge: 0 },
+    { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false, badge: 0 },
+    { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true, badge: 0 },
+    { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true, badge: 0 },
+    { to: '/painel/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, badge: unread },
+    { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true, badge: 0 },
   ];
 
   const isActive = (to: string, exact: boolean) => {
