@@ -122,6 +122,36 @@ export default function PainelSuporte() {
     if (threadRef.current) threadRef.current.scrollTop = threadRef.current.scrollHeight;
   }, [messages.length, selectedId]);
 
+  // Realtime: atualiza badge de não-lidas e thread aberto quando admin envia nova mensagem
+  useEffect(() => {
+    if (!user || ticketIds.length === 0) return;
+    const channel = supabase
+      .channel(`school-support-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'support_messages' },
+        (payload) => {
+          const msg = payload.new as any;
+          if (!ticketIds.includes(msg.ticket_id)) return;
+          if (msg.author_type !== 'admin') return;
+          if (msg.ticket_id === selectedId) {
+            // Ticket aberto: recarrega thread e marca como lido (não conta como não-lido)
+            qc.invalidateQueries({ queryKey: ['school-ticket-messages', selectedId] });
+            supabase.rpc('mark_messages_read', { p_ticket_id: selectedId, p_role: 'school' }).then(() => {
+              qc.invalidateQueries({ queryKey: ['school-unread-count'] });
+              qc.invalidateQueries({ queryKey: ['school-tickets-unread'] });
+            });
+          } else {
+            qc.invalidateQueries({ queryKey: ['school-tickets-unread'] });
+            qc.invalidateQueries({ queryKey: ['school-unread-count'] });
+            qc.invalidateQueries({ queryKey: ['school-tickets'] });
+          }
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user?.id, ticketIds.join(','), selectedId, qc]);
+
   const createTicket = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error('Sem usuário');
