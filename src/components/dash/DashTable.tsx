@@ -57,8 +57,6 @@ type Props = {
     limit: number;
     onPageChange: (page: number) => void;
   };
-  /** Remove borda externa e radius — útil quando aninhada dentro de DashSection flush. */
-  bare?: boolean;
 };
 
 /**
@@ -78,7 +76,6 @@ export function DashTable({
   emptyTitle,
   emptyDescription,
   pagination,
-  bare = false,
 }: Props) {
   const columns = headers.length;
 
@@ -86,8 +83,8 @@ export function DashTable({
     <div
       style={{
         background: 'var(--color-bg)',
-        border: bare ? 'none' : '1px solid var(--color-border)',
-        borderRadius: bare ? 0 : 'var(--radius-md, 8px)',
+        border: '1px solid var(--color-border)',
+        borderRadius: 'var(--radius-md, 8px)',
         overflow: 'hidden',
       }}
     >

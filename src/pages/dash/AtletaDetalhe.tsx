@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Eye, EyeOff, Pencil, Hash, Building2 } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Pencil, Award, Hash, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import {
@@ -16,7 +16,6 @@ import { maskCpf, maskBirthDate, formatCpf, formatBirthDate } from '@/lib/sensit
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
-import { DashBackLink } from '@/components/dash/DashBackLink';
 
 const REVEAL_MS = 60_000;
 
@@ -43,6 +42,7 @@ const EDITABLE_FIELDS: { key: string; label: string; type?: string }[] = [
 
 export default function AtletaDetalhe() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const qc = useQueryClient();
 
   const [revealed, setRevealed] = useState(false);
@@ -147,16 +147,26 @@ export default function AtletaDetalhe() {
   };
 
   if (isLoading) {
-    return <div style={{ padding: 24, color: 'var(--color-text-muted)' }}>Carregando…</div>;
+    return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', color: 'var(--color-text-muted)' }}>Carregando…</div>;
   }
   if (!p) {
-    return <div style={{ padding: 24, color: 'var(--color-text-muted)' }}>Atleta não encontrado.</div>;
+    return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', color: 'var(--color-text-muted)' }}>Atleta não encontrado.</div>;
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Voltar */}
-      <DashBackLink to="/dash/atletas" label="Voltar para atletas" />
+      <button
+        onClick={() => navigate('/dash/atletas')}
+        style={{
+          background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12,
+          alignSelf: 'flex-start',
+        }}
+      >
+        <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar para atletas
+      </button>
 
       {/* Cabeçalho padrão */}
       <DashPageHeader
@@ -230,7 +240,16 @@ export default function AtletaDetalhe() {
       </DashSection>
 
       {/* Histórico de graduações */}
-      <DashSection title="Histórico de graduações">
+      <DashSection
+        title={
+          <>
+            <Award style={{ width: 16, height: 16 }} /> Histórico de graduações
+            <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
+              (imutáveis — somente leitura)
+            </span>
+          </>
+        }
+      >
         {achievements.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', fontSize: 13, fontFamily: 'var(--font-sans)' }}>Nenhuma graduação registrada.</p>
         ) : (
