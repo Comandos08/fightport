@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,15 @@ export function Sidebar() {
     refetchOnWindowFocus: true,
   });
 
+  // Pulso visual no badge ao chegar nova mensagem do admin
+  const [pulse, setPulse] = useState(false);
+  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const triggerPulse = () => {
+    setPulse(true);
+    if (pulseTimer.current) clearTimeout(pulseTimer.current);
+    pulseTimer.current = setTimeout(() => setPulse(false), 3000);
+  };
+
   // Realtime global: atualiza badge + dispara toast sutil ao receber resposta do admin
   useEffect(() => {
     if (!user) return;
@@ -37,6 +46,7 @@ export function Sidebar() {
           const msg = payload.new as { author_type?: string; ticket_id?: string };
           qc.invalidateQueries({ queryKey: ['school-unread-count'] });
           if (msg?.author_type !== 'admin') return;
+          triggerPulse();
           // Não mostra toast quando o usuário já está na página de Suporte
           if (location.pathname.startsWith('/painel/suporte')) return;
           toast('Nova resposta do suporte', {
@@ -54,7 +64,10 @@ export function Sidebar() {
         () => { qc.invalidateQueries({ queryKey: ['school-unread-count'] }); }
       )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+      if (pulseTimer.current) clearTimeout(pulseTimer.current);
+    };
   }, [user?.id, qc, location.pathname, navigate]);
 
 
@@ -127,12 +140,25 @@ export function Sidebar() {
               <Icon style={{ width: 16, height: 16 }} />
               <span style={{ flex: 1 }}>{label}</span>
               {badge > 0 && (
-                <span style={{
-                  fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
-                  padding: '1px 6px', borderRadius: 999,
-                  background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
-                }}>
-                  {badgeLabel ?? badge}
+                <span style={{ position: 'relative', display: 'inline-flex' }}>
+                  <span style={{
+                    fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
+                    padding: '1px 6px', borderRadius: 999,
+                    background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
+                  }}>
+                    {badgeLabel ?? badge}
+                  </span>
+                  {to === '/painel/suporte' && pulse && (
+                    <span
+                      aria-hidden
+                      className="animate-ping"
+                      style={{
+                        position: 'absolute', top: -2, right: -2,
+                        width: 8, height: 8, borderRadius: 999,
+                        background: '#C8F135',
+                      }}
+                    />
+                  )}
                 </span>
               )}
             </Link>
