@@ -37,7 +37,23 @@ export default function CreditosPage() {
     setLoadingPkg(pkgRawName);
     try {
       const { data, error } = await supabase.functions.invoke('mercadopago-checkout', { body: { package_name: pkgRawName } });
-      if (error) throw error;
+      if (error) {
+        // Tenta extrair body JSON do erro (ex: 429 com mensagem amigável)
+        let friendly: string | null = null;
+        try {
+          const ctx: any = (error as any).context;
+          if (ctx && typeof ctx.json === 'function') {
+            const parsed = await ctx.json();
+            if (parsed?.error) friendly = parsed.error;
+          } else if (ctx && typeof ctx.text === 'function') {
+            const txt = await ctx.text();
+            try { const parsed = JSON.parse(txt); if (parsed?.error) friendly = parsed.error; } catch { /* noop */ }
+          }
+        } catch { /* noop */ }
+        toast.error(friendly || ('Erro ao iniciar checkout: ' + (error.message || 'Tente novamente')));
+        setLoadingPkg(null);
+        return;
+      }
       if (data?.init_point) { setTimeout(() => setLoadingPkg(null), 10000); window.location.href = data.init_point; } else { throw new Error('Nenhum link de checkout retornado'); }
     } catch (err: any) { toast.error('Erro ao iniciar checkout: ' + (err.message || 'Tente novamente')); setLoadingPkg(null); }
   };
