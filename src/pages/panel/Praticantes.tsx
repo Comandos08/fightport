@@ -94,7 +94,7 @@ export default function PraticantesPage() {
     toast.success(t('practitioners.exported', { count: filtered.length }));
   };
 
-  const tableHeaders = ['', t('practitioners.table.name'), t('practitioners.table.martialArt'), t('practitioners.table.lastBelt'), t('practitioners.table.school'), ''];
+  const tableHeaders = ['', t('practitioners.table.name'), t('practitioners.table.lastBelt'), ''];
 
   return (
     <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
@@ -152,7 +152,7 @@ export default function PraticantesPage() {
               <thead>
                 <tr style={{ background: 'var(--color-bg-soft)' }}>
                   {tableHeaders.map((h, i) => (
-                    <th key={i} style={{ width: i === 0 ? 36 : undefined, textAlign: i === 5 ? 'right' : 'left', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', padding: '10px 16px', borderBottom: '1px solid var(--color-border)' }}>{h}</th>
+                    <th key={i} style={{ width: i === 0 ? 36 : undefined, textAlign: i === 3 ? 'right' : 'left', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', padding: '10px 16px', borderBottom: '1px solid var(--color-border)' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -263,9 +263,7 @@ function FragmentRow({ practitioner: a, schoolName, isExpanded, isLast, onToggle
             <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{a.first_name} {a.last_name}</span>
           </div>
         </td>
-        <td style={{ padding: '14px 16px', fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)' }}>{a.martial_art}</td>
         <td style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>—</span>}</td>
-        <td style={{ padding: '14px 16px', fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)' }}>{schoolName ?? '...'}</td>
         <td style={{ padding: '14px 16px', textAlign: 'right' }} onClick={stop}>
           <div className="flex items-center justify-end" style={{ gap: 8 }}>
             {[
@@ -290,7 +288,7 @@ function FragmentRow({ practitioner: a, schoolName, isExpanded, isLast, onToggle
       </tr>
       {isExpanded && (
         <tr style={{ background: 'var(--color-bg-soft)', borderBottom: !isLast ? '1px solid var(--color-border)' : 'none' }}>
-          <td colSpan={6} style={{ padding: '0 16px 20px 52px' }}>
+          <td colSpan={4} style={{ padding: '0 16px 20px 52px' }}>
             <AchievementsAccordion achievements={achievements ?? []} isLoading={isLoading} fmtDate={fmtDate} fmtBelt={fmtBelt} t={t} />
           </td>
         </tr>
