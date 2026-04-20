@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Copy, CheckCircle, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { toast } from 'sonner';
@@ -42,6 +42,8 @@ export default function NovaConquistaPage() {
   const [loading, setLoading] = useState(false);
   // Mobile wizard step (1: Praticante, 2: Faixa/Data, 3: Confirmação)
   const [mobileStep, setMobileStep] = useState<1 | 2 | 3>(1);
+  // Touch swipe tracking
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const { data: credits } = useQuery({ queryKey: ['credits', user?.id], queryFn: async () => { const { data } = await supabase.from('credits').select('balance').eq('school_id', user!.id).single(); return data; }, enabled: !!user });
   const { data: school } = useQuery({ queryKey: ['school-full', user?.id], queryFn: async () => { const { data } = await supabase.from('schools').select('name').eq('id', user!.id).single(); return data; }, enabled: !!user });
@@ -172,7 +174,34 @@ export default function NovaConquistaPage() {
       {balance === 0 && (<div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: 24, textAlign: 'center', marginBottom: 24, background: 'var(--color-bg-soft)' }}><p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)', marginBottom: 8 }}>{t('achievement.noCredits')}</p><Link to="/painel/creditos"><Button size="sm">{t('achievement.buyCredits')}</Button></Link></div>)}
 
       {/* ===== Mobile Wizard (< sm) ===== */}
-      <div className="sm:hidden">
+      <div
+        className="sm:hidden"
+        onTouchStart={(e) => {
+          const tch = e.touches[0];
+          touchStartRef.current = { x: tch.clientX, y: tch.clientY };
+        }}
+        onTouchEnd={(e) => {
+          const start = touchStartRef.current;
+          if (!start) return;
+          touchStartRef.current = null;
+          // Ignore swipes originating on interactive elements (selects, dropdowns, buttons)
+          const target = e.target as HTMLElement;
+          if (target.closest('input, select, textarea, button, a')) return;
+          const tch = e.changedTouches[0];
+          const dx = tch.clientX - start.x;
+          const dy = tch.clientY - start.y;
+          // Require clear horizontal intent
+          if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)) return;
+          if (dx < 0) {
+            // swipe left → next step
+            if (mobileStep === 1 && canAdvanceStep1) setMobileStep(2);
+            else if (mobileStep === 2 && canAdvanceStep2) setMobileStep(3);
+          } else {
+            // swipe right → previous step
+            if (mobileStep > 1) setMobileStep((s) => (s - 1) as 1 | 2 | 3);
+          }
+        }}
+      >
         {/* Stepper */}
         <div className="flex items-center justify-between" style={{ marginBottom: 24 }}>
           {[1, 2, 3].map((n, i) => {
