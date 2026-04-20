@@ -139,7 +139,7 @@ export function NavbarPanel() {
               </button>
             </div>
             <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>
-              {links.map(({ to, label, icon: Icon, exact }) => {
+              {links.map(({ to, label, icon: Icon, exact, badge }) => {
                 const active = isActive(to, exact);
                 return (
                   <Link
@@ -161,7 +161,16 @@ export function NavbarPanel() {
                     }}
                   >
                     <Icon style={{ width: 16, height: 16 }} />
-                    {label}
+                    <span style={{ flex: 1 }}>{label}</span>
+                    {badge > 0 && (
+                      <span style={{
+                        fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
+                        padding: '1px 6px', borderRadius: 999,
+                        background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
+                      }}>
+                        {badge}
+                      </span>
+                    )}
                   </Link>
                 );
               })}
