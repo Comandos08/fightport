@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { Search, ChevronUp, ChevronDown, X, Users } from 'lucide-react';
 import { DashTable } from '@/components/dash/DashTable';
@@ -21,6 +22,7 @@ const lbl: React.CSSProperties = {
 
 export default function Atletas() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [schoolId, setSchoolId] = useState('');
   const [martialArt, setMartialArt] = useState('');
@@ -85,10 +87,10 @@ export default function Atletas() {
     <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
-          Atletas
+          {t('dash.athletes.title')}
         </h1>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-          Visão global de todos os praticantes cadastrados na plataforma.
+          {t('dash.athletes.subtitle')}
         </p>
       </div>
 
@@ -105,7 +107,7 @@ export default function Atletas() {
             <Search style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: 'var(--color-text-muted)' }} />
             <input
               style={{ ...ipt, width: '100%', paddingLeft: 32 }}
-              placeholder="Nome, FP-ID ou CPF…"
+              placeholder={t('dash.athletes.searchPlaceholder')}
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
             />
@@ -115,7 +117,7 @@ export default function Atletas() {
         <div>
           <label style={lbl}>Escola</label>
           <select style={{ ...ipt, width: '100%' }} value={schoolId} onChange={e => { setSchoolId(e.target.value); setPage(0); }}>
-            <option value="">Todas</option>
+            <option value="">{t('dash.athletes.filters.allSchools')}</option>
             {(schools as any[]).map(s => (
               <option key={s.id} value={s.id}>{s.name}</option>
             ))}
@@ -125,7 +127,7 @@ export default function Atletas() {
         <div>
           <label style={lbl}>Arte marcial</label>
           <select style={{ ...ipt, width: '100%' }} value={martialArt} onChange={e => { setMartialArt(e.target.value); setPage(0); }}>
-            <option value="">Todas</option>
+            <option value="">{t('dash.athletes.filters.allArts')}</option>
             <option value="Jiu-Jitsu">Jiu-Jitsu</option>
             <option value="Judô">Judô</option>
             <option value="Karatê">Karatê</option>
@@ -163,8 +165,8 @@ export default function Atletas() {
       {/* Tabela */}
       <DashTable
         headers={(([
-          ['name', 'Nome'], ['fp_id', 'FP-ID'], [null, 'CPF'], [null, 'Escola'],
-          [null, 'Arte'], ['belt', 'Faixa'], ['achievements', 'Graduações'], ['created_at', 'Cadastro'],
+          ['name', t('dash.athletes.table.name')], ['fp_id', t('dash.athletes.table.fpId')], [null, t('dash.athletes.table.cpf')], [null, t('dash.athletes.table.school')],
+          [null, t('dash.athletes.table.art')], ['belt', t('dash.athletes.table.belt')], ['achievements', t('dash.athletes.table.graduations')], ['created_at', t('dash.athletes.table.createdAt')],
         ] as [SortKey | null, string][]).map(([k, label]) => (
           <span
             key={label}
@@ -187,7 +189,7 @@ export default function Atletas() {
         isLoading={isLoading}
         isEmpty={!isLoading && rows.length === 0}
         emptyIcon={Users}
-        emptyTitle="Nenhum atleta encontrado"
+        emptyTitle={t('dash.athletes.empty')}
         emptyDescription="Ajuste os filtros para ver mais resultados."
         pagination={{ page, totalPages, total, limit, onPageChange: setPage }}
       >

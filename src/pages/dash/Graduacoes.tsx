@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { Search, Download, Copy, Building2, User, Award } from 'lucide-react';
 import { DashTable } from '@/components/dash/DashTable';
@@ -26,6 +27,7 @@ const shortHash = (h?: string | null) => {
 };
 
 export default function Graduacoes() {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [schoolId, setSchoolId] = useState('');
   const [martialArt, setMartialArt] = useState('');
@@ -116,10 +118,10 @@ export default function Graduacoes() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start" style={{ gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
-            Graduações
+            {t('dash.graduations.title')}
           </h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            Histórico global de todas as graduações registradas (somente leitura — imutáveis).
+            {t('dash.graduations.subtitle')}
           </p>
         </div>
         <button onClick={exportCsv} style={{
@@ -129,7 +131,7 @@ export default function Graduacoes() {
           fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
           color: 'var(--color-text)', cursor: 'pointer',
         }}>
-          <Download style={{ width: 14, height: 14 }} /> Exportar CSV
+          <Download style={{ width: 14, height: 14 }} /> {t('dash.graduations.exportCsv')}
         </button>
       </div>
 
@@ -145,7 +147,7 @@ export default function Graduacoes() {
             <Search style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: 'var(--color-text-muted)' }} />
             <input
               style={{ ...ipt, paddingLeft: 32 }}
-              placeholder="Nome do atleta, FP-ID ou hash…"
+              placeholder={t('dash.graduations.searchPlaceholder')}
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
             />
@@ -202,11 +204,11 @@ export default function Graduacoes() {
 
       {/* Tabela */}
       <DashTable
-        headers={['Data/hora', 'Atleta', 'Escola', 'Arte marcial', 'Faixa', 'Graduado por', 'Hash']}
+        headers={[t('dash.graduations.table.dateTime'), t('dash.graduations.table.athlete'), t('dash.graduations.table.school'), t('dash.graduations.table.martialArt'), t('dash.graduations.table.belt'), t('dash.graduations.table.graduatedBy'), t('dash.graduations.table.hash')]}
         isLoading={isLoading}
         isEmpty={!isLoading && rows.length === 0}
         emptyIcon={Award}
-        emptyTitle="Nenhuma graduação encontrada"
+        emptyTitle={t('dash.graduations.empty')}
         emptyDescription="Ajuste os filtros para ver mais resultados."
         pagination={{ page, totalPages, total, limit, onPageChange: setPage }}
       >

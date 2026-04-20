@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, Download, Eye, X, FileSearch } from 'lucide-react';
 import { DashTable } from '@/components/dash/DashTable';
@@ -51,6 +52,7 @@ type Row = {
 };
 
 export default function Auditoria() {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [action, setAction] = useState('');
   const [targetType, setTargetType] = useState('');
@@ -135,10 +137,10 @@ export default function Auditoria() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between" style={{ gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: 'var(--color-text)' }}>
-            Auditoria
+            {t('dash.audit.title')}
           </h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
-            Registro imutável de todas as ações administrativas. Somente leitura.
+            {t('dash.audit.subtitle')}
           </p>
         </div>
         <button
@@ -152,7 +154,7 @@ export default function Auditoria() {
           }}
         >
           <Download style={{ width: 14, height: 14 }} />
-          Exportar CSV
+          {t('dash.audit.exportCsv')}
         </button>
       </div>
 
@@ -168,7 +170,7 @@ export default function Auditoria() {
             <Search style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: 'var(--color-text-muted)' }} />
             <input
               type="text"
-              placeholder="ID, nome do alvo ou admin"
+              placeholder={t('dash.audit.searchPlaceholder')}
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
               style={{ ...ipt, paddingLeft: 32 }}
@@ -178,7 +180,7 @@ export default function Auditoria() {
         <div>
           <label style={lbl}>Ação</label>
           <select value={action} onChange={e => { setAction(e.target.value); setPage(0); }} style={ipt}>
-            <option value="">Todas</option>
+            <option value="">{t('dash.audit.filters.allActions')}</option>
             {actions.map(a => (
               <option key={a.action} value={a.action}>{friendlyAction(a.action)}</option>
             ))}
@@ -210,11 +212,11 @@ export default function Auditoria() {
 
       {/* Tabela */}
       <DashTable
-        headers={['Data/Hora', 'Admin', 'Ação', 'Alvo', 'IP', <span style={{ display: 'block', textAlign: 'center' }}>Detalhes</span>]}
+        headers={[t('dash.audit.table.dateTime'), t('dash.audit.table.admin'), t('dash.audit.table.action'), t('dash.audit.table.target'), t('dash.audit.table.ip'), <span style={{ display: 'block', textAlign: 'center' }}>{t('dash.audit.table.details')}</span>]}
         isLoading={isLoading}
         isEmpty={!isLoading && rows.length === 0}
         emptyIcon={FileSearch}
-        emptyTitle="Nenhum registro encontrado"
+        emptyTitle={t('dash.audit.empty')}
         emptyDescription="Ajuste os filtros ou amplie o intervalo de datas para ver mais resultados."
         pagination={{ page, totalPages, total: Number(total), limit, onPageChange: setPage }}
       >
@@ -274,7 +276,7 @@ export default function Auditoria() {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--color-border)' }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600, color: 'var(--color-text)' }}>
-                Detalhes do registro
+                {t('dash.audit.modal.title')}
               </h2>
               <button onClick={() => setDetail(null)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}>
                 <X style={{ width: 18, height: 18 }} />

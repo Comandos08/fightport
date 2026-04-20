@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { Send, CheckCircle2, MessageSquare, Building2, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -31,6 +32,7 @@ const ipt: React.CSSProperties = {
 
 export default function DashSuporte() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const qc = useQueryClient();
   const [statusFilter, setStatusFilter] = useState('open');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -124,17 +126,17 @@ export default function DashSuporte() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end" style={{ gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
-            Suporte
+            {t('dash.support.title')}
           </h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            Tickets de todas as escolas. Selecione um para responder.
+            {t('dash.support.subtitle')}
           </p>
         </div>
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ ...ipt, width: '100%', maxWidth: 240 }}>
-          <option value="open">Abertos</option>
+          <option value="open">{t('dash.support.filters.open')}</option>
           <option value="awaiting_school">Aguardando escola</option>
-          <option value="resolved">Resolvidos</option>
-          <option value="all">Todos</option>
+          <option value="resolved">{t('dash.support.filters.resolved')}</option>
+          <option value="all">{t('dash.support.filters.all')}</option>
         </select>
       </div>
 
@@ -158,7 +160,7 @@ export default function DashSuporte() {
           {!isLoading && tickets.length === 0 && (
             <div style={{ padding: 24, color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>
               <MessageSquare style={{ width: 24, height: 24, margin: '0 auto 8px', opacity: 0.5 }} />
-              Nenhum ticket nesta categoria.
+              {t('dash.support.empty')}
             </div>
           )}
           <div style={{ overflowY: 'auto', flex: 1 }}>
@@ -222,7 +224,7 @@ export default function DashSuporte() {
         >
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-muted)', fontSize: 13 }}>
-              Selecione um ticket para ver a conversa.
+              {t('dash.support.selectTicket')}
             </div>
           ) : (
             <>
@@ -286,7 +288,7 @@ export default function DashSuporte() {
                   <textarea
                     value={reply}
                     onChange={e => setReply(e.target.value)}
-                    placeholder="Escreva uma resposta…"
+                    placeholder={t('dash.support.reply.placeholder')}
                     rows={2}
                     style={{
                       flex: 1, padding: 10, fontFamily: 'var(--font-sans)', fontSize: 13,
@@ -295,7 +297,7 @@ export default function DashSuporte() {
                     }}
                   />
                   <Button onClick={() => sendReply.mutate()} disabled={!reply.trim() || sendReply.isPending}>
-                    <Send className="w-4 h-4 mr-2" /> Enviar
+                    <Send className="w-4 h-4 mr-2" /> {t('dash.support.reply.send')}
                   </Button>
                 </div>
               )}
