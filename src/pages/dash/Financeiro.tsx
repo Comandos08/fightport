@@ -512,11 +512,68 @@ export default function Financeiro() {
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({
+  label,
+  value,
+  sparkData,
+  sparkKey,
+  sparkTooltip,
+}: {
+  label: string;
+  value: string;
+  sparkData?: { day: string; revenue: number; tx: number }[];
+  sparkKey?: 'revenue' | 'tx';
+  sparkTooltip?: (v: number) => string;
+}) {
+  const hasSpark = !!sparkData && sparkData.length > 0 && !!sparkKey;
+  const hasMovement = hasSpark && sparkData!.some((d) => Number((d as any)[sparkKey!]) > 0);
   return (
     <div style={card}>
+      {hasSpark && (
+        <div style={{ width: '100%', height: 28, marginBottom: 6 }} aria-hidden={!hasMovement}>
+          {hasMovement ? (
+            <ResponsiveContainer>
+              <LineChart data={sparkData} margin={{ top: 2, right: 2, left: 2, bottom: 2 }}>
+                <Line
+                  type="monotone"
+                  dataKey={sparkKey}
+                  stroke="var(--admin-chart-primary)"
+                  strokeWidth={1.5}
+                  dot={false}
+                  isAnimationActive={false}
+                />
+                <RTooltip
+                  cursor={{ stroke: 'var(--color-border)', strokeWidth: 1 }}
+                  contentStyle={{
+                    fontFamily: 'var(--font-sans)', fontSize: 11,
+                    background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+                    borderRadius: 6, padding: '4px 8px',
+                  }}
+                  labelFormatter={(l) => format(new Date(l as string), 'dd/MM')}
+                  formatter={(v: any) => [sparkTooltip ? sparkTooltip(Number(v)) : String(v), '']}
+                  separator=""
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div
+              title="Sem movimento nos últimos 7 dias"
+              style={{
+                width: '100%', height: '100%',
+                borderBottom: '1px dashed var(--color-border)',
+                opacity: 0.5,
+              }}
+            />
+          )}
+        </div>
+      )}
       <div style={lbl}>{label}</div>
       <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{value}</div>
+      {hasSpark && (
+        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2 }}>
+          últimos 7 dias
+        </div>
+      )}
     </div>
   );
 }
