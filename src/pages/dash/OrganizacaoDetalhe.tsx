@@ -388,6 +388,17 @@ export default function OrganizacaoDetalhe() {
         </div>
       </DashSection>
 
+      {/* Histórico de ações da escola */}
+      <SchoolAuditSection
+        items={schoolAudit}
+        schoolName={s.name}
+        page={schoolAuditPage}
+        onPageChange={setSchoolAuditPage}
+        filter={schoolAuditFilter}
+        onFilterChange={(v) => { setSchoolAuditFilter(v); setSchoolAuditPage(0); }}
+        pageSize={PAGE_SIZE}
+      />
+
       {/* MODAIS */}
       {showSuspend && (
         <Modal title="Suspender organização" onClose={() => { setShowSuspend(false); setReason(''); }}>
