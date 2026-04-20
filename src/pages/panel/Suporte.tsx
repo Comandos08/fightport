@@ -310,7 +310,7 @@ export default function PainelSuporte() {
         >
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-muted)', fontSize: 13 }}>
-              Selecione um ticket para ver a conversa.
+              {t('support.selectTicket')}
             </div>
           ) : (
             <>
@@ -320,11 +320,11 @@ export default function PainelSuporte() {
                   className="md:hidden"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', padding: 0, marginBottom: 8, cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}
                 >
-                  <ArrowLeft className="w-4 h-4" /> Voltar
+                  <ArrowLeft className="w-4 h-4" /> {t('support.back')}
                 </button>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>{selected.subject}</div>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 2 }}>
-                  {selected.category} · {STATUS_LABEL[selected.status]} · aberto em {format(new Date(selected.created_at), 'dd/MM/yyyy')}
+                  {t(`support.form.categories.${selected.category}`, { defaultValue: selected.category })} · {t(`support.status.${selected.status}`, { defaultValue: selected.status })} · {t('support.openedOn', { date: format(new Date(selected.created_at), 'dd/MM/yyyy') })}
                 </div>
               </div>
               <div ref={threadRef} style={{ flex: 1, padding: 16, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -340,14 +340,14 @@ export default function PainelSuporte() {
                       }}>
                         <div>{m.content}</div>
                         <div style={{ fontSize: 10, marginTop: 4, opacity: 0.7 }}>
-                          {isMine ? 'Você' : 'Suporte'} · {format(new Date(m.created_at), 'dd/MM HH:mm')}
+                          {isMine ? t('support.you') : t('support.supportTeam')} · {format(new Date(m.created_at), 'dd/MM HH:mm')}
                         </div>
                       </div>
                     </div>
                   );
                 })}
                 {messages.length === 0 && (
-                  <div style={{ color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>Nenhuma mensagem.</div>
+                  <div style={{ color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>{t('support.noMessages')}</div>
                 )}
               </div>
               {selected.status !== 'resolved' && selected.status !== 'closed' && (
@@ -355,7 +355,7 @@ export default function PainelSuporte() {
                   <textarea
                     value={reply}
                     onChange={e => setReply(e.target.value)}
-                    placeholder="Escreva sua resposta…"
+                    placeholder={t('support.reply.placeholder')}
                     rows={2}
                     style={{
                       flex: 1, padding: 10, fontFamily: 'var(--font-sans)', fontSize: 13,
@@ -364,7 +364,7 @@ export default function PainelSuporte() {
                     }}
                   />
                   <Button onClick={() => sendReply.mutate()} disabled={!reply.trim() || sendReply.isPending}>
-                    <Send className="w-4 h-4 mr-2" /> Enviar
+                    <Send className="w-4 h-4 mr-2" /> {t('support.reply.send')}
                   </Button>
                 </div>
               )}
@@ -377,31 +377,33 @@ export default function PainelSuporte() {
       <Dialog open={newOpen} onOpenChange={setNewOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Abrir novo ticket</DialogTitle>
-            <DialogDescription>Descreva sua questão. Nossa equipe responde por aqui mesmo.</DialogDescription>
+            <DialogTitle>{t('support.form.title')}</DialogTitle>
+            <DialogDescription>{t('support.form.description')}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div>
-              <Label htmlFor="t-subject">Assunto *</Label>
-              <Input id="t-subject" value={newSubject} onChange={e => setNewSubject(e.target.value)} placeholder="Ex.: Erro ao registrar graduação" />
+              <Label htmlFor="t-subject">{t('support.form.subjectRequired')}</Label>
+              <Input id="t-subject" value={newSubject} onChange={e => setNewSubject(e.target.value)} placeholder={t('support.form.subjectPlaceholder')} />
             </div>
             <div>
-              <Label htmlFor="t-cat">Categoria</Label>
+              <Label htmlFor="t-cat">{t('support.form.category')}</Label>
               <select
                 id="t-cat" value={newCategory} onChange={e => setNewCategory(e.target.value)}
                 style={{ ...ipt, width: '100%' }}
               >
-                {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                {CATEGORY_VALUES.map(c => (
+                  <option key={c} value={c}>{t(`support.form.categories.${c}`)}</option>
+                ))}
               </select>
             </div>
             <div>
-              <Label htmlFor="t-msg">Mensagem *</Label>
-              <Textarea id="t-msg" rows={5} value={newMessage} onChange={e => setNewMessage(e.target.value)} placeholder="Detalhe sua dúvida ou problema…" />
+              <Label htmlFor="t-msg">{t('support.form.messageRequired')}</Label>
+              <Textarea id="t-msg" rows={5} value={newMessage} onChange={e => setNewMessage(e.target.value)} placeholder={t('support.form.messagePlaceholder')} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setNewOpen(false)}>Cancelar</Button>
-            <Button onClick={() => createTicket.mutate()} disabled={createTicket.isPending}>Abrir ticket</Button>
+            <Button variant="outline" onClick={() => setNewOpen(false)}>{t('support.form.cancel')}</Button>
+            <Button onClick={() => createTicket.mutate()} disabled={createTicket.isPending}>{t('support.form.send')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
