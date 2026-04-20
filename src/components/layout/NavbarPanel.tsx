@@ -182,12 +182,25 @@ export function NavbarPanel() {
                     <Icon style={{ width: 16, height: 16 }} />
                     <span style={{ flex: 1 }}>{label}</span>
                     {badge > 0 && (
-                      <span style={{
-                        fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
-                        padding: '1px 6px', borderRadius: 999,
-                        background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
-                      }}>
-                        {badgeLabel ?? badge}
+                      <span style={{ position: 'relative', display: 'inline-flex' }}>
+                        <span style={{
+                          fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
+                          padding: '1px 6px', borderRadius: 999,
+                          background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
+                        }}>
+                          {badgeLabel ?? badge}
+                        </span>
+                        {to === '/painel/suporte' && pulse && (
+                          <span
+                            aria-hidden
+                            className="animate-ping"
+                            style={{
+                              position: 'absolute', top: -2, right: -2,
+                              width: 8, height: 8, borderRadius: 999,
+                              background: '#C8F135',
+                            }}
+                          />
+                        )}
                       </span>
                     )}
                   </Link>
