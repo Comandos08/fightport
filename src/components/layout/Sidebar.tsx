@@ -25,6 +25,18 @@ export function Sidebar() {
     refetchOnWindowFocus: true,
   });
 
+  // Tickets aguardando resposta da escola há mais de 24h
+  const { data: staleTickets = 0 } = useQuery({
+    queryKey: ['school-stale-tickets-count', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.rpc('school_stale_tickets_count');
+      return Number(data ?? 0);
+    },
+    enabled: !!user,
+    refetchOnWindowFocus: true,
+    refetchInterval: 5 * 60 * 1000,
+  });
+
   // Pulso visual no badge ao chegar nova mensagem do admin
   const [pulse, setPulse] = useState(false);
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
