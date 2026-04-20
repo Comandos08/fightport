@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Send, CheckCircle2, MessageSquare, Building2 } from 'lucide-react';
+import { Send, CheckCircle2, MessageSquare, Building2, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -120,8 +120,8 @@ export default function DashSuporte() {
   const selected = useMemo(() => (tickets as any[]).find(t => t.id === selectedId), [tickets, selectedId]);
 
   return (
-    <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
+    <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto' }}>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end" style={{ gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
             Suporte
@@ -130,7 +130,7 @@ export default function DashSuporte() {
             Tickets de todas as escolas. Selecione um para responder.
           </p>
         </div>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={ipt}>
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ ...ipt, width: '100%', maxWidth: 240 }}>
           <option value="open">Abertos</option>
           <option value="awaiting_school">Aguardando escola</option>
           <option value="resolved">Resolvidos</option>
@@ -138,15 +138,22 @@ export default function DashSuporte() {
         </select>
       </div>
 
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'minmax(300px, 380px) 1fr', gap: 16,
-        minHeight: 'calc(100vh - 200px)',
-      }}>
-        {/* Lista */}
-        <div style={{
-          background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', display: 'flex', flexDirection: 'column',
-        }}>
+      <div
+        className="grid lg:grid-cols-[minmax(300px,380px)_1fr]"
+        style={{
+          gridTemplateColumns: '1fr',
+          gap: 16,
+          minHeight: 'calc(100vh - 200px)',
+        }}
+      >
+        {/* Lista — escondida em mobile quando ticket selecionado */}
+        <div
+          className={selectedId ? 'hidden lg:flex' : 'flex'}
+          style={{
+            background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', flexDirection: 'column',
+          }}
+        >
           {isLoading && <div style={{ padding: 16, color: 'var(--color-text-muted)', fontSize: 13 }}>Carregando…</div>}
           {!isLoading && tickets.length === 0 && (
             <div style={{ padding: 24, color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>
@@ -205,11 +212,14 @@ export default function DashSuporte() {
           </div>
         </div>
 
-        {/* Thread */}
-        <div style={{
-          background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md, 8px)', display: 'flex', flexDirection: 'column',
-        }}>
+        {/* Thread — escondida em mobile quando nenhum ticket selecionado */}
+        <div
+          className={selectedId ? 'flex' : 'hidden lg:flex'}
+          style={{
+            background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md, 8px)', flexDirection: 'column',
+          }}
+        >
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-muted)', fontSize: 13 }}>
               Selecione um ticket para ver a conversa.
@@ -217,15 +227,30 @@ export default function DashSuporte() {
           ) : (
             <>
               <div style={{ padding: 16, borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>
-                    {selected.subject}
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                    <Link to={`/dash/organizacoes/${selected.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                      <Building2 style={{ width: 12, height: 12 }} /> {selected.school_name}
-                    </Link>
-                    <span>· {selected.category} · {STATUS_LABEL[selected.status]}</span>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, flex: 1, minWidth: 0 }}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedId(null)}
+                    className="lg:hidden cursor-pointer"
+                    aria-label="Voltar para lista"
+                    style={{
+                      background: 'transparent', border: '1px solid var(--color-border)',
+                      borderRadius: 'var(--radius-sm, 6px)', padding: '6px 8px',
+                      color: 'var(--color-text-muted)', flexShrink: 0,
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>
+                      {selected.subject}
+                    </div>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                      <Link to={`/dash/organizacoes/${selected.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        <Building2 style={{ width: 12, height: 12 }} /> {selected.school_name}
+                      </Link>
+                      <span>· {selected.category} · {STATUS_LABEL[selected.status]}</span>
+                    </div>
                   </div>
                 </div>
                 {selected.status !== 'resolved' && selected.status !== 'closed' && (

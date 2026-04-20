@@ -147,14 +147,14 @@ export default function AtletaDetalhe() {
   };
 
   if (isLoading) {
-    return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', color: 'var(--color-text-muted)' }}>Carregando…</div>;
+    return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', color: 'var(--color-text-muted)' }}>Carregando…</div>;
   }
   if (!p) {
-    return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', color: 'var(--color-text-muted)' }}>Atleta não encontrado.</div>;
+    return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', color: 'var(--color-text-muted)' }}>Atleta não encontrado.</div>;
   }
 
   return (
-    <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Voltar */}
       <button
         onClick={() => navigate('/dash/atletas')}
@@ -195,7 +195,7 @@ export default function AtletaDetalhe() {
           </button>
         }
       >
-        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 20 }}>
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr]" style={{ gap: 20 }}>
           {p.photo_url ? (
             <img src={p.photo_url} alt={`${p.first_name}`} style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 'var(--radius-md, 8px)', border: '1px solid var(--color-border)' }} />
           ) : (

@@ -131,8 +131,8 @@ export default function Auditoria() {
   };
 
   return (
-    <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+    <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto' }}>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between" style={{ gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', color: 'var(--color-text)' }}>
             Auditoria

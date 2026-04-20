@@ -184,8 +184,8 @@ export default function OrganizacaoDetalhe() {
     onError: (e: any) => toast.error(e.message ?? 'Erro ao conceder créditos'),
   });
 
-  if (isLoading) return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', ...muted }}>Carregando...</div>;
-  if (!detail?.school) return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', ...muted }}>Organização não encontrada</div>;
+  if (isLoading) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>Carregando...</div>;
+  if (!detail?.school) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>Organização não encontrada</div>;
 
   const s = detail.school;
   const hc = detail.head_coach;
@@ -223,7 +223,7 @@ export default function OrganizacaoDetalhe() {
   );
 
   return (
-    <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Voltar */}
       <Link to="/dash/organizacoes" className="inline-flex items-center no-underline" style={{ gap: 6, color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12, alignSelf: 'flex-start' }}>
         <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar para organizações
@@ -241,7 +241,7 @@ export default function OrganizacaoDetalhe() {
         </div>
       </div>
 
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 16 }}>
         {/* Dados cadastrais */}
         <DashSection title="Dados cadastrais">
           <dl className="grid" style={{ gridTemplateColumns: '1fr 2fr', gap: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, margin: 0 }}>
