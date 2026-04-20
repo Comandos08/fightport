@@ -300,16 +300,27 @@ export default function Financeiro() {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 20 }}>
-        <Metric label="Receita do período" value={fmtBRL(overview?.revenue ?? 0)} sparkData={sparkline as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} />
-        <Metric label="Transações" value={String(overview?.tx_count ?? 0)} sparkData={sparkline as any[]} sparkKey="tx" sparkTooltip={(v) => `${v} tx`} />
-        <Metric label="Ticket médio" value={fmtBRL(overview?.avg_ticket ?? 0)} />
-        <Metric label="Escolas únicas" value={String(overview?.unique_schools ?? 0)} />
-        <Metric label="MRR (média 3 meses)" value={fmtBRL(overview?.mrr ?? 0)} sparkData={sparkline as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} />
-        <Metric label="LTV estimado" value={fmtBRL(overview?.ltv ?? 0)} />
-        <Metric label="Taxa de recompra" value={fmtPct(overview?.repurchase_rate ?? 0)} />
-        <Metric label="Compras / escola" value={Number(overview?.avg_purchases ?? 0).toFixed(2)} />
-      </div>
+      {(() => {
+        const calcDelta = (curr: number, prev: number): number | null => {
+          if (prev === 0 && curr === 0) return 0;
+          if (prev === 0) return null; // sem base de comparação
+          return ((curr - prev) / prev) * 100;
+        };
+        const revenueDelta = calcDelta(sparkTotals.current.revenue, sparkTotals.previous.revenue);
+        const txDelta = calcDelta(sparkTotals.current.tx, sparkTotals.previous.tx);
+        return (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 20 }}>
+            <Metric label="Receita do período" value={fmtBRL(overview?.revenue ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} delta={revenueDelta} />
+            <Metric label="Transações" value={String(overview?.tx_count ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="tx" sparkTooltip={(v) => `${v} tx`} delta={txDelta} />
+            <Metric label="Ticket médio" value={fmtBRL(overview?.avg_ticket ?? 0)} />
+            <Metric label="Escolas únicas" value={String(overview?.unique_schools ?? 0)} />
+            <Metric label="MRR (média 3 meses)" value={fmtBRL(overview?.mrr ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} delta={revenueDelta} />
+            <Metric label="LTV estimado" value={fmtBRL(overview?.ltv ?? 0)} />
+            <Metric label="Taxa de recompra" value={fmtPct(overview?.repurchase_rate ?? 0)} />
+            <Metric label="Compras / escola" value={Number(overview?.avg_purchases ?? 0).toFixed(2)} />
+          </div>
+        );
+      })()}
 
       {/* Breakdown por pacote (cards) */}
       <div style={{ ...card, marginBottom: 20 }}>
