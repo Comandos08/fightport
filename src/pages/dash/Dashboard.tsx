@@ -75,7 +75,126 @@ function StatCard({ icon: Icon, label, value, change, link }: { icon: any; label
   return link ? <Link to={link} className="no-underline">{content}</Link> : content;
 }
 
-function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
+/**
+ * Variante mobile: cards compactos dos últimos 3 períodos com delta % vs anterior.
+ * Usado nos gráficos de série temporal (12 meses) que ficam ilegíveis em telas pequenas.
+ */
+function CompactSeriesCards({
+  data,
+  valueKey,
+  formatValue,
+  emptyLabel = 'Sem dados.',
+}: {
+  data: { month: string; [k: string]: any }[];
+  valueKey: string;
+  formatValue: (v: number) => string;
+  emptyLabel?: string;
+}) {
+  const last3 = data.slice(-3);
+  if (last3.length === 0) {
+    return (
+      <div style={{ color: 'var(--color-text-muted)', fontSize: 13, padding: 8 }}>
+        {emptyLabel}
+      </div>
+    );
+  }
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+      {last3.map((m, i) => {
+        const prev = i > 0 ? Number(last3[i - 1][valueKey] || 0) : null;
+        const curr = Number(m[valueKey] || 0);
+        const delta = prev !== null && prev > 0 ? ((curr - prev) / prev) * 100 : null;
+        const positive = delta !== null && delta >= 0;
+        return (
+          <div
+            key={m.month}
+            style={{
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-sm, 6px)',
+              padding: 10,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+            }}
+          >
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)' }}>
+              {m.month}
+            </div>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', fontVariantNumeric: 'tabular-nums' }}>
+              {formatValue(curr)}
+            </div>
+            {delta !== null && (
+              <div
+                style={{
+                  fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500,
+                  color: positive ? 'var(--admin-chart-accent, #15803d)' : 'var(--color-text-muted)',
+                }}
+              >
+                {positive ? '↑' : '↓'} {Math.abs(delta).toFixed(0)}%
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * Variante mobile para dados categóricos: lista com barra de proporção.
+ */
+function CompactCategoryList({
+  data,
+  labelKey,
+  valueKey,
+  emptyLabel = 'Sem dados no período.',
+}: {
+  data: Record<string, any>[];
+  labelKey: string;
+  valueKey: string;
+  emptyLabel?: string;
+}) {
+  if (data.length === 0) {
+    return (
+      <div style={{ color: 'var(--color-text-muted)', fontSize: 13, padding: 8 }}>
+        {emptyLabel}
+      </div>
+    );
+  }
+  const max = Math.max(...data.map(d => Number(d[valueKey] || 0)), 1);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {data.map((d, i) => {
+        const v = Number(d[valueKey] || 0);
+        const pct = (v / max) * 100;
+        return (
+          <div key={`${d[labelKey]}-${i}`}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 }}>
+              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)' }}>{d[labelKey]}</span>
+              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 600, color: 'var(--color-text)', fontVariantNumeric: 'tabular-nums' }}>{v}</span>
+            </div>
+            <div style={{ width: '100%', height: 4, borderRadius: 999, background: 'var(--color-bg-soft)', overflow: 'hidden' }}>
+              <div style={{ width: `${pct}%`, height: '100%', background: 'var(--admin-chart-accent)', transition: 'width 300ms ease-out' }} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * ChartCard responsivo: mostra `mobile` em telas <lg e o gráfico recharts em ≥lg.
+ */
+function ChartCard({
+  title,
+  mobile,
+  children,
+}: {
+  title: string;
+  mobile?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <div
       style={{
@@ -86,7 +205,8 @@ function ChartCard({ title, children }: { title: string; children: React.ReactNo
       }}
     >
       <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, color: 'var(--color-text)', marginBottom: 16 }}>{title}</h3>
-      <div style={{ height: 240 }}>
+      {mobile !== undefined && <div className="lg:hidden">{mobile}</div>}
+      <div className={mobile !== undefined ? 'hidden lg:block' : ''} style={{ height: 240 }}>
         <ResponsiveContainer width="100%" height="100%">
           {children as any}
         </ResponsiveContainer>
