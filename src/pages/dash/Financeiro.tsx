@@ -281,9 +281,60 @@ export default function Financeiro() {
       <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 16, marginBottom: 20 }}>
         <div style={card}>
           <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
-            Receita mensal (12 meses)
+            <span className="lg:hidden">Receita — últimos 3 meses</span>
+            <span className="hidden lg:inline">Receita mensal (12 meses)</span>
           </h3>
-          <div className="h-[200px] sm:h-[260px]" style={{ width: '100%' }}>
+
+          {/* Mobile: cards dos últimos 3 meses */}
+          <div className="lg:hidden" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+            {(() => {
+              const last3 = (monthly as any[]).slice(-3);
+              if (last3.length === 0) {
+                return (
+                  <div style={{ gridColumn: '1 / -1', color: 'var(--color-text-muted)', fontSize: 13, padding: 8 }}>
+                    Sem dados.
+                  </div>
+                );
+              }
+              return last3.map((m: any, i: number) => {
+                const prev = i > 0 ? Number(last3[i - 1].revenue || 0) : null;
+                const curr = Number(m.revenue || 0);
+                const delta = prev !== null && prev > 0 ? ((curr - prev) / prev) * 100 : null;
+                const deltaPositive = delta !== null && delta >= 0;
+                return (
+                  <div
+                    key={m.month}
+                    style={{
+                      border: '1px solid var(--color-border)',
+                      borderRadius: 'var(--radius-sm, 6px)',
+                      padding: 10,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 4,
+                    }}
+                  >
+                    <div style={{ ...lbl, marginBottom: 0, fontSize: 10 }}>{m.month}</div>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', fontVariantNumeric: 'tabular-nums' }}>
+                      {fmtBRL(curr)}
+                    </div>
+                    {delta !== null && (
+                      <div
+                        style={{
+                          fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500,
+                          color: deltaPositive ? 'var(--admin-chart-accent, #15803d)' : 'var(--color-text-muted)',
+                        }}
+                      >
+                        {deltaPositive ? '↑' : '↓'} {Math.abs(delta).toFixed(0)}%
+                      </div>
+                    )}
+                  </div>
+                );
+              });
+            })()}
+          </div>
+
+          {/* Desktop: line chart 12 meses */}
+          <div className="hidden lg:block h-[260px]" style={{ width: '100%' }}>
             <ResponsiveContainer>
               <LineChart data={monthly as any[]} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
                 <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" />
