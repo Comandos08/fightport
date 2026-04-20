@@ -2,6 +2,7 @@ import { LogOut } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { NotificationBell } from '@/components/NotificationBell';
 
 export function DashHeader() {
   const { user, signOut } = useAuth();
@@ -27,6 +28,7 @@ export function DashHeader() {
     >
       <div className="flex-1" />
       <div className="flex items-center" style={{ gap: 12 }}>
+        <NotificationBell />
         {school?.is_admin && (
           <span
             style={{
