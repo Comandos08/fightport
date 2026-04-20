@@ -52,7 +52,7 @@ export function HeroSection() {
           </p>
 
           <h1 className="animate-fadeup delay-200" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 'clamp(48px, 6.5vw, 80px)', lineHeight: 1.04, letterSpacing: '-0.04em', color: 'var(--color-text)', maxWidth: 680, margin: 0 }}>
-            {titleParts.map((part, i) =
+            {titleParts.map((part, i) =>
               i % 2 === 1 ? (
                 <span key={i} style={{ color: 'var(--color-accent)' }} dangerouslySetInnerHTML={{ __html: part }} />
               ) : (
