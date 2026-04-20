@@ -16,6 +16,11 @@ type Belt = 'Branca' | 'Cinza' | 'Amarela' | 'Laranja' | 'Verde' | 'Azul' | 'Rox
 
 const BELT_OPTIONS: Belt[] = ['Branca', 'Cinza', 'Amarela', 'Laranja', 'Verde', 'Azul', 'Roxa', 'Marrom', 'Preta', 'Preta 1º Grau', 'Preta 2º Grau', 'Preta 3º Grau', 'Preta 4º Grau', 'Preta 5º Grau', 'Preta 6º Grau', 'Preta 7º Grau', 'Preta 8º Grau', 'Preta 9º Grau'];
 
+const BELT_GROUPS: { label: string; belts: Belt[] }[] = [
+  { label: 'Cores básicas', belts: ['Branca', 'Cinza', 'Amarela', 'Laranja', 'Verde', 'Azul', 'Roxa', 'Marrom'] },
+  { label: 'Faixa preta', belts: ['Preta', 'Preta 1º Grau', 'Preta 2º Grau', 'Preta 3º Grau', 'Preta 4º Grau', 'Preta 5º Grau', 'Preta 6º Grau', 'Preta 7º Grau', 'Preta 8º Grau', 'Preta 9º Grau'] },
+];
+
 const inputStyle: React.CSSProperties = { background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '13px 16px', fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--color-text)', outline: 'none', width: '100%', transition: 'var(--transition)' };
 const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 12, letterSpacing: '0.01em', color: 'var(--color-text)', display: 'block', marginBottom: 6 };
 const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => { e.currentTarget.style.borderColor = '#9A9A9A'; e.currentTarget.style.background = 'var(--color-bg)'; };
@@ -123,7 +128,17 @@ export default function NovaConquistaPage() {
   );
 
   const BeltField = (
-    <div><label style={labelStyle}>{t('achievement.belt')}</label><select value={belt} onChange={e => setBelt(e.target.value as Belt)} style={{ ...inputStyle, height: 44 }} onFocus={focusInput as any} onBlur={blurInput as any}><option value="">{t('achievement.selectBelt')}</option>{BELT_OPTIONS.map(b => <option key={b} value={b}>{b}</option>)}</select></div>
+    <div>
+      <label style={labelStyle}>{t('achievement.belt')}</label>
+      <select value={belt} onChange={e => setBelt(e.target.value as Belt)} style={{ ...inputStyle, height: 44 }} onFocus={focusInput as any} onBlur={blurInput as any}>
+        <option value="">{t('achievement.selectBelt')}</option>
+        {BELT_GROUPS.map(group => (
+          <optgroup key={group.label} label={group.label}>
+            {group.belts.map(b => <option key={b} value={b}>{b}</option>)}
+          </optgroup>
+        ))}
+      </select>
+    </div>
   );
 
   const DateField = (
