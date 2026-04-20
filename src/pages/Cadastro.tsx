@@ -55,7 +55,18 @@ export default function CadastroPage() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) navigate('/painel/praticantes', { replace: true });
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('schools')
+        .select('is_admin')
+        .eq('id', user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      navigate(data?.is_admin ? '/dash' : '/painel/praticantes', { replace: true });
+    })();
+    return () => { cancelled = true; };
   }, [user, navigate]);
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -97,7 +108,17 @@ export default function CadastroPage() {
     if (error) {
       toast.error(error.message === 'Invalid login credentials' ? t('common.wrongCredentials') : error.message);
     } else {
-      navigate('/painel/praticantes');
+      const { data: { user: signedInUser } } = await supabase.auth.getUser();
+      if (signedInUser) {
+        const { data: school } = await supabase
+          .from('schools')
+          .select('is_admin')
+          .eq('id', signedInUser.id)
+          .maybeSingle();
+        navigate(school?.is_admin ? '/dash' : '/painel/praticantes');
+      } else {
+        navigate('/painel/praticantes');
+      }
     }
   };
 
