@@ -396,6 +396,94 @@
     "message": "Página no encontrada",
     "back": "Volver al inicio"
   },
+  "support": {
+    "title": "Soporte",
+    "subtitle": "Abre tickets para hacer preguntas, reportar bugs o pedir ayuda.",
+    "newTicket": "Nuevo ticket",
+    "loading": "Cargando…",
+    "status": {
+      "open": "Abierto",
+      "awaiting_school": "Esperándote",
+      "awaiting_admin": "Esperando soporte",
+      "resolved": "Resuelto",
+      "closed": "Cerrado"
+    },
+    "filter": {
+      "all": "Todos",
+      "open": "Abiertos",
+      "resolved": "Resueltos"
+    },
+    "empty": "Ningún ticket {{state}}.",
+    "emptyState": {
+      "all": "",
+      "open": "abierto",
+      "resolved": "resuelto"
+    },
+    "selectTicket": "Selecciona un ticket para ver la conversación.",
+    "noMessages": "Ningún mensaje.",
+    "back": "Volver",
+    "openedOn": "abierto el {{date}}",
+    "you": "Tú",
+    "supportTeam": "Soporte",
+    "unreadAria": "{{count}} mensajes no leídos",
+    "form": {
+      "title": "Abrir nuevo ticket",
+      "description": "Describe tu consulta. Nuestro equipo responde aquí mismo.",
+      "subject": "Asunto",
+      "subjectRequired": "Asunto *",
+      "subjectPlaceholder": "Ej.: Error al registrar graduación",
+      "category": "Categoría",
+      "message": "Mensaje",
+      "messageRequired": "Mensaje *",
+      "messagePlaceholder": "Detalla tu duda o problema…",
+      "send": "Abrir ticket",
+      "cancel": "Cancelar",
+      "categories": {
+        "bug": "Bug",
+        "duvida": "Duda",
+        "creditos": "Créditos",
+        "cadastro": "Cuenta",
+        "financeiro": "Financiero",
+        "problema": "Problema técnico",
+        "outro": "Otro"
+      }
+    },
+    "reply": {
+      "placeholder": "Escribe tu respuesta…",
+      "send": "Enviar"
+    },
+    "toast": {
+      "createdTitle": "Ticket creado",
+      "createdDesc": "Nuestro equipo responderá pronto.",
+      "errorTitle": "Error",
+      "subjectMessageRequired": "Asunto y mensaje son obligatorios",
+      "emptyMessage": "Mensaje vacío",
+      "noTicketSelected": "Ningún ticket seleccionado",
+      "noUser": "Sin usuario"
+    },
+    "notifyAdmin": {
+      "title": "Nuevo ticket de soporte",
+      "body": "La escuela \"{{school}}\" abrió un nuevo ticket: \"{{subject}}\".",
+      "unknownSchool": "desconocida"
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "Ninguna notificación",
+    "emptyUnread": "Ninguna notificación sin leer",
+    "markAllRead": "Marcar todas como leídas",
+    "ariaLabel": "Notificaciones",
+    "filter": {
+      "all": "Todas",
+      "unread": "Sin leer"
+    },
+    "groups": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "thisWeek": "Esta semana",
+      "older": "Más antiguas"
+    }
+  },
   "common": {
     "fillAllFields": "Completa todos los campos.",
     "minPassword": "La contraseña debe tener al menos 8 caracteres.",

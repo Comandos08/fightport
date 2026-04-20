@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Bell, CheckCheck } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { ptBR, es as esLocale, enUS } from 'date-fns/locale';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -24,8 +25,15 @@ export function NotificationBell() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+
+  const dateLocale = i18n.language?.startsWith('es')
+    ? esLocale
+    : i18n.language?.startsWith('en')
+      ? enUS
+      : ptBR;
 
   const { data: notifications = [] } = useQuery<NotificationRow[]>({
     queryKey: ['notifications', user?.id],
@@ -57,10 +65,10 @@ export function NotificationBell() {
     startOfWeek.setDate(startOfWeek.getDate() - 7);
 
     const groups: { label: string; items: NotificationRow[] }[] = [
-      { label: 'Hoje', items: [] },
-      { label: 'Ontem', items: [] },
-      { label: 'Esta semana', items: [] },
-      { label: 'Mais antigas', items: [] },
+      { label: t('notifications.groups.today'), items: [] },
+      { label: t('notifications.groups.yesterday'), items: [] },
+      { label: t('notifications.groups.thisWeek'), items: [] },
+      { label: t('notifications.groups.older'), items: [] },
     ];
 
     const source = filter === 'unread' ? notifications.filter((n) => !n.read) : notifications;
@@ -72,7 +80,7 @@ export function NotificationBell() {
       else groups[3].items.push(n);
     }
     return groups.filter((g) => g.items.length > 0);
-  }, [notifications, filter]);
+  }, [notifications, filter, t]);
 
   // Pulso visual no badge ao chegar nova notificação
   const [pulse, setPulse] = useState(false);
@@ -145,7 +153,7 @@ export function NotificationBell() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          aria-label="Notificações"
+          aria-label={t('notifications.ariaLabel')}
           style={{
             position: 'relative',
             background: 'none',
@@ -224,7 +232,7 @@ export function NotificationBell() {
               color: 'var(--color-text)',
             }}
           >
-            Notificações
+            {t('notifications.title')}
           </span>
           <button
             onClick={handleMarkAllRead}
@@ -243,7 +251,7 @@ export function NotificationBell() {
             }}
           >
             <CheckCheck className="h-3 w-3" />
-            Marcar todas como lidas
+            {t('notifications.markAllRead')}
           </button>
         </div>
 
@@ -257,8 +265,8 @@ export function NotificationBell() {
           }}
         >
           {([
-            { key: 'all', label: 'Todas', count: notifications.length },
-            { key: 'unread', label: 'Não-lidas', count: unreadCount },
+            { key: 'all', label: t('notifications.filter.all'), count: notifications.length },
+            { key: 'unread', label: t('notifications.filter.unread'), count: unreadCount },
           ] as const).map((opt) => {
             const active = filter === opt.key;
             return (
@@ -299,7 +307,7 @@ export function NotificationBell() {
                 color: 'var(--color-text-muted)',
               }}
             >
-              {filter === 'unread' ? 'Nenhuma notificação não-lida' : 'Nenhuma notificação'}
+              {filter === 'unread' ? t('notifications.emptyUnread') : t('notifications.empty')}
             </div>
           ) : (
             groupedNotifications.map((group) => (
@@ -368,7 +376,7 @@ export function NotificationBell() {
                     >
                       {formatDistanceToNow(new Date(n.created_at), {
                         addSuffix: true,
-                        locale: ptBR,
+                        locale: dateLocale,
                       })}
                     </div>
                   </button>

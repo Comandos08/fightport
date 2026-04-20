@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Plus, Send, MessageSquare, ArrowLeft } from 'lucide-react';
@@ -14,21 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { notifyAdmin } from '@/lib/notifications';
 
-const CATEGORIES = [
-  { value: 'bug', label: 'Bug' },
-  { value: 'duvida', label: 'Dúvida' },
-  { value: 'creditos', label: 'Créditos' },
-  { value: 'cadastro', label: 'Cadastro' },
-  { value: 'outro', label: 'Outro' },
-];
-
-const STATUS_LABEL: Record<string, string> = {
-  open: 'Aberto',
-  awaiting_admin: 'Aguardando suporte',
-  awaiting_school: 'Aguardando você',
-  resolved: 'Resolvido',
-  closed: 'Encerrado',
-};
+const CATEGORY_VALUES = ['bug', 'duvida', 'creditos', 'cadastro', 'outro'] as const;
 
 const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
   open:            { bg: '#fde68a', fg: '#92400e' },
@@ -47,6 +34,7 @@ const ipt: React.CSSProperties = {
 export default function PainelSuporte() {
   const { user } = useAuth();
   const qc = useQueryClient();
+  const { t } = useTranslation();
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [newOpen, setNewOpen] = useState(false);
@@ -154,10 +142,10 @@ export default function PainelSuporte() {
 
   const createTicket = useMutation({
     mutationFn: async () => {
-      if (!user) throw new Error('Sem usuário');
+      if (!user) throw new Error(t('support.toast.noUser'));
       const subject = newSubject.trim();
       const message = newMessage.trim();
-      if (!subject || !message) throw new Error('Assunto e mensagem são obrigatórios');
+      if (!subject || !message) throw new Error(t('support.toast.subjectMessageRequired'));
 
       const { data: ticket, error: e1 } = await supabase
         .from('support_tickets')
@@ -183,8 +171,11 @@ export default function PainelSuporte() {
           .maybeSingle();
         notifyAdmin({
           type: 'new_ticket',
-          title: 'Novo ticket de suporte',
-          body: `A escola "${schoolRow?.name ?? 'desconhecida'}" abriu um novo ticket: "${ticket.subject}".`,
+          title: t('support.notifyAdmin.title'),
+          body: t('support.notifyAdmin.body', {
+            school: schoolRow?.name ?? t('support.notifyAdmin.unknownSchool'),
+            subject: ticket.subject,
+          }),
           link: '/dash/suporte',
         });
       })();
@@ -192,16 +183,16 @@ export default function PainelSuporte() {
       setNewOpen(false);
       setNewSubject(''); setNewCategory('duvida'); setNewMessage('');
       setSelectedId(ticket.id);
-      toast({ title: 'Ticket criado', description: 'Nossa equipe responderá em breve.' });
+      toast({ title: t('support.toast.createdTitle'), description: t('support.toast.createdDesc') });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: t('support.toast.errorTitle'), description: e.message, variant: 'destructive' }),
   });
 
   const sendReply = useMutation({
     mutationFn: async () => {
-      if (!user || !selectedId) throw new Error('Sem ticket selecionado');
+      if (!user || !selectedId) throw new Error(t('support.toast.noTicketSelected'));
       const content = reply.trim();
-      if (!content) throw new Error('Mensagem vazia');
+      if (!content) throw new Error(t('support.toast.emptyMessage'));
       const { error } = await supabase
         .from('support_messages')
         .insert({ ticket_id: selectedId, author_type: 'school', author_id: user.id, content });
@@ -212,7 +203,7 @@ export default function PainelSuporte() {
       qc.invalidateQueries({ queryKey: ['school-ticket-messages', selectedId] });
       qc.invalidateQueries({ queryKey: ['school-tickets'] });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: t('support.toast.errorTitle'), description: e.message, variant: 'destructive' }),
   });
 
   const selected = useMemo(() => tickets.find((t: any) => t.id === selectedId), [tickets, selectedId]);
@@ -222,20 +213,20 @@ export default function PainelSuporte() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 22, fontWeight: 600, margin: 0, color: 'var(--color-text)' }}>
-            Suporte
+            {t('support.title')}
           </h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            Abra tickets para tirar dúvidas, reportar bugs ou pedir ajuda.
+            {t('support.subtitle')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={ipt}>
-            <option value="all">Todos</option>
-            <option value="open">Em aberto</option>
-            <option value="resolved">Resolvidos</option>
+            <option value="all">{t('support.filter.all')}</option>
+            <option value="open">{t('support.filter.open')}</option>
+            <option value="resolved">{t('support.filter.resolved')}</option>
           </select>
           <Button onClick={() => setNewOpen(true)} size="sm">
-            <Plus className="w-4 h-4 mr-2" /> Novo ticket
+            <Plus className="w-4 h-4 mr-2" /> {t('support.newTicket')}
           </Button>
         </div>
       </div>
@@ -252,11 +243,11 @@ export default function PainelSuporte() {
             borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', flexDirection: 'column',
           }}
         >
-          {isLoading && <div style={{ padding: 16, color: 'var(--color-text-muted)', fontSize: 13 }}>Carregando…</div>}
+          {isLoading && <div style={{ padding: 16, color: 'var(--color-text-muted)', fontSize: 13 }}>{t('support.loading')}</div>}
           {!isLoading && tickets.length === 0 && (
             <div style={{ padding: 24, color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>
               <MessageSquare style={{ width: 24, height: 24, margin: '0 auto 8px', opacity: 0.5 }} />
-              Nenhum ticket {statusFilter === 'open' ? 'em aberto' : statusFilter === 'resolved' ? 'resolvido' : ''}.
+              {t('support.empty', { state: t(`support.emptyState.${statusFilter}`) }).replace(/\s+\./, '.')}
             </div>
           )}
           {(tickets as any[]).map(t => {
@@ -280,7 +271,7 @@ export default function PainelSuporte() {
                     </span>
                     {unread > 0 && (
                       <span
-                        aria-label={`${unread} mensagem${unread > 1 ? 's' : ''} não lida${unread > 1 ? 's' : ''}`}
+                        aria-label={t('support.unreadAria', { count: unread })}
                         style={{
                           flexShrink: 0,
                           minWidth: 18, height: 18, padding: '0 6px',
@@ -297,7 +288,7 @@ export default function PainelSuporte() {
                     fontFamily: 'var(--font-sans)', fontSize: 10, padding: '2px 6px', borderRadius: 4,
                     background: sc.bg, color: sc.fg, whiteSpace: 'nowrap',
                   }}>
-                    {STATUS_LABEL[t.status]}
+                    {t(`support.status.${t.status}`, { defaultValue: t.status })}
                   </span>
                 </div>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-muted)' }}>
@@ -319,7 +310,7 @@ export default function PainelSuporte() {
         >
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-muted)', fontSize: 13 }}>
-              Selecione um ticket para ver a conversa.
+              {t('support.selectTicket')}
             </div>
           ) : (
             <>
@@ -329,11 +320,11 @@ export default function PainelSuporte() {
                   className="md:hidden"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', padding: 0, marginBottom: 8, cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}
                 >
-                  <ArrowLeft className="w-4 h-4" /> Voltar
+                  <ArrowLeft className="w-4 h-4" /> {t('support.back')}
                 </button>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>{selected.subject}</div>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 2 }}>
-                  {selected.category} · {STATUS_LABEL[selected.status]} · aberto em {format(new Date(selected.created_at), 'dd/MM/yyyy')}
+                  {t(`support.form.categories.${selected.category}`, { defaultValue: selected.category })} · {t(`support.status.${selected.status}`, { defaultValue: selected.status })} · {t('support.openedOn', { date: format(new Date(selected.created_at), 'dd/MM/yyyy') })}
                 </div>
               </div>
               <div ref={threadRef} style={{ flex: 1, padding: 16, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -349,14 +340,14 @@ export default function PainelSuporte() {
                       }}>
                         <div>{m.content}</div>
                         <div style={{ fontSize: 10, marginTop: 4, opacity: 0.7 }}>
-                          {isMine ? 'Você' : 'Suporte'} · {format(new Date(m.created_at), 'dd/MM HH:mm')}
+                          {isMine ? t('support.you') : t('support.supportTeam')} · {format(new Date(m.created_at), 'dd/MM HH:mm')}
                         </div>
                       </div>
                     </div>
                   );
                 })}
                 {messages.length === 0 && (
-                  <div style={{ color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>Nenhuma mensagem.</div>
+                  <div style={{ color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>{t('support.noMessages')}</div>
                 )}
               </div>
               {selected.status !== 'resolved' && selected.status !== 'closed' && (
@@ -364,7 +355,7 @@ export default function PainelSuporte() {
                   <textarea
                     value={reply}
                     onChange={e => setReply(e.target.value)}
-                    placeholder="Escreva sua resposta…"
+                    placeholder={t('support.reply.placeholder')}
                     rows={2}
                     style={{
                       flex: 1, padding: 10, fontFamily: 'var(--font-sans)', fontSize: 13,
@@ -373,7 +364,7 @@ export default function PainelSuporte() {
                     }}
                   />
                   <Button onClick={() => sendReply.mutate()} disabled={!reply.trim() || sendReply.isPending}>
-                    <Send className="w-4 h-4 mr-2" /> Enviar
+                    <Send className="w-4 h-4 mr-2" /> {t('support.reply.send')}
                   </Button>
                 </div>
               )}
@@ -386,31 +377,33 @@ export default function PainelSuporte() {
       <Dialog open={newOpen} onOpenChange={setNewOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Abrir novo ticket</DialogTitle>
-            <DialogDescription>Descreva sua questão. Nossa equipe responde por aqui mesmo.</DialogDescription>
+            <DialogTitle>{t('support.form.title')}</DialogTitle>
+            <DialogDescription>{t('support.form.description')}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div>
-              <Label htmlFor="t-subject">Assunto *</Label>
-              <Input id="t-subject" value={newSubject} onChange={e => setNewSubject(e.target.value)} placeholder="Ex.: Erro ao registrar graduação" />
+              <Label htmlFor="t-subject">{t('support.form.subjectRequired')}</Label>
+              <Input id="t-subject" value={newSubject} onChange={e => setNewSubject(e.target.value)} placeholder={t('support.form.subjectPlaceholder')} />
             </div>
             <div>
-              <Label htmlFor="t-cat">Categoria</Label>
+              <Label htmlFor="t-cat">{t('support.form.category')}</Label>
               <select
                 id="t-cat" value={newCategory} onChange={e => setNewCategory(e.target.value)}
                 style={{ ...ipt, width: '100%' }}
               >
-                {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                {CATEGORY_VALUES.map(c => (
+                  <option key={c} value={c}>{t(`support.form.categories.${c}`)}</option>
+                ))}
               </select>
             </div>
             <div>
-              <Label htmlFor="t-msg">Mensagem *</Label>
-              <Textarea id="t-msg" rows={5} value={newMessage} onChange={e => setNewMessage(e.target.value)} placeholder="Detalhe sua dúvida ou problema…" />
+              <Label htmlFor="t-msg">{t('support.form.messageRequired')}</Label>
+              <Textarea id="t-msg" rows={5} value={newMessage} onChange={e => setNewMessage(e.target.value)} placeholder={t('support.form.messagePlaceholder')} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setNewOpen(false)}>Cancelar</Button>
-            <Button onClick={() => createTicket.mutate()} disabled={createTicket.isPending}>Abrir ticket</Button>
+            <Button variant="outline" onClick={() => setNewOpen(false)}>{t('support.form.cancel')}</Button>
+            <Button onClick={() => createTicket.mutate()} disabled={createTicket.isPending}>{t('support.form.send')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
