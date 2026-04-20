@@ -16,7 +16,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { notifyAdmin } from '@/lib/notifications';
 
 const CATEGORY_VALUES = ['bug', 'duvida', 'creditos', 'cadastro', 'outro'] as const;
-const STATUS_KEYS = ['open', 'awaiting_admin', 'awaiting_school', 'resolved', 'closed'] as const;
 
 const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
   open:            { bg: '#fde68a', fg: '#92400e' },
@@ -35,6 +34,7 @@ const ipt: React.CSSProperties = {
 export default function PainelSuporte() {
   const { user } = useAuth();
   const qc = useQueryClient();
+  const { t } = useTranslation();
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [newOpen, setNewOpen] = useState(false);
@@ -142,10 +142,10 @@ export default function PainelSuporte() {
 
   const createTicket = useMutation({
     mutationFn: async () => {
-      if (!user) throw new Error('Sem usuário');
+      if (!user) throw new Error(t('support.toast.noUser'));
       const subject = newSubject.trim();
       const message = newMessage.trim();
-      if (!subject || !message) throw new Error('Assunto e mensagem são obrigatórios');
+      if (!subject || !message) throw new Error(t('support.toast.subjectMessageRequired'));
 
       const { data: ticket, error: e1 } = await supabase
         .from('support_tickets')
@@ -171,8 +171,11 @@ export default function PainelSuporte() {
           .maybeSingle();
         notifyAdmin({
           type: 'new_ticket',
-          title: 'Novo ticket de suporte',
-          body: `A escola "${schoolRow?.name ?? 'desconhecida'}" abriu um novo ticket: "${ticket.subject}".`,
+          title: t('support.notifyAdmin.title'),
+          body: t('support.notifyAdmin.body', {
+            school: schoolRow?.name ?? t('support.notifyAdmin.unknownSchool'),
+            subject: ticket.subject,
+          }),
           link: '/dash/suporte',
         });
       })();
@@ -180,16 +183,16 @@ export default function PainelSuporte() {
       setNewOpen(false);
       setNewSubject(''); setNewCategory('duvida'); setNewMessage('');
       setSelectedId(ticket.id);
-      toast({ title: 'Ticket criado', description: 'Nossa equipe responderá em breve.' });
+      toast({ title: t('support.toast.createdTitle'), description: t('support.toast.createdDesc') });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: t('support.toast.errorTitle'), description: e.message, variant: 'destructive' }),
   });
 
   const sendReply = useMutation({
     mutationFn: async () => {
-      if (!user || !selectedId) throw new Error('Sem ticket selecionado');
+      if (!user || !selectedId) throw new Error(t('support.toast.noTicketSelected'));
       const content = reply.trim();
-      if (!content) throw new Error('Mensagem vazia');
+      if (!content) throw new Error(t('support.toast.emptyMessage'));
       const { error } = await supabase
         .from('support_messages')
         .insert({ ticket_id: selectedId, author_type: 'school', author_id: user.id, content });
@@ -200,7 +203,7 @@ export default function PainelSuporte() {
       qc.invalidateQueries({ queryKey: ['school-ticket-messages', selectedId] });
       qc.invalidateQueries({ queryKey: ['school-tickets'] });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: t('support.toast.errorTitle'), description: e.message, variant: 'destructive' }),
   });
 
   const selected = useMemo(() => tickets.find((t: any) => t.id === selectedId), [tickets, selectedId]);
@@ -210,20 +213,20 @@ export default function PainelSuporte() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 22, fontWeight: 600, margin: 0, color: 'var(--color-text)' }}>
-            Suporte
+            {t('support.title')}
           </h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            Abra tickets para tirar dúvidas, reportar bugs ou pedir ajuda.
+            {t('support.subtitle')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={ipt}>
-            <option value="all">Todos</option>
-            <option value="open">Em aberto</option>
-            <option value="resolved">Resolvidos</option>
+            <option value="all">{t('support.filter.all')}</option>
+            <option value="open">{t('support.filter.open')}</option>
+            <option value="resolved">{t('support.filter.resolved')}</option>
           </select>
           <Button onClick={() => setNewOpen(true)} size="sm">
-            <Plus className="w-4 h-4 mr-2" /> Novo ticket
+            <Plus className="w-4 h-4 mr-2" /> {t('support.newTicket')}
           </Button>
         </div>
       </div>
@@ -240,11 +243,11 @@ export default function PainelSuporte() {
             borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', flexDirection: 'column',
           }}
         >
-          {isLoading && <div style={{ padding: 16, color: 'var(--color-text-muted)', fontSize: 13 }}>Carregando…</div>}
+          {isLoading && <div style={{ padding: 16, color: 'var(--color-text-muted)', fontSize: 13 }}>{t('support.loading')}</div>}
           {!isLoading && tickets.length === 0 && (
             <div style={{ padding: 24, color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>
               <MessageSquare style={{ width: 24, height: 24, margin: '0 auto 8px', opacity: 0.5 }} />
-              Nenhum ticket {statusFilter === 'open' ? 'em aberto' : statusFilter === 'resolved' ? 'resolvido' : ''}.
+              {t('support.empty', { state: t(`support.emptyState.${statusFilter}`) }).replace(/\s+\./, '.')}
             </div>
           )}
           {(tickets as any[]).map(t => {
@@ -268,7 +271,7 @@ export default function PainelSuporte() {
                     </span>
                     {unread > 0 && (
                       <span
-                        aria-label={`${unread} mensagem${unread > 1 ? 's' : ''} não lida${unread > 1 ? 's' : ''}`}
+                        aria-label={t('support.unreadAria', { count: unread })}
                         style={{
                           flexShrink: 0,
                           minWidth: 18, height: 18, padding: '0 6px',
@@ -285,7 +288,7 @@ export default function PainelSuporte() {
                     fontFamily: 'var(--font-sans)', fontSize: 10, padding: '2px 6px', borderRadius: 4,
                     background: sc.bg, color: sc.fg, whiteSpace: 'nowrap',
                   }}>
-                    {STATUS_LABEL[t.status]}
+                    {t(`support.status.${t.status}`, { defaultValue: t.status })}
                   </span>
                 </div>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-muted)' }}>
