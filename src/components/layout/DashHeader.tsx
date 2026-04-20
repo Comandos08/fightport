@@ -171,7 +171,17 @@ export function DashHeader() {
           />
           <aside
             className="absolute left-0 top-0 bottom-0 flex flex-col animate-in slide-in-from-left duration-200"
-            style={{ width: 280, background: 'var(--color-bg)' }}
+            style={{
+              width: 280,
+              background: 'var(--color-bg)',
+              transform: dragOffset < 0 ? `translateX(${dragOffset}px)` : undefined,
+              transition: dragOffset === 0 ? 'transform 200ms ease-out' : 'none',
+              touchAction: 'pan-y',
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
           >
             <div
               className="flex items-center justify-between"
