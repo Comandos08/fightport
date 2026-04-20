@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ArrowLeft, Ban, RefreshCw, Gift, X } from 'lucide-react';
+import { ArrowLeft, Ban, RefreshCw, Gift, X, Users, Award } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
+import { DashTable, dashTd } from '@/components/dash/DashTable';
 import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
