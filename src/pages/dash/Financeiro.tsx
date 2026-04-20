@@ -594,7 +594,7 @@ function Metric({
     : trend === 'down' ? 'var(--color-warning, #b45309)'
     : 'var(--color-text-muted)';
   const trendLabel = trend === 'up' ? 'subindo' : trend === 'down' ? 'caindo' : 'estável';
-  const trendArrow = trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→';
+  const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
 
   return (
     <div style={card}>
@@ -647,20 +647,21 @@ function Metric({
             : positive
               ? 'var(--color-success, #15803d)'
               : 'var(--color-warning, #b45309)';
-          const arrow = flat ? '→' : positive ? '↑' : '↓';
+          const DeltaIcon = flat ? Minus : positive ? TrendingUp : TrendingDown;
           return (
             <span
               title={`Variação vs 7 dias anteriores: ${positive ? '+' : ''}${delta.toFixed(1)}%`}
               style={{
                 fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600,
                 color, fontVariantNumeric: 'tabular-nums',
-                display: 'inline-flex', alignItems: 'center', gap: 2,
+                display: 'inline-flex', alignItems: 'center', gap: 4,
                 padding: '2px 6px',
                 borderRadius: 999,
                 background: 'var(--color-bg-soft)',
               }}
             >
-              {arrow} {Math.abs(delta).toFixed(0)}%
+              <DeltaIcon style={{ width: 11, height: 11 }} strokeWidth={2.5} aria-hidden />
+              {Math.abs(delta).toFixed(0)}%
             </span>
           );
         })()}
@@ -676,8 +677,12 @@ function Metric({
         >
           <span>últimos 7 dias</span>
           {hasMovement && (
-            <span style={{ color: trendColor, fontWeight: 600 }} aria-label={`tendência ${trendLabel}`}>
-              {trendArrow} {trendLabel}
+            <span
+              style={{ color: trendColor, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 3 }}
+              aria-label={`tendência ${trendLabel}`}
+            >
+              <TrendIcon style={{ width: 10, height: 10 }} strokeWidth={2.5} aria-hidden />
+              {trendLabel}
             </span>
           )}
         </div>
