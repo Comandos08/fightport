@@ -171,10 +171,7 @@ export function NavbarPanel() {
               transition: dragOffset === 0 ? 'transform 200ms ease-out' : 'none',
               touchAction: 'pan-y',
             }}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onTouchCancel={handleTouchEnd}
+            {...touchHandlers}
           >
             {/* Handle bar — sugere swipe-to-close */}
             <div
