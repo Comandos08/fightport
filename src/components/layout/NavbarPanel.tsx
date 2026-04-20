@@ -15,6 +15,37 @@ export function NavbarPanel() {
   const location = useLocation();
   const qc = useQueryClient();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const isHorizontalSwipe = useRef<boolean>(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    isHorizontalSwipe.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    const dy = e.touches[0].clientY - touchStartY.current;
+    if (!isHorizontalSwipe.current && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      isHorizontalSwipe.current = Math.abs(dx) > Math.abs(dy);
+    }
+    if (!isHorizontalSwipe.current) return;
+    if (dx < 0) setDragOffset(dx);
+  };
+
+  const handleTouchEnd = () => {
+    if (isHorizontalSwipe.current && dragOffset < -70) {
+      setMobileOpen(false);
+    }
+    setDragOffset(0);
+    touchStartX.current = null;
+    touchStartY.current = null;
+    isHorizontalSwipe.current = false;
+  };
 
   const { data: unread = 0 } = useQuery({
     queryKey: ['school-unread-count', user?.id],
