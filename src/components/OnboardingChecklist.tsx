@@ -23,6 +23,19 @@ export function OnboardingChecklist() {
   useEffect(() => {
     if (allDone && !forceHide) {
       setCelebrate(true);
+      // Fire confetti bursts
+      const fire = (originX: number) => {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          startVelocity: 45,
+          origin: { x: originX, y: 0.7 },
+          colors: ['#C8F135', '#0D0D0D', '#F7F5F0', '#4ade80'],
+        });
+      };
+      fire(0.25);
+      setTimeout(() => fire(0.5), 200);
+      setTimeout(() => fire(0.75), 400);
       const t = setTimeout(() => setForceHide(true), 3000);
       return () => clearTimeout(t);
     }
