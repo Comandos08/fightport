@@ -184,7 +184,7 @@ export default function PraticantesPage() {
                         ))}
                         <button className="cursor-pointer" aria-label={t('practitioners.delete')} onClick={() => setDeleteTarget({ id: a.id, name: `${a.first_name} ${a.last_name}` })}
                           style={{ background: 'none', border: 'none', padding: 4, color: 'var(--color-text-muted)', transition: 'var(--transition)' }}
-                          onMouseEnter={e => (e.currentTarget.style.color = '#DC2626')} onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}>
+                          onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-danger)')} onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}>
                           <Trash2 style={{ width: 16, height: 16 }} />
                         </button>
                       </div>

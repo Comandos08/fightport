@@ -18,6 +18,12 @@
     --color-border:       #E8E8E5;
     --color-border-dark:  #D0D0CB;
 
+    /* ── Status semânticos ── */
+    --color-danger:       #DC2626;
+    --color-danger-soft:  rgba(220, 38, 38, 0.08);
+    --color-success:      #16A34A;
+    --color-success-soft: rgba(22, 163, 74, 0.08);
+
     /* ── Tipografia ── */
     --font-sans:  'DM Sans', sans-serif;
     --font-mono:  'Space Mono', monospace;

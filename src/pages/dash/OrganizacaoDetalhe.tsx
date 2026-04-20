@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { DashTable, dashTd } from '@/components/dash/DashTable';
-import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
+import { dashOutlineButtonStyle, dashDangerButtonStyle } from '@/components/dash/DashFiltersBar';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
@@ -163,8 +163,8 @@ export default function OrganizacaoDetalhe() {
       <span style={{
         display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500,
         borderRadius: 4,
-        color: s.is_suspended ? '#dc2626' : '#16a34a',
-        background: s.is_suspended ? 'rgba(220,38,38,0.08)' : 'rgba(22,163,74,0.08)',
+        color: s.is_suspended ? 'var(--color-danger)' : 'var(--color-success)',
+        background: s.is_suspended ? 'var(--color-danger-soft)' : 'var(--color-success-soft)',
       }}>{s.is_suspended ? 'Suspensa' : 'Ativa'}</span>
       {s.is_admin && <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, background: 'var(--color-text)', color: 'var(--color-bg)' }}>Admin</span>}
       <span>{s.martial_art}</span>
@@ -347,7 +347,7 @@ export default function OrganizacaoDetalhe() {
           <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Descreva o motivo da suspensão" />
           <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
             <button onClick={() => { setShowSuspend(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => suspendMut.mutate()} disabled={!reason.trim() || suspendMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: '#fff', background: '#dc2626', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>Suspender</button>
+            <button onClick={() => suspendMut.mutate()} disabled={!reason.trim() || suspendMut.isPending} style={{ ...dashDangerButtonStyle, height: 32, padding: '0 14px', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>Suspender</button>
           </div>
         </Modal>
       )}

@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { maskCpf, maskBirthDate, formatCpf, formatBirthDate } from '@/lib/sensitive';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
-import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
+import { dashOutlineButtonStyle, dashDangerOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 
 const REVEAL_MS = 60_000;
 
@@ -187,10 +187,7 @@ export default function AtletaDetalhe() {
         actions={
           <button
             onClick={() => revealed ? setRevealed(false) : setRevealOpen(true)}
-            style={{
-              ...dashOutlineButtonStyle,
-              ...(revealed ? { color: '#dc2626', borderColor: '#dc2626' } : {}),
-            }}
+            style={revealed ? dashDangerOutlineButtonStyle : dashOutlineButtonStyle}
           >
             {revealed
               ? (<><EyeOff style={{ width: 14, height: 14 }} /> Re-mascarar</>)

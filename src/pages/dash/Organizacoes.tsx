@@ -240,8 +240,8 @@ export default function Organizacoes() {
               <span style={{
                 display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500,
                 borderRadius: 4,
-                color: r.is_suspended ? '#dc2626' : '#16a34a',
-                background: r.is_suspended ? 'rgba(220,38,38,0.08)' : 'rgba(22,163,74,0.08)',
+                color: r.is_suspended ? 'var(--color-danger)' : 'var(--color-success)',
+                background: r.is_suspended ? 'var(--color-danger-soft)' : 'var(--color-success-soft)',
               }}>
                 {r.is_suspended ? 'Suspensa' : 'Ativa'}
               </span>

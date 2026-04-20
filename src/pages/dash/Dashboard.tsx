@@ -62,7 +62,7 @@ function StatCard({ icon: Icon, label, value, change, link }: { icon: any; label
       <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
         <Icon style={{ width: 16, height: 16, color: 'var(--color-text-muted)' }} />
         {change !== undefined && (
-          <span className="flex items-center" style={{ gap: 4, fontSize: 12, fontFamily: 'var(--font-sans)', color: positive ? '#16a34a' : '#dc2626' }}>
+          <span className="flex items-center" style={{ gap: 4, fontSize: 12, fontFamily: 'var(--font-sans)', color: positive ? 'var(--color-success)' : 'var(--color-danger)' }}>
             {positive ? <TrendingUp style={{ width: 12, height: 12 }} /> : <TrendingDown style={{ width: 12, height: 12 }} />}
             {Math.abs(change).toFixed(1)}%
           </span>
@@ -306,7 +306,7 @@ export default function DashDashboard() {
 
           <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md, 8px)', padding: 16 }}>
             <div className="flex items-center" style={{ gap: 8, marginBottom: 12 }}>
-              <AlertCircle style={{ width: 14, height: 14, color: '#dc2626' }} />
+              <AlertCircle style={{ width: 14, height: 14, color: 'var(--color-danger)' }} />
               <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)' }}>Saldo zerado (top 5)</span>
             </div>
             {zeroBalance.length === 0 ? (

@@ -72,3 +72,29 @@ export const dashClearButtonStyle: CSSProperties = {
   width: '100%',
   justifyContent: 'center',
 };
+
+/**
+ * Botão sólido destrutivo (ações irreversíveis ou de alto risco):
+ * suspender organização, deletar, etc.
+ */
+export const dashDangerButtonStyle: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 8,
+  padding: '9px 14px',
+  border: 'none',
+  borderRadius: 'var(--radius-sm)',
+  background: 'var(--color-danger)',
+  fontFamily: 'var(--font-sans)',
+  fontSize: 13,
+  fontWeight: 500,
+  color: '#fff',
+  cursor: 'pointer',
+};
+
+/** Variante outline do botão destrutivo (estado de alerta sem submeter ação). */
+export const dashDangerOutlineButtonStyle: CSSProperties = {
+  ...dashOutlineButtonStyle,
+  color: 'var(--color-danger)',
+  borderColor: 'var(--color-danger)',
+};
