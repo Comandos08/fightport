@@ -121,6 +121,30 @@
       "achievements": "Conquistas"
     }
   },
+  "onboarding": {
+    "modal": {
+      "title": "Bem-vindo ao FightPort!",
+      "subtitle": "Siga os primeiros passos para certificar suas primeiras graduações.",
+      "start": "Começar agora",
+      "skip": "Pular por enquanto"
+    },
+    "checklist": {
+      "title": "Primeiros passos",
+      "tooltip": "Primeiros passos",
+      "progress": "{{done}} de {{total}} concluídos",
+      "dismiss": "Dispensar",
+      "minimize": "Minimizar",
+      "celebrate": "Você está pronto! 🎉",
+      "celebrateDesc": "Parabéns por completar todos os primeiros passos."
+    },
+    "steps": {
+      "school": { "label": "Configurar escola", "description": "Adicione o logo e dados da sua escola" },
+      "practitioner": { "label": "Cadastrar praticante", "description": "Adicione seu primeiro aluno" },
+      "achievement": { "label": "Registrar graduação", "description": "Emita seu primeiro certificado" },
+      "passport": { "label": "Ver passaporte", "description": "Visualize um passaporte público" },
+      "credits": { "label": "Comprar créditos", "description": "Garanta créditos para novas graduações" }
+    }
+  },
   "practitioners": {
     "title": "Praticantes",
     "exportCsv": "Exportar CSV",
