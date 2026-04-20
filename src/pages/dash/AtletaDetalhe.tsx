@@ -187,10 +187,7 @@ export default function AtletaDetalhe() {
         actions={
           <button
             onClick={() => revealed ? setRevealed(false) : setRevealOpen(true)}
-            style={{
-              ...dashOutlineButtonStyle,
-              ...(revealed ? { color: '#dc2626', borderColor: '#dc2626' } : {}),
-            }}
+            style={revealed ? dashDangerOutlineButtonStyle : dashOutlineButtonStyle}
           >
             {revealed
               ? (<><EyeOff style={{ width: 14, height: 14 }} /> Re-mascarar</>)
