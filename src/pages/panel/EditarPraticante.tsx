@@ -44,9 +44,43 @@ export default function EditarPraticantePage() {
     e.preventDefault();
     if (!firstName || !lastName) { toast.error('Nome e sobrenome são obrigatórios.'); return; }
     setLoading(true);
-    const { error } = await supabase.from('practitioners').update({ first_name: firstName, last_name: lastName, birth_date: birthDate || null, gender: gender || null, cpf: cpf || null, father_name: fatherName || null, mother_name: motherName || null, current_belt: currentBelt || null }).eq('id', id!).eq('school_id', user!.id);
+    const updates = { first_name: firstName, last_name: lastName, birth_date: birthDate || null, gender: gender || null, cpf: cpf || null, father_name: fatherName || null, mother_name: motherName || null, current_belt: currentBelt || null };
+    const { error } = await supabase.from('practitioners').update(updates).eq('id', id!).eq('school_id', user!.id);
     setLoading(false);
-    if (error) { toast.error('Erro ao atualizar praticante: ' + error.message); } else { toast.success('Praticante atualizado com sucesso!'); queryClient.invalidateQueries({ queryKey: ['practitioners'] }); queryClient.invalidateQueries({ queryKey: ['practitioner', id] }); navigate('/painel/praticantes'); }
+    if (error) {
+      toast.error('Erro ao atualizar praticante: ' + error.message);
+    } else {
+      // Compute changed fields
+      const fieldsChanged: string[] = [];
+      if (practitioner) {
+        const before: Record<string, any> = {
+          first_name: practitioner.first_name ?? null,
+          last_name: practitioner.last_name ?? null,
+          birth_date: practitioner.birth_date ?? null,
+          gender: practitioner.gender ?? null,
+          cpf: practitioner.cpf ?? null,
+          father_name: practitioner.father_name ?? null,
+          mother_name: practitioner.mother_name ?? null,
+          current_belt: practitioner.current_belt ?? null,
+        };
+        for (const k of Object.keys(updates)) {
+          if ((before as any)[k] !== (updates as any)[k]) fieldsChanged.push(k);
+        }
+      }
+      // Fire-and-forget audit log
+      void supabase.from('school_audit_log').insert({
+        school_id: user!.id,
+        action: 'practitioner_updated',
+        entity: 'practitioner',
+        entity_id: id!,
+        entity_name: `${firstName} ${lastName}`.trim(),
+        metadata: { fields_changed: fieldsChanged },
+      }).then(() => {});
+      toast.success('Praticante atualizado com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['practitioners'] });
+      queryClient.invalidateQueries({ queryKey: ['practitioner', id] });
+      navigate('/painel/praticantes');
+    }
   };
 
   if (fetching) return <div style={{ padding: '32px', display: 'flex', justifyContent: 'center', paddingTop: 80 }}><div className="animate-spin" style={{ width: 32, height: 32, border: '3px solid var(--color-text)', borderTopColor: 'transparent', borderRadius: '50%' }} /></div>;

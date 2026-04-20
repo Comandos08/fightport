@@ -67,12 +67,26 @@ export default function PraticantesPage() {
   const handleDelete = async () => {
     if (!deleteTarget) return;
     setDeleting(true);
+    // Snapshot metadata before delete
+    const target = practitioners.find(p => p.id === deleteTarget.id);
     const { error } = await supabase.from('practitioners').delete().eq('id', deleteTarget.id);
     setDeleting(false);
+    const targetCopy = deleteTarget;
     setDeleteTarget(null);
     if (error) {
       toast.error(error.message.includes('foreign') ? t('practitioners.deleteForeignKey') : error.message);
     } else {
+      // Fire-and-forget audit log
+      if (user) {
+        void supabase.from('school_audit_log').insert({
+          school_id: user.id,
+          action: 'practitioner_deleted',
+          entity: 'practitioner',
+          entity_id: targetCopy.id,
+          entity_name: targetCopy.name,
+          metadata: { belt: target?.current_belt ?? null, martial_art: target?.martial_art ?? null },
+        }).then(() => {});
+      }
       toast.success(t('practitioners.deleteSuccess'));
       queryClient.invalidateQueries({ queryKey: ['practitioners'] });
       queryClient.invalidateQueries({ queryKey: ['practitioner-count'] });

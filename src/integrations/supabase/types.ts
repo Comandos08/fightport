@@ -403,6 +403,54 @@ export type Database = {
           },
         ]
       }
+      school_audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          entity: string
+          entity_id: string | null
+          entity_name: string | null
+          id: string
+          metadata: Json | null
+          school_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity: string
+          entity_id?: string | null
+          entity_name?: string | null
+          id?: string
+          metadata?: Json | null
+          school_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity?: string
+          entity_id?: string | null
+          entity_name?: string | null
+          id?: string
+          metadata?: Json | null
+          school_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_audit_log_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_audit_log_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schools: {
         Row: {
           city: string | null

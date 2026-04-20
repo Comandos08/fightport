@@ -46,9 +46,27 @@ export default function NovaConquistaPage() {
     setLoading(true);
     const { data: hash, error: hashError } = await supabase.rpc('generate_achievement_hash', { p_fp_id: selectedPractitioner.fp_id, p_belt: belt, p_date: date, p_school: school?.name ?? '', p_professor: graduatedBy });
     if (hashError || !hash) { toast.error('Erro ao gerar hash.'); setLoading(false); return; }
-    const { error } = await supabase.from('achievements').insert({ practitioner_id: selectedPractitioner.id, school_id: user!.id, belt, graduation_date: date, graduated_by: graduatedBy, notes: note || null, hash });
+    const { data: inserted, error } = await supabase.from('achievements').insert({ practitioner_id: selectedPractitioner.id, school_id: user!.id, belt, graduation_date: date, graduated_by: graduatedBy, notes: note || null, hash }).select('id, degree').single();
     setLoading(false); setShowConfirm(false);
-    if (error) { toast.error(error.message.includes('insuficiente') ? 'Saldo de créditos insuficiente.' : error.message); } else { setGeneratedHash(hash); setShowSuccess(true); queryClient.invalidateQueries({ queryKey: ['credits'] }); queryClient.invalidateQueries({ queryKey: ['recent-achievements'] }); queryClient.invalidateQueries({ queryKey: ['achievement-count'] }); queryClient.invalidateQueries({ queryKey: ['practitioners'] }); }
+    if (error) {
+      toast.error(error.message.includes('insuficiente') ? 'Saldo de créditos insuficiente.' : error.message);
+    } else {
+      // Fire-and-forget audit log
+      void supabase.from('school_audit_log').insert({
+        school_id: user!.id,
+        action: 'achievement_created',
+        entity: 'achievement',
+        entity_id: inserted?.id ?? null,
+        entity_name: `${selectedPractitioner.first_name} ${selectedPractitioner.last_name}`.trim(),
+        metadata: { belt, degree: inserted?.degree ?? 0, graduated_by: graduatedBy },
+      }).then(() => {});
+      setGeneratedHash(hash);
+      setShowSuccess(true);
+      queryClient.invalidateQueries({ queryKey: ['credits'] });
+      queryClient.invalidateQueries({ queryKey: ['recent-achievements'] });
+      queryClient.invalidateQueries({ queryKey: ['achievement-count'] });
+      queryClient.invalidateQueries({ queryKey: ['practitioners'] });
+    }
   };
 
   if (showSuccess) {

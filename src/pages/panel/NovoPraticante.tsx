@@ -41,9 +41,26 @@ export default function NovoPraticantePage() {
     setLoading(true);
     const { data: fpId, error: fpError } = await supabase.rpc('generate_fp_id');
     if (fpError || !fpId) { toast.error('Erro ao gerar ID do praticante.'); setLoading(false); return; }
-    const { error } = await supabase.from('practitioners').insert({ school_id: user!.id, fp_id: fpId, first_name: firstName, last_name: lastName, birth_date: birthDate || null, gender: gender || null, cpf: cpf || null, father_name: fatherName || null, mother_name: motherName || null, martial_art: school?.martial_art ?? 'Jiu-Jitsu', current_belt: currentBelt || null });
+    const martialArt = school?.martial_art ?? 'Jiu-Jitsu';
+    const { data: inserted, error } = await supabase.from('practitioners').insert({ school_id: user!.id, fp_id: fpId, first_name: firstName, last_name: lastName, birth_date: birthDate || null, gender: gender || null, cpf: cpf || null, father_name: fatherName || null, mother_name: motherName || null, martial_art: martialArt, current_belt: currentBelt || null }).select('id').single();
     setLoading(false);
-    if (error) { toast.error('Erro ao cadastrar praticante: ' + error.message); } else { toast.success('Praticante cadastrado com sucesso!'); queryClient.invalidateQueries({ queryKey: ['practitioners'] }); queryClient.invalidateQueries({ queryKey: ['practitioner-count'] }); navigate('/painel/praticantes'); }
+    if (error) {
+      toast.error('Erro ao cadastrar praticante: ' + error.message);
+    } else {
+      // Fire-and-forget audit log
+      void supabase.from('school_audit_log').insert({
+        school_id: user!.id,
+        action: 'practitioner_created',
+        entity: 'practitioner',
+        entity_id: inserted?.id ?? null,
+        entity_name: `${firstName} ${lastName}`.trim(),
+        metadata: { martial_art: martialArt, belt: currentBelt || null },
+      }).then(() => {});
+      toast.success('Praticante cadastrado com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['practitioners'] });
+      queryClient.invalidateQueries({ queryKey: ['practitioner-count'] });
+      navigate('/painel/praticantes');
+    }
   };
 
   return (

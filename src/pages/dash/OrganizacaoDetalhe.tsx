@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ArrowLeft, Ban, RefreshCw, Gift, X, Users, Award } from 'lucide-react';
+import { ArrowLeft, Ban, RefreshCw, Gift, X, Users, Award, Activity, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
@@ -47,6 +47,8 @@ export default function OrganizacaoDetalhe() {
   const [bonusReason, setBonusReason] = useState('');
   const [pracPage, setPracPage] = useState(0);
   const [achPage, setAchPage] = useState(0);
+  const [schoolAuditPage, setSchoolAuditPage] = useState(0);
+  const [schoolAuditFilter, setSchoolAuditFilter] = useState<string>('');
   const PAGE_SIZE = 20;
 
   const { data: detail, isLoading } = useQuery({
@@ -96,6 +98,19 @@ export default function OrganizacaoDetalhe() {
     queryFn: async () => {
       const { data, error } = await supabase.rpc('admin_school_audit', { p_school_id: id });
       if (error) throw error; return data ?? [];
+    },
+    enabled: !!id,
+  });
+  const { data: schoolAudit = [] } = useQuery({
+    queryKey: ['admin-school-audit-log', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('school_audit_log')
+        .select('id, action, entity, entity_id, entity_name, metadata, created_at')
+        .eq('school_id', id!)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data ?? [];
     },
     enabled: !!id,
   });
@@ -373,6 +388,17 @@ export default function OrganizacaoDetalhe() {
         </div>
       </DashSection>
 
+      {/* Histórico de ações da escola */}
+      <SchoolAuditSection
+        items={schoolAudit}
+        schoolName={s.name}
+        page={schoolAuditPage}
+        onPageChange={setSchoolAuditPage}
+        filter={schoolAuditFilter}
+        onFilterChange={(v) => { setSchoolAuditFilter(v); setSchoolAuditPage(0); }}
+        pageSize={PAGE_SIZE}
+      />
+
       {/* MODAIS */}
       {showSuspend && (
         <Modal title="Suspender organização" onClose={() => { setShowSuspend(false); setReason(''); }}>
@@ -408,6 +434,203 @@ export default function OrganizacaoDetalhe() {
             <button onClick={() => bonusMut.mutate()} disabled={!bonusAmount || !bonusReason.trim() || bonusMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: (!bonusAmount || !bonusReason.trim()) ? 'not-allowed' : 'pointer', opacity: (!bonusAmount || !bonusReason.trim()) ? 0.5 : 1 }}>Conceder</button>
           </div>
         </Modal>
+      )}
+    </div>
+  );
+}
+
+// ============= Histórico de ações da escola =============
+
+const ACTION_LABELS: Record<string, { label: string; color: string; bg: string }> = {
+  practitioner_created: { label: 'Praticante criado', color: '#15803d', bg: 'rgba(34,197,94,0.12)' },
+  practitioner_updated: { label: 'Praticante editado', color: '#1d4ed8', bg: 'rgba(59,130,246,0.12)' },
+  practitioner_deleted: { label: 'Praticante deletado', color: '#b91c1c', bg: 'rgba(239,68,68,0.12)' },
+  achievement_created: { label: 'Graduação registrada', color: '#7c3aed', bg: 'rgba(139,92,246,0.14)' },
+};
+
+function formatSchoolAuditDetails(action: string, metadata: any): string {
+  if (!metadata || typeof metadata !== 'object') return '—';
+  switch (action) {
+    case 'practitioner_created': {
+      const art = metadata.martial_art ?? '—';
+      const belt = metadata.belt ?? '—';
+      return `${art} • Faixa ${belt}`;
+    }
+    case 'practitioner_updated': {
+      const fields = Array.isArray(metadata.fields_changed) ? metadata.fields_changed : [];
+      if (fields.length === 0) return 'Nenhum campo alterado';
+      const map: Record<string, string> = {
+        first_name: 'nome', last_name: 'sobrenome', birth_date: 'data de nascimento',
+        gender: 'sexo', cpf: 'CPF', father_name: 'nome do pai', mother_name: 'nome da mãe',
+        current_belt: 'faixa', photo_url: 'foto', martial_art: 'arte marcial',
+      };
+      return `Campos alterados: ${fields.map((f: string) => map[f] ?? f).join(', ')}`;
+    }
+    case 'practitioner_deleted': {
+      const belt = metadata.belt ?? '—';
+      const art = metadata.martial_art ?? '—';
+      return `Faixa: ${belt} • Arte: ${art}`;
+    }
+    case 'achievement_created': {
+      const belt = metadata.belt ?? '—';
+      const degree = metadata.degree && metadata.degree > 0 ? ` ${metadata.degree}° Grau` : '';
+      const by = metadata.graduated_by ?? '—';
+      return `Faixa ${belt}${degree} • Por: ${by}`;
+    }
+    default:
+      return Object.entries(metadata).map(([k, v]) => `${k}: ${v}`).join(' · ');
+  }
+}
+
+interface SchoolAuditSectionProps {
+  items: any[];
+  schoolName: string;
+  page: number;
+  onPageChange: (n: number) => void;
+  filter: string;
+  onFilterChange: (v: string) => void;
+  pageSize: number;
+}
+
+function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onFilterChange, pageSize }: SchoolAuditSectionProps) {
+  const filtered = filter ? items.filter((it) => it.action === filter) : items;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const currentPage = Math.min(page, totalPages - 1);
+  const pageItems = filtered.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+
+  const handleExport = () => {
+    if (filtered.length === 0) {
+      toast.error('Nenhum registro para exportar.');
+      return;
+    }
+    const headers = ['Data/Hora', 'Ação', 'Nome', 'Escola', 'Detalhes'];
+    const rows = filtered.map((it) => [
+      format(new Date(it.created_at), 'dd/MM/yyyy HH:mm'),
+      ACTION_LABELS[it.action]?.label ?? it.action,
+      it.entity_name ?? '',
+      schoolName ?? '',
+      it.metadata ? JSON.stringify(it.metadata) : '',
+    ]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `historico-escola_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const sectionHeader = (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <Activity style={{ width: 16, height: 16, color: 'var(--color-text-muted)' }} />
+        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>Histórico de ações da escola</h2>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <select
+          value={filter}
+          onChange={(e) => onFilterChange(e.target.value)}
+          style={{
+            height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 12,
+            background: 'var(--color-bg)', color: 'var(--color-text)',
+            border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
+          }}
+        >
+          <option value="">Todas as ações</option>
+          <option value="practitioner_created">Praticantes criados</option>
+          <option value="practitioner_updated">Praticantes editados</option>
+          <option value="practitioner_deleted">Praticantes deletados</option>
+          <option value="achievement_created">Graduações registradas</option>
+        </select>
+        <button
+          onClick={handleExport}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            height: 32, padding: '0 12px', fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500,
+            color: 'var(--color-text)', background: 'transparent',
+            border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer',
+          }}
+        >
+          <Download style={{ width: 12, height: 12 }} /> Exportar CSV
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md, 8px)', padding: 20 }}>
+      {sectionHeader}
+
+      {filtered.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '40px 16px' }}>
+          <Activity style={{ width: 28, height: 28, color: 'var(--color-text-muted)', margin: '0 auto 8px', display: 'block', opacity: 0.5 }} />
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>Nenhuma ação registrada ainda.</p>
+        </div>
+      ) : (
+        <>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Data/Hora</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Ação</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Nome</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Detalhes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pageItems.map((it) => {
+                  const cfg = ACTION_LABELS[it.action] ?? { label: it.action, color: 'var(--color-text)', bg: 'var(--color-bg-soft)' };
+                  return (
+                    <tr key={it.id}>
+                      <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' }}>
+                        {format(new Date(it.created_at), 'dd/MM/yyyy HH:mm')}
+                      </td>
+                      <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' }}>
+                        <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, color: cfg.color, background: cfg.bg }}>
+                          {cfg.label}
+                        </span>
+                      </td>
+                      <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)' }}>
+                        {it.entity_name ?? '—'}
+                      </td>
+                      <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', whiteSpace: 'normal' }}>
+                        {formatSchoolAuditDetails(it.action, it.metadata)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
+              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>
+                Página {currentPage + 1} de {totalPages} · {filtered.length} registros
+              </span>
+              <div style={{ display: 'flex', gap: 6 }}>
+                <button
+                  onClick={() => onPageChange(Math.max(0, currentPage - 1))}
+                  disabled={currentPage === 0}
+                  style={{ height: 28, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: currentPage === 0 ? 'not-allowed' : 'pointer', opacity: currentPage === 0 ? 0.4 : 1 }}
+                >
+                  Anterior
+                </button>
+                <button
+                  onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
+                  disabled={currentPage >= totalPages - 1}
+                  style={{ height: 28, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: currentPage >= totalPages - 1 ? 'not-allowed' : 'pointer', opacity: currentPage >= totalPages - 1 ? 0.4 : 1 }}
+                >
+                  Próxima
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
