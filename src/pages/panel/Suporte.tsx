@@ -232,6 +232,7 @@ export default function PainelSuporte() {
           {(tickets as any[]).map(t => {
             const active = selectedId === t.id;
             const sc = STATUS_COLORS[t.status] ?? STATUS_COLORS.open;
+            const unread = unreadCounts[t.id] ?? 0;
             return (
               <button
                 key={t.id}
@@ -243,8 +244,24 @@ export default function PainelSuporte() {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {t.subject}
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 }}>
+                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: unread > 0 ? 700 : 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {t.subject}
+                    </span>
+                    {unread > 0 && (
+                      <span
+                        aria-label={`${unread} mensagem${unread > 1 ? 's' : ''} não lida${unread > 1 ? 's' : ''}`}
+                        style={{
+                          flexShrink: 0,
+                          minWidth: 18, height: 18, padding: '0 6px',
+                          borderRadius: 9, background: '#dc2626', color: '#fff',
+                          fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 700,
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1,
+                        }}
+                      >
+                        {unread > 9 ? '9+' : unread}
+                      </span>
+                    )}
                   </span>
                   <span style={{
                     fontFamily: 'var(--font-sans)', fontSize: 10, padding: '2px 6px', borderRadius: 4,
