@@ -201,7 +201,23 @@ function CompactSeriesCards({
             <div style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', fontVariantNumeric: 'tabular-nums' }}>
               {formatValue(curr)}
             </div>
-            {delta !== null && (() => {
+            {delta === null ? (
+              <span
+                title="Sem mês anterior para comparar"
+                style={{
+                  fontFamily: 'var(--font-sans)', fontSize: 9, fontWeight: 600,
+                  color: 'var(--color-text-muted)',
+                  display: 'inline-flex', alignItems: 'center',
+                  padding: '1px 6px',
+                  borderRadius: 999,
+                  background: 'var(--color-bg-soft)',
+                  textTransform: 'uppercase', letterSpacing: '0.04em',
+                  alignSelf: 'flex-start',
+                }}
+              >
+                novo
+              </span>
+            ) : (() => {
               const flat = Math.abs(delta) < 0.5;
               const DeltaIcon = flat ? Minus : positive ? TrendingUp : TrendingDown;
               const color = flat
