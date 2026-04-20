@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format, startOfDay, startOfMonth, startOfYear, subDays, endOfDay } from 'date-fns';
 import { CalendarIcon, TrendingUp, TrendingDown, Minus, Building2, Users, Award, DollarSign, AlertCircle, MessageSquare } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
