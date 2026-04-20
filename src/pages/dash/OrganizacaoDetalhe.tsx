@@ -139,9 +139,9 @@ export default function OrganizacaoDetalhe() {
           link: '/painel/suporte',
         });
       }
-      toast.success('Organização suspensa'); setShowSuspend(false); setReason(''); invalidateAll();
+      toast.success(t('dash.organizations.detail.toasts.suspendSuccess')); setShowSuspend(false); setReason(''); invalidateAll();
     },
-    onError: (e: any) => toast.error(e.message ?? 'Erro ao suspender'),
+    onError: (e: any) => toast.error(e.message ?? t('dash.organizations.detail.toasts.suspendError')),
   });
   const reactivateMut = useMutation({
     mutationFn: async () => {
@@ -158,9 +158,9 @@ export default function OrganizacaoDetalhe() {
           link: '/painel/suporte',
         });
       }
-      toast.success('Organização reativada'); setShowReactivate(false); setReason(''); invalidateAll();
+      toast.success(t('dash.organizations.detail.toasts.reactivateSuccess')); setShowReactivate(false); setReason(''); invalidateAll();
     },
-    onError: (e: any) => toast.error(e.message ?? 'Erro ao reativar'),
+    onError: (e: any) => toast.error(e.message ?? t('dash.organizations.detail.toasts.reactivateError')),
   });
   const bonusMut = useMutation({
     mutationFn: async () => {
@@ -181,9 +181,9 @@ export default function OrganizacaoDetalhe() {
           link: '/painel/creditos',
         });
       }
-      toast.success('Créditos concedidos'); setShowBonus(false); setBonusAmount(''); setBonusReason(''); invalidateAll();
+      toast.success(t('dash.organizations.detail.toasts.courtesySuccess')); setShowBonus(false); setBonusAmount(''); setBonusReason(''); invalidateAll();
     },
-    onError: (e: any) => toast.error(e.message ?? 'Erro ao conceder créditos'),
+    onError: (e: any) => toast.error(e.message ?? t('dash.organizations.detail.toasts.courtesyError')),
   });
 
   if (isLoading) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>Carregando...</div>;

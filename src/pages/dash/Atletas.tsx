@@ -157,7 +157,7 @@ export default function Atletas() {
             ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6,
             background: 'transparent',
           }}>
-            <X style={{ width: 12, height: 12 }} /> Limpar
+            <X style={{ width: 12, height: 12 }} /> {t('dash.common.clear')}
           </button>
         </div>
       </div>

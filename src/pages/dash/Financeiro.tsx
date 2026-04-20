@@ -278,18 +278,18 @@ export default function Financeiro() {
           <div>
             <label style={lbl}>{t('dash.financial.period')}</label>
             <select style={{ ...ipt }} value={preset} onChange={e => setPreset(e.target.value as Preset)}>
-              <option value="today">Hoje</option>
-              <option value="7d">7 dias</option>
-              <option value="30d">{t('dash.financial.periods.30')}</option>
-              <option value="month">Mês atual</option>
-              <option value="year">Ano atual</option>
-              <option value="custom">Personalizado</option>
+              <option value="today">{t('dash.financial.periods.today')}</option>
+              <option value="7d">{t('dash.financial.periods.7d')}</option>
+              <option value="30d">{t('dash.financial.periods.30d')}</option>
+              <option value="month">{t('dash.financial.periods.month')}</option>
+              <option value="year">{t('dash.financial.periods.year')}</option>
+              <option value="custom">{t('dash.financial.periods.custom')}</option>
             </select>
           </div>
           {preset === 'custom' && (
             <>
-              <div><label style={lbl}>De</label><input type="date" style={ipt} value={from} onChange={e => setFrom(e.target.value)} /></div>
-              <div><label style={lbl}>Até</label><input type="date" style={ipt} value={to} onChange={e => setTo(e.target.value)} /></div>
+              <div><label style={lbl}>{t('dash.financial.customRange.from')}</label><input type="date" style={ipt} value={from} onChange={e => setFrom(e.target.value)} /></div>
+              <div><label style={lbl}>{t('dash.financial.customRange.to')}</label><input type="date" style={ipt} value={to} onChange={e => setTo(e.target.value)} /></div>
             </>
           )}
           <button onClick={exportCsv} style={{ ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>

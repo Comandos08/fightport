@@ -197,7 +197,7 @@ export default function Organizacoes() {
         </div>
         <div className="flex items-end">
           <button onClick={clearFilters} className="flex items-center" style={{ gap: 4, height: 36, padding: '0 12px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>
-            <X style={{ width: 12, height: 12 }} /> Limpar
+            <X style={{ width: 12, height: 12 }} /> {t('dash.common.clear')}
           </button>
         </div>
       </div>
