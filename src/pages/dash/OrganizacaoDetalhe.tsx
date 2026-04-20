@@ -101,6 +101,19 @@ export default function OrganizacaoDetalhe() {
     },
     enabled: !!id,
   });
+  const { data: schoolAudit = [] } = useQuery({
+    queryKey: ['admin-school-audit-log', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('school_audit_log')
+        .select('id, action, entity, entity_id, entity_name, metadata, created_at')
+        .eq('school_id', id!)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!id,
+  });
 
   const invalidateAll = () => {
     qc.invalidateQueries({ queryKey: ['admin-school', id] });
