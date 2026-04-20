@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format, startOfMonth, startOfYear, subDays, startOfDay, endOfDay } from 'date-fns';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
@@ -63,6 +64,7 @@ function getRange(preset: Preset, customFrom?: string, customTo?: string): { sta
 }
 
 export default function Financeiro() {
+  const { t } = useTranslation();
   const [preset, setPreset] = useState<Preset>('30d');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
@@ -266,19 +268,19 @@ export default function Financeiro() {
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end" style={{ gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
-            Financeiro
+            {t('dash.financial.title')}
           </h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', margin: '4px 0 0' }}>
-            Receita, MRR, LTV e recompra calculados em tempo real sobre as transações de compra.
+            {t('dash.financial.subtitle')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'flex-end' }}>
           <div>
-            <label style={lbl}>Período</label>
+            <label style={lbl}>{t('dash.financial.period')}</label>
             <select style={{ ...ipt }} value={preset} onChange={e => setPreset(e.target.value as Preset)}>
               <option value="today">Hoje</option>
               <option value="7d">7 dias</option>
-              <option value="30d">30 dias</option>
+              <option value="30d">{t('dash.financial.periods.30')}</option>
               <option value="month">Mês atual</option>
               <option value="year">Ano atual</option>
               <option value="custom">Personalizado</option>
@@ -291,10 +293,10 @@ export default function Financeiro() {
             </>
           )}
           <button onClick={exportCsv} style={{ ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <FileSpreadsheet style={{ width: 14, height: 14 }} /> CSV
+            <FileSpreadsheet style={{ width: 14, height: 14 }} /> {t('dash.financial.exportCsv')}
           </button>
           <button onClick={exportPdf} style={{ ...ipt, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <FileText style={{ width: 14, height: 14 }} /> PDF
+            <FileText style={{ width: 14, height: 14 }} /> {t('dash.financial.exportPdf')}
           </button>
         </div>
       </div>
@@ -310,14 +312,14 @@ export default function Financeiro() {
         const txDelta = calcDelta(sparkTotals.current.tx, sparkTotals.previous.tx);
         return (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 20 }}>
-            <Metric label="Receita do período" value={fmtBRL(overview?.revenue ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} delta={revenueDelta} />
-            <Metric label="Transações" value={String(overview?.tx_count ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="tx" sparkTooltip={(v) => `${v} tx`} delta={txDelta} />
-            <Metric label="Ticket médio" value={fmtBRL(overview?.avg_ticket ?? 0)} />
-            <Metric label="Escolas únicas" value={String(overview?.unique_schools ?? 0)} />
-            <Metric label="MRR (média 3 meses)" value={fmtBRL(overview?.mrr ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} delta={revenueDelta} />
-            <Metric label="LTV estimado" value={fmtBRL(overview?.ltv ?? 0)} />
-            <Metric label="Taxa de recompra" value={fmtPct(overview?.repurchase_rate ?? 0)} />
-            <Metric label="Compras / escola" value={Number(overview?.avg_purchases ?? 0).toFixed(2)} />
+            <Metric label={t('dash.financial.metrics.periodRevenue')} value={fmtBRL(overview?.revenue ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} delta={revenueDelta} />
+            <Metric label={t('dash.financial.metrics.transactions')} value={String(overview?.tx_count ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="tx" sparkTooltip={(v) => `${v} tx`} delta={txDelta} />
+            <Metric label={t('dash.financial.metrics.avgTicket')} value={fmtBRL(overview?.avg_ticket ?? 0)} />
+            <Metric label={t('dash.financial.metrics.uniqueSchools')} value={String(overview?.unique_schools ?? 0)} />
+            <Metric label={t('dash.financial.metrics.mrr')} value={fmtBRL(overview?.mrr ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} delta={revenueDelta} />
+            <Metric label={t('dash.financial.metrics.ltv')} value={fmtBRL(overview?.ltv ?? 0)} />
+            <Metric label={t('dash.financial.metrics.repurchaseRate')} value={fmtPct(overview?.repurchase_rate ?? 0)} />
+            <Metric label={t('dash.financial.metrics.purchasesPerSchool')} value={Number(overview?.avg_purchases ?? 0).toFixed(2)} />
           </div>
         );
       })()}
@@ -325,7 +327,7 @@ export default function Financeiro() {
       {/* Breakdown por pacote (cards) */}
       <div style={{ ...card, marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
-          Receita por pacote
+          {t('dash.financial.charts.revenueByPackage')}
         </h2>
         {breakdown.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', fontSize: 13 }}>Nenhuma compra no período.</p>
@@ -381,7 +383,7 @@ export default function Financeiro() {
         <div style={card}>
           <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
             <span className="lg:hidden">Receita — últimos 3 meses</span>
-            <span className="hidden lg:inline">Receita mensal (12 meses)</span>
+            <span className="hidden lg:inline">{t('dash.financial.charts.monthlyRevenue')}</span>
           </h3>
 
           {/* Mobile: cards dos últimos 3 meses */}
@@ -448,7 +450,7 @@ export default function Financeiro() {
 
         <div style={card} className="hidden lg:block">
           <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
-            Distribuição por pacote
+            {t('dash.financial.charts.distributionByPackage')}
           </h3>
           <div className="h-[220px] sm:h-[260px]" style={{ width: '100%' }}>
             {breakdown.length === 0 ? (
@@ -481,7 +483,7 @@ export default function Financeiro() {
       {/* Top 10 escolas */}
       <div style={card}>
         <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
-          Top 10 escolas por receita acumulada
+          {t('dash.financial.charts.topSchools')}
         </h3>
         {topSchools.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', fontSize: 13 }}>Nenhuma compra no período.</p>

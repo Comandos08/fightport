@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { ArrowLeft, Ban, RefreshCw, Gift, X, Users, Award, Activity, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -39,6 +40,7 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
 export default function OrganizacaoDetalhe() {
   const { id } = useParams<{ id: string }>();
   const qc = useQueryClient();
+  const { t } = useTranslation();
   const [showSuspend, setShowSuspend] = useState(false);
   const [showReactivate, setShowReactivate] = useState(false);
   const [showBonus, setShowBonus] = useState(false);
@@ -193,15 +195,15 @@ export default function OrganizacaoDetalhe() {
   const headerActions = (
     <>
       <button onClick={() => setShowBonus(true)} style={dashOutlineButtonStyle}>
-        <Gift style={{ width: 14, height: 14 }} /> Conceder cortesia
+        <Gift style={{ width: 14, height: 14 }} /> {t('dash.organizations.detail.grantCourtesy')}
       </button>
       {s.is_suspended ? (
         <button onClick={() => setShowReactivate(true)} style={dashOutlineButtonStyle}>
-          <RefreshCw style={{ width: 14, height: 14 }} /> Reativar
+          <RefreshCw style={{ width: 14, height: 14 }} /> {t('dash.organizations.detail.reactivate')}
         </button>
       ) : (
         <button onClick={() => setShowSuspend(true)} style={dashDangerOutlineButtonStyle}>
-          <Ban style={{ width: 14, height: 14 }} /> Suspender
+          <Ban style={{ width: 14, height: 14 }} /> {t('dash.organizations.detail.suspend')}
         </button>
       )}
     </>
@@ -214,7 +216,7 @@ export default function OrganizacaoDetalhe() {
         borderRadius: 4,
         color: s.is_suspended ? 'var(--color-danger)' : 'var(--color-success)',
         background: s.is_suspended ? 'var(--color-danger-soft)' : 'var(--color-success-soft)',
-      }}>{s.is_suspended ? 'Suspensa' : 'Ativa'}</span>
+      }}>{s.is_suspended ? t('dash.organizations.status.suspended') : t('dash.organizations.status.active')}</span>
       {s.is_admin && <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, background: 'var(--color-text)', color: 'var(--color-bg)' }}>Admin</span>}
       <span>{s.martial_art}</span>
       {(s.city || s.state) && <span>· {[s.city, s.state].filter(Boolean).join(' / ')}</span>}
@@ -226,7 +228,7 @@ export default function OrganizacaoDetalhe() {
     <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Voltar */}
       <Link to="/dash/organizacoes" className="inline-flex items-center no-underline" style={{ gap: 6, color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontSize: 12, alignSelf: 'flex-start' }}>
-        <ArrowLeft style={{ width: 12, height: 12 }} /> Voltar para organizações
+        <ArrowLeft style={{ width: 12, height: 12 }} /> {t('dash.organizations.detail.back')}
       </Link>
 
       {/* Cabeçalho padrão com logo opcional */}
@@ -243,39 +245,39 @@ export default function OrganizacaoDetalhe() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 16 }}>
         {/* Dados cadastrais */}
-        <DashSection title="Dados cadastrais">
+        <DashSection title={t('dash.organizations.detail.sections.registrationData')}>
           <dl className="grid" style={{ gridTemplateColumns: '1fr 2fr', gap: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, margin: 0 }}>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Nome</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.name}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Arte marcial</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.martial_art}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Cidade/UF</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{[s.city, s.state].filter(Boolean).join(' / ') || '—'}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Email</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.email}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Cadastro</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{format(new Date(s.created_at), 'dd/MM/yyyy')}</dd>
-            <dt style={{ color: 'var(--color-text-muted)' }}>Head coach</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{hc ? `${hc.name} · ${hc.graduation}` : '—'}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.fields.name')}</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.name}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.fields.martialArt')}</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.martial_art}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.fields.cityState')}</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{[s.city, s.state].filter(Boolean).join(' / ') || '—'}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.fields.email')}</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{s.email}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.fields.createdAt')}</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{format(new Date(s.created_at), 'dd/MM/yyyy')}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.fields.headCoach')}</dt><dd style={{ color: 'var(--color-text)', margin: 0 }}>{hc ? `${hc.name} · ${hc.graduation}` : '—'}</dd>
           </dl>
         </DashSection>
 
         {/* Créditos */}
-        <DashSection title="Créditos">
+        <DashSection title={t('dash.organizations.detail.sections.credits')}>
           <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             <div>
-              <div style={muted}>Saldo</div>
+              <div style={muted}>{t('dash.organizations.detail.fields.balance')}</div>
               <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{detail.balance}</div>
             </div>
             <div>
-              <div style={muted}>Total comprado</div>
+              <div style={muted}>{t('dash.organizations.detail.fields.totalPurchased')}</div>
               <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{detail.total_purchased_credits}</div>
             </div>
             <div>
-              <div style={muted}>Total consumido</div>
+              <div style={muted}>{t('dash.organizations.detail.fields.totalConsumed')}</div>
               <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{detail.total_used_credits}</div>
             </div>
           </div>
-          <div style={{ ...muted, marginTop: 12 }}>Total gasto: {fmtBRL(Number(detail.total_spent_brl))}</div>
+          <div style={{ ...muted, marginTop: 12 }}>{t('dash.organizations.detail.fields.totalSpent')}: {fmtBRL(Number(detail.total_spent_brl))}</div>
         </DashSection>
       </div>
 
       {/* Atletas */}
-      <DashSection title={`Atletas (${practitioners.length})`} flush>
+      <DashSection title={`${t('dash.organizations.detail.sections.athletes')} (${practitioners.length})`} flush>
         <DashTable
           headers={['FP-ID', 'Nome', 'Faixa', 'Modalidade', 'Cadastro']}
           isEmpty={practitioners.length === 0}
@@ -302,7 +304,7 @@ export default function OrganizacaoDetalhe() {
       </DashSection>
 
       {/* Graduações */}
-      <DashSection title={`Graduações emitidas (${achievements.length})`} flush>
+      <DashSection title={`${t('dash.organizations.detail.sections.graduations')} (${achievements.length})`} flush>
         <DashTable
           headers={['Data', 'Atleta', 'Faixa', 'Grau', 'Graduado por']}
           isEmpty={achievements.length === 0}
@@ -329,7 +331,7 @@ export default function OrganizacaoDetalhe() {
       </DashSection>
 
       {/* Histórico financeiro */}
-      <DashSection title="Histórico financeiro">
+      <DashSection title={t('dash.organizations.detail.sections.financialHistory')}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr><th style={th}>Data</th><th style={th}>Tipo</th><th style={th}>Pacote</th><th style={th}>Quantidade</th><th style={th}>Valor</th><th style={th}>Status</th></tr></thead>
@@ -351,7 +353,7 @@ export default function OrganizacaoDetalhe() {
       </DashSection>
 
       {/* Tickets */}
-      <DashSection title={`Tickets de suporte abertos (${tickets.length})`}>
+      <DashSection title={`${t('dash.organizations.detail.sections.supportTickets')} (${tickets.length})`}>
         {tickets.length === 0 ? <p style={muted}>Nenhum ticket em aberto.</p> : (
           <ul className="flex flex-col" style={{ gap: 10, listStyle: 'none', padding: 0, margin: 0 }}>
             {tickets.map((t: any) => (
@@ -367,7 +369,7 @@ export default function OrganizacaoDetalhe() {
       </DashSection>
 
       {/* Audit log */}
-      <DashSection title="Histórico de ações administrativas">
+      <DashSection title={t('dash.organizations.detail.sections.adminActions')}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr><th style={th}>Data</th><th style={th}>Admin</th><th style={th}>Ação</th><th style={th}>Detalhes</th></tr></thead>
@@ -401,37 +403,37 @@ export default function OrganizacaoDetalhe() {
 
       {/* MODAIS */}
       {showSuspend && (
-        <Modal title="Suspender organização" onClose={() => { setShowSuspend(false); setReason(''); }}>
-          <p style={{ ...muted, marginBottom: 12 }}>A organização perderá acesso ao painel. Os dados são preservados.</p>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Descreva o motivo da suspensão" />
+        <Modal title={t('dash.organizations.detail.modals.suspend.title')} onClose={() => { setShowSuspend(false); setReason(''); }}>
+          <p style={{ ...muted, marginBottom: 12 }}>{t('dash.organizations.detail.modals.suspend.desc')}</p>
+          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>{t('dash.organizations.detail.modals.suspend.reason')}</label>
+          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder={t('dash.organizations.detail.modals.suspend.reasonPlaceholder')} />
           <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowSuspend(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => suspendMut.mutate()} disabled={!reason.trim() || suspendMut.isPending} style={{ ...dashDangerButtonStyle, height: 32, padding: '0 14px', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>Suspender</button>
+            <button onClick={() => { setShowSuspend(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>{t('dash.organizations.detail.modals.suspend.cancel')}</button>
+            <button onClick={() => suspendMut.mutate()} disabled={!reason.trim() || suspendMut.isPending} style={{ ...dashDangerButtonStyle, height: 32, padding: '0 14px', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>{t('dash.organizations.detail.modals.suspend.confirm')}</button>
           </div>
         </Modal>
       )}
 
       {showReactivate && (
-        <Modal title="Reativar organização" onClose={() => { setShowReactivate(false); setReason(''); }}>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Descreva o motivo da reativação" />
+        <Modal title={t('dash.organizations.detail.modals.reactivate.title')} onClose={() => { setShowReactivate(false); setReason(''); }}>
+          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>{t('dash.organizations.detail.modals.reactivate.reason')}</label>
+          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder={t('dash.organizations.detail.modals.reactivate.reasonPlaceholder')} />
           <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowReactivate(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => reactivateMut.mutate()} disabled={!reason.trim() || reactivateMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: '#fff', background: '#16a34a', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>Reativar</button>
+            <button onClick={() => { setShowReactivate(false); setReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>{t('dash.organizations.detail.modals.reactivate.cancel')}</button>
+            <button onClick={() => reactivateMut.mutate()} disabled={!reason.trim() || reactivateMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: '#fff', background: '#16a34a', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: !reason.trim() ? 'not-allowed' : 'pointer', opacity: !reason.trim() ? 0.5 : 1 }}>{t('dash.organizations.detail.modals.reactivate.confirm')}</button>
           </div>
         </Modal>
       )}
 
       {showBonus && (
-        <Modal title="Conceder créditos de cortesia" onClose={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }}>
-          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Quantidade *</label>
-          <input type="number" min={1} value={bonusAmount} onChange={e => setBonusAmount(e.target.value)} style={ipt} placeholder="Ex.: 10" />
-          <label style={{ display: 'block', marginTop: 12, marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>Motivo *</label>
-          <textarea value={bonusReason} onChange={e => setBonusReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder="Justificativa para o bônus" />
+        <Modal title={t('dash.organizations.detail.modals.courtesy.title')} onClose={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }}>
+          <label style={{ display: 'block', marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>{t('dash.organizations.detail.modals.courtesy.amount')}</label>
+          <input type="number" min={1} value={bonusAmount} onChange={e => setBonusAmount(e.target.value)} style={ipt} placeholder={t('dash.organizations.detail.modals.courtesy.amountPlaceholder')} />
+          <label style={{ display: 'block', marginTop: 12, marginBottom: 6, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-text)' }}>{t('dash.organizations.detail.modals.courtesy.reason')}</label>
+          <textarea value={bonusReason} onChange={e => setBonusReason(e.target.value)} rows={3} style={{ ...ipt, resize: 'vertical' }} placeholder={t('dash.organizations.detail.modals.courtesy.reasonPlaceholder')} />
           <div className="flex justify-end" style={{ gap: 8, marginTop: 16 }}>
-            <button onClick={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>Cancelar</button>
-            <button onClick={() => bonusMut.mutate()} disabled={!bonusAmount || !bonusReason.trim() || bonusMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: (!bonusAmount || !bonusReason.trim()) ? 'not-allowed' : 'pointer', opacity: (!bonusAmount || !bonusReason.trim()) ? 0.5 : 1 }}>Conceder</button>
+            <button onClick={() => { setShowBonus(false); setBonusAmount(''); setBonusReason(''); }} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}>{t('dash.organizations.detail.modals.courtesy.cancel')}</button>
+            <button onClick={() => bonusMut.mutate()} disabled={!bonusAmount || !bonusReason.trim() || bonusMut.isPending} style={{ height: 32, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: (!bonusAmount || !bonusReason.trim()) ? 'not-allowed' : 'pointer', opacity: (!bonusAmount || !bonusReason.trim()) ? 0.5 : 1 }}>{t('dash.organizations.detail.modals.courtesy.confirm')}</button>
           </div>
         </Modal>
       )}
