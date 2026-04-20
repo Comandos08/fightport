@@ -183,6 +183,22 @@ export function DashHeader() {
             onTouchEnd={handleTouchEnd}
             onTouchCancel={handleTouchEnd}
           >
+            {/* Handle bar — sugere swipe-to-close */}
+            <div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                right: 6,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: 4,
+                height: 40,
+                borderRadius: 999,
+                background: 'var(--color-border)',
+                opacity: 0.6,
+                pointerEvents: 'none',
+              }}
+            />
             <div
               className="flex items-center justify-between"
               style={{ padding: '20px 20px', borderBottom: '1px solid var(--color-border)' }}
