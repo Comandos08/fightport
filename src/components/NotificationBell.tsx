@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, CheckCheck } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -45,6 +45,10 @@ export function NotificationBell() {
     [notifications]
   );
 
+  // Pulso visual no badge ao chegar nova notificação
+  const [pulse, setPulse] = useState(false);
+  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Realtime: escuta inserts para o usuário
   useEffect(() => {
     if (!user) return;
@@ -60,11 +64,15 @@ export function NotificationBell() {
         },
         () => {
           qc.invalidateQueries({ queryKey: ['notifications', user.id] });
+          setPulse(true);
+          if (pulseTimer.current) clearTimeout(pulseTimer.current);
+          pulseTimer.current = setTimeout(() => setPulse(false), 3000);
         }
       )
       .subscribe();
     return () => {
       supabase.removeChannel(channel);
+      if (pulseTimer.current) clearTimeout(pulseTimer.current);
     };
   }, [user, qc]);
 
