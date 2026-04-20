@@ -6,7 +6,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, BarChart, Bar,
 } from 'recharts';
-import { FileText, FileSpreadsheet, Building2 } from 'lucide-react';
+import { FileText, FileSpreadsheet, Building2, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/integrations/supabase/client';
