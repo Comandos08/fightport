@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import logoFightport from '@/assets/logo-fightport.png';
@@ -10,6 +11,7 @@ import logoFightport from '@/assets/logo-fightport.png';
 export function Sidebar() {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
 
@@ -23,19 +25,38 @@ export function Sidebar() {
     refetchOnWindowFocus: true,
   });
 
-  // Realtime global: atualiza badge mesmo fora da página de Suporte
+  // Realtime global: atualiza badge + dispara toast sutil ao receber resposta do admin
   useEffect(() => {
     if (!user) return;
     const channel = supabase
       .channel(`sidebar-school-unread-${user.id}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'support_messages' },
+        { event: 'INSERT', schema: 'public', table: 'support_messages' },
+        (payload) => {
+          const msg = payload.new as { author_type?: string; ticket_id?: string };
+          qc.invalidateQueries({ queryKey: ['school-unread-count'] });
+          if (msg?.author_type !== 'admin') return;
+          // Não mostra toast quando o usuário já está na página de Suporte
+          if (location.pathname.startsWith('/painel/suporte')) return;
+          toast('Nova resposta do suporte', {
+            description: 'Clique em "Abrir" para ver o ticket.',
+            action: {
+              label: 'Abrir',
+              onClick: () => navigate('/painel/suporte'),
+            },
+          });
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'support_messages' },
         () => { qc.invalidateQueries({ queryKey: ['school-unread-count'] }); }
       )
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user?.id, qc]);
+  }, [user?.id, qc, location.pathname, navigate]);
+
 
   const links = [
     { to: '/painel', label: t('app.nav.dashboard'), icon: LayoutDashboard, exact: true, badge: 0 },
