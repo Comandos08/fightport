@@ -47,8 +47,83 @@ const fmtMonth = (m: string) => {
   return format(new Date(Number(y), Number(mo) - 1, 1), 'MMM/yy');
 };
 
-function StatCard({ icon: Icon, label, value, change, link }: { icon: any; label: string; value: string; change?: number; link?: string }) {
+/**
+ * Sparkline com cor por tendência (últimos 3 dias vs 3 anteriores).
+ * up (≥+5%) verde · down (≤-5%) âmbar · stable cinza muted.
+ */
+function StatSparkline({
+  data,
+  formatTooltip,
+}: {
+  data: { day: string; value: number }[];
+  formatTooltip?: (v: number) => string;
+}) {
+  const vals = data.map(d => Number(d.value || 0));
+  const last3 = vals.slice(-3);
+  const prev3 = vals.slice(-6, -3);
+  const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+  const recent = avg(last3);
+  const previous = avg(prev3);
+  const delta = previous === 0 ? (recent > 0 ? 100 : 0) : ((recent - previous) / previous) * 100;
+  const trend: 'up' | 'down' | 'stable' = delta >= 5 ? 'up' : delta <= -5 ? 'down' : 'stable';
+  const color =
+    trend === 'up'
+      ? 'var(--color-success, #15803d)'
+      : trend === 'down'
+        ? 'var(--color-warning, #b45309)'
+        : 'var(--color-text-muted)';
+  return (
+    <div style={{ width: 70, height: 24 }} aria-hidden>
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={data} margin={{ top: 2, right: 0, bottom: 2, left: 0 }}>
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke={color}
+            strokeWidth={1.5}
+            dot={false}
+            isAnimationActive={false}
+          />
+          {formatTooltip && (
+            <Tooltip
+              contentStyle={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 6, fontSize: 11, padding: '4px 6px' }}
+              formatter={(v: any) => formatTooltip(Number(v))}
+              labelFormatter={() => ''}
+              cursor={false}
+            />
+          )}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  change,
+  link,
+  sparkData,
+  sparkTooltip,
+}: {
+  icon: any;
+  label: string;
+  value: string;
+  change?: number;
+  link?: string;
+  sparkData?: { day: string; value: number }[];
+  sparkTooltip?: (v: number) => string;
+}) {
   const positive = (change ?? 0) >= 0;
+  const flat = change !== undefined && Math.abs(change) < 0.5;
+  const ChangeIcon = flat ? Minus : positive ? TrendingUp : TrendingDown;
+  const changeColor = flat
+    ? 'var(--color-text-muted)'
+    : positive
+      ? 'var(--color-success)'
+      : 'var(--color-danger)';
+  const hasSpark = !!sparkData && sparkData.length > 1;
   const content = (
     <div
       style={{
@@ -62,14 +137,17 @@ function StatCard({ icon: Icon, label, value, change, link }: { icon: any; label
       <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
         <Icon style={{ width: 16, height: 16, color: 'var(--color-text-muted)' }} />
         {change !== undefined && (
-          <span className="flex items-center" style={{ gap: 4, fontSize: 12, fontFamily: 'var(--font-sans)', color: positive ? 'var(--color-success)' : 'var(--color-danger)' }}>
-            {positive ? <TrendingUp style={{ width: 12, height: 12 }} /> : <TrendingDown style={{ width: 12, height: 12 }} />}
+          <span className="flex items-center" style={{ gap: 4, fontSize: 12, fontFamily: 'var(--font-sans)', color: changeColor }}>
+            <ChangeIcon style={{ width: 12, height: 12 }} strokeWidth={2.5} />
             {Math.abs(change).toFixed(1)}%
           </span>
         )}
       </div>
       <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)', marginBottom: 4 }}>{value}</div>
-      <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{label}</div>
+      <div className="flex items-center justify-between" style={{ gap: 8 }}>
+        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{label}</div>
+        {hasSpark && <StatSparkline data={sparkData!} formatTooltip={sparkTooltip} />}
+      </div>
     </div>
   );
   return link ? <Link to={link} className="no-underline">{content}</Link> : content;
