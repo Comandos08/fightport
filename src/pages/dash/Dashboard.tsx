@@ -364,6 +364,63 @@ export default function DashDashboard() {
     },
   });
 
+  // Sparklines diárias (7 dias) para os 4 StatCards. Buscamos created_at de cada tabela
+  // e agregamos no client. RLS permite leitura admin via policies existentes.
+  const { data: sparklines } = useQuery({
+    queryKey: ['admin-statcards-sparklines-7d'],
+    queryFn: async () => {
+      const start = startOfDay(subDays(new Date(), 6));
+      const startIso = start.toISOString();
+
+      const [schoolsRes, practRes, achRes, txRes] = await Promise.all([
+        supabase.from('schools').select('created_at').gte('created_at', startIso),
+        supabase.from('practitioners').select('created_at').gte('created_at', startIso),
+        supabase.from('achievements').select('created_at').gte('created_at', startIso),
+        supabase
+          .from('credit_transactions')
+          .select('created_at, price_brl')
+          .eq('type', 'purchase')
+          .eq('status', 'completed')
+          .gte('created_at', startIso),
+      ]);
+
+      const buildBuckets = () => {
+        const out: { day: string; value: number }[] = [];
+        for (let i = 6; i >= 0; i--) {
+          out.push({ day: format(startOfDay(subDays(new Date(), i)), 'yyyy-MM-dd'), value: 0 });
+        }
+        return out;
+      };
+      const fillCount = (rows: any[] | null) => {
+        const b = buildBuckets();
+        const idx = new Map(b.map((x, i) => [x.day, i]));
+        for (const r of rows ?? []) {
+          const k = format(startOfDay(new Date(r.created_at)), 'yyyy-MM-dd');
+          const i = idx.get(k);
+          if (i !== undefined) b[i].value += 1;
+        }
+        return b;
+      };
+      const fillSum = (rows: any[] | null, key: string) => {
+        const b = buildBuckets();
+        const idx = new Map(b.map((x, i) => [x.day, i]));
+        for (const r of rows ?? []) {
+          const k = format(startOfDay(new Date(r.created_at)), 'yyyy-MM-dd');
+          const i = idx.get(k);
+          if (i !== undefined) b[i].value += Number(r[key] ?? 0);
+        }
+        return b;
+      };
+
+      return {
+        schools: fillCount(schoolsRes.data as any[]),
+        practitioners: fillCount(practRes.data as any[]),
+        achievements: fillCount(achRes.data as any[]),
+        revenue: fillSum(txRes.data as any[], 'price_brl'),
+      };
+    },
+  });
+
   const schoolsChange = overview && overview.schools_prev > 0
     ? ((overview.schools_total - overview.schools_prev) / overview.schools_prev) * 100
     : 0;
@@ -438,10 +495,36 @@ export default function DashDashboard() {
         <div className="flex flex-col" style={{ gap: 20, minWidth: 0 }}>
           {/* Stat cards */}
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-            <StatCard icon={Building2} label="Escolas cadastradas" value={String(overview?.schools_total ?? 0)} change={schoolsChange} />
-            <StatCard icon={Users} label="Atletas cadastrados" value={String(overview?.practitioners_total ?? 0)} change={practChange} />
-            <StatCard icon={Award} label="Graduações no mês" value={String(overview?.achievements_month ?? 0)} />
-            <StatCard icon={DollarSign} label="Receita do mês" value={fmtBRL(Number(overview?.revenue_month ?? 0))} />
+            <StatCard
+              icon={Building2}
+              label="Escolas cadastradas"
+              value={String(overview?.schools_total ?? 0)}
+              change={schoolsChange}
+              sparkData={sparklines?.schools}
+              sparkTooltip={(v) => `${v} escola${v === 1 ? '' : 's'}`}
+            />
+            <StatCard
+              icon={Users}
+              label="Atletas cadastrados"
+              value={String(overview?.practitioners_total ?? 0)}
+              change={practChange}
+              sparkData={sparklines?.practitioners}
+              sparkTooltip={(v) => `${v} atleta${v === 1 ? '' : 's'}`}
+            />
+            <StatCard
+              icon={Award}
+              label="Graduações no mês"
+              value={String(overview?.achievements_month ?? 0)}
+              sparkData={sparklines?.achievements}
+              sparkTooltip={(v) => `${v} graduaç${v === 1 ? 'ão' : 'ões'}`}
+            />
+            <StatCard
+              icon={DollarSign}
+              label="Receita do mês"
+              value={fmtBRL(Number(overview?.revenue_month ?? 0))}
+              sparkData={sparklines?.revenue}
+              sparkTooltip={(v) => fmtBRL(v)}
+            />
           </div>
 
           {/* Charts */}
