@@ -527,6 +527,39 @@ function Metric({
 }) {
   const hasSpark = !!sparkData && sparkData.length > 0 && !!sparkKey;
   const hasMovement = hasSpark && sparkData!.some((d) => Number((d as any)[sparkKey!]) > 0);
+
+  // Tendência: média dos últimos 3 dias vs média dos 3 dias anteriores.
+  // up (≥+5%) → verde · down (≤-5%) → âmbar · stable → cinza
+  type Trend = 'up' | 'down' | 'stable';
+  let trend: Trend = 'stable';
+  let trendDeltaPct: number | null = null;
+  if (hasSpark && sparkData!.length >= 6) {
+    const vals = sparkData!.map((d) => Number((d as any)[sparkKey!]) || 0);
+    const recent = vals.slice(-3);
+    const previous = vals.slice(-6, -3);
+    const avg = (a: number[]) => a.reduce((s, v) => s + v, 0) / a.length;
+    const recentAvg = avg(recent);
+    const prevAvg = avg(previous);
+    if (prevAvg === 0 && recentAvg === 0) {
+      trend = 'stable';
+    } else if (prevAvg === 0) {
+      trend = recentAvg > 0 ? 'up' : 'stable';
+      trendDeltaPct = null;
+    } else {
+      const delta = ((recentAvg - prevAvg) / prevAvg) * 100;
+      trendDeltaPct = delta;
+      if (delta >= 5) trend = 'up';
+      else if (delta <= -5) trend = 'down';
+      else trend = 'stable';
+    }
+  }
+  const trendColor =
+    trend === 'up' ? 'var(--color-success, #15803d)'
+    : trend === 'down' ? 'var(--color-warning, #b45309)'
+    : 'var(--color-text-muted)';
+  const trendLabel = trend === 'up' ? 'subindo' : trend === 'down' ? 'caindo' : 'estável';
+  const trendArrow = trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→';
+
   return (
     <div style={card}>
       {hasSpark && (
@@ -537,7 +570,7 @@ function Metric({
                 <Line
                   type="monotone"
                   dataKey={sparkKey}
-                  stroke="var(--admin-chart-primary)"
+                  stroke={trendColor}
                   strokeWidth={1.5}
                   dot={false}
                   isAnimationActive={false}
@@ -570,8 +603,20 @@ function Metric({
       <div style={lbl}>{label}</div>
       <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{value}</div>
       {hasSpark && (
-        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2 }}>
-          últimos 7 dias
+        <div
+          style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}
+          title={
+            trendDeltaPct !== null
+              ? `Tendência ${trendLabel} (${trendDeltaPct >= 0 ? '+' : ''}${trendDeltaPct.toFixed(0)}% últimos 3 dias vs 3 anteriores)`
+              : `Tendência ${trendLabel}`
+          }
+        >
+          <span>últimos 7 dias</span>
+          {hasMovement && (
+            <span style={{ color: trendColor, fontWeight: 600 }} aria-label={`tendência ${trendLabel}`}>
+              {trendArrow} {trendLabel}
+            </span>
+          )}
         </div>
       )}
     </div>
