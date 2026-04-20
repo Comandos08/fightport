@@ -5,6 +5,7 @@ import {
   LayoutDashboard, Building2, Users, Award, DollarSign, LifeBuoy, ScrollText,
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useSwipeToClose } from '@/hooks/useSwipeToClose';
@@ -12,18 +13,19 @@ import { NotificationBell } from '@/components/NotificationBell';
 import logoFightport from '@/assets/logo-fightport.png';
 
 const links = [
-  { to: '/dash', label: 'Dashboard', icon: LayoutDashboard, exact: true, key: 'dash' },
-  { to: '/dash/organizacoes', label: 'Organizações', icon: Building2, exact: false, key: 'org' },
-  { to: '/dash/atletas', label: 'Atletas', icon: Users, exact: false, key: 'ath' },
-  { to: '/dash/graduacoes', label: 'Graduações', icon: Award, exact: false, key: 'grad' },
-  { to: '/dash/financeiro', label: 'Financeiro', icon: DollarSign, exact: false, key: 'fin' },
-  { to: '/dash/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, key: 'sup' },
-  { to: '/dash/auditoria', label: 'Auditoria', icon: ScrollText, exact: false, key: 'aud' },
+  { to: '/dash', i18nKey: 'dash.nav.dashboard', icon: LayoutDashboard, exact: true, key: 'dash' },
+  { to: '/dash/organizacoes', i18nKey: 'dash.nav.organizations', icon: Building2, exact: false, key: 'org' },
+  { to: '/dash/atletas', i18nKey: 'dash.nav.athletes', icon: Users, exact: false, key: 'ath' },
+  { to: '/dash/graduacoes', i18nKey: 'dash.nav.graduations', icon: Award, exact: false, key: 'grad' },
+  { to: '/dash/financeiro', i18nKey: 'dash.nav.financial', icon: DollarSign, exact: false, key: 'fin' },
+  { to: '/dash/suporte', i18nKey: 'dash.nav.support', icon: LifeBuoy, exact: false, key: 'sup' },
+  { to: '/dash/auditoria', i18nKey: 'dash.nav.audit', icon: ScrollText, exact: false, key: 'aud' },
 ];
 
 export function DashHeader() {
   const { user, signOut } = useAuth();
   const location = useLocation();
+  const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { dragOffset, touchHandlers } = useSwipeToClose({
     onClose: () => setMobileOpen(false),
@@ -67,7 +69,7 @@ export function DashHeader() {
         <button
           className="lg:hidden mr-3 cursor-pointer"
           onClick={() => setMobileOpen(true)}
-          aria-label="Abrir menu"
+          aria-label={t('panel.menu.open', 'Abrir menu')}
           style={{ color: 'var(--color-text)', background: 'none', border: 'none' }}
         >
           <Menu className="h-5 w-5" />
@@ -123,7 +125,7 @@ export function DashHeader() {
             onClick={signOut}
             className="cursor-pointer"
             style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none' }}
-            aria-label="Sair"
+            aria-label={t('panel.signOut', 'Sair')}
           >
             <LogOut className="h-4 w-4" />
           </button>
@@ -185,13 +187,13 @@ export function DashHeader() {
                 onClick={() => setMobileOpen(false)}
                 className="cursor-pointer"
                 style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none' }}
-                aria-label="Fechar"
+                aria-label={t('panel.menu.close', 'Fechar')}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
             <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>
-              {links.map(({ to, label, icon: Icon, exact, key }) => {
+              {links.map(({ to, i18nKey, icon: Icon, exact, key }) => {
                 const active = isActive(to, exact);
                 const badge = key === 'sup' ? awaiting : 0;
                 return (
@@ -214,7 +216,7 @@ export function DashHeader() {
                     }}
                   >
                     <Icon style={{ width: 16, height: 16 }} />
-                    <span style={{ flex: 1 }}>{label}</span>
+                    <span style={{ flex: 1 }}>{t(i18nKey)}</span>
                     {badge > 0 && (
                       <span style={{
                         fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
