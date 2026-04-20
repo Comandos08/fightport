@@ -7,6 +7,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { useSwipeToClose } from '@/hooks/useSwipeToClose';
 import { NotificationBell } from '@/components/NotificationBell';
 import logoFightport from '@/assets/logo-fightport.png';
 
