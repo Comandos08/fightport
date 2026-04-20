@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Plus, Send, MessageSquare } from 'lucide-react';
+import { Plus, Send, MessageSquare, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -167,7 +167,7 @@ export default function PainelSuporte() {
   const selected = useMemo(() => tickets.find((t: any) => t.id === selectedId), [tickets, selectedId]);
 
   return (
-    <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div className="px-4 py-4 sm:p-6" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 22, fontWeight: 600, margin: 0, color: 'var(--color-text)' }}>
@@ -189,15 +189,18 @@ export default function PainelSuporte() {
         </div>
       </div>
 
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'minmax(280px, 360px) 1fr', gap: 16,
-        minHeight: 'calc(100vh - 240px)',
-      }}>
+      <div
+        className="grid grid-cols-1 md:grid-cols-[minmax(280px,360px)_1fr] gap-4"
+        style={{ minHeight: 'calc(100vh - 240px)' }}
+      >
         {/* Lista */}
-        <div style={{
-          background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', display: 'flex', flexDirection: 'column',
-        }}>
+        <div
+          className={selectedId ? 'hidden md:flex' : 'flex'}
+          style={{
+            background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', flexDirection: 'column',
+          }}
+        >
           {isLoading && <div style={{ padding: 16, color: 'var(--color-text-muted)', fontSize: 13 }}>Carregando…</div>}
           {!isLoading && tickets.length === 0 && (
             <div style={{ padding: 24, color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>
@@ -238,11 +241,14 @@ export default function PainelSuporte() {
         </div>
 
         {/* Thread */}
-        <div style={{
-          background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md, 8px)', display: 'flex', flexDirection: 'column',
-          minHeight: 400,
-        }}>
+        <div
+          className={selectedId ? 'flex' : 'hidden md:flex'}
+          style={{
+            background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md, 8px)', flexDirection: 'column',
+            minHeight: 400,
+          }}
+        >
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-muted)', fontSize: 13 }}>
               Selecione um ticket para ver a conversa.
@@ -250,6 +256,13 @@ export default function PainelSuporte() {
           ) : (
             <>
               <div style={{ padding: 16, borderBottom: '1px solid var(--color-border)' }}>
+                <button
+                  onClick={() => setSelectedId(null)}
+                  className="md:hidden"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', padding: 0, marginBottom: 8, cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}
+                >
+                  <ArrowLeft className="w-4 h-4" /> Voltar
+                </button>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>{selected.subject}</div>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 2 }}>
                   {selected.category} · {STATUS_LABEL[selected.status]} · aberto em {format(new Date(selected.created_at), 'dd/MM/yyyy')}

@@ -98,8 +98,8 @@ export default function NovaConquistaPage() {
   const canSubmit = selectedPractitioner && belt && date && balance > 0;
 
   return (
-    <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
-      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>{t('achievement.title')}</h1>
+    <div className="px-4 py-6 sm:px-8 sm:py-8" style={{ maxWidth: 1100 }}>
+      <h1 className="text-2xl sm:text-[28px]" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>{t('achievement.title')}</h1>
       <div style={{ background: 'var(--color-bg-soft)', borderBottom: '1px solid var(--color-border)', padding: '14px 24px', marginBottom: 24, fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text-muted)' }}>{t('achievement.creditInfo', { balance })}</div>
       {balance === 0 && (<div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: 24, textAlign: 'center', marginBottom: 24, background: 'var(--color-bg-soft)' }}><p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)', marginBottom: 8 }}>{t('achievement.noCredits')}</p><Link to="/painel/creditos"><Button size="sm">{t('achievement.buyCredits')}</Button></Link></div>)}
       <div className="grid grid-cols-1 lg:grid-cols-5" style={{ gap: 32 }}>
@@ -123,7 +123,7 @@ export default function NovaConquistaPage() {
           <div><label style={labelStyle}>{t('achievement.date')}</label><input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ ...inputStyle, height: 44 }} onFocus={focusInput} onBlur={blurInput} /></div>
           <div><label style={labelStyle}>{t('achievement.graduatedBy')}</label><input value={graduatedBy} onChange={e => setGraduatedBy(e.target.value)} style={{ ...inputStyle, height: 44 }} onFocus={focusInput} onBlur={blurInput} /></div>
           <div><label style={labelStyle}>{t('achievement.notes')}</label><textarea value={note} onChange={e => setNote(e.target.value)} rows={3} style={{ ...inputStyle, resize: 'none', padding: '12px 16px' }} placeholder={t('achievement.notesPlaceholder')} onFocus={focusInput as any} onBlur={blurInput as any} /></div>
-          <button disabled={!canSubmit} onClick={() => setShowConfirm(true)} style={{ background: canSubmit ? 'var(--color-bg-amber)' : 'var(--color-border)', color: canSubmit ? '#1C1C1C' : 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, padding: '14px 28px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: canSubmit ? 'pointer' : 'not-allowed', transition: 'var(--transition)', width: 'fit-content' }}>{t('achievement.submit')}</button>
+          <button disabled={!canSubmit} onClick={() => setShowConfirm(true)} className="w-full sm:w-fit" style={{ background: canSubmit ? 'var(--color-bg-amber)' : 'var(--color-border)', color: canSubmit ? '#1C1C1C' : 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 15, padding: '14px 28px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: canSubmit ? 'pointer' : 'not-allowed', transition: 'var(--transition)' }}>{t('achievement.submit')}</button>
         </div>
         <div className="lg:col-span-2">
           <p style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', marginBottom: 12 }}>{t('achievement.preview.label')}</p>
