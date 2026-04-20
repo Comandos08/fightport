@@ -193,6 +193,12 @@ export function NavbarPanel() {
                   >
                     <Icon style={{ width: 16, height: 16 }} />
                     <span style={{ flex: 1 }}>{label}</span>
+                    {to === '/painel/suporte' && staleTickets > 0 && (
+                      <Clock
+                        aria-label={`${staleTickets} ticket(s) aguardando sua resposta há mais de 24h`}
+                        style={{ width: 12, height: 12, color: 'var(--color-bg-amber)', marginRight: 2 }}
+                      />
+                    )}
                     {badge > 0 && (
                       <span style={{ position: 'relative', display: 'inline-flex' }}>
                         <span style={{
