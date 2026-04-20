@@ -25,41 +25,9 @@ export function DashHeader() {
   const { user, signOut } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dragOffset, setDragOffset] = useState(0);
-  const touchStartX = useRef<number | null>(null);
-  const touchStartY = useRef<number | null>(null);
-  const isHorizontalSwipe = useRef<boolean>(false);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    isHorizontalSwipe.current = false;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (touchStartX.current === null || touchStartY.current === null) return;
-    const dx = e.touches[0].clientX - touchStartX.current;
-    const dy = e.touches[0].clientY - touchStartY.current;
-
-    // Determina direção dominante na primeira movimentação relevante
-    if (!isHorizontalSwipe.current && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
-      isHorizontalSwipe.current = Math.abs(dx) > Math.abs(dy);
-    }
-    if (!isHorizontalSwipe.current) return;
-
-    // Apenas swipe à esquerda (dx negativo) move o drawer
-    if (dx < 0) setDragOffset(dx);
-  };
-
-  const handleTouchEnd = () => {
-    if (isHorizontalSwipe.current && dragOffset < -70) {
-      setMobileOpen(false);
-    }
-    setDragOffset(0);
-    touchStartX.current = null;
-    touchStartY.current = null;
-    isHorizontalSwipe.current = false;
-  };
+  const { dragOffset, touchHandlers } = useSwipeToClose({
+    onClose: () => setMobileOpen(false),
+  });
 
   const { data: school } = useQuery({
     queryKey: ['school-admin-name', user?.id],
