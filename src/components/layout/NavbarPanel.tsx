@@ -139,7 +139,7 @@ export function NavbarPanel() {
               </button>
             </div>
             <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>
-              {links.map(({ to, label, icon: Icon, exact, badge }) => {
+              {links.map(({ to, label, icon: Icon, exact, badge, badgeLabel }) => {
                 const active = isActive(to, exact);
                 return (
                   <Link
@@ -168,7 +168,7 @@ export function NavbarPanel() {
                         padding: '1px 6px', borderRadius: 999,
                         background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
                       }}>
-                        {badge}
+                        {badgeLabel ?? badge}
                       </span>
                     )}
                   </Link>
