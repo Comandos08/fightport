@@ -1,0 +1,1 @@
+UPDATE public.practitioners SET current_belt = 'Roxa' WHERE id = '10295c52-781b-46ca-a194-c9e43aec98b4';
