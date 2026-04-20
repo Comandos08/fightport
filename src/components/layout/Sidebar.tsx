@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import logoFightport from '@/assets/logo-fightport.png';
@@ -10,6 +11,7 @@ export function Sidebar() {
   const { t } = useTranslation();
   const location = useLocation();
   const { user } = useAuth();
+  const qc = useQueryClient();
 
   const { data: unread = 0 } = useQuery({
     queryKey: ['school-unread-count', user?.id],
@@ -20,6 +22,20 @@ export function Sidebar() {
     enabled: !!user,
     refetchOnWindowFocus: true,
   });
+
+  // Realtime global: atualiza badge mesmo fora da página de Suporte
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`sidebar-school-unread-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'support_messages' },
+        () => { qc.invalidateQueries({ queryKey: ['school-unread-count'] }); }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user?.id, qc]);
 
   const links = [
     { to: '/painel', label: t('app.nav.dashboard'), icon: LayoutDashboard, exact: true, badge: 0 },
