@@ -48,14 +48,16 @@ export default function NovoPraticantePage() {
       toast.error('Erro ao cadastrar praticante: ' + error.message);
     } else {
       // Fire-and-forget audit log (with temporary error logging)
-      void supabase.from('school_audit_log').insert({
+      supabase.from('school_audit_log' as any).insert({
         school_id: user!.id,
         action: 'practitioner_created',
         entity: 'practitioner',
         entity_id: inserted?.id ?? null,
         entity_name: `${firstName} ${lastName}`.trim(),
         metadata: { martial_art: martialArt, belt: currentBelt || null },
-      }).then(({ error }) => { if (error) console.error('[audit:practitioner_created]', error); });
+      }).then(({ error }) => {
+        if (error) console.warn('[school_audit]', error.message);
+      });
       toast.success('Praticante cadastrado com sucesso!');
       queryClient.invalidateQueries({ queryKey: ['practitioners'] });
       queryClient.invalidateQueries({ queryKey: ['practitioner-count'] });
