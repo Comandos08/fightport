@@ -226,47 +226,57 @@ export default function OrganizacaoDetalhe() {
       </div>
 
       {/* Atletas */}
-      <DashSection title={`Atletas (${practitioners.length})`}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>FP-ID</th><th style={th}>Nome</th><th style={th}>Faixa</th><th style={th}>Modalidade</th><th style={th}>Cadastro</th></tr></thead>
-            <tbody>
-              {practitioners.length === 0 && <tr><td colSpan={5} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhum atleta cadastrado</td></tr>}
-              {practitioners.slice(0, 20).map((p: any) => (
-                <tr key={p.id}>
-                  <td style={td}>{p.fp_id}</td>
-                  <td style={td}>{p.first_name} {p.last_name}</td>
-                  <td style={td}>{p.current_belt ?? '—'}</td>
-                  <td style={td}>{p.martial_art}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{format(new Date(p.created_at), 'dd/MM/yyyy')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {practitioners.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {practitioners.length}</p>}
-        </div>
+      <DashSection title={`Atletas (${practitioners.length})`} flush>
+        <DashTable
+          headers={['FP-ID', 'Nome', 'Faixa', 'Modalidade', 'Cadastro']}
+          isEmpty={practitioners.length === 0}
+          emptyIcon={Users}
+          emptyTitle="Nenhum atleta cadastrado"
+          pagination={{
+            page: pracPage,
+            totalPages: Math.max(1, Math.ceil(practitioners.length / PAGE_SIZE)),
+            total: practitioners.length,
+            limit: PAGE_SIZE,
+            onPageChange: setPracPage,
+          }}
+        >
+          {practitioners.slice(pracPage * PAGE_SIZE, (pracPage + 1) * PAGE_SIZE).map((p: any) => (
+            <tr key={p.id}>
+              <td style={dashTd}>{p.fp_id}</td>
+              <td style={dashTd}>{p.first_name} {p.last_name}</td>
+              <td style={dashTd}>{p.current_belt ?? '—'}</td>
+              <td style={dashTd}>{p.martial_art}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{format(new Date(p.created_at), 'dd/MM/yyyy')}</td>
+            </tr>
+          ))}
+        </DashTable>
       </DashSection>
 
       {/* Graduações */}
-      <DashSection title={`Graduações emitidas (${achievements.length})`}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Atleta</th><th style={th}>Faixa</th><th style={th}>Grau</th><th style={th}>Graduado por</th></tr></thead>
-            <tbody>
-              {achievements.length === 0 && <tr><td colSpan={5} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma graduação emitida</td></tr>}
-              {achievements.slice(0, 20).map((a: any) => (
-                <tr key={a.id}>
-                  <td style={td}>{format(new Date(a.graduation_date), 'dd/MM/yyyy')}</td>
-                  <td style={td}>{a.practitioner_name}</td>
-                  <td style={td}>{a.belt}</td>
-                  <td style={td}>{a.degree ?? 0}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{a.graduated_by}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {achievements.length > 20 && <p style={{ ...muted, marginTop: 8 }}>Mostrando 20 de {achievements.length}</p>}
-        </div>
+      <DashSection title={`Graduações emitidas (${achievements.length})`} flush>
+        <DashTable
+          headers={['Data', 'Atleta', 'Faixa', 'Grau', 'Graduado por']}
+          isEmpty={achievements.length === 0}
+          emptyIcon={Award}
+          emptyTitle="Nenhuma graduação emitida"
+          pagination={{
+            page: achPage,
+            totalPages: Math.max(1, Math.ceil(achievements.length / PAGE_SIZE)),
+            total: achievements.length,
+            limit: PAGE_SIZE,
+            onPageChange: setAchPage,
+          }}
+        >
+          {achievements.slice(achPage * PAGE_SIZE, (achPage + 1) * PAGE_SIZE).map((a: any) => (
+            <tr key={a.id}>
+              <td style={dashTd}>{format(new Date(a.graduation_date), 'dd/MM/yyyy')}</td>
+              <td style={dashTd}>{a.practitioner_name}</td>
+              <td style={dashTd}>{a.belt}</td>
+              <td style={dashTd}>{a.degree ?? 0}</td>
+              <td style={{ ...dashTd, color: 'var(--color-text-muted)' }}>{a.graduated_by}</td>
+            </tr>
+          ))}
+        </DashTable>
       </DashSection>
 
       {/* Histórico financeiro */}
