@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { format, startOfMonth, startOfYear, subDays, startOfDay, endOfDay } from 'date-fns';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, Legend, BarChart, Bar,
+  PieChart, Pie, Cell, Legend, BarChart, Bar, Area, AreaChart,
 } from 'recharts';
 import { Download, FileText, FileSpreadsheet, Building2 } from 'lucide-react';
 import jsPDF from 'jspdf';
