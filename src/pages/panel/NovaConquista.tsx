@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Copy, CheckCircle, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { toast } from 'sonner';
