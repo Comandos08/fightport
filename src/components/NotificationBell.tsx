@@ -65,10 +65,10 @@ export function NotificationBell() {
     startOfWeek.setDate(startOfWeek.getDate() - 7);
 
     const groups: { label: string; items: NotificationRow[] }[] = [
-      { label: 'Hoje', items: [] },
-      { label: 'Ontem', items: [] },
-      { label: 'Esta semana', items: [] },
-      { label: 'Mais antigas', items: [] },
+      { label: t('notifications.groups.today'), items: [] },
+      { label: t('notifications.groups.yesterday'), items: [] },
+      { label: t('notifications.groups.thisWeek'), items: [] },
+      { label: t('notifications.groups.older'), items: [] },
     ];
 
     const source = filter === 'unread' ? notifications.filter((n) => !n.read) : notifications;
@@ -80,7 +80,7 @@ export function NotificationBell() {
       else groups[3].items.push(n);
     }
     return groups.filter((g) => g.items.length > 0);
-  }, [notifications, filter]);
+  }, [notifications, filter, t]);
 
   // Pulso visual no badge ao chegar nova notificação
   const [pulse, setPulse] = useState(false);
