@@ -73,7 +73,33 @@ export default function CreditosPage() {
       <h1 className="text-2xl sm:text-[28px]" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>{t('credits.title')}</h1>
       <div style={{ marginBottom: 32 }}><CreditBalance balance={credits?.balance ?? 0} /></div>
 
-      <div style={{ marginBottom: 16, maxWidth: 860, overflowX: 'auto' }}>
+      {/* Mobile: cards empilhados */}
+      <div className="sm:hidden grid grid-cols-1" style={{ gap: 12, marginBottom: 16 }}>
+        {packages.map((pkg) => {
+          const isHL = pkg.highlight;
+          const name = t(pkg.nameKey);
+          return (
+            <div key={pkg.nameKey} style={{ background: isHL ? 'var(--color-bg-amber)' : 'var(--color-bg)', border: isHL ? 'none' : '1px solid var(--color-border)', borderRadius: 6, padding: 16 }}>
+              <div className="flex items-center" style={{ gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                <span style={{ fontFamily: 'var(--font-sans)', fontSize: 17, fontWeight: 500, color: 'var(--color-text)' }}>{name}</span>
+                {isHL && <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', background: '#1C1C1C', color: '#FFFFFF', padding: '2px 8px', borderRadius: 3 }}>{t('credits.mostPopular')}</span>}
+              </div>
+              <div className="flex items-baseline" style={{ gap: 8, marginBottom: 4 }}>
+                <span style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 500, color: 'var(--color-text)' }}>R$ {pkg.price}</span>
+                <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>· {pkg.credits} {t('credits.creditsCol').toLowerCase()}</span>
+              </div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 16 }}>R$ {pkg.unit}/un</div>
+              <button onClick={() => handleBuy(pkg.rawName)} disabled={loadingPkg !== null} className="w-full flex items-center justify-center cursor-pointer" style={{ background: 'var(--color-text)', color: '#FFFFFF', border: 'none', borderRadius: 4, fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 14, gap: 6, padding: '12px 16px', transition: 'var(--transition)' }}>
+                {loadingPkg === pkg.rawName ? <Loader2 style={{ width: 16, height: 16 }} className="animate-spin" /> : null}
+                {loadingPkg === pkg.rawName ? t('credits.waiting') : t('credits.buy')}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop: tabela */}
+      <div className="hidden sm:block" style={{ marginBottom: 16, maxWidth: 860, overflowX: 'auto' }}>
         <table style={{ width: '100%', minWidth: 560, borderCollapse: 'collapse', tableLayout: 'fixed' }}>
           <colgroup><col style={{ width: '35%' }} /><col style={{ width: '15%' }} /><col style={{ width: '20%' }} /><col style={{ width: '18%' }} /><col style={{ width: '12%' }} /></colgroup>
           <thead><tr style={{ borderBottom: '2px solid var(--color-text)' }}><th style={{ ...thStyle, textAlign: 'left' }}>{t('credits.plan')}</th><th style={{ ...thStyle, textAlign: 'right' }}>{t('credits.creditsCol')}</th><th style={{ ...thStyle, textAlign: 'right' }}>{t('credits.price')}</th><th style={{ ...thStyle, textAlign: 'right' }}>{t('credits.perGrad')}</th><th style={{ padding: '0 0 16px 0' }}></th></tr></thead>
