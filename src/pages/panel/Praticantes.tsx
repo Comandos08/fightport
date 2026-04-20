@@ -94,7 +94,7 @@ export default function PraticantesPage() {
     toast.success(t('practitioners.exported', { count: filtered.length }));
   };
 
-  const tableHeaders = [t('practitioners.table.name'), t('practitioners.table.martialArt'), t('practitioners.table.lastBelt'), t('practitioners.table.school'), ''];
+  const tableHeaders = ['', t('practitioners.table.name'), t('practitioners.table.martialArt'), t('practitioners.table.lastBelt'), t('practitioners.table.school'), ''];
 
   return (
     <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
