@@ -1,23 +1,25 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Building2, Users, Award, DollarSign, LifeBuoy, ScrollText } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import logoFightport from '@/assets/logo-fightport.png';
 
 const links = [
-  { to: '/dash', label: 'Dashboard', icon: LayoutDashboard, exact: true, key: 'dash' },
-  { to: '/dash/organizacoes', label: 'Organizações', icon: Building2, exact: false, key: 'org' },
-  { to: '/dash/atletas', label: 'Atletas', icon: Users, exact: false, key: 'ath' },
-  { to: '/dash/graduacoes', label: 'Graduações', icon: Award, exact: false, key: 'grad' },
-  { to: '/dash/financeiro', label: 'Financeiro', icon: DollarSign, exact: false, key: 'fin' },
-  { to: '/dash/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, key: 'sup' },
-  { to: '/dash/auditoria', label: 'Auditoria', icon: ScrollText, exact: false, key: 'aud' },
+  { to: '/dash', i18nKey: 'dash.nav.dashboard', icon: LayoutDashboard, exact: true, key: 'dash' },
+  { to: '/dash/organizacoes', i18nKey: 'dash.nav.organizations', icon: Building2, exact: false, key: 'org' },
+  { to: '/dash/atletas', i18nKey: 'dash.nav.athletes', icon: Users, exact: false, key: 'ath' },
+  { to: '/dash/graduacoes', i18nKey: 'dash.nav.graduations', icon: Award, exact: false, key: 'grad' },
+  { to: '/dash/financeiro', i18nKey: 'dash.nav.financial', icon: DollarSign, exact: false, key: 'fin' },
+  { to: '/dash/suporte', i18nKey: 'dash.nav.support', icon: LifeBuoy, exact: false, key: 'sup' },
+  { to: '/dash/auditoria', i18nKey: 'dash.nav.audit', icon: ScrollText, exact: false, key: 'aud' },
 ];
 
 export function DashSidebar() {
   const location = useLocation();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const { data: awaiting = 0 } = useQuery({
     queryKey: ['admin-awaiting-count'],
@@ -69,7 +71,7 @@ export function DashSidebar() {
         </Link>
       </div>
       <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>
-        {links.map(({ to, label, icon: Icon, exact, key }) => {
+        {links.map(({ to, i18nKey, icon: Icon, exact, key }) => {
           const active = isActive(to, exact);
           const badge = key === 'sup' ? awaiting : 0;
           return (
@@ -103,7 +105,7 @@ export function DashSidebar() {
               }}
             >
               <Icon style={{ width: 16, height: 16 }} />
-              <span style={{ flex: 1 }}>{label}</span>
+              <span style={{ flex: 1 }}>{t(i18nKey)}</span>
               {badge > 0 && (
                 <span style={{
                   fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,

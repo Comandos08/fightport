@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format, startOfDay, startOfMonth, startOfYear, subDays, endOfDay } from 'date-fns';
 import { CalendarIcon, TrendingUp, TrendingDown, Minus, Building2, Users, Award, DollarSign, AlertCircle, MessageSquare } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -320,6 +321,7 @@ function ChartCard({
 }
 
 export default function DashDashboard() {
+  const { t } = useTranslation();
   const [period, setPeriod] = useState<PeriodKey>('30d');
   const [customRange, setCustomRange] = useState<{ from?: Date; to?: Date }>({});
   const range = useMemo(() => getPeriodRange(period, customRange), [period, customRange]);
@@ -458,9 +460,9 @@ export default function DashDashboard() {
     <div className="p-4 sm:p-6 lg:p-8" style={{ maxWidth: 1600, margin: '0 auto' }}>
       <div className="flex items-center justify-between flex-wrap" style={{ gap: 16, marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)' }}>Dashboard</h1>
+          <h1 style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)' }}>{t('dash.dashboard.title')}</h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', marginTop: 4 }}>
-            Visão operacional da plataforma
+            {t('dash.dashboard.subtitle')}
           </p>
         </div>
 
@@ -523,7 +525,7 @@ export default function DashDashboard() {
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
             <StatCard
               icon={Building2}
-              label="Escolas cadastradas"
+              label={t('dash.dashboard.metrics.totalSchools')}
               value={String(overview?.schools_total ?? 0)}
               change={schoolsChange}
               sparkData={sparklines?.schools}
@@ -531,7 +533,7 @@ export default function DashDashboard() {
             />
             <StatCard
               icon={Users}
-              label="Atletas cadastrados"
+              label={t('dash.dashboard.metrics.totalAthletes')}
               value={String(overview?.practitioners_total ?? 0)}
               change={practChange}
               sparkData={sparklines?.practitioners}
@@ -539,14 +541,14 @@ export default function DashDashboard() {
             />
             <StatCard
               icon={Award}
-              label="Graduações no mês"
+              label={t('dash.dashboard.metrics.totalGraduations')}
               value={String(overview?.achievements_month ?? 0)}
               sparkData={sparklines?.achievements}
               sparkTooltip={(v) => `${v} graduaç${v === 1 ? 'ão' : 'ões'}`}
             />
             <StatCard
               icon={DollarSign}
-              label="Receita do mês"
+              label={t('dash.dashboard.metrics.totalRevenue')}
               value={fmtBRL(Number(overview?.revenue_month ?? 0))}
               sparkData={sparklines?.revenue}
               sparkTooltip={(v) => fmtBRL(v)}
@@ -556,7 +558,7 @@ export default function DashDashboard() {
           {/* Charts */}
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
             <ChartCard
-              title="Crescimento de escolas (12 meses)"
+              title={t('dash.dashboard.charts.schoolsPerMonth')}
               mobile={<CompactSeriesCards data={growth} valueKey="schools" formatValue={(v) => String(v)} />}
             >
               <LineChart data={growth}>
@@ -569,7 +571,7 @@ export default function DashDashboard() {
             </ChartCard>
 
             <ChartCard
-              title="Crescimento de atletas (12 meses)"
+              title={t('dash.dashboard.charts.athletesPerMonth', 'Crescimento de atletas (12 meses)')}
               mobile={<CompactSeriesCards data={growth} valueKey="practitioners" formatValue={(v) => String(v)} />}
             >
               <LineChart data={growth}>
@@ -582,7 +584,7 @@ export default function DashDashboard() {
             </ChartCard>
 
             <ChartCard
-              title="Receita mensal (12 meses)"
+              title={t('dash.dashboard.charts.revenuePerMonth')}
               mobile={<CompactSeriesCards data={revenue} valueKey="revenue" formatValue={(v) => fmtBRL(v)} />}
             >
               <BarChart data={revenue}>
@@ -598,7 +600,7 @@ export default function DashDashboard() {
             </ChartCard>
 
             <ChartCard
-              title="Graduações por modalidade (período)"
+              title={t('dash.dashboard.charts.graduationsPerMonth')}
               mobile={<CompactCategoryList data={byArt} labelKey="art" valueKey="total" />}
             >
               <BarChart data={byArt}>
