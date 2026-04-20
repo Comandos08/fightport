@@ -278,12 +278,12 @@ export default function Financeiro() {
       </div>
 
       {/* Gráficos */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16, marginBottom: 20 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 16, marginBottom: 20 }}>
         <div style={card}>
           <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
             Receita mensal (12 meses)
           </h3>
-          <div style={{ width: '100%', height: 260 }}>
+          <div className="h-[200px] sm:h-[260px]" style={{ width: '100%' }}>
             <ResponsiveContainer>
               <LineChart data={monthly as any[]} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
                 <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" />
@@ -300,7 +300,7 @@ export default function Financeiro() {
           <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
             Distribuição por pacote
           </h3>
-          <div style={{ width: '100%', height: 260 }}>
+          <div className="h-[220px] sm:h-[260px]" style={{ width: '100%' }}>
             {breakdown.length === 0 ? (
               <div style={{ color: 'var(--color-text-muted)', fontSize: 13, padding: 8 }}>Sem dados.</div>
             ) : (
