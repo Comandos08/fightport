@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { maskCpf, maskBirthDate, formatCpf, formatBirthDate } from '@/lib/sensitive';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
-import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
+import { dashOutlineButtonStyle, dashDangerOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 
 const REVEAL_MS = 60_000;
 

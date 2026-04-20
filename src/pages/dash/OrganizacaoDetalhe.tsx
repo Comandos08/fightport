@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { DashTable, dashTd } from '@/components/dash/DashTable';
-import { dashOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
+import { dashOutlineButtonStyle, dashDangerButtonStyle } from '@/components/dash/DashFiltersBar';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
