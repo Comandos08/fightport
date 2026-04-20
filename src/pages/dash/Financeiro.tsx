@@ -551,12 +551,15 @@ function Metric({
   sparkData,
   sparkKey,
   sparkTooltip,
+  delta,
 }: {
   label: string;
   value: string;
   sparkData?: { day: string; revenue: number; tx: number }[];
   sparkKey?: 'revenue' | 'tx';
   sparkTooltip?: (v: number) => string;
+  /** Variação percentual vs os 7 dias anteriores. null = sem base de comparação. */
+  delta?: number | null;
 }) {
   const hasSpark = !!sparkData && sparkData.length > 0 && !!sparkKey;
   const hasMovement = hasSpark && sparkData!.some((d) => Number((d as any)[sparkKey!]) > 0);
