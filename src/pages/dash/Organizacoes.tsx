@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { Search, Download, ChevronUp, ChevronDown, X, Building2 } from 'lucide-react';
 import { DashTable } from '@/components/dash/DashTable';
@@ -21,6 +22,7 @@ const lbl: React.CSSProperties = {
 
 export default function Organizacoes() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [martialArt, setMartialArt] = useState('');
   const [stateF, setStateF] = useState('');
@@ -116,9 +118,9 @@ export default function Organizacoes() {
     <div className="p-4 sm:p-6 lg:p-8" style={{ maxWidth: 1600, margin: '0 auto' }}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap" style={{ gap: 16, marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)', letterSpacing: '0.02em' }}>Organizações</h1>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)', letterSpacing: '0.02em' }}>{t('dash.organizations.title')}</h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
-            {total} {total === 1 ? 'organização cadastrada' : 'organizações cadastradas'}
+            {t('dash.organizations.subtitle')}
           </p>
         </div>
         <button
@@ -127,7 +129,7 @@ export default function Organizacoes() {
           style={{ gap: 6, height: 36, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
             color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}
         >
-          <Download style={{ width: 14, height: 14 }} /> Exportar CSV
+          <Download style={{ width: 14, height: 14 }} /> {t('dash.organizations.exportCsv')}
         </button>
       </div>
 
@@ -147,7 +149,7 @@ export default function Organizacoes() {
             <input
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
-              placeholder="Nome, email ou cidade"
+              placeholder={t('dash.organizations.searchPlaceholder')}
               style={{ ...ipt, width: '100%', paddingLeft: 32 }}
             />
           </div>
@@ -172,9 +174,9 @@ export default function Organizacoes() {
         <div>
           <label style={lbl}>Status</label>
           <select value={status} onChange={e => { setStatus(e.target.value); setPage(0); }} style={{ ...ipt, width: '100%' }}>
-            <option value="">Todos</option>
-            <option value="active">Ativas</option>
-            <option value="suspended">Suspensas</option>
+            <option value="">{t('dash.organizations.filters.all')}</option>
+            <option value="active">{t('dash.organizations.filters.active')}</option>
+            <option value="suspended">{t('dash.organizations.filters.suspended')}</option>
           </select>
         </div>
         <div>
@@ -203,20 +205,20 @@ export default function Organizacoes() {
       {/* Tabela */}
       <DashTable
         headers={[
-          <span onClick={() => toggleSort('name')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Nome <SortIcon k="name" /></span>,
+          <span onClick={() => toggleSort('name')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>{t('dash.organizations.table.name')} <SortIcon k="name" /></span>,
           'Responsável',
-          <span onClick={() => toggleSort('email')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Email <SortIcon k="email" /></span>,
-          <span onClick={() => toggleSort('city')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Cidade/UF <SortIcon k="city" /></span>,
-          <span onClick={() => toggleSort('martial_art')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Arte <SortIcon k="martial_art" /></span>,
-          <span onClick={() => toggleSort('created_at')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Cadastro <SortIcon k="created_at" /></span>,
-          <span onClick={() => toggleSort('balance')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Saldo <SortIcon k="balance" /></span>,
+          <span onClick={() => toggleSort('email')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>{t('dash.organizations.table.email')} <SortIcon k="email" /></span>,
+          <span onClick={() => toggleSort('city')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>{t('dash.organizations.table.city')} <SortIcon k="city" /></span>,
+          <span onClick={() => toggleSort('martial_art')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>{t('dash.organizations.table.martialArt')} <SortIcon k="martial_art" /></span>,
+          <span onClick={() => toggleSort('created_at')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>{t('dash.organizations.table.createdAt')} <SortIcon k="created_at" /></span>,
+          <span onClick={() => toggleSort('balance')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>{t('dash.organizations.table.balance')} <SortIcon k="balance" /></span>,
           <span onClick={() => toggleSort('total_spent')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', userSelect: 'none' }}>Total gasto <SortIcon k="total_spent" /></span>,
-          'Status',
+          t('dash.organizations.table.status'),
         ]}
         isLoading={isLoading}
         isEmpty={!isLoading && rows.length === 0}
         emptyIcon={Building2}
-        emptyTitle="Nenhuma organização encontrada"
+        emptyTitle={t('dash.organizations.empty')}
         emptyDescription="Ajuste os filtros para ver mais resultados."
         pagination={{ page, totalPages, total, limit, onPageChange: setPage }}
       >
@@ -243,7 +245,7 @@ export default function Organizacoes() {
                 color: r.is_suspended ? 'var(--color-danger)' : 'var(--color-success)',
                 background: r.is_suspended ? 'var(--color-danger-soft)' : 'var(--color-success-soft)',
               }}>
-                {r.is_suspended ? 'Suspensa' : 'Ativa'}
+                {r.is_suspended ? t('dash.organizations.status.suspended') : t('dash.organizations.status.active')}
               </span>
             </td>
           </tr>
