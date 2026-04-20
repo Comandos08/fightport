@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ArrowLeft, Ban, RefreshCw, Gift, X, Users, Award } from 'lucide-react';
+import { ArrowLeft, Ban, RefreshCw, Gift, X, Users, Award, Activity, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
