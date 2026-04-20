@@ -174,6 +174,16 @@ export default function Atletas() {
             {label} {k && sortIcon(k)}
           </span>
         )))}
+        headerClassNames={[
+          undefined,                  // Nome
+          undefined,                  // FP-ID
+          'hidden sm:table-cell',     // CPF
+          undefined,                  // Escola
+          'hidden sm:table-cell',     // Arte
+          undefined,                  // Faixa
+          'hidden sm:table-cell',     // Graduações
+          'hidden sm:table-cell',     // Cadastro
+        ]}
         isLoading={isLoading}
         isEmpty={!isLoading && rows.length === 0}
         emptyIcon={Users}
@@ -191,7 +201,7 @@ export default function Atletas() {
           >
             <td style={{ padding: '6px 12px', color: 'var(--color-text)' }}>{r.first_name} {r.last_name}</td>
             <td style={{ padding: '6px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12, whiteSpace: 'nowrap' }}>{r.fp_id}</td>
-            <td style={{ padding: '6px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{maskCpf(r.cpf)}</td>
+            <td className="hidden sm:table-cell" style={{ padding: '6px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{maskCpf(r.cpf)}</td>
             <td style={{ padding: '6px 12px' }} onClick={e => e.stopPropagation()}>
               {r.school_id ? (
                 <Link to={`/dash/organizacoes/${r.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline' }}>
@@ -199,10 +209,10 @@ export default function Atletas() {
                 </Link>
               ) : '—'}
             </td>
-            <td style={{ padding: '6px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art}</td>
+            <td className="hidden sm:table-cell" style={{ padding: '6px 12px', color: 'var(--color-text-muted)' }}>{r.martial_art}</td>
             <td style={{ padding: '6px 12px', color: 'var(--color-text)' }}>{r.current_belt ?? '—'}</td>
-            <td style={{ padding: '6px 12px', color: 'var(--color-text)' }}>{r.achievements_count}</td>
-            <td style={{ padding: '6px 12px', color: 'var(--color-text-muted)' }}>{format(new Date(r.created_at), 'dd/MM/yyyy')}</td>
+            <td className="hidden sm:table-cell" style={{ padding: '6px 12px', color: 'var(--color-text)' }}>{r.achievements_count}</td>
+            <td className="hidden sm:table-cell" style={{ padding: '6px 12px', color: 'var(--color-text-muted)' }}>{format(new Date(r.created_at), 'dd/MM/yyyy')}</td>
           </tr>
         ))}
       </DashTable>
