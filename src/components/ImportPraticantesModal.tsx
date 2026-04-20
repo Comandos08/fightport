@@ -255,7 +255,7 @@ export function ImportPraticantesModal({ open, onClose }: { open: boolean; onClo
                   </span>
                 )}
                 {errorRows.length > 0 && (
-                  <span className="flex items-center" style={{ gap: 4, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: '#DC2626' }}>
+                  <span className="flex items-center" style={{ gap: 4, fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500, color: 'var(--color-danger)' }}>
                     <AlertCircle style={{ width: 14, height: 14 }} /> {errorRows.length} erro(s)
                   </span>
                 )}
@@ -281,7 +281,7 @@ export function ImportPraticantesModal({ open, onClose }: { open: boolean; onClo
                         <td style={{ padding: 8 }}>
                           {r.status === 'valid' && <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-text-muted)' }}>Pronto</span>}
                           {r.status === 'imported' && <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, color: '#2D6A4F' }}>✓ Importado</span>}
-                          {r.status === 'error' && <span style={{ fontFamily: 'var(--font-sans)', color: '#DC2626' }} title={r.error}>✕ {r.error}</span>}
+                          {r.status === 'error' && <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-danger)' }} title={r.error}>✕ {r.error}</span>}
                         </td>
                       </tr>
                     ))}
