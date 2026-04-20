@@ -117,8 +117,8 @@ export default function PraticantesPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between" style={{ gap: 16, marginBottom: 28 }}>
         <h1 className="text-2xl sm:text-[28px]" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>{t('practitioners.title')}</h1>
         <div className="flex flex-wrap w-full sm:w-auto" style={{ gap: 8 }}>
-          <Button variant="ghost" size="sm" onClick={handleExportCsv} className="flex-1 sm:flex-none"><Download className="h-4 w-4" /> <span className="hidden xs:inline">{t('practitioners.exportCsv')}</span><span className="xs:hidden">CSV</span></Button>
-          <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)} className="flex-1 sm:flex-none"><Upload className="h-4 w-4" /> <span className="hidden xs:inline">{t('practitioners.importCsv')}</span><span className="xs:hidden">Import</span></Button>
+          <Button variant="ghost" size="sm" onClick={handleExportCsv} className="flex-1 sm:flex-none"><Download className="h-4 w-4" /> {t('practitioners.exportCsv')}</Button>
+          <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)} className="flex-1 sm:flex-none"><Upload className="h-4 w-4" /> {t('practitioners.importCsv')}</Button>
           <Link to="/painel/praticantes/novo" className="w-full sm:w-auto">
             <button className="w-full sm:w-auto" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#F5A623', color: '#1C1C1C', fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, padding: '10px 20px', borderRadius: 6, border: 'none', cursor: 'pointer', transition: 'var(--transition)' }}
               onMouseEnter={e => (e.currentTarget.style.background = '#e09600')} onMouseLeave={e => (e.currentTarget.style.background = '#F5A623')}>
