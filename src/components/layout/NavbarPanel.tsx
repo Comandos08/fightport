@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LogOut, Menu, X, LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -25,18 +25,37 @@ export function NavbarPanel() {
     refetchOnWindowFocus: true,
   });
 
-  // Realtime global: badge de Suporte sempre atualizado
+  // Pulso visual no badge ao chegar nova mensagem do admin
+  const [pulse, setPulse] = useState(false);
+  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Realtime global: badge de Suporte sempre atualizado + pulso ao receber resposta do admin
   useEffect(() => {
     if (!user) return;
     const channel = supabase
       .channel(`navbar-school-unread-${user.id}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'support_messages' },
+        { event: 'INSERT', schema: 'public', table: 'support_messages' },
+        (payload) => {
+          const msg = payload.new as { author_type?: string };
+          qc.invalidateQueries({ queryKey: ['school-unread-count'] });
+          if (msg?.author_type !== 'admin') return;
+          setPulse(true);
+          if (pulseTimer.current) clearTimeout(pulseTimer.current);
+          pulseTimer.current = setTimeout(() => setPulse(false), 3000);
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'support_messages' },
         () => { qc.invalidateQueries({ queryKey: ['school-unread-count'] }); }
       )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+      if (pulseTimer.current) clearTimeout(pulseTimer.current);
+    };
   }, [user?.id, qc]);
 
   const links = [
