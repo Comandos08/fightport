@@ -7,6 +7,39 @@ const PACKAGES: Record<string, { credits: number; price: number }> = {
   "Organização": { credits: 150, price: 99000 },
 };
 
+// Rate limit em memória (por instância da Edge Function):
+// máx. 5 chamadas por escola em janela deslizante de 10 minutos.
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const checkoutAttempts = new Map<string, number[]>();
+
+function checkRateLimit(schoolId: string): { allowed: boolean; retryAfterSec: number } {
+  const now = Date.now();
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  const recent = (checkoutAttempts.get(schoolId) ?? []).filter((t) => t > cutoff);
+
+  if (recent.length >= RATE_LIMIT_MAX) {
+    checkoutAttempts.set(schoolId, recent);
+    const oldest = recent[0];
+    const retryAfterSec = Math.max(1, Math.ceil((oldest + RATE_LIMIT_WINDOW_MS - now) / 1000));
+    return { allowed: false, retryAfterSec };
+  }
+
+  recent.push(now);
+  checkoutAttempts.set(schoolId, recent);
+
+  // GC ocasional para não vazar memória de schools inativas
+  if (checkoutAttempts.size > 1000) {
+    for (const [k, v] of checkoutAttempts) {
+      const fresh = v.filter((t) => t > cutoff);
+      if (fresh.length === 0) checkoutAttempts.delete(k);
+      else checkoutAttempts.set(k, fresh);
+    }
+  }
+
+  return { allowed: true, retryAfterSec: 0 };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -37,6 +70,25 @@ Deno.serve(async (req) => {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Rate limit por escola (school_id = user.id)
+    const rl = checkRateLimit(user.id);
+    if (!rl.allowed) {
+      return new Response(
+        JSON.stringify({
+          error: "Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.",
+          retry_after_sec: rl.retryAfterSec,
+        }),
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Retry-After": String(rl.retryAfterSec),
+          },
+        }
+      );
     }
 
     let body: { package_name?: unknown };
