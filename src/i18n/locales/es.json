@@ -138,7 +138,16 @@
     "clearFilters": "Limpiar filtros",
     "viewPassport": "Ver pasaporte",
     "registerAchievement": "Registrar logro",
-    "edit": "Editar"
+    "edit": "Editar",
+    "achievements": {
+      "date": "Fecha",
+      "belt": "Cinturón",
+      "graduatedBy": "Graduado por",
+      "hash": "Hash",
+      "empty": "Aún no hay logros registrados.",
+      "loading": "Cargando logros...",
+      "copied": "Hash copiado al portapapeles"
+    }
   },
   "newPractitioner": {
     "title": "Nuevo Practicante",
