@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, startOfDay, startOfMonth, startOfYear, subDays, endOfDay } from 'date-fns';
-import { CalendarIcon, TrendingUp, TrendingDown, Building2, Users, Award, DollarSign, AlertCircle, MessageSquare } from 'lucide-react';
+import { CalendarIcon, TrendingUp, TrendingDown, Minus, Building2, Users, Award, DollarSign, AlertCircle, MessageSquare } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '@/integrations/supabase/client';
 import { Calendar } from '@/components/ui/calendar';
@@ -47,8 +47,83 @@ const fmtMonth = (m: string) => {
   return format(new Date(Number(y), Number(mo) - 1, 1), 'MMM/yy');
 };
 
-function StatCard({ icon: Icon, label, value, change, link }: { icon: any; label: string; value: string; change?: number; link?: string }) {
+/**
+ * Sparkline com cor por tendência (últimos 3 dias vs 3 anteriores).
+ * up (≥+5%) verde · down (≤-5%) âmbar · stable cinza muted.
+ */
+function StatSparkline({
+  data,
+  formatTooltip,
+}: {
+  data: { day: string; value: number }[];
+  formatTooltip?: (v: number) => string;
+}) {
+  const vals = data.map(d => Number(d.value || 0));
+  const last3 = vals.slice(-3);
+  const prev3 = vals.slice(-6, -3);
+  const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+  const recent = avg(last3);
+  const previous = avg(prev3);
+  const delta = previous === 0 ? (recent > 0 ? 100 : 0) : ((recent - previous) / previous) * 100;
+  const trend: 'up' | 'down' | 'stable' = delta >= 5 ? 'up' : delta <= -5 ? 'down' : 'stable';
+  const color =
+    trend === 'up'
+      ? 'var(--color-success, #15803d)'
+      : trend === 'down'
+        ? 'var(--color-warning, #b45309)'
+        : 'var(--color-text-muted)';
+  return (
+    <div style={{ width: 70, height: 24 }} aria-hidden>
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={data} margin={{ top: 2, right: 0, bottom: 2, left: 0 }}>
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke={color}
+            strokeWidth={1.5}
+            dot={false}
+            isAnimationActive={false}
+          />
+          {formatTooltip && (
+            <Tooltip
+              contentStyle={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 6, fontSize: 11, padding: '4px 6px' }}
+              formatter={(v: any) => formatTooltip(Number(v))}
+              labelFormatter={() => ''}
+              cursor={false}
+            />
+          )}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  change,
+  link,
+  sparkData,
+  sparkTooltip,
+}: {
+  icon: any;
+  label: string;
+  value: string;
+  change?: number;
+  link?: string;
+  sparkData?: { day: string; value: number }[];
+  sparkTooltip?: (v: number) => string;
+}) {
   const positive = (change ?? 0) >= 0;
+  const flat = change !== undefined && Math.abs(change) < 0.5;
+  const ChangeIcon = flat ? Minus : positive ? TrendingUp : TrendingDown;
+  const changeColor = flat
+    ? 'var(--color-text-muted)'
+    : positive
+      ? 'var(--color-success)'
+      : 'var(--color-danger)';
+  const hasSpark = !!sparkData && sparkData.length > 1;
   const content = (
     <div
       style={{
@@ -62,14 +137,17 @@ function StatCard({ icon: Icon, label, value, change, link }: { icon: any; label
       <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
         <Icon style={{ width: 16, height: 16, color: 'var(--color-text-muted)' }} />
         {change !== undefined && (
-          <span className="flex items-center" style={{ gap: 4, fontSize: 12, fontFamily: 'var(--font-sans)', color: positive ? 'var(--color-success)' : 'var(--color-danger)' }}>
-            {positive ? <TrendingUp style={{ width: 12, height: 12 }} /> : <TrendingDown style={{ width: 12, height: 12 }} />}
+          <span className="flex items-center" style={{ gap: 4, fontSize: 12, fontFamily: 'var(--font-sans)', color: changeColor }}>
+            <ChangeIcon style={{ width: 12, height: 12 }} strokeWidth={2.5} />
             {Math.abs(change).toFixed(1)}%
           </span>
         )}
       </div>
       <div style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)', marginBottom: 4 }}>{value}</div>
-      <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{label}</div>
+      <div className="flex items-center justify-between" style={{ gap: 8 }}>
+        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>{label}</div>
+        {hasSpark && <StatSparkline data={sparkData!} formatTooltip={sparkTooltip} />}
+      </div>
     </div>
   );
   return link ? <Link to={link} className="no-underline">{content}</Link> : content;
@@ -286,6 +364,63 @@ export default function DashDashboard() {
     },
   });
 
+  // Sparklines diárias (7 dias) para os 4 StatCards. Buscamos created_at de cada tabela
+  // e agregamos no client. RLS permite leitura admin via policies existentes.
+  const { data: sparklines } = useQuery({
+    queryKey: ['admin-statcards-sparklines-7d'],
+    queryFn: async () => {
+      const start = startOfDay(subDays(new Date(), 6));
+      const startIso = start.toISOString();
+
+      const [schoolsRes, practRes, achRes, txRes] = await Promise.all([
+        supabase.from('schools').select('created_at').gte('created_at', startIso),
+        supabase.from('practitioners').select('created_at').gte('created_at', startIso),
+        supabase.from('achievements').select('created_at').gte('created_at', startIso),
+        supabase
+          .from('credit_transactions')
+          .select('created_at, price_brl')
+          .eq('type', 'purchase')
+          .eq('status', 'completed')
+          .gte('created_at', startIso),
+      ]);
+
+      const buildBuckets = () => {
+        const out: { day: string; value: number }[] = [];
+        for (let i = 6; i >= 0; i--) {
+          out.push({ day: format(startOfDay(subDays(new Date(), i)), 'yyyy-MM-dd'), value: 0 });
+        }
+        return out;
+      };
+      const fillCount = (rows: any[] | null) => {
+        const b = buildBuckets();
+        const idx = new Map(b.map((x, i) => [x.day, i]));
+        for (const r of rows ?? []) {
+          const k = format(startOfDay(new Date(r.created_at)), 'yyyy-MM-dd');
+          const i = idx.get(k);
+          if (i !== undefined) b[i].value += 1;
+        }
+        return b;
+      };
+      const fillSum = (rows: any[] | null, key: string) => {
+        const b = buildBuckets();
+        const idx = new Map(b.map((x, i) => [x.day, i]));
+        for (const r of rows ?? []) {
+          const k = format(startOfDay(new Date(r.created_at)), 'yyyy-MM-dd');
+          const i = idx.get(k);
+          if (i !== undefined) b[i].value += Number(r[key] ?? 0);
+        }
+        return b;
+      };
+
+      return {
+        schools: fillCount(schoolsRes.data as any[]),
+        practitioners: fillCount(practRes.data as any[]),
+        achievements: fillCount(achRes.data as any[]),
+        revenue: fillSum(txRes.data as any[], 'price_brl'),
+      };
+    },
+  });
+
   const schoolsChange = overview && overview.schools_prev > 0
     ? ((overview.schools_total - overview.schools_prev) / overview.schools_prev) * 100
     : 0;
@@ -360,10 +495,36 @@ export default function DashDashboard() {
         <div className="flex flex-col" style={{ gap: 20, minWidth: 0 }}>
           {/* Stat cards */}
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-            <StatCard icon={Building2} label="Escolas cadastradas" value={String(overview?.schools_total ?? 0)} change={schoolsChange} />
-            <StatCard icon={Users} label="Atletas cadastrados" value={String(overview?.practitioners_total ?? 0)} change={practChange} />
-            <StatCard icon={Award} label="Graduações no mês" value={String(overview?.achievements_month ?? 0)} />
-            <StatCard icon={DollarSign} label="Receita do mês" value={fmtBRL(Number(overview?.revenue_month ?? 0))} />
+            <StatCard
+              icon={Building2}
+              label="Escolas cadastradas"
+              value={String(overview?.schools_total ?? 0)}
+              change={schoolsChange}
+              sparkData={sparklines?.schools}
+              sparkTooltip={(v) => `${v} escola${v === 1 ? '' : 's'}`}
+            />
+            <StatCard
+              icon={Users}
+              label="Atletas cadastrados"
+              value={String(overview?.practitioners_total ?? 0)}
+              change={practChange}
+              sparkData={sparklines?.practitioners}
+              sparkTooltip={(v) => `${v} atleta${v === 1 ? '' : 's'}`}
+            />
+            <StatCard
+              icon={Award}
+              label="Graduações no mês"
+              value={String(overview?.achievements_month ?? 0)}
+              sparkData={sparklines?.achievements}
+              sparkTooltip={(v) => `${v} graduaç${v === 1 ? 'ão' : 'ões'}`}
+            />
+            <StatCard
+              icon={DollarSign}
+              label="Receita do mês"
+              value={fmtBRL(Number(overview?.revenue_month ?? 0))}
+              sparkData={sparklines?.revenue}
+              sparkTooltip={(v) => fmtBRL(v)}
+            />
           </div>
 
           {/* Charts */}
