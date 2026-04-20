@@ -256,6 +256,13 @@ export default function PainelSuporte() {
           ) : (
             <>
               <div style={{ padding: 16, borderBottom: '1px solid var(--color-border)' }}>
+                <button
+                  onClick={() => setSelectedId(null)}
+                  className="md:hidden"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', padding: 0, marginBottom: 8, cursor: 'pointer', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}
+                >
+                  <ArrowLeft className="w-4 h-4" /> Voltar
+                </button>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>{selected.subject}</div>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 2 }}>
                   {selected.category} · {STATUS_LABEL[selected.status]} · aberto em {format(new Date(selected.created_at), 'dd/MM/yyyy')}
