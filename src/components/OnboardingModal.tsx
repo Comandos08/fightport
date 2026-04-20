@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useOnboarding } from '@/hooks/useOnboarding';
@@ -7,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 const MODAL_KEY = (sid: string) => `fp_onboarding_modal_seen_${sid}`;
 
 export function OnboardingModal() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { steps, hidden, loading } = useOnboarding();
   const [open, setOpen] = useState(false);
@@ -32,9 +34,9 @@ export function OnboardingModal() {
       <DialogContent className="max-w-md" style={{ fontFamily: 'var(--font-sans)' }}>
         <DialogHeader>
           <div className="text-5xl text-center mb-2">🥋</div>
-          <DialogTitle className="text-center text-xl">Bem-vindo ao FightPort!</DialogTitle>
+          <DialogTitle className="text-center text-xl">{t('onboarding.modal.title')}</DialogTitle>
           <DialogDescription className="text-center">
-            Siga os primeiros passos para certificar suas primeiras graduações.
+            {t('onboarding.modal.subtitle')}
           </DialogDescription>
         </DialogHeader>
         <ul className="space-y-2 my-2">
@@ -43,17 +45,17 @@ export function OnboardingModal() {
               <span className="w-6 h-6 rounded-full bg-[var(--color-bg-soft)] flex items-center justify-center text-xs font-medium">
                 {i + 1}
               </span>
-              {s.label}
+              {t(s.labelKey)}
             </li>
           ))}
         </ul>
         <div className="flex flex-col gap-2 mt-2">
-          <Button onClick={handleStart}>Começar agora</Button>
+          <Button onClick={handleStart}>{t('onboarding.modal.start')}</Button>
           <button
             onClick={() => setOpen(false)}
             className="text-sm text-[var(--color-text-muted)] hover:underline"
           >
-            Pular por enquanto
+            {t('onboarding.modal.skip')}
           </button>
         </div>
       </DialogContent>
