@@ -637,7 +637,34 @@ function Metric({
         </div>
       )}
       <div style={lbl}>{label}</div>
-      <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{value}</div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{value}</div>
+        {delta !== undefined && delta !== null && (() => {
+          const positive = delta >= 0;
+          const flat = Math.abs(delta) < 0.5;
+          const color = flat
+            ? 'var(--color-text-muted)'
+            : positive
+              ? 'var(--color-success, #15803d)'
+              : 'var(--color-warning, #b45309)';
+          const arrow = flat ? '→' : positive ? '↑' : '↓';
+          return (
+            <span
+              title={`Variação vs 7 dias anteriores: ${positive ? '+' : ''}${delta.toFixed(1)}%`}
+              style={{
+                fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600,
+                color, fontVariantNumeric: 'tabular-nums',
+                display: 'inline-flex', alignItems: 'center', gap: 2,
+                padding: '2px 6px',
+                borderRadius: 999,
+                background: 'var(--color-bg-soft)',
+              }}
+            >
+              {arrow} {Math.abs(delta).toFixed(0)}%
+            </span>
+          );
+        })()}
+      </div>
       {hasSpark && (
         <div
           style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}
