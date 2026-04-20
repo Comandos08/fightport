@@ -164,13 +164,13 @@ export default function DashSuporte() {
             </div>
           )}
           <div style={{ overflowY: 'auto', flex: 1 }}>
-            {(tickets as any[]).map(t => {
-              const active = selectedId === t.id;
-              const sc = STATUS_COLORS[t.status] ?? STATUS_COLORS.open;
+            {(tickets as any[]).map(ticket => {
+              const active = selectedId === ticket.id;
+              const sc = STATUS_COLORS[ticket.status] ?? STATUS_COLORS.open;
               return (
                 <button
-                  key={t.id}
-                  onClick={() => setSelectedId(t.id)}
+                  key={ticket.id}
+                  onClick={() => setSelectedId(ticket.id)}
                   style={{
                     width: '100%', textAlign: 'left', padding: 12, border: 'none',
                     borderBottom: '1px solid var(--color-border)',
@@ -180,32 +180,32 @@ export default function DashSuporte() {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}>
                     <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {t.school_name}
+                      {ticket.school_name}
                     </span>
-                    {t.unread_for_admin > 0 && (
+                    {ticket.unread_for_admin > 0 && (
                       <span style={{
                         fontFamily: 'var(--font-sans)', fontSize: 10, padding: '1px 6px', borderRadius: 999,
                         background: '#0D0D0D', color: '#C8F135', fontWeight: 600,
                       }}>
-                        {t.unread_for_admin}
+                        {ticket.unread_for_admin}
                       </span>
                     )}
                   </div>
                   <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {t.subject}
+                    {ticket.subject}
                   </div>
                   <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {t.preview ?? '—'}
+                    {ticket.preview ?? '—'}
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{
                       fontFamily: 'var(--font-sans)', fontSize: 10, padding: '2px 6px', borderRadius: 4,
                       background: sc.bg, color: sc.fg,
                     }}>
-                      {t(STATUS_LABEL_KEYS[t.status] ?? STATUS_LABEL_KEYS.open)}
+                      {t(STATUS_LABEL_KEYS[ticket.status] ?? STATUS_LABEL_KEYS.open)}
                     </span>
                     <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)' }}>
-                      {format(new Date(t.last_message_at), 'dd/MM HH:mm')}
+                      {format(new Date(ticket.last_message_at), 'dd/MM HH:mm')}
                     </span>
                   </div>
                 </button>
