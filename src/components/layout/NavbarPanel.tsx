@@ -15,6 +15,37 @@ export function NavbarPanel() {
   const location = useLocation();
   const qc = useQueryClient();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const isHorizontalSwipe = useRef<boolean>(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    isHorizontalSwipe.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    const dy = e.touches[0].clientY - touchStartY.current;
+    if (!isHorizontalSwipe.current && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      isHorizontalSwipe.current = Math.abs(dx) > Math.abs(dy);
+    }
+    if (!isHorizontalSwipe.current) return;
+    if (dx < 0) setDragOffset(dx);
+  };
+
+  const handleTouchEnd = () => {
+    if (isHorizontalSwipe.current && dragOffset < -70) {
+      setMobileOpen(false);
+    }
+    setDragOffset(0);
+    touchStartX.current = null;
+    touchStartY.current = null;
+    isHorizontalSwipe.current = false;
+  };
 
   const { data: unread = 0 } = useQuery({
     queryKey: ['school-unread-count', user?.id],
@@ -160,7 +191,17 @@ export function NavbarPanel() {
           <div className="absolute inset-0" style={{ background: 'rgba(15,25,35,0.4)' }} onClick={() => setMobileOpen(false)} />
           <aside
             className="absolute left-0 top-0 bottom-0 flex flex-col animate-in slide-in-from-left duration-200"
-            style={{ width: 280, background: 'var(--color-bg)' }}
+            style={{
+              width: 280,
+              background: 'var(--color-bg)',
+              transform: dragOffset < 0 ? `translateX(${dragOffset}px)` : undefined,
+              transition: dragOffset === 0 ? 'transform 200ms ease-out' : 'none',
+              touchAction: 'pan-y',
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
           >
             <div className="flex items-center justify-between" style={{ padding: '20px 20px', borderBottom: '1px solid var(--color-border)' }}>
               <Link to="/" className="no-underline" onClick={() => setMobileOpen(false)}>
