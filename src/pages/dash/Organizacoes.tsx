@@ -113,8 +113,8 @@ export default function Organizacoes() {
   };
 
   return (
-    <div style={{ padding: 32, maxWidth: 1600, margin: '0 auto' }}>
-      <div className="flex items-center justify-between flex-wrap" style={{ gap: 16, marginBottom: 24 }}>
+    <div className="p-4 sm:p-6 lg:p-8" style={{ maxWidth: 1600, margin: '0 auto' }}>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap" style={{ gap: 16, marginBottom: 24 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)', letterSpacing: '0.02em' }}>Organizações</h1>
           <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 300, color: 'var(--color-text-muted)', marginTop: 4 }}>
@@ -123,7 +123,7 @@ export default function Organizacoes() {
         </div>
         <button
           onClick={exportCsv}
-          className="flex items-center"
+          className="flex items-center self-start sm:self-auto"
           style={{ gap: 6, height: 36, padding: '0 14px', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500,
             color: 'var(--color-bg)', background: 'var(--color-text)', border: 'none', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer' }}
         >
