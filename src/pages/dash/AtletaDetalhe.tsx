@@ -154,7 +154,7 @@ export default function AtletaDetalhe() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Voltar */}
       <button
         onClick={() => navigate('/dash/atletas')}
