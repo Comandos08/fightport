@@ -1,29 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { format } from 'date-fns';
-import { Send, CheckCircle2, MessageSquare, Building2, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
 import { sendNotification } from '@/lib/notifications';
+import { TicketList } from '@/components/dash/support/TicketList';
+import { TicketThread } from '@/components/dash/support/TicketThread';
+import type { SupportMessage, SupportTicket } from '@/components/dash/support/types';
 
-const STATUS_LABEL_KEYS: Record<string, string> = {
-  open: 'dash.support.status.open',
-  awaiting_admin: 'dash.support.status.awaitingAdmin',
-  awaiting_school: 'dash.support.status.awaitingSchool',
-  resolved: 'dash.support.status.resolved',
-  closed: 'dash.support.status.closed',
-};
-const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
-  open:            { bg: '#fde68a', fg: '#92400e' },
-  awaiting_admin:  { bg: '#fde68a', fg: '#92400e' },
-  awaiting_school: { bg: '#bfdbfe', fg: '#1e40af' },
-  resolved:        { bg: '#bbf7d0', fg: '#166534' },
-  closed:          { bg: '#e5e7eb', fg: '#374151' },
-};
 const ipt: React.CSSProperties = {
   height: 32, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 13,
   background: 'var(--color-bg)', color: 'var(--color-text)', border: '1px solid var(--color-border)',
@@ -37,14 +22,13 @@ export default function DashSuporte() {
   const [statusFilter, setStatusFilter] = useState('open');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reply, setReply] = useState('');
-  const threadRef = useRef<HTMLDivElement>(null);
 
   const { data: tickets = [], isLoading } = useQuery({
     queryKey: ['admin-tickets', statusFilter],
     queryFn: async () => {
       const { data, error } = await supabase.rpc('admin_list_support_tickets', { p_status: statusFilter });
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []) as SupportTicket[];
     },
   });
 
@@ -57,7 +41,7 @@ export default function DashSuporte() {
         .eq('ticket_id', selectedId!)
         .order('created_at', { ascending: true });
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []) as SupportMessage[];
     },
     enabled: !!selectedId,
   });
@@ -71,10 +55,6 @@ export default function DashSuporte() {
     });
   }, [selectedId, qc]);
 
-  useEffect(() => {
-    if (threadRef.current) threadRef.current.scrollTop = threadRef.current.scrollHeight;
-  }, [messages.length, selectedId]);
-
   const sendReply = useMutation({
     mutationFn: async () => {
       if (!user || !selectedId) throw new Error('Sem ticket');
@@ -87,7 +67,7 @@ export default function DashSuporte() {
     },
     onSuccess: () => {
       // Notifica a escola dona do ticket (fire-and-forget)
-      const ticket = (tickets as any[]).find(t => t.id === selectedId);
+      const ticket = tickets.find(tk => tk.id === selectedId);
       if (ticket) {
         sendNotification({
           recipient_id: ticket.school_id,
@@ -119,7 +99,10 @@ export default function DashSuporte() {
     onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
   });
 
-  const selected = useMemo(() => (tickets as any[]).find(t => t.id === selectedId), [tickets, selectedId]);
+  const selected = useMemo(
+    () => tickets.find(tk => tk.id === selectedId),
+    [tickets, selectedId],
+  );
 
   return (
     <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto' }}>
@@ -148,162 +131,22 @@ export default function DashSuporte() {
           minHeight: 'calc(100vh - 200px)',
         }}
       >
-        {/* Lista — escondida em mobile quando ticket selecionado */}
-        <div
-          className={selectedId ? 'hidden lg:flex' : 'flex'}
-          style={{
-            background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', flexDirection: 'column',
-          }}
-        >
-          {isLoading && <div style={{ padding: 16, color: 'var(--color-text-muted)', fontSize: 13 }}>Carregando…</div>}
-          {!isLoading && tickets.length === 0 && (
-            <div style={{ padding: 24, color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>
-              <MessageSquare style={{ width: 24, height: 24, margin: '0 auto 8px', opacity: 0.5 }} />
-              {t('dash.support.empty')}
-            </div>
-          )}
-          <div style={{ overflowY: 'auto', flex: 1 }}>
-            {(tickets as any[]).map(ticket => {
-              const active = selectedId === ticket.id;
-              const sc = STATUS_COLORS[ticket.status] ?? STATUS_COLORS.open;
-              return (
-                <button
-                  key={ticket.id}
-                  onClick={() => setSelectedId(ticket.id)}
-                  style={{
-                    width: '100%', textAlign: 'left', padding: 12, border: 'none',
-                    borderBottom: '1px solid var(--color-border)',
-                    background: active ? 'var(--color-bg-soft)' : 'transparent', cursor: 'pointer',
-                    display: 'flex', flexDirection: 'column', gap: 4,
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {ticket.school_name}
-                    </span>
-                    {ticket.unread_for_admin > 0 && (
-                      <span style={{
-                        fontFamily: 'var(--font-sans)', fontSize: 10, padding: '1px 6px', borderRadius: 999,
-                        background: '#0D0D0D', color: '#C8F135', fontWeight: 600,
-                      }}>
-                        {ticket.unread_for_admin}
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {ticket.subject}
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {ticket.preview ?? '—'}
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-sans)', fontSize: 10, padding: '2px 6px', borderRadius: 4,
-                      background: sc.bg, color: sc.fg,
-                    }}>
-                      {t(STATUS_LABEL_KEYS[ticket.status] ?? STATUS_LABEL_KEYS.open)}
-                    </span>
-                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)' }}>
-                      {format(new Date(ticket.last_message_at), 'dd/MM HH:mm')}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Thread — escondida em mobile quando nenhum ticket selecionado */}
-        <div
-          className={selectedId ? 'flex' : 'hidden lg:flex'}
-          style={{
-            background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-md, 8px)', flexDirection: 'column',
-          }}
-        >
-          {!selected ? (
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-muted)', fontSize: 13 }}>
-              {t('dash.support.selectTicket')}
-            </div>
-          ) : (
-            <>
-              <div style={{ padding: 16, borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, flex: 1, minWidth: 0 }}>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedId(null)}
-                    className="lg:hidden cursor-pointer"
-                    aria-label="Voltar para lista"
-                    style={{
-                      background: 'transparent', border: '1px solid var(--color-border)',
-                      borderRadius: 'var(--radius-sm, 6px)', padding: '6px 8px',
-                      color: 'var(--color-text-muted)', flexShrink: 0,
-                    }}
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                  </button>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>
-                      {selected.subject}
-                    </div>
-                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                      <Link to={`/dash/organizacoes/${selected.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                        <Building2 style={{ width: 12, height: 12 }} /> {selected.school_name}
-                      </Link>
-                      <span>· {selected.category} · {t(STATUS_LABEL_KEYS[selected.status] ?? STATUS_LABEL_KEYS.open)}</span>
-                    </div>
-                  </div>
-                </div>
-                {selected.status !== 'resolved' && selected.status !== 'closed' && (
-                  <Button variant="outline" size="sm" onClick={() => resolveTicket.mutate()}>
-                    <CheckCircle2 className="w-4 h-4 mr-2" /> Marcar como resolvido
-                  </Button>
-                )}
-              </div>
-
-              <div ref={threadRef} style={{ flex: 1, padding: 16, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {(messages as any[]).map(m => {
-                  const isMine = m.author_type === 'admin';
-                  return (
-                    <div key={m.id} style={{ display: 'flex', justifyContent: isMine ? 'flex-end' : 'flex-start' }}>
-                      <div style={{
-                        maxWidth: '75%', padding: '8px 12px',
-                        borderRadius: 12, background: isMine ? '#0D0D0D' : 'var(--color-bg-soft)',
-                        color: isMine ? '#fff' : 'var(--color-text)',
-                        fontFamily: 'var(--font-sans)', fontSize: 13, whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                      }}>
-                        <div>{m.content}</div>
-                        <div style={{ fontSize: 10, marginTop: 4, opacity: 0.7 }}>
-                          {isMine ? 'Suporte' : 'Escola'} · {format(new Date(m.created_at), 'dd/MM HH:mm')}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {selected.status !== 'resolved' && selected.status !== 'closed' && (
-                <div style={{ padding: 12, borderTop: '1px solid var(--color-border)', display: 'flex', gap: 8 }}>
-                  <textarea
-                    value={reply}
-                    onChange={e => setReply(e.target.value)}
-                    placeholder={t('dash.support.reply.placeholder')}
-                    rows={2}
-                    style={{
-                      flex: 1, padding: 10, fontFamily: 'var(--font-sans)', fontSize: 13,
-                      background: 'var(--color-bg)', color: 'var(--color-text)',
-                      border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', resize: 'vertical',
-                    }}
-                  />
-                  <Button onClick={() => sendReply.mutate()} disabled={!reply.trim() || sendReply.isPending}>
-                    <Send className="w-4 h-4 mr-2" /> {t('dash.support.reply.send')}
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+        <TicketList
+          tickets={tickets}
+          isLoading={isLoading}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
+        <TicketThread
+          ticket={selected}
+          messages={messages}
+          reply={reply}
+          onReplyChange={setReply}
+          onSend={() => sendReply.mutate()}
+          isSending={sendReply.isPending}
+          onResolve={() => resolveTicket.mutate()}
+          onBack={() => setSelectedId(null)}
+        />
       </div>
     </div>
   );
