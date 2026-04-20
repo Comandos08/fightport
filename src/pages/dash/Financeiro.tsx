@@ -639,7 +639,26 @@ function Metric({
       <div style={lbl}>{label}</div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
         <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{value}</div>
-        {delta !== undefined && delta !== null && (() => {
+        {delta !== undefined && (() => {
+          // delta === null ⇒ sem base anterior (período "novo")
+          if (delta === null) {
+            return (
+              <span
+                title="Sem dados nos 7 dias anteriores para comparar"
+                style={{
+                  fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600,
+                  color: 'var(--color-text-muted)',
+                  display: 'inline-flex', alignItems: 'center',
+                  padding: '2px 8px',
+                  borderRadius: 999,
+                  background: 'var(--color-bg-soft)',
+                  textTransform: 'uppercase', letterSpacing: '0.04em',
+                }}
+              >
+                novo
+              </span>
+            );
+          }
           const positive = delta >= 0;
           const flat = Math.abs(delta) < 0.5;
           const color = flat
