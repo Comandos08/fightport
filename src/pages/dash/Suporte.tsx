@@ -227,15 +227,30 @@ export default function DashSuporte() {
           ) : (
             <>
               <div style={{ padding: 16, borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>
-                    {selected.subject}
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                    <Link to={`/dash/organizacoes/${selected.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                      <Building2 style={{ width: 12, height: 12 }} /> {selected.school_name}
-                    </Link>
-                    <span>· {selected.category} · {STATUS_LABEL[selected.status]}</span>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, flex: 1, minWidth: 0 }}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedId(null)}
+                    className="lg:hidden cursor-pointer"
+                    aria-label="Voltar para lista"
+                    style={{
+                      background: 'transparent', border: '1px solid var(--color-border)',
+                      borderRadius: 'var(--radius-sm, 6px)', padding: '6px 8px',
+                      color: 'var(--color-text-muted)', flexShrink: 0,
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--color-text)' }}>
+                      {selected.subject}
+                    </div>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                      <Link to={`/dash/organizacoes/${selected.school_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        <Building2 style={{ width: 12, height: 12 }} /> {selected.school_name}
+                      </Link>
+                      <span>· {selected.category} · {STATUS_LABEL[selected.status]}</span>
+                    </div>
                   </div>
                 </div>
                 {selected.status !== 'resolved' && selected.status !== 'closed' && (
