@@ -114,6 +114,7 @@ export default function PainelSuporte() {
     if (!selectedId) return;
     supabase.rpc('mark_messages_read', { p_ticket_id: selectedId, p_role: 'school' }).then(() => {
       qc.invalidateQueries({ queryKey: ['school-unread-count'] });
+      qc.invalidateQueries({ queryKey: ['school-tickets-unread'] });
     });
   }, [selectedId, qc]);
 
