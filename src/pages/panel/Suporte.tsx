@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { notifyAdmin } from '@/lib/notifications';
 
 const CATEGORIES = [
   { value: 'bug', label: 'Bug' },
@@ -122,6 +123,20 @@ export default function PainelSuporte() {
       return ticket;
     },
     onSuccess: (ticket) => {
+      // Notifica admin (fire-and-forget) — busca nome da escola
+      (async () => {
+        const { data: schoolRow } = await supabase
+          .from('schools')
+          .select('name')
+          .eq('id', user!.id)
+          .maybeSingle();
+        notifyAdmin({
+          type: 'new_ticket',
+          title: 'Novo ticket de suporte',
+          body: `A escola "${schoolRow?.name ?? 'desconhecida'}" abriu um novo ticket: "${ticket.subject}".`,
+          link: '/dash/suporte',
+        });
+      })();
       qc.invalidateQueries({ queryKey: ['school-tickets'] });
       setNewOpen(false);
       setNewSubject(''); setNewCategory('duvida'); setNewMessage('');

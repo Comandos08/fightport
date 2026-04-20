@@ -9,6 +9,7 @@ import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { DashTable, dashTd } from '@/components/dash/DashTable';
 import { dashOutlineButtonStyle, dashDangerButtonStyle, dashDangerOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
+import { sendNotification } from '@/lib/notifications';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
@@ -111,7 +112,18 @@ export default function OrganizacaoDetalhe() {
       const { error } = await supabase.rpc('admin_suspend_school', { p_school_id: id, p_reason: reason });
       if (error) throw error;
     },
-    onSuccess: () => { toast.success('Organização suspensa'); setShowSuspend(false); setReason(''); invalidateAll(); },
+    onSuccess: () => {
+      if (id) {
+        sendNotification({
+          recipient_id: id,
+          type: 'account_suspended',
+          title: 'Conta suspensa',
+          body: 'Sua conta foi suspensa pelo administrador. Entre em contato com o suporte.',
+          link: '/painel/suporte',
+        });
+      }
+      toast.success('Organização suspensa'); setShowSuspend(false); setReason(''); invalidateAll();
+    },
     onError: (e: any) => toast.error(e.message ?? 'Erro ao suspender'),
   });
   const reactivateMut = useMutation({
@@ -119,7 +131,18 @@ export default function OrganizacaoDetalhe() {
       const { error } = await supabase.rpc('admin_reactivate_school', { p_school_id: id, p_reason: reason });
       if (error) throw error;
     },
-    onSuccess: () => { toast.success('Organização reativada'); setShowReactivate(false); setReason(''); invalidateAll(); },
+    onSuccess: () => {
+      if (id) {
+        sendNotification({
+          recipient_id: id,
+          type: 'account_reactivated',
+          title: 'Conta reativada',
+          body: 'Sua conta foi reativada. Bem-vindo de volta!',
+          link: '/painel/suporte',
+        });
+      }
+      toast.success('Organização reativada'); setShowReactivate(false); setReason(''); invalidateAll();
+    },
     onError: (e: any) => toast.error(e.message ?? 'Erro ao reativar'),
   });
   const bonusMut = useMutation({
@@ -131,7 +154,18 @@ export default function OrganizacaoDetalhe() {
       });
       if (error) throw error;
     },
-    onSuccess: () => { toast.success('Créditos concedidos'); setShowBonus(false); setBonusAmount(''); setBonusReason(''); invalidateAll(); },
+    onSuccess: () => {
+      if (id) {
+        sendNotification({
+          recipient_id: id,
+          type: 'courtesy_credits',
+          title: 'Créditos adicionados',
+          body: 'O administrador adicionou créditos de cortesia à sua conta.',
+          link: '/painel/creditos',
+        });
+      }
+      toast.success('Créditos concedidos'); setShowBonus(false); setBonusAmount(''); setBonusReason(''); invalidateAll();
+    },
     onError: (e: any) => toast.error(e.message ?? 'Erro ao conceder créditos'),
   });
 
