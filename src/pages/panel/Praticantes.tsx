@@ -276,7 +276,14 @@ function FragmentRow({ practitioner: a, schoolName, isExpanded, isLast, onToggle
         <td style={{ padding: '14px 16px' }}>
           <div className="flex items-center" style={{ gap: 12 }}>
             <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-text)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, flexShrink: 0 }}>{getInitials(a.first_name, a.last_name)}</div>
-            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{a.first_name} {a.last_name}</span>
+            <div className="flex flex-col" style={{ gap: 4, minWidth: 0 }}>
+              <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{a.first_name} {a.last_name}</span>
+              {a.current_belt && (
+                <div className="sm:hidden">
+                  <BeltBadge belt={a.current_belt as any} size="sm" />
+                </div>
+              )}
+            </div>
           </div>
         </td>
         <td className="hidden sm:table-cell" style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>—</span>}</td>
