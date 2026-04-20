@@ -63,7 +63,8 @@ export function NotificationBell() {
       { label: 'Mais antigas', items: [] },
     ];
 
-    for (const n of notifications) {
+    const source = filter === 'unread' ? notifications.filter((n) => !n.read) : notifications;
+    for (const n of source) {
       const created = new Date(n.created_at);
       if (created >= startOfToday) groups[0].items.push(n);
       else if (created >= startOfYesterday) groups[1].items.push(n);
@@ -71,7 +72,7 @@ export function NotificationBell() {
       else groups[3].items.push(n);
     }
     return groups.filter((g) => g.items.length > 0);
-  }, [notifications]);
+  }, [notifications, filter]);
 
   // Pulso visual no badge ao chegar nova notificação
   const [pulse, setPulse] = useState(false);
