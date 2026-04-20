@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import confetti from 'canvas-confetti';
 import { ListChecks, X, CheckCircle2, Circle, ArrowRight } from 'lucide-react';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 
 export function OnboardingChecklist() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { steps, allDone, hidden, dismiss, markPassportViewed } = useOnboarding();
   const [open, setOpen] = useState(false);
