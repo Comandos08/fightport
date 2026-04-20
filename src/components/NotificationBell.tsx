@@ -25,8 +25,15 @@ export function NotificationBell() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+
+  const dateLocale = i18n.language?.startsWith('es')
+    ? esLocale
+    : i18n.language?.startsWith('en')
+      ? enUS
+      : ptBR;
 
   const { data: notifications = [] } = useQuery<NotificationRow[]>({
     queryKey: ['notifications', user?.id],
