@@ -556,6 +556,14 @@
         "suspend": "Suspender",
         "reactivate": "Reactivar",
         "grantCourtesy": "Otorgar cortesía",
+        "toasts": {
+          "suspendSuccess": "Organización suspendida",
+          "suspendError": "Error al suspender",
+          "reactivateSuccess": "Organización reactivada",
+          "reactivateError": "Error al reactivar",
+          "courtesySuccess": "Créditos otorgados",
+          "courtesyError": "Error al otorgar créditos"
+        },
         "sections": {
           "registrationData": "Datos de registro",
           "credits": "Créditos",
@@ -650,10 +658,20 @@
       "exportPdf": "PDF",
       "period": "Período",
       "periods": {
+        "today": "Hoy",
+        "7d": "7 días",
         "30": "30 días",
+        "30d": "30 días",
         "90": "90 días",
         "365": "1 año",
+        "month": "Mes actual",
+        "year": "Año actual",
+        "custom": "Personalizado",
         "all": "Todo"
+      },
+      "customRange": {
+        "from": "Desde",
+        "to": "Hasta"
       },
       "metrics": {
         "periodRevenue": "Ingresos del período",
@@ -677,8 +695,16 @@
       "subtitle": "Tickets de todas las escuelas. Selecciona uno para responder.",
       "filters": {
         "open": "Abiertos",
+        "awaitingSchool": "Esperando escuela",
         "resolved": "Resueltos",
         "all": "Todos"
+      },
+      "status": {
+        "open": "Abierto",
+        "awaitingAdmin": "Esperando soporte",
+        "awaitingSchool": "Esperando escuela",
+        "resolved": "Resuelto",
+        "closed": "Cerrado"
       },
       "empty": "No hay tickets en esta categoría.",
       "selectTicket": "Selecciona un ticket para ver la conversación.",
@@ -709,6 +735,9 @@
         "title": "Detalles de la acción",
         "close": "Cerrar"
       }
+    },
+    "common": {
+      "clear": "Limpiar"
     }
   }
 }
