@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { DashPageHeader } from '@/components/dash/DashPageHeader';
 import { DashSection } from '@/components/dash/DashSection';
 import { DashTable, dashTd } from '@/components/dash/DashTable';
-import { dashOutlineButtonStyle, dashDangerButtonStyle } from '@/components/dash/DashFiltersBar';
+import { dashOutlineButtonStyle, dashDangerButtonStyle, dashDangerOutlineButtonStyle } from '@/components/dash/DashFiltersBar';
 
 const fmtBRL = (n: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(n) || 0);
 
@@ -151,7 +151,7 @@ export default function OrganizacaoDetalhe() {
           <RefreshCw style={{ width: 14, height: 14 }} /> Reativar
         </button>
       ) : (
-        <button onClick={() => setShowSuspend(true)} style={dashOutlineButtonStyle}>
+        <button onClick={() => setShowSuspend(true)} style={dashDangerOutlineButtonStyle}>
           <Ban style={{ width: 14, height: 14 }} /> Suspender
         </button>
       )}
