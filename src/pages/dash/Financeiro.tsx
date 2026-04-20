@@ -296,7 +296,7 @@ export default function Financeiro() {
           </div>
         </div>
 
-        <div style={card}>
+        <div style={card} className="hidden lg:block">
           <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text)' }}>
             Distribuição por pacote
           </h3>
