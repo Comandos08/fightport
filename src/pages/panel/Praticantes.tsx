@@ -212,3 +212,159 @@ export default function PraticantesPage() {
     </div>
   );
 }
+
+interface FragmentRowProps {
+  practitioner: any;
+  schoolName?: string;
+  isExpanded: boolean;
+  isLast: boolean;
+  onToggle: () => void;
+  onDelete: () => void;
+  locale: string;
+  t: (key: string, opts?: any) => string;
+}
+
+function FragmentRow({ practitioner: a, schoolName, isExpanded, isLast, onToggle, onDelete, locale, t }: FragmentRowProps) {
+  const { data: achievements, isLoading } = useQuery({
+    queryKey: ['practitioner-achievements', a.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('achievements_public')
+        .select('id, belt, degree, graduation_date, graduated_by, hash, created_at')
+        .eq('practitioner_id', a.id)
+        .order('graduation_date', { ascending: false });
+      return data ?? [];
+    },
+    enabled: isExpanded,
+  });
+
+  const stop = (e: React.MouseEvent) => e.stopPropagation();
+  const dateLocale = locale?.startsWith('en') ? 'en-US' : locale?.startsWith('es') ? 'es-ES' : 'pt-BR';
+  const fmtDate = (d: string) => new Date(d + 'T00:00:00').toLocaleDateString(dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const fmtBelt = (belt: string, degree: number | null) => {
+    const deg = degree && degree > 0 ? ` ${degree}°` : '';
+    return `${belt}${deg}`;
+  };
+
+  return (
+    <>
+      <tr
+        onClick={onToggle}
+        style={{ borderBottom: isExpanded || !isLast ? '1px solid var(--color-border)' : 'none', transition: 'var(--transition)', cursor: 'pointer', background: isExpanded ? 'var(--color-bg-soft)' : 'transparent' }}
+        onMouseEnter={e => { if (!isExpanded) e.currentTarget.style.background = 'var(--color-bg-soft)'; }}
+        onMouseLeave={e => { if (!isExpanded) e.currentTarget.style.background = 'transparent'; }}
+      >
+        <td style={{ padding: '14px 8px 14px 16px', width: 36 }}>
+          <ChevronDown style={{ width: 14, height: 14, color: 'var(--color-text-muted)', transition: 'transform 0.2s ease', transform: isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)' }} />
+        </td>
+        <td style={{ padding: '14px 16px' }}>
+          <div className="flex items-center" style={{ gap: 12 }}>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-text)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, flexShrink: 0 }}>{getInitials(a.first_name, a.last_name)}</div>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{a.first_name} {a.last_name}</span>
+          </div>
+        </td>
+        <td style={{ padding: '14px 16px', fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)' }}>{a.martial_art}</td>
+        <td style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>—</span>}</td>
+        <td style={{ padding: '14px 16px', fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)' }}>{schoolName ?? '...'}</td>
+        <td style={{ padding: '14px 16px', textAlign: 'right' }} onClick={stop}>
+          <div className="flex items-center justify-end" style={{ gap: 8 }}>
+            {[
+              { to: `/p/${a.fp_id}`, icon: Eye, label: t('practitioners.viewPassport') },
+              { to: '/painel/conquistas/nova', icon: Award, label: t('practitioners.registerAchievement') },
+              { to: `/painel/praticantes/${a.id}/editar`, icon: Pencil, label: t('practitioners.edit') },
+            ].map(act => (
+              <Link key={act.label} to={act.to} onClick={stop}>
+                <button className="cursor-pointer" aria-label={act.label} style={{ background: 'none', border: 'none', padding: 4, color: 'var(--color-text-muted)', transition: 'var(--transition)' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')} onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}>
+                  <act.icon style={{ width: 16, height: 16 }} />
+                </button>
+              </Link>
+            ))}
+            <button className="cursor-pointer" aria-label={t('practitioners.delete')} onClick={(e) => { stop(e); onDelete(); }}
+              style={{ background: 'none', border: 'none', padding: 4, color: 'var(--color-text-muted)', transition: 'var(--transition)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-danger)')} onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}>
+              <Trash2 style={{ width: 16, height: 16 }} />
+            </button>
+          </div>
+        </td>
+      </tr>
+      {isExpanded && (
+        <tr style={{ background: 'var(--color-bg-soft)', borderBottom: !isLast ? '1px solid var(--color-border)' : 'none' }}>
+          <td colSpan={6} style={{ padding: '0 16px 20px 52px' }}>
+            <AchievementsAccordion achievements={achievements ?? []} isLoading={isLoading} fmtDate={fmtDate} fmtBelt={fmtBelt} t={t} />
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+function AchievementsAccordion({ achievements, isLoading, fmtDate, fmtBelt, t }: { achievements: any[]; isLoading: boolean; fmtDate: (d: string) => string; fmtBelt: (b: string, d: number | null) => string; t: (k: string, o?: any) => string }) {
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const copyHash = (id: string, hash: string) => {
+    navigator.clipboard.writeText(hash);
+    setCopiedId(id);
+    toast.success(t('practitioners.achievements.copied'));
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: '16px 0', textAlign: 'center' }}>
+        <div className="animate-spin inline-block" style={{ width: 20, height: 20, border: '2px solid var(--color-text)', borderTopColor: 'transparent', borderRadius: '50%' }} />
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 8 }}>{t('practitioners.achievements.loading')}</p>
+      </div>
+    );
+  }
+
+  if (achievements.length === 0) {
+    return (
+      <div style={{ padding: '16px 0', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)' }}>
+        {t('practitioners.achievements.empty')}
+      </div>
+    );
+  }
+
+  const cellStyle: React.CSSProperties = { padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)' };
+  const headStyle: React.CSSProperties = { padding: '6px 12px', fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', textAlign: 'left', borderBottom: '1px solid var(--color-border)' };
+
+  return (
+    <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden', marginTop: 4 }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead style={{ background: 'var(--color-bg-soft)' }}>
+          <tr>
+            <th style={headStyle}>{t('practitioners.achievements.date')}</th>
+            <th style={headStyle}>{t('practitioners.achievements.belt')}</th>
+            <th style={headStyle}>{t('practitioners.achievements.graduatedBy')}</th>
+            <th style={headStyle}>{t('practitioners.achievements.hash')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {achievements.map((ach, i) => {
+            const isLast = i === achievements.length - 1;
+            const partial = ach.hash ? `${ach.hash.slice(0, 8)}...${ach.hash.slice(-8)}` : '—';
+            const copied = copiedId === ach.id;
+            return (
+              <tr key={ach.id}>
+                <td style={{ ...cellStyle, borderBottom: isLast ? 'none' : cellStyle.borderBottom, whiteSpace: 'nowrap' }}>{fmtDate(ach.graduation_date)}</td>
+                <td style={{ ...cellStyle, borderBottom: isLast ? 'none' : cellStyle.borderBottom }}>{fmtBelt(ach.belt, ach.degree)}</td>
+                <td style={{ ...cellStyle, borderBottom: isLast ? 'none' : cellStyle.borderBottom }}>{ach.graduated_by}</td>
+                <td style={{ ...cellStyle, borderBottom: isLast ? 'none' : cellStyle.borderBottom }}>
+                  <div className="inline-flex items-center" style={{ gap: 6 }}>
+                    <span style={{ fontFamily: 'ui-monospace, SFMono-Regular, monospace', fontSize: 11, color: 'var(--color-text-light)', letterSpacing: '0.04em' }}>{partial}</span>
+                    {ach.hash && (
+                      <button onClick={() => copyHash(ach.id, ach.hash)} aria-label="Copy hash"
+                        style={{ background: 'none', border: 'none', padding: 2, cursor: 'pointer', color: copied ? 'var(--color-success, #16a34a)' : 'var(--color-text-muted)', transition: 'var(--transition)' }}>
+                        {copied ? <Check style={{ width: 12, height: 12 }} /> : <Copy style={{ width: 12, height: 12 }} />}
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
