@@ -191,7 +191,17 @@ export function NavbarPanel() {
           <div className="absolute inset-0" style={{ background: 'rgba(15,25,35,0.4)' }} onClick={() => setMobileOpen(false)} />
           <aside
             className="absolute left-0 top-0 bottom-0 flex flex-col animate-in slide-in-from-left duration-200"
-            style={{ width: 280, background: 'var(--color-bg)' }}
+            style={{
+              width: 280,
+              background: 'var(--color-bg)',
+              transform: dragOffset < 0 ? `translateX(${dragOffset}px)` : undefined,
+              transition: dragOffset === 0 ? 'transform 200ms ease-out' : 'none',
+              touchAction: 'pan-y',
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
           >
             <div className="flex items-center justify-between" style={{ padding: '20px 20px', borderBottom: '1px solid var(--color-border)' }}>
               <Link to="/" className="no-underline" onClick={() => setMobileOpen(false)}>
