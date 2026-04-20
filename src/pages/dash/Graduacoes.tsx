@@ -215,14 +215,14 @@ export default function Graduacoes() {
             <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
               {format(new Date(r.created_at), 'dd/MM/yyyy HH:mm')}
             </td>
-            <td style={{ padding: '10px 12px' }}>
+            <td style={{ padding: '6px 12px' }}>
               {r.practitioner_id ? (
-                <Link to={`/dash/atletas/${r.practitioner_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <Link to={`/dash/atletas/${r.practitioner_id}`} style={{ color: 'var(--color-text)', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                   <User style={{ width: 12, height: 12 }} />
                   {r.practitioner_name}
                 </Link>
               ) : '—'}
-              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 11, color: 'var(--color-text-muted)' }}>{r.fp_id}</div>
+              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2 }}>{r.fp_id}</div>
             </td>
             <td style={{ padding: '10px 12px' }}>
               {r.school_id ? (

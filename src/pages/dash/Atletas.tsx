@@ -190,7 +190,7 @@ export default function Atletas() {
             onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
           >
             <td style={{ padding: '10px 12px', color: 'var(--color-text)' }}>{r.first_name} {r.last_name}</td>
-            <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{r.fp_id}</td>
+            <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12, whiteSpace: 'nowrap' }}>{r.fp_id}</td>
             <td style={{ padding: '10px 12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono, monospace)', fontSize: 12 }}>{maskCpf(r.cpf)}</td>
             <td style={{ padding: '10px 12px' }} onClick={e => e.stopPropagation()}>
               {r.school_id ? (
