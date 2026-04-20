@@ -152,46 +152,28 @@ export default function PraticantesPage() {
               <thead>
                 <tr style={{ background: 'var(--color-bg-soft)' }}>
                   {tableHeaders.map((h, i) => (
-                    <th key={i} style={{ textAlign: i === 4 ? 'right' : 'left', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', padding: '10px 16px', borderBottom: '1px solid var(--color-border)' }}>{h}</th>
+                    <th key={i} style={{ width: i === 0 ? 36 : undefined, textAlign: i === 5 ? 'right' : 'left', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', padding: '10px 16px', borderBottom: '1px solid var(--color-border)' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {paginatedItems.map((a, i) => (
-                  <tr key={a.id} style={{ borderBottom: i !== paginatedItems.length - 1 ? '1px solid var(--color-border)' : 'none', transition: 'var(--transition)' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-bg-soft)')} onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                    <td style={{ padding: '14px 16px' }}>
-                      <div className="flex items-center" style={{ gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-text)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, flexShrink: 0 }}>{getInitials(a.first_name, a.last_name)}</div>
-                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{a.first_name} {a.last_name}</span>
-                      </div>
-                    </td>
-                    <td style={{ padding: '14px 16px', fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text)' }}>{a.martial_art}</td>
-                    <td style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>—</span>}</td>
-                    <td style={{ padding: '14px 16px', fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--color-text-muted)' }}>{school?.name ?? '...'}</td>
-                    <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-                      <div className="flex items-center justify-end" style={{ gap: 8 }}>
-                        {[
-                          { to: `/p/${a.fp_id}`, icon: Eye, label: t('practitioners.viewPassport') },
-                          { to: '/painel/conquistas/nova', icon: Award, label: t('practitioners.registerAchievement') },
-                          { to: `/painel/praticantes/${a.id}/editar`, icon: Pencil, label: t('practitioners.edit') },
-                        ].map(act => (
-                          <Link key={act.label} to={act.to}>
-                            <button className="cursor-pointer" aria-label={act.label} style={{ background: 'none', border: 'none', padding: 4, color: 'var(--color-text-muted)', transition: 'var(--transition)' }}
-                              onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text)')} onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}>
-                              <act.icon style={{ width: 16, height: 16 }} />
-                            </button>
-                          </Link>
-                        ))}
-                        <button className="cursor-pointer" aria-label={t('practitioners.delete')} onClick={() => setDeleteTarget({ id: a.id, name: `${a.first_name} ${a.last_name}` })}
-                          style={{ background: 'none', border: 'none', padding: 4, color: 'var(--color-text-muted)', transition: 'var(--transition)' }}
-                          onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-danger)')} onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}>
-                          <Trash2 style={{ width: 16, height: 16 }} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {paginatedItems.map((a, i) => {
+                  const isExpanded = expandedId === a.id;
+                  const isLast = i === paginatedItems.length - 1;
+                  return (
+                    <FragmentRow
+                      key={a.id}
+                      practitioner={a}
+                      schoolName={school?.name}
+                      isExpanded={isExpanded}
+                      isLast={isLast}
+                      onToggle={() => setExpandedId(prev => prev === a.id ? null : a.id)}
+                      onDelete={() => setDeleteTarget({ id: a.id, name: `${a.first_name} ${a.last_name}` })}
+                      locale={i18n.language}
+                      t={t}
+                    />
+                  );
+                })}
               </tbody>
             </table>
           </div>
