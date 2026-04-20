@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy } from 'lucide-react';
+import { LayoutDashboard, Users, Award, Coins, Settings, LifeBuoy, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -23,6 +23,18 @@ export function Sidebar() {
     },
     enabled: !!user,
     refetchOnWindowFocus: true,
+  });
+
+  // Tickets aguardando resposta da escola há mais de 24h
+  const { data: staleTickets = 0 } = useQuery({
+    queryKey: ['school-stale-tickets-count', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase.rpc('school_stale_tickets_count');
+      return Number(data ?? 0);
+    },
+    enabled: !!user,
+    refetchOnWindowFocus: true,
+    refetchInterval: 5 * 60 * 1000,
   });
 
   // Pulso visual no badge ao chegar nova mensagem do admin
@@ -139,6 +151,12 @@ export function Sidebar() {
             >
               <Icon style={{ width: 16, height: 16 }} />
               <span style={{ flex: 1 }}>{label}</span>
+              {to === '/painel/suporte' && staleTickets > 0 && (
+                <Clock
+                  aria-label={`${staleTickets} ticket(s) aguardando sua resposta há mais de 24h`}
+                  style={{ width: 12, height: 12, color: 'var(--color-bg-amber)', marginRight: 2 }}
+                />
+              )}
               {badge > 0 && (
                 <span style={{ position: 'relative', display: 'inline-flex' }}>
                   <span style={{

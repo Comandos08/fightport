@@ -1079,6 +1079,7 @@ export type Database = {
         Args: { p_role: string; p_ticket_id: string }
         Returns: undefined
       }
+      school_stale_tickets_count: { Args: never; Returns: number }
       school_unread_messages_count: { Args: never; Returns: number }
     }
     Enums: {
