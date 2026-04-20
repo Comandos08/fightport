@@ -186,8 +186,8 @@ export default function OrganizacaoDetalhe() {
     onError: (e: any) => toast.error(e.message ?? t('dash.organizations.detail.toasts.courtesyError')),
   });
 
-  if (isLoading) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>Carregando...</div>;
-  if (!detail?.school) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>Organização não encontrada</div>;
+  if (isLoading) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>{t('dash.organizations.detail.loading')}</div>;
+  if (!detail?.school) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>{t('dash.organizations.detail.notFound')}</div>;
 
   const s = detail.school;
   const hc = detail.head_coach;
@@ -220,7 +220,7 @@ export default function OrganizacaoDetalhe() {
       {s.is_admin && <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, background: 'var(--color-text)', color: 'var(--color-bg)' }}>Admin</span>}
       <span>{s.martial_art}</span>
       {(s.city || s.state) && <span>· {[s.city, s.state].filter(Boolean).join(' / ')}</span>}
-      {s.is_suspended && s.suspended_reason && <span>· Motivo: {s.suspended_reason}</span>}
+      {s.is_suspended && s.suspended_reason && <span>· {t('dash.organizations.detail.reasonLabel')}: {s.suspended_reason}</span>}
     </span>
   );
 
@@ -279,10 +279,16 @@ export default function OrganizacaoDetalhe() {
       {/* Atletas */}
       <DashSection title={`${t('dash.organizations.detail.sections.athletes')} (${practitioners.length})`} flush>
         <DashTable
-          headers={['FP-ID', 'Nome', 'Faixa', 'Modalidade', 'Cadastro']}
+          headers={[
+            t('dash.organizations.detail.athletesTable.fpId'),
+            t('dash.organizations.detail.athletesTable.name'),
+            t('dash.organizations.detail.athletesTable.belt'),
+            t('dash.organizations.detail.athletesTable.modality'),
+            t('dash.organizations.detail.athletesTable.createdAt'),
+          ]}
           isEmpty={practitioners.length === 0}
           emptyIcon={Users}
-          emptyTitle="Nenhum atleta cadastrado"
+          emptyTitle={t('dash.organizations.detail.athletesEmpty')}
           pagination={{
             page: pracPage,
             totalPages: Math.max(1, Math.ceil(practitioners.length / PAGE_SIZE)),
@@ -306,10 +312,16 @@ export default function OrganizacaoDetalhe() {
       {/* Graduações */}
       <DashSection title={`${t('dash.organizations.detail.sections.graduations')} (${achievements.length})`} flush>
         <DashTable
-          headers={['Data', 'Atleta', 'Faixa', 'Grau', 'Graduado por']}
+          headers={[
+            t('dash.organizations.detail.graduationsTable.date'),
+            t('dash.organizations.detail.graduationsTable.athlete'),
+            t('dash.organizations.detail.graduationsTable.belt'),
+            t('dash.organizations.detail.graduationsTable.degree'),
+            t('dash.organizations.detail.graduationsTable.graduatedBy'),
+          ]}
           isEmpty={achievements.length === 0}
           emptyIcon={Award}
-          emptyTitle="Nenhuma graduação emitida"
+          emptyTitle={t('dash.organizations.detail.graduationsEmpty')}
           pagination={{
             page: achPage,
             totalPages: Math.max(1, Math.ceil(achievements.length / PAGE_SIZE)),
@@ -334,17 +346,17 @@ export default function OrganizacaoDetalhe() {
       <DashSection title={t('dash.organizations.detail.sections.financialHistory')}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Tipo</th><th style={th}>Pacote</th><th style={th}>Quantidade</th><th style={th}>Valor</th><th style={th}>Status</th></tr></thead>
+            <thead><tr><th style={th}>{t('dash.organizations.detail.financialTable.date')}</th><th style={th}>{t('dash.organizations.detail.financialTable.type')}</th><th style={th}>{t('dash.organizations.detail.financialTable.package')}</th><th style={th}>{t('dash.organizations.detail.financialTable.amount')}</th><th style={th}>{t('dash.organizations.detail.financialTable.value')}</th><th style={th}>{t('dash.organizations.detail.financialTable.status')}</th></tr></thead>
             <tbody>
-              {txs.length === 0 && <tr><td colSpan={6} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma transação</td></tr>}
-              {txs.map((t: any) => (
-                <tr key={t.id}>
-                  <td style={td}>{format(new Date(t.created_at), 'dd/MM/yyyy HH:mm')}</td>
-                  <td style={td}>{t.type === 'purchase' ? 'Compra' : t.type === 'usage' ? 'Uso' : t.type === 'bonus' ? 'Cortesia' : t.type}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{t.package_name ?? '—'}</td>
-                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{t.amount > 0 ? '+' : ''}{t.amount}</td>
-                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{t.price_brl ? fmtBRL(t.price_brl) : '—'}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{t.status}</td>
+              {txs.length === 0 && <tr><td colSpan={6} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.noTransactions')}</td></tr>}
+              {txs.map((tx: any) => (
+                <tr key={tx.id}>
+                  <td style={td}>{format(new Date(tx.created_at), 'dd/MM/yyyy HH:mm')}</td>
+                  <td style={td}>{tx.type === 'purchase' ? t('dash.organizations.detail.txTypes.purchase') : tx.type === 'usage' ? t('dash.organizations.detail.txTypes.usage') : tx.type === 'bonus' ? t('dash.organizations.detail.txTypes.bonus') : tx.type}</td>
+                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{tx.package_name ?? '—'}</td>
+                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{tx.amount > 0 ? '+' : ''}{tx.amount}</td>
+                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{tx.price_brl ? fmtBRL(tx.price_brl) : '—'}</td>
+                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{tx.status}</td>
                 </tr>
               ))}
             </tbody>
@@ -354,13 +366,13 @@ export default function OrganizacaoDetalhe() {
 
       {/* Tickets */}
       <DashSection title={`${t('dash.organizations.detail.sections.supportTickets')} (${tickets.length})`}>
-        {tickets.length === 0 ? <p style={muted}>Nenhum ticket em aberto.</p> : (
+        {tickets.length === 0 ? <p style={muted}>{t('dash.organizations.detail.noTickets')}</p> : (
           <ul className="flex flex-col" style={{ gap: 10, listStyle: 'none', padding: 0, margin: 0 }}>
-            {tickets.map((t: any) => (
-              <li key={t.id} style={{ padding: 12, border: '1px solid var(--color-border)', borderRadius: 6 }}>
+            {tickets.map((tk: any) => (
+              <li key={tk.id} style={{ padding: 12, border: '1px solid var(--color-border)', borderRadius: 6 }}>
                 <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)' }}>{t.subject}</span>
-                  <span style={muted}>{format(new Date(t.created_at), 'dd/MM/yyyy')}</span>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)' }}>{tk.subject}</span>
+                  <span style={muted}>{format(new Date(tk.created_at), 'dd/MM/yyyy')}</span>
                 </div>
               </li>
             ))}
@@ -372,9 +384,9 @@ export default function OrganizacaoDetalhe() {
       <DashSection title={t('dash.organizations.detail.sections.adminActions')}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Admin</th><th style={th}>Ação</th><th style={th}>Detalhes</th></tr></thead>
+            <thead><tr><th style={th}>{t('dash.organizations.detail.adminTable.date')}</th><th style={th}>{t('dash.organizations.detail.adminTable.admin')}</th><th style={th}>{t('dash.organizations.detail.adminTable.action')}</th><th style={th}>{t('dash.organizations.detail.adminTable.details')}</th></tr></thead>
             <tbody>
-              {audit.length === 0 && <tr><td colSpan={4} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma ação registrada</td></tr>}
+              {audit.length === 0 && <tr><td colSpan={4} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.noAdminActions')}</td></tr>}
               {audit.map((a: any) => (
                 <tr key={a.id}>
                   <td style={td}>{format(new Date(a.created_at), 'dd/MM/yyyy HH:mm')}</td>
@@ -443,11 +455,11 @@ export default function OrganizacaoDetalhe() {
 
 // ============= Histórico de ações da escola =============
 
-const ACTION_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  practitioner_created: { label: 'Praticante criado', color: '#15803d', bg: 'rgba(34,197,94,0.12)' },
-  practitioner_updated: { label: 'Praticante editado', color: '#1d4ed8', bg: 'rgba(59,130,246,0.12)' },
-  practitioner_deleted: { label: 'Praticante deletado', color: '#b91c1c', bg: 'rgba(239,68,68,0.12)' },
-  achievement_created: { label: 'Graduação registrada', color: '#7c3aed', bg: 'rgba(139,92,246,0.14)' },
+const ACTION_COLORS: Record<string, { color: string; bg: string }> = {
+  practitioner_created: { color: '#15803d', bg: 'rgba(34,197,94,0.12)' },
+  practitioner_updated: { color: '#1d4ed8', bg: 'rgba(59,130,246,0.12)' },
+  practitioner_deleted: { color: '#b91c1c', bg: 'rgba(239,68,68,0.12)' },
+  achievement_created: { color: '#7c3aed', bg: 'rgba(139,92,246,0.14)' },
 };
 
 function formatSchoolAuditDetails(action: string, metadata: any): string {
@@ -495,6 +507,11 @@ interface SchoolAuditSectionProps {
 }
 
 function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onFilterChange, pageSize }: SchoolAuditSectionProps) {
+  const { t } = useTranslation();
+  const actionLabel = (action: string) =>
+    ['practitioner_created','practitioner_updated','practitioner_deleted','achievement_created'].includes(action)
+      ? t(`dash.organizations.detail.schoolAudit.actions.${action}`)
+      : action;
   const filtered = filter ? items.filter((it) => it.action === filter) : items;
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const currentPage = Math.min(page, totalPages - 1);
@@ -502,13 +519,19 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
 
   const handleExport = () => {
     if (filtered.length === 0) {
-      toast.error('Nenhum registro para exportar.');
+      toast.error(t('dash.organizations.detail.schoolAudit.exportEmpty'));
       return;
     }
-    const headers = ['Data/Hora', 'Ação', 'Nome', 'Escola', 'Detalhes'];
+    const headers = [
+      t('dash.organizations.detail.schoolAudit.tableDate'),
+      t('dash.organizations.detail.schoolAudit.tableAction'),
+      t('dash.organizations.detail.schoolAudit.tableName'),
+      t('dash.organizations.detail.sections.athletes'),
+      t('dash.organizations.detail.schoolAudit.tableDetails'),
+    ];
     const rows = filtered.map((it) => [
       format(new Date(it.created_at), 'dd/MM/yyyy HH:mm'),
-      ACTION_LABELS[it.action]?.label ?? it.action,
+      actionLabel(it.action),
       it.entity_name ?? '',
       schoolName ?? '',
       it.metadata ? JSON.stringify(it.metadata) : '',
@@ -529,7 +552,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Activity style={{ width: 16, height: 16, color: 'var(--color-text-muted)' }} />
-        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>Histórico de ações da escola</h2>
+        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{t('dash.organizations.detail.schoolAudit.title')}</h2>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         <select
@@ -541,11 +564,11 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
             border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
           }}
         >
-          <option value="">Todas as ações</option>
-          <option value="practitioner_created">Praticantes criados</option>
-          <option value="practitioner_updated">Praticantes editados</option>
-          <option value="practitioner_deleted">Praticantes deletados</option>
-          <option value="achievement_created">Graduações registradas</option>
+          <option value="">{t('dash.organizations.detail.schoolAudit.filterAll')}</option>
+          <option value="practitioner_created">{t('dash.organizations.detail.schoolAudit.filterCreated')}</option>
+          <option value="practitioner_updated">{t('dash.organizations.detail.schoolAudit.filterUpdated')}</option>
+          <option value="practitioner_deleted">{t('dash.organizations.detail.schoolAudit.filterDeleted')}</option>
+          <option value="achievement_created">{t('dash.organizations.detail.schoolAudit.filterAchievement')}</option>
         </select>
         <button
           onClick={handleExport}
@@ -556,7 +579,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
             border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer',
           }}
         >
-          <Download style={{ width: 12, height: 12 }} /> Exportar CSV
+          <Download style={{ width: 12, height: 12 }} /> {t('dash.organizations.detail.schoolAudit.exportCsv')}
         </button>
       </div>
     </div>
@@ -569,7 +592,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
       {filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 16px' }}>
           <Activity style={{ width: 28, height: 28, color: 'var(--color-text-muted)', margin: '0 auto 8px', display: 'block', opacity: 0.5 }} />
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>Nenhuma ação registrada ainda.</p>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>{t('dash.organizations.detail.schoolAudit.noActions')}</p>
         </div>
       ) : (
         <>
@@ -577,15 +600,15 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Data/Hora</th>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Ação</th>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Nome</th>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Detalhes</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>{t('dash.organizations.detail.schoolAudit.tableDate')}</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>{t('dash.organizations.detail.schoolAudit.tableAction')}</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>{t('dash.organizations.detail.schoolAudit.tableName')}</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>{t('dash.organizations.detail.schoolAudit.tableDetails')}</th>
                 </tr>
               </thead>
               <tbody>
                 {pageItems.map((it) => {
-                  const cfg = ACTION_LABELS[it.action] ?? { label: it.action, color: 'var(--color-text)', bg: 'var(--color-bg-soft)' };
+                  const cfg = ACTION_COLORS[it.action] ?? { color: 'var(--color-text)', bg: 'var(--color-bg-soft)' };
                   return (
                     <tr key={it.id}>
                       <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' }}>
@@ -593,7 +616,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
                       </td>
                       <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' }}>
                         <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, color: cfg.color, background: cfg.bg }}>
-                          {cfg.label}
+                          {actionLabel(it.action)}
                         </span>
                       </td>
                       <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)' }}>
@@ -612,7 +635,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
           {totalPages > 1 && (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
               <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>
-                Página {currentPage + 1} de {totalPages} · {filtered.length} registros
+                {t('dash.organizations.detail.schoolAudit.pageInfo', { current: currentPage + 1, total: totalPages, count: filtered.length })}
               </span>
               <div style={{ display: 'flex', gap: 6 }}>
                 <button
@@ -620,14 +643,14 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
                   disabled={currentPage === 0}
                   style={{ height: 28, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: currentPage === 0 ? 'not-allowed' : 'pointer', opacity: currentPage === 0 ? 0.4 : 1 }}
                 >
-                  Anterior
+                  {t('dash.organizations.detail.schoolAudit.previous')}
                 </button>
                 <button
                   onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
                   disabled={currentPage >= totalPages - 1}
                   style={{ height: 28, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: currentPage >= totalPages - 1 ? 'not-allowed' : 'pointer', opacity: currentPage >= totalPages - 1 ? 0.4 : 1 }}
                 >
-                  Próxima
+                  {t('dash.organizations.detail.schoolAudit.next')}
                 </button>
               </div>
             </div>

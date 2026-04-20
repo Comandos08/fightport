@@ -553,9 +553,74 @@
       "empty": "No se encontró ninguna organización.",
       "detail": {
         "back": "Volver a organizaciones",
+        "loading": "Cargando...",
+        "notFound": "Organización no encontrada",
         "suspend": "Suspender",
         "reactivate": "Reactivar",
         "grantCourtesy": "Otorgar cortesía",
+        "reasonLabel": "Motivo",
+        "athletesEmpty": "Ningún atleta registrado",
+        "graduationsEmpty": "Ninguna graduación emitida",
+        "noTransactions": "Sin transacciones",
+        "noAdminActions": "Sin acciones registradas",
+        "noTickets": "Sin tickets abiertos.",
+        "athletesTable": {
+          "fpId": "FP-ID",
+          "name": "Nombre",
+          "belt": "Cinturón",
+          "modality": "Modalidad",
+          "createdAt": "Registro"
+        },
+        "graduationsTable": {
+          "date": "Fecha",
+          "athlete": "Atleta",
+          "belt": "Cinturón",
+          "degree": "Grado",
+          "graduatedBy": "Graduado por"
+        },
+        "financialTable": {
+          "date": "Fecha",
+          "type": "Tipo",
+          "package": "Paquete",
+          "amount": "Cantidad",
+          "value": "Valor",
+          "status": "Estado"
+        },
+        "adminTable": {
+          "date": "Fecha",
+          "admin": "Admin",
+          "action": "Acción",
+          "details": "Detalles"
+        },
+        "txTypes": {
+          "purchase": "Compra",
+          "usage": "Uso",
+          "bonus": "Cortesía"
+        },
+        "schoolAudit": {
+          "title": "Historial de acciones de la escuela",
+          "exportCsv": "Exportar CSV",
+          "exportEmpty": "Sin registros para exportar.",
+          "noActions": "Sin acciones registradas todavía.",
+          "filterAll": "Todas las acciones",
+          "filterCreated": "Practicantes creados",
+          "filterUpdated": "Practicantes editados",
+          "filterDeleted": "Practicantes eliminados",
+          "filterAchievement": "Graduaciones registradas",
+          "tableDate": "Fecha/Hora",
+          "tableAction": "Acción",
+          "tableName": "Nombre",
+          "tableDetails": "Detalles",
+          "pageInfo": "Página {{current}} de {{total}} · {{count}} registros",
+          "previous": "Anterior",
+          "next": "Siguiente",
+          "actions": {
+            "practitioner_created": "Practicante creado",
+            "practitioner_updated": "Practicante editado",
+            "practitioner_deleted": "Practicante eliminado",
+            "achievement_created": "Graduación registrada"
+          }
+        },
         "toasts": {
           "suspendSuccess": "Organización suspendida",
           "suspendError": "Error al suspender",
