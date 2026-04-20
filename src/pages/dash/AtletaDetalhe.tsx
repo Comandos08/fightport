@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { ArrowLeft, Eye, EyeOff, Pencil, Award, Hash, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -44,6 +45,7 @@ export default function AtletaDetalhe() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { t } = useTranslation();
 
   const [revealed, setRevealed] = useState(false);
   const [revealOpen, setRevealOpen] = useState(false);
