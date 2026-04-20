@@ -103,6 +103,38 @@ export default function Financeiro() {
     },
   });
 
+  // Sparkline: últimos 7 dias de receita e transações (independente do filtro de período)
+  const { data: sparkline = [] } = useQuery({
+    queryKey: ['admin-finance-sparkline-7d'],
+    queryFn: async () => {
+      const start = startOfDay(subDays(new Date(), 6));
+      const { data, error } = await supabase
+        .from('credit_transactions')
+        .select('created_at, price_brl')
+        .eq('type', 'purchase')
+        .eq('status', 'completed')
+        .gte('created_at', start.toISOString());
+      if (error) throw error;
+
+      // Inicializa 7 buckets diários (D-6 → hoje)
+      const buckets: { day: string; revenue: number; tx: number }[] = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = startOfDay(subDays(new Date(), i));
+        buckets.push({ day: format(d, 'yyyy-MM-dd'), revenue: 0, tx: 0 });
+      }
+      const idx = new Map(buckets.map((b, i) => [b.day, i]));
+      for (const r of (data ?? []) as any[]) {
+        const key = format(startOfDay(new Date(r.created_at)), 'yyyy-MM-dd');
+        const i = idx.get(key);
+        if (i !== undefined) {
+          buckets[i].revenue += Number(r.price_brl ?? 0);
+          buckets[i].tx += 1;
+        }
+      }
+      return buckets;
+    },
+  });
+
   const breakdown: { package: string; count: number; revenue: number }[] = overview?.breakdown ?? [];
 
   const exportCsv = async () => {
