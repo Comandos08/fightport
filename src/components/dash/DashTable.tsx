@@ -37,6 +37,8 @@ export const dashTd: CSSProperties = {
 type Props = {
   /** Cabeçalho: array de strings ou nodes JSX (para colunas com sort/ícones). */
   headers: ReactNode[];
+  /** Classes CSS opcionais por índice de coluna (aplicadas ao <th>). Ex: ['', '', 'hidden sm:table-cell']. */
+  headerClassNames?: (string | undefined)[];
   /** Linhas <tr> renderizadas pelo consumidor (apenas quando não está loading nem vazio). */
   children: ReactNode;
   /** Mostra skeleton em vez das linhas. */
@@ -68,6 +70,7 @@ type Props = {
  */
 export function DashTable({
   headers,
+  headerClassNames,
   children,
   isLoading = false,
   isEmpty = false,
@@ -93,7 +96,7 @@ export function DashTable({
           <thead>
             <tr>
               {headers.map((h, i) => (
-                <th key={i} style={dashTh}>
+                <th key={i} style={dashTh} className={headerClassNames?.[i]}>
                   {h}
                 </th>
               ))}
