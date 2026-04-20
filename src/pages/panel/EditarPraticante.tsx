@@ -67,7 +67,7 @@ export default function EditarPraticantePage() {
           if ((before as any)[k] !== (updates as any)[k]) fieldsChanged.push(k);
         }
       }
-      // Fire-and-forget audit log
+      // Fire-and-forget audit log (with temporary error logging)
       void supabase.from('school_audit_log').insert({
         school_id: user!.id,
         action: 'practitioner_updated',
@@ -75,7 +75,7 @@ export default function EditarPraticantePage() {
         entity_id: id!,
         entity_name: `${firstName} ${lastName}`.trim(),
         metadata: { fields_changed: fieldsChanged },
-      }).then(() => {});
+      }).then(({ error }) => { if (error) console.error('[audit:practitioner_updated]', error); });
       toast.success('Praticante atualizado com sucesso!');
       queryClient.invalidateQueries({ queryKey: ['practitioners'] });
       queryClient.invalidateQueries({ queryKey: ['practitioner', id] });
