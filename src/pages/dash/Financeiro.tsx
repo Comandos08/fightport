@@ -6,7 +6,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, BarChart, Bar,
 } from 'recharts';
-import { Download, FileText, FileSpreadsheet, Building2 } from 'lucide-react';
+import { FileText, FileSpreadsheet, Building2 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/integrations/supabase/client';
@@ -100,6 +100,38 @@ export default function Financeiro() {
       } as any);
       if (error) throw error;
       return data ?? [];
+    },
+  });
+
+  // Sparkline: últimos 7 dias de receita e transações (independente do filtro de período)
+  const { data: sparkline = [] } = useQuery({
+    queryKey: ['admin-finance-sparkline-7d'],
+    queryFn: async () => {
+      const start = startOfDay(subDays(new Date(), 6));
+      const { data, error } = await supabase
+        .from('credit_transactions')
+        .select('created_at, price_brl')
+        .eq('type', 'purchase')
+        .eq('status', 'completed')
+        .gte('created_at', start.toISOString());
+      if (error) throw error;
+
+      // Inicializa 7 buckets diários (D-6 → hoje)
+      const buckets: { day: string; revenue: number; tx: number }[] = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = startOfDay(subDays(new Date(), i));
+        buckets.push({ day: format(d, 'yyyy-MM-dd'), revenue: 0, tx: 0 });
+      }
+      const idx = new Map(buckets.map((b, i) => [b.day, i]));
+      for (const r of (data ?? []) as any[]) {
+        const key = format(startOfDay(new Date(r.created_at)), 'yyyy-MM-dd');
+        const i = idx.get(key);
+        if (i !== undefined) {
+          buckets[i].revenue += Number(r.price_brl ?? 0);
+          buckets[i].tx += 1;
+        }
+      }
+      return buckets;
     },
   });
 
@@ -247,11 +279,11 @@ export default function Financeiro() {
 
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 20 }}>
-        <Metric label="Receita do período" value={fmtBRL(overview?.revenue ?? 0)} />
-        <Metric label="Transações" value={String(overview?.tx_count ?? 0)} />
+        <Metric label="Receita do período" value={fmtBRL(overview?.revenue ?? 0)} sparkData={sparkline as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} />
+        <Metric label="Transações" value={String(overview?.tx_count ?? 0)} sparkData={sparkline as any[]} sparkKey="tx" sparkTooltip={(v) => `${v} tx`} />
         <Metric label="Ticket médio" value={fmtBRL(overview?.avg_ticket ?? 0)} />
         <Metric label="Escolas únicas" value={String(overview?.unique_schools ?? 0)} />
-        <Metric label="MRR (média 3 meses)" value={fmtBRL(overview?.mrr ?? 0)} />
+        <Metric label="MRR (média 3 meses)" value={fmtBRL(overview?.mrr ?? 0)} sparkData={sparkline as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} />
         <Metric label="LTV estimado" value={fmtBRL(overview?.ltv ?? 0)} />
         <Metric label="Taxa de recompra" value={fmtPct(overview?.repurchase_rate ?? 0)} />
         <Metric label="Compras / escola" value={Number(overview?.avg_purchases ?? 0).toFixed(2)} />
@@ -480,11 +512,68 @@ export default function Financeiro() {
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({
+  label,
+  value,
+  sparkData,
+  sparkKey,
+  sparkTooltip,
+}: {
+  label: string;
+  value: string;
+  sparkData?: { day: string; revenue: number; tx: number }[];
+  sparkKey?: 'revenue' | 'tx';
+  sparkTooltip?: (v: number) => string;
+}) {
+  const hasSpark = !!sparkData && sparkData.length > 0 && !!sparkKey;
+  const hasMovement = hasSpark && sparkData!.some((d) => Number((d as any)[sparkKey!]) > 0);
   return (
     <div style={card}>
+      {hasSpark && (
+        <div style={{ width: '100%', height: 28, marginBottom: 6 }} aria-hidden={!hasMovement}>
+          {hasMovement ? (
+            <ResponsiveContainer>
+              <LineChart data={sparkData} margin={{ top: 2, right: 2, left: 2, bottom: 2 }}>
+                <Line
+                  type="monotone"
+                  dataKey={sparkKey}
+                  stroke="var(--admin-chart-primary)"
+                  strokeWidth={1.5}
+                  dot={false}
+                  isAnimationActive={false}
+                />
+                <RTooltip
+                  cursor={{ stroke: 'var(--color-border)', strokeWidth: 1 }}
+                  contentStyle={{
+                    fontFamily: 'var(--font-sans)', fontSize: 11,
+                    background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+                    borderRadius: 6, padding: '4px 8px',
+                  }}
+                  labelFormatter={(l) => format(new Date(l as string), 'dd/MM')}
+                  formatter={(v: any) => [sparkTooltip ? sparkTooltip(Number(v)) : String(v), '']}
+                  separator=""
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div
+              title="Sem movimento nos últimos 7 dias"
+              style={{
+                width: '100%', height: '100%',
+                borderBottom: '1px dashed var(--color-border)',
+                opacity: 0.5,
+              }}
+            />
+          )}
+        </div>
+      )}
       <div style={lbl}>{label}</div>
       <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{value}</div>
+      {hasSpark && (
+        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2 }}>
+          últimos 7 dias
+        </div>
+      )}
     </div>
   );
 }
