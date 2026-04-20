@@ -246,8 +246,50 @@ export function NotificationBell() {
             Marcar todas como lidas
           </button>
         </div>
+
+        {/* Filtro Todas / Não-lidas */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 4,
+            padding: '8px 12px',
+            borderBottom: '1px solid var(--color-border)',
+          }}
+        >
+          {([
+            { key: 'all', label: 'Todas', count: notifications.length },
+            { key: 'unread', label: 'Não-lidas', count: unreadCount },
+          ] as const).map((opt) => {
+            const active = filter === opt.key;
+            return (
+              <button
+                key={opt.key}
+                onClick={() => setFilter(opt.key)}
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 11,
+                  fontWeight: active ? 600 : 500,
+                  padding: '4px 10px',
+                  borderRadius: 999,
+                  border: '1px solid var(--color-border)',
+                  background: active ? 'var(--color-text)' : 'transparent',
+                  color: active ? 'var(--color-bg)' : 'var(--color-text-muted)',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  transition: 'var(--transition)',
+                }}
+              >
+                {opt.label}
+                <span style={{ opacity: 0.7, fontWeight: 500 }}>{opt.count}</span>
+              </button>
+            );
+          })}
+        </div>
+
         <div style={{ maxHeight: 420, overflowY: 'auto' }}>
-          {notifications.length === 0 ? (
+          {groupedNotifications.length === 0 ? (
             <div
               style={{
                 padding: 24,
@@ -257,7 +299,7 @@ export function NotificationBell() {
                 color: 'var(--color-text-muted)',
               }}
             >
-              Nenhuma notificação
+              {filter === 'unread' ? 'Nenhuma notificação não-lida' : 'Nenhuma notificação'}
             </div>
           ) : (
             groupedNotifications.map((group) => (
