@@ -74,6 +74,26 @@ export default function PainelSuporte() {
     enabled: !!user,
   });
 
+  // Contagem de mensagens não-lidas por ticket (recebidas do admin)
+  const ticketIds = (tickets as any[]).map(t => t.id);
+  const { data: unreadCounts = {} } = useQuery<Record<string, number>>({
+    queryKey: ['school-tickets-unread', user?.id, ticketIds.join(',')],
+    queryFn: async () => {
+      if (ticketIds.length === 0) return {};
+      const { data, error } = await supabase
+        .from('support_messages')
+        .select('ticket_id')
+        .in('ticket_id', ticketIds)
+        .eq('author_type', 'admin')
+        .eq('read_by_recipient', false);
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      (data ?? []).forEach((m: any) => { counts[m.ticket_id] = (counts[m.ticket_id] ?? 0) + 1; });
+      return counts;
+    },
+    enabled: !!user && ticketIds.length > 0,
+  });
+
   // Mensagens do ticket selecionado
   const { data: messages = [] } = useQuery({
     queryKey: ['school-ticket-messages', selectedId],
