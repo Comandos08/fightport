@@ -103,11 +103,12 @@ export default function Financeiro() {
     },
   });
 
-  // Sparkline: últimos 7 dias de receita e transações (independente do filtro de período)
+  // Sparkline: 14 dias (7 atuais + 7 anteriores) de receita e transações.
+  // Os 7 atuais alimentam o gráfico; comparamos totais current vs previous para o delta %.
   const { data: sparkline = [] } = useQuery({
-    queryKey: ['admin-finance-sparkline-7d'],
+    queryKey: ['admin-finance-sparkline-14d'],
     queryFn: async () => {
-      const start = startOfDay(subDays(new Date(), 6));
+      const start = startOfDay(subDays(new Date(), 13));
       const { data, error } = await supabase
         .from('credit_transactions')
         .select('created_at, price_brl')
@@ -116,11 +117,16 @@ export default function Financeiro() {
         .gte('created_at', start.toISOString());
       if (error) throw error;
 
-      // Inicializa 7 buckets diários (D-6 → hoje)
-      const buckets: { day: string; revenue: number; tx: number }[] = [];
-      for (let i = 6; i >= 0; i--) {
+      // Inicializa 14 buckets diários (D-13 → hoje); period 'previous' (i>=7) e 'current' (i<7)
+      const buckets: { day: string; revenue: number; tx: number; period: 'previous' | 'current' }[] = [];
+      for (let i = 13; i >= 0; i--) {
         const d = startOfDay(subDays(new Date(), i));
-        buckets.push({ day: format(d, 'yyyy-MM-dd'), revenue: 0, tx: 0 });
+        buckets.push({
+          day: format(d, 'yyyy-MM-dd'),
+          revenue: 0,
+          tx: 0,
+          period: i >= 7 ? 'previous' : 'current',
+        });
       }
       const idx = new Map(buckets.map((b, i) => [b.day, i]));
       for (const r of (data ?? []) as any[]) {
@@ -134,6 +140,22 @@ export default function Financeiro() {
       return buckets;
     },
   });
+
+  // Totais current (últimos 7 dias) vs previous (D-13 → D-7) para o badge de delta nos cards
+  const sparkTotals = useMemo(() => {
+    const acc = { current: { revenue: 0, tx: 0 }, previous: { revenue: 0, tx: 0 } };
+    for (const b of sparkline as any[]) {
+      acc[b.period as 'current' | 'previous'].revenue += b.revenue;
+      acc[b.period as 'current' | 'previous'].tx += b.tx;
+    }
+    return acc;
+  }, [sparkline]);
+
+  // Apenas os 7 dias atuais alimentam o gráfico (mantém o visual de 7 pontos)
+  const sparkCurrent = useMemo(
+    () => (sparkline as any[]).filter((b) => b.period === 'current'),
+    [sparkline],
+  );
 
   const breakdown: { package: string; count: number; revenue: number }[] = overview?.breakdown ?? [];
 
