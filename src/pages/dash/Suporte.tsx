@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Send, CheckCircle2, MessageSquare, Building2 } from 'lucide-react';
+import { Send, CheckCircle2, MessageSquare, Building2, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
@@ -139,7 +139,7 @@ export default function DashSuporte() {
       </div>
 
       <div
-        className="grid"
+        className="grid lg:grid-cols-[minmax(300px,380px)_1fr]"
         style={{
           gridTemplateColumns: '1fr',
           gap: 16,
@@ -212,11 +212,14 @@ export default function DashSuporte() {
           </div>
         </div>
 
-        {/* Thread */}
-        <div style={{
-          background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md, 8px)', display: 'flex', flexDirection: 'column',
-        }}>
+        {/* Thread — escondida em mobile quando nenhum ticket selecionado */}
+        <div
+          className={selectedId ? 'flex' : 'hidden lg:flex'}
+          style={{
+            background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md, 8px)', flexDirection: 'column',
+          }}
+        >
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-muted)', fontSize: 13 }}>
               Selecione um ticket para ver a conversa.
