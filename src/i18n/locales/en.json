@@ -138,7 +138,16 @@
     "clearFilters": "Clear filters",
     "viewPassport": "View passport",
     "registerAchievement": "Record achievement",
-    "edit": "Edit"
+    "edit": "Edit",
+    "achievements": {
+      "date": "Date",
+      "belt": "Belt",
+      "graduatedBy": "Graduated by",
+      "hash": "Hash",
+      "empty": "No achievements recorded yet.",
+      "loading": "Loading achievements...",
+      "copied": "Hash copied to clipboard"
+    }
   },
   "newPractitioner": {
     "title": "New Practitioner",
