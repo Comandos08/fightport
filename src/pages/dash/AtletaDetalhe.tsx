@@ -147,10 +147,10 @@ export default function AtletaDetalhe() {
   };
 
   if (isLoading) {
-    return <div style={{ padding: 24, color: 'var(--color-text-muted)' }}>Carregando…</div>;
+    return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', color: 'var(--color-text-muted)' }}>Carregando…</div>;
   }
   if (!p) {
-    return <div style={{ padding: 24, color: 'var(--color-text-muted)' }}>Atleta não encontrado.</div>;
+    return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', color: 'var(--color-text-muted)' }}>Atleta não encontrado.</div>;
   }
 
   return (

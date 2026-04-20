@@ -131,8 +131,8 @@ export default function OrganizacaoDetalhe() {
     onError: (e: any) => toast.error(e.message ?? 'Erro ao conceder créditos'),
   });
 
-  if (isLoading) return <div style={{ padding: 32, ...muted }}>Carregando...</div>;
-  if (!detail?.school) return <div style={{ padding: 32, ...muted }}>Organização não encontrada</div>;
+  if (isLoading) return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', ...muted }}>Carregando...</div>;
+  if (!detail?.school) return <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto', ...muted }}>Organização não encontrada</div>;
 
   const s = detail.school;
   const hc = detail.head_coach;
