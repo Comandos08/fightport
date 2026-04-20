@@ -153,7 +153,7 @@ export function NotificationBell() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          aria-label="Notificações"
+          aria-label={t('notifications.ariaLabel')}
           style={{
             position: 'relative',
             background: 'none',
@@ -232,7 +232,7 @@ export function NotificationBell() {
               color: 'var(--color-text)',
             }}
           >
-            Notificações
+            {t('notifications.title')}
           </span>
           <button
             onClick={handleMarkAllRead}
@@ -251,7 +251,7 @@ export function NotificationBell() {
             }}
           >
             <CheckCheck className="h-3 w-3" />
-            Marcar todas como lidas
+            {t('notifications.markAllRead')}
           </button>
         </div>
 
@@ -265,8 +265,8 @@ export function NotificationBell() {
           }}
         >
           {([
-            { key: 'all', label: 'Todas', count: notifications.length },
-            { key: 'unread', label: 'Não-lidas', count: unreadCount },
+            { key: 'all', label: t('notifications.filter.all'), count: notifications.length },
+            { key: 'unread', label: t('notifications.filter.unread'), count: unreadCount },
           ] as const).map((opt) => {
             const active = filter === opt.key;
             return (
@@ -307,7 +307,7 @@ export function NotificationBell() {
                 color: 'var(--color-text-muted)',
               }}
             >
-              {filter === 'unread' ? 'Nenhuma notificação não-lida' : 'Nenhuma notificação'}
+              {filter === 'unread' ? t('notifications.emptyUnread') : t('notifications.empty')}
             </div>
           ) : (
             groupedNotifications.map((group) => (
@@ -376,7 +376,7 @@ export function NotificationBell() {
                     >
                       {formatDistanceToNow(new Date(n.created_at), {
                         addSuffix: true,
-                        locale: ptBR,
+                        locale: dateLocale,
                       })}
                     </div>
                   </button>
