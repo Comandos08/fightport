@@ -14,6 +14,8 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { OnboardingModal } from '@/components/OnboardingModal';
+import { OnboardingChecklist } from '@/components/OnboardingChecklist';
 
 const BELT_COLORS: Record<string, string> = {
   Branca: '#F7F7F5',
@@ -132,6 +134,8 @@ export default function DashboardPage() {
 
   return (
     <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
+      <OnboardingModal />
+      <OnboardingChecklist />
       <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>{t('dashboard.title')}</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 32 }}>

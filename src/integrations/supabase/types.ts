@@ -414,6 +414,7 @@ export type Database = {
           logo_url: string | null
           martial_art: string
           name: string
+          onboarding_dismissed: boolean
           state: string | null
           suspended_at: string | null
           suspended_reason: string | null
@@ -429,6 +430,7 @@ export type Database = {
           logo_url?: string | null
           martial_art?: string
           name: string
+          onboarding_dismissed?: boolean
           state?: string | null
           suspended_at?: string | null
           suspended_reason?: string | null
@@ -444,6 +446,7 @@ export type Database = {
           logo_url?: string | null
           martial_art?: string
           name?: string
+          onboarding_dismissed?: boolean
           state?: string | null
           suspended_at?: string | null
           suspended_reason?: string | null
