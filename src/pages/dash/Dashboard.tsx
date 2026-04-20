@@ -355,7 +355,7 @@ export default function DashDashboard() {
         </div>
       </div>
 
-      <div className="grid" style={{ gridTemplateColumns: 'minmax(0, 1fr) 320px', gap: 20 }}>
+      <div className="grid grid-cols-1 lg:[grid-template-columns:minmax(0,1fr)_320px]" style={{ gap: 20 }}>
         {/* MAIN COLUMN */}
         <div className="flex flex-col" style={{ gap: 20, minWidth: 0 }}>
           {/* Stat cards */}
