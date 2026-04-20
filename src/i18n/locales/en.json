@@ -553,9 +553,74 @@
       "empty": "No organization found.",
       "detail": {
         "back": "Back to organizations",
+        "loading": "Loading...",
+        "notFound": "Organization not found",
         "suspend": "Suspend",
         "reactivate": "Reactivate",
         "grantCourtesy": "Grant courtesy",
+        "reasonLabel": "Reason",
+        "athletesEmpty": "No athletes registered",
+        "graduationsEmpty": "No graduations issued",
+        "noTransactions": "No transactions",
+        "noAdminActions": "No actions logged",
+        "noTickets": "No open tickets.",
+        "athletesTable": {
+          "fpId": "FP-ID",
+          "name": "Name",
+          "belt": "Belt",
+          "modality": "Modality",
+          "createdAt": "Registered"
+        },
+        "graduationsTable": {
+          "date": "Date",
+          "athlete": "Athlete",
+          "belt": "Belt",
+          "degree": "Degree",
+          "graduatedBy": "Graduated by"
+        },
+        "financialTable": {
+          "date": "Date",
+          "type": "Type",
+          "package": "Package",
+          "amount": "Amount",
+          "value": "Value",
+          "status": "Status"
+        },
+        "adminTable": {
+          "date": "Date",
+          "admin": "Admin",
+          "action": "Action",
+          "details": "Details"
+        },
+        "txTypes": {
+          "purchase": "Purchase",
+          "usage": "Usage",
+          "bonus": "Courtesy"
+        },
+        "schoolAudit": {
+          "title": "School action history",
+          "exportCsv": "Export CSV",
+          "exportEmpty": "No records to export.",
+          "noActions": "No actions logged yet.",
+          "filterAll": "All actions",
+          "filterCreated": "Practitioners created",
+          "filterUpdated": "Practitioners edited",
+          "filterDeleted": "Practitioners deleted",
+          "filterAchievement": "Graduations recorded",
+          "tableDate": "Date/Time",
+          "tableAction": "Action",
+          "tableName": "Name",
+          "tableDetails": "Details",
+          "pageInfo": "Page {{current}} of {{total}} · {{count}} records",
+          "previous": "Previous",
+          "next": "Next",
+          "actions": {
+            "practitioner_created": "Practitioner created",
+            "practitioner_updated": "Practitioner edited",
+            "practitioner_deleted": "Practitioner deleted",
+            "achievement_created": "Graduation recorded"
+          }
+        },
         "toasts": {
           "suspendSuccess": "Organization suspended",
           "suspendError": "Failed to suspend",
