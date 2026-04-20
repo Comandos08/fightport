@@ -472,6 +472,94 @@
     "message": "Página não encontrada",
     "back": "Voltar ao início"
   },
+  "support": {
+    "title": "Suporte",
+    "subtitle": "Abra tickets para tirar dúvidas, reportar bugs ou pedir ajuda.",
+    "newTicket": "Novo ticket",
+    "loading": "Carregando…",
+    "status": {
+      "open": "Aberto",
+      "awaiting_school": "Aguardando você",
+      "awaiting_admin": "Aguardando suporte",
+      "resolved": "Resolvido",
+      "closed": "Encerrado"
+    },
+    "filter": {
+      "all": "Todos",
+      "open": "Em aberto",
+      "resolved": "Resolvidos"
+    },
+    "empty": "Nenhum ticket {{state}}.",
+    "emptyState": {
+      "all": "",
+      "open": "em aberto",
+      "resolved": "resolvido"
+    },
+    "selectTicket": "Selecione um ticket para ver a conversa.",
+    "noMessages": "Nenhuma mensagem.",
+    "back": "Voltar",
+    "openedOn": "aberto em {{date}}",
+    "you": "Você",
+    "supportTeam": "Suporte",
+    "unreadAria": "{{count}} mensagens não lidas",
+    "form": {
+      "title": "Abrir novo ticket",
+      "description": "Descreva sua questão. Nossa equipe responde por aqui mesmo.",
+      "subject": "Assunto",
+      "subjectRequired": "Assunto *",
+      "subjectPlaceholder": "Ex.: Erro ao registrar graduação",
+      "category": "Categoria",
+      "message": "Mensagem",
+      "messageRequired": "Mensagem *",
+      "messagePlaceholder": "Detalhe sua dúvida ou problema…",
+      "send": "Abrir ticket",
+      "cancel": "Cancelar",
+      "categories": {
+        "bug": "Bug",
+        "duvida": "Dúvida",
+        "creditos": "Créditos",
+        "cadastro": "Cadastro",
+        "financeiro": "Financeiro",
+        "problema": "Problema técnico",
+        "outro": "Outro"
+      }
+    },
+    "reply": {
+      "placeholder": "Escreva sua resposta…",
+      "send": "Enviar"
+    },
+    "toast": {
+      "createdTitle": "Ticket criado",
+      "createdDesc": "Nossa equipe responderá em breve.",
+      "errorTitle": "Erro",
+      "subjectMessageRequired": "Assunto e mensagem são obrigatórios",
+      "emptyMessage": "Mensagem vazia",
+      "noTicketSelected": "Sem ticket selecionado",
+      "noUser": "Sem usuário"
+    },
+    "notifyAdmin": {
+      "title": "Novo ticket de suporte",
+      "body": "A escola \"{{school}}\" abriu um novo ticket: \"{{subject}}\".",
+      "unknownSchool": "desconhecida"
+    }
+  },
+  "notifications": {
+    "title": "Notificações",
+    "empty": "Nenhuma notificação",
+    "emptyUnread": "Nenhuma notificação não-lida",
+    "markAllRead": "Marcar todas como lidas",
+    "ariaLabel": "Notificações",
+    "filter": {
+      "all": "Todas",
+      "unread": "Não-lidas"
+    },
+    "groups": {
+      "today": "Hoje",
+      "yesterday": "Ontem",
+      "thisWeek": "Esta semana",
+      "older": "Mais antigas"
+    }
+  },
   "common": {
     "fillAllFields": "Preencha todos os campos.",
     "minPassword": "A senha deve ter no mínimo 8 caracteres.",

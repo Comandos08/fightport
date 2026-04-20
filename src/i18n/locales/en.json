@@ -396,6 +396,94 @@
     "message": "Page not found",
     "back": "Return to home"
   },
+  "support": {
+    "title": "Support",
+    "subtitle": "Open tickets to ask questions, report bugs, or get help.",
+    "newTicket": "New ticket",
+    "loading": "Loading…",
+    "status": {
+      "open": "Open",
+      "awaiting_school": "Awaiting you",
+      "awaiting_admin": "Awaiting support",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "filter": {
+      "all": "All",
+      "open": "Open",
+      "resolved": "Resolved"
+    },
+    "empty": "No {{state}} tickets.",
+    "emptyState": {
+      "all": "",
+      "open": "open",
+      "resolved": "resolved"
+    },
+    "selectTicket": "Select a ticket to view the conversation.",
+    "noMessages": "No messages.",
+    "back": "Back",
+    "openedOn": "opened on {{date}}",
+    "you": "You",
+    "supportTeam": "Support",
+    "unreadAria": "{{count}} unread messages",
+    "form": {
+      "title": "Open a new ticket",
+      "description": "Describe your question. Our team replies right here.",
+      "subject": "Subject",
+      "subjectRequired": "Subject *",
+      "subjectPlaceholder": "E.g.: Error recording graduation",
+      "category": "Category",
+      "message": "Message",
+      "messageRequired": "Message *",
+      "messagePlaceholder": "Describe your question or issue…",
+      "send": "Open ticket",
+      "cancel": "Cancel",
+      "categories": {
+        "bug": "Bug",
+        "duvida": "Question",
+        "creditos": "Credits",
+        "cadastro": "Account",
+        "financeiro": "Billing",
+        "problema": "Technical issue",
+        "outro": "Other"
+      }
+    },
+    "reply": {
+      "placeholder": "Write your reply…",
+      "send": "Send"
+    },
+    "toast": {
+      "createdTitle": "Ticket created",
+      "createdDesc": "Our team will respond shortly.",
+      "errorTitle": "Error",
+      "subjectMessageRequired": "Subject and message are required",
+      "emptyMessage": "Empty message",
+      "noTicketSelected": "No ticket selected",
+      "noUser": "No user"
+    },
+    "notifyAdmin": {
+      "title": "New support ticket",
+      "body": "School \"{{school}}\" opened a new ticket: \"{{subject}}\".",
+      "unknownSchool": "unknown"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "emptyUnread": "No unread notifications",
+    "markAllRead": "Mark all as read",
+    "ariaLabel": "Notifications",
+    "filter": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "groups": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This week",
+      "older": "Older"
+    }
+  },
   "common": {
     "fillAllFields": "Please fill in all fields.",
     "minPassword": "Password must be at least 8 characters.",
