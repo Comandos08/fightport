@@ -113,14 +113,14 @@ export default function PraticantesPage() {
   const tableHeaders = ['', t('practitioners.table.name'), t('practitioners.table.lastBelt'), ''];
 
   return (
-    <div style={{ padding: '32px 32px', maxWidth: 1100 }}>
+    <div className="px-4 py-6 sm:px-8 sm:py-8" style={{ maxWidth: 1100 }}>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between" style={{ gap: 16, marginBottom: 28 }}>
-        <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>{t('practitioners.title')}</h1>
-        <div className="flex" style={{ gap: 8 }}>
-          <Button variant="ghost" size="sm" onClick={handleExportCsv}><Download className="h-4 w-4" /> {t('practitioners.exportCsv')}</Button>
-          <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}><Upload className="h-4 w-4" /> {t('practitioners.importCsv')}</Button>
-          <Link to="/painel/praticantes/novo">
-            <button style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#F5A623', color: '#1C1C1C', fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, padding: '10px 20px', borderRadius: 6, border: 'none', cursor: 'pointer', transition: 'var(--transition)' }}
+        <h1 className="text-2xl sm:text-[28px]" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>{t('practitioners.title')}</h1>
+        <div className="flex flex-wrap w-full sm:w-auto" style={{ gap: 8 }}>
+          <Button variant="ghost" size="sm" onClick={handleExportCsv} className="flex-1 sm:flex-none"><Download className="h-4 w-4" /> <span className="hidden xs:inline">{t('practitioners.exportCsv')}</span><span className="xs:hidden">CSV</span></Button>
+          <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)} className="flex-1 sm:flex-none"><Upload className="h-4 w-4" /> <span className="hidden xs:inline">{t('practitioners.importCsv')}</span><span className="xs:hidden">Import</span></Button>
+          <Link to="/painel/praticantes/novo" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#F5A623', color: '#1C1C1C', fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 500, padding: '10px 20px', borderRadius: 6, border: 'none', cursor: 'pointer', transition: 'var(--transition)' }}
               onMouseEnter={e => (e.currentTarget.style.background = '#e09600')} onMouseLeave={e => (e.currentTarget.style.background = '#F5A623')}>
               <Plus className="h-4 w-4" /> {t('practitioners.newPractitioner')}
             </button>
@@ -168,7 +168,7 @@ export default function PraticantesPage() {
               <thead>
                 <tr style={{ background: 'var(--color-bg-soft)' }}>
                   {tableHeaders.map((h, i) => (
-                    <th key={i} style={{ width: i === 0 ? 36 : undefined, textAlign: i === 3 ? 'right' : 'left', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', padding: '10px 16px', borderBottom: '1px solid var(--color-border)' }}>{h}</th>
+                    <th key={i} className={i === 2 ? 'hidden sm:table-cell' : ''} style={{ width: i === 0 ? 36 : undefined, textAlign: i === 3 ? 'right' : 'left', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-text-muted)', padding: '10px 16px', borderBottom: '1px solid var(--color-border)' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -279,7 +279,7 @@ function FragmentRow({ practitioner: a, schoolName, isExpanded, isLast, onToggle
             <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{a.first_name} {a.last_name}</span>
           </div>
         </td>
-        <td style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>—</span>}</td>
+        <td className="hidden sm:table-cell" style={{ padding: '14px 16px' }}>{a.current_belt ? <BeltBadge belt={a.current_belt as any} size="sm" /> : <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>—</span>}</td>
         <td style={{ padding: '14px 16px', textAlign: 'right' }} onClick={stop}>
           <div className="flex items-center justify-end" style={{ gap: 8 }}>
             {[
@@ -304,8 +304,10 @@ function FragmentRow({ practitioner: a, schoolName, isExpanded, isLast, onToggle
       </tr>
       {isExpanded && (
         <tr style={{ background: 'var(--color-bg-soft)', borderBottom: !isLast ? '1px solid var(--color-border)' : 'none' }}>
-          <td colSpan={4} style={{ padding: '0 16px 20px 52px' }}>
-            <AchievementsAccordion achievements={achievements ?? []} isLoading={isLoading} fmtDate={fmtDate} fmtBelt={fmtBelt} t={t} />
+          <td colSpan={4} className="px-2 sm:px-0 sm:pl-[52px] sm:pr-4" style={{ paddingTop: 0, paddingBottom: 20 }}>
+            <div style={{ overflowX: 'auto' }}>
+              <AchievementsAccordion achievements={achievements ?? []} isLoading={isLoading} fmtDate={fmtDate} fmtBelt={fmtBelt} t={t} />
+            </div>
           </td>
         </tr>
       )}

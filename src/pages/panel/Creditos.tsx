@@ -69,12 +69,12 @@ export default function CreditosPage() {
   const historyHeaders = [t('credits.history.date'), t('credits.history.type'), t('credits.history.amount'), t('credits.history.status')];
 
   return (
-    <div style={{ padding: '32px 32px', maxWidth: 900 }}>
-      <h1 style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 28, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>{t('credits.title')}</h1>
+    <div className="px-4 py-6 sm:px-8 sm:py-8" style={{ maxWidth: 900 }}>
+      <h1 className="text-2xl sm:text-[28px]" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, color: 'var(--color-text)', letterSpacing: '-0.02em', marginBottom: 32 }}>{t('credits.title')}</h1>
       <div style={{ marginBottom: 32 }}><CreditBalance balance={credits?.balance ?? 0} /></div>
 
-      <div style={{ marginBottom: 16, maxWidth: 860 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+      <div style={{ marginBottom: 16, maxWidth: 860, overflowX: 'auto' }}>
+        <table style={{ width: '100%', minWidth: 560, borderCollapse: 'collapse', tableLayout: 'fixed' }}>
           <colgroup><col style={{ width: '35%' }} /><col style={{ width: '15%' }} /><col style={{ width: '20%' }} /><col style={{ width: '18%' }} /><col style={{ width: '12%' }} /></colgroup>
           <thead><tr style={{ borderBottom: '2px solid var(--color-text)' }}><th style={{ ...thStyle, textAlign: 'left' }}>{t('credits.plan')}</th><th style={{ ...thStyle, textAlign: 'right' }}>{t('credits.creditsCol')}</th><th style={{ ...thStyle, textAlign: 'right' }}>{t('credits.price')}</th><th style={{ ...thStyle, textAlign: 'right' }}>{t('credits.perGrad')}</th><th style={{ padding: '0 0 16px 0' }}></th></tr></thead>
           <tbody>
