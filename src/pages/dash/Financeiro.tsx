@@ -264,17 +264,51 @@ export default function Financeiro() {
         </h2>
         {breakdown.length === 0 ? (
           <p style={{ color: 'var(--color-text-muted)', fontSize: 13 }}>Nenhuma compra no período.</p>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
-            {breakdown.map(b => (
-              <div key={b.package} style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', padding: 12 }}>
-                <div style={{ ...lbl, marginBottom: 4 }}>{b.package}</div>
-                <div style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 600, color: 'var(--color-text)' }}>{fmtBRL(b.revenue)}</div>
-                <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>{b.count} transaç{b.count === 1 ? 'ão' : 'ões'}</div>
-              </div>
-            ))}
-          </div>
-        )}
+        ) : (() => {
+          const totalRevenue = breakdown.reduce((acc, b) => acc + Number(b.revenue || 0), 0);
+          return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
+              {breakdown.map((b, i) => {
+                const pct = totalRevenue > 0 ? (Number(b.revenue) / totalRevenue) * 100 : 0;
+                const color = PIE_COLORS[i % PIE_COLORS.length];
+                return (
+                  <div key={b.package} style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', padding: 12 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8, marginBottom: 4 }}>
+                      <div style={lbl}>{b.package}</div>
+                      <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600, color: 'var(--color-text-muted)', fontVariantNumeric: 'tabular-nums' }}>
+                        {pct.toFixed(1)}%
+                      </div>
+                    </div>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 600, color: 'var(--color-text)' }}>{fmtBRL(b.revenue)}</div>
+                    <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 8 }}>
+                      {b.count} transaç{b.count === 1 ? 'ão' : 'ões'}
+                    </div>
+                    <div
+                      role="progressbar"
+                      aria-valuenow={Math.round(pct)}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={`${b.package}: ${pct.toFixed(1)}% da receita`}
+                      style={{
+                        width: '100%', height: 4, borderRadius: 999,
+                        background: 'var(--color-bg-soft)',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: `${pct}%`, height: '100%',
+                          background: color,
+                          transition: 'width 300ms ease-out',
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
       </div>
 
       {/* Gráficos */}
