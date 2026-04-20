@@ -51,7 +51,7 @@ export default function NovaConquistaPage() {
     if (error) {
       toast.error(error.message.includes('insuficiente') ? 'Saldo de créditos insuficiente.' : error.message);
     } else {
-      // Fire-and-forget audit log
+      // Fire-and-forget audit log (with temporary error logging)
       void supabase.from('school_audit_log').insert({
         school_id: user!.id,
         action: 'achievement_created',
@@ -59,7 +59,7 @@ export default function NovaConquistaPage() {
         entity_id: inserted?.id ?? null,
         entity_name: `${selectedPractitioner.first_name} ${selectedPractitioner.last_name}`.trim(),
         metadata: { belt, degree: inserted?.degree ?? 0, graduated_by: graduatedBy },
-      }).then(() => {});
+      }).then(({ error }) => { if (error) console.error('[audit:achievement_created]', error); });
       setGeneratedHash(hash);
       setShowSuccess(true);
       queryClient.invalidateQueries({ queryKey: ['credits'] });

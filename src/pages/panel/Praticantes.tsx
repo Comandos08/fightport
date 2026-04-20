@@ -76,7 +76,7 @@ export default function PraticantesPage() {
     if (error) {
       toast.error(error.message.includes('foreign') ? t('practitioners.deleteForeignKey') : error.message);
     } else {
-      // Fire-and-forget audit log
+      // Fire-and-forget audit log (with temporary error logging)
       if (user) {
         void supabase.from('school_audit_log').insert({
           school_id: user.id,
@@ -85,7 +85,7 @@ export default function PraticantesPage() {
           entity_id: targetCopy.id,
           entity_name: targetCopy.name,
           metadata: { belt: target?.current_belt ?? null, martial_art: target?.martial_art ?? null },
-        }).then(() => {});
+        }).then(({ error }) => { if (error) console.error('[audit:practitioner_deleted]', error); });
       }
       toast.success(t('practitioners.deleteSuccess'));
       queryClient.invalidateQueries({ queryKey: ['practitioners'] });
