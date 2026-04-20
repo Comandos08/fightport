@@ -46,6 +46,32 @@ export function NotificationBell() {
     [notifications]
   );
 
+  // Agrupa notificações por janela temporal (Hoje / Ontem / Esta semana / Mais antigas)
+  const groupedNotifications = useMemo(() => {
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfYesterday = new Date(startOfToday);
+    startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+    const startOfWeek = new Date(startOfToday);
+    startOfWeek.setDate(startOfWeek.getDate() - 7);
+
+    const groups: { label: string; items: NotificationRow[] }[] = [
+      { label: 'Hoje', items: [] },
+      { label: 'Ontem', items: [] },
+      { label: 'Esta semana', items: [] },
+      { label: 'Mais antigas', items: [] },
+    ];
+
+    for (const n of notifications) {
+      const created = new Date(n.created_at);
+      if (created >= startOfToday) groups[0].items.push(n);
+      else if (created >= startOfYesterday) groups[1].items.push(n);
+      else if (created >= startOfWeek) groups[2].items.push(n);
+      else groups[3].items.push(n);
+    }
+    return groups.filter((g) => g.items.length > 0);
+  }, [notifications]);
+
   // Pulso visual no badge ao chegar nova notificação
   const [pulse, setPulse] = useState(false);
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -232,56 +258,78 @@ export function NotificationBell() {
               Nenhuma notificação
             </div>
           ) : (
-            notifications.map((n) => (
-              <button
-                key={n.id}
-                onClick={() => handleClickItem(n)}
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  textAlign: 'left',
-                  padding: '10px 12px',
-                  border: 'none',
-                  borderBottom: '1px solid var(--color-border)',
-                  background: n.read ? 'transparent' : 'var(--color-bg-soft)',
-                  cursor: 'pointer',
-                }}
-              >
+            groupedNotifications.map((group) => (
+              <div key={group.label}>
                 <div
                   style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 13,
-                    fontWeight: n.read ? 500 : 600,
-                    color: 'var(--color-text)',
-                    marginBottom: 2,
-                  }}
-                >
-                  {n.title}
-                </div>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 12,
-                    color: 'var(--color-text-muted)',
-                    lineHeight: 1.4,
-                    marginBottom: 4,
-                  }}
-                >
-                  {n.body}
-                </div>
-                <div
-                  style={{
+                    padding: '8px 12px 4px',
                     fontFamily: 'var(--font-sans)',
                     fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
                     color: 'var(--color-text-muted)',
+                    background: 'var(--color-bg)',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 1,
+                    borderBottom: '1px solid var(--color-border)',
                   }}
                 >
-                  {formatDistanceToNow(new Date(n.created_at), {
-                    addSuffix: true,
-                    locale: ptBR,
-                  })}
+                  {group.label}
                 </div>
-              </button>
+                {group.items.map((n) => (
+                  <button
+                    key={n.id}
+                    onClick={() => handleClickItem(n)}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '10px 12px',
+                      border: 'none',
+                      borderBottom: '1px solid var(--color-border)',
+                      background: n.read ? 'transparent' : 'var(--color-bg-soft)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: 13,
+                        fontWeight: n.read ? 500 : 600,
+                        color: 'var(--color-text)',
+                        marginBottom: 2,
+                      }}
+                    >
+                      {n.title}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: 12,
+                        color: 'var(--color-text-muted)',
+                        lineHeight: 1.4,
+                        marginBottom: 4,
+                      }}
+                    >
+                      {n.body}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: 10,
+                        color: 'var(--color-text-muted)',
+                      }}
+                    >
+                      {formatDistanceToNow(new Date(n.created_at), {
+                        addSuffix: true,
+                        locale: ptBR,
+                      })}
+                    </div>
+                  </button>
+                ))}
+              </div>
             ))
           )}
         </div>
