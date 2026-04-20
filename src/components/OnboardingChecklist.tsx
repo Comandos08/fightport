@@ -78,7 +78,7 @@ export function OnboardingChecklist() {
     <div className="fixed bottom-6 right-6 z-40 w-[320px] bg-white border border-[var(--color-border)] rounded-lg shadow-xl" style={{ fontFamily: 'var(--font-sans)' }}>
       <div className="p-4 border-b border-[var(--color-border)]">
         <div className="flex items-start justify-between mb-1">
-          <h3 className="text-sm font-medium text-[var(--color-text)]">Primeiros passos 🥋</h3>
+          <h3 className="text-sm font-medium text-[var(--color-text)]">Primeiros passos</h3>
           <button onClick={() => setOpen(false)} className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]" aria-label="Minimizar">
             <X className="w-4 h-4" />
           </button>
