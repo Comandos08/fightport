@@ -5,8 +5,8 @@ import { useAuth } from '@/hooks/useAuth';
 
 export interface OnboardingStep {
   id: string;
-  label: string;
-  description: string;
+  labelKey: string;
+  descriptionKey: string;
   link: string;
   done: boolean;
 }
@@ -62,11 +62,11 @@ export function useOnboarding() {
   const passportLink = data?.firstPractitionerId ? `/p/${data.firstPractitionerId}` : '/painel/praticantes';
 
   const steps: OnboardingStep[] = [
-    { id: 'school', label: 'Configurar escola', description: 'Adicione o logo e dados da sua escola', link: '/painel/configuracoes', done: !!data?.hasLogo },
-    { id: 'practitioner', label: 'Cadastrar praticante', description: 'Adicione seu primeiro aluno', link: '/painel/praticantes/novo', done: (data?.practitionerCount ?? 0) > 0 },
-    { id: 'achievement', label: 'Registrar graduação', description: 'Emita seu primeiro certificado', link: '/painel/praticantes', done: (data?.achievementCount ?? 0) > 0 },
-    { id: 'passport', label: 'Ver passaporte', description: 'Visualize um passaporte público', link: passportLink, done: passportViewed },
-    { id: 'credits', label: 'Comprar créditos', description: 'Garanta créditos para novas graduações', link: '/painel/creditos', done: (data?.purchaseCount ?? 0) > 0 },
+    { id: 'school', labelKey: 'onboarding.steps.school.label', descriptionKey: 'onboarding.steps.school.description', link: '/painel/configuracoes', done: !!data?.hasLogo },
+    { id: 'practitioner', labelKey: 'onboarding.steps.practitioner.label', descriptionKey: 'onboarding.steps.practitioner.description', link: '/painel/praticantes/novo', done: (data?.practitionerCount ?? 0) > 0 },
+    { id: 'achievement', labelKey: 'onboarding.steps.achievement.label', descriptionKey: 'onboarding.steps.achievement.description', link: '/painel/praticantes', done: (data?.achievementCount ?? 0) > 0 },
+    { id: 'passport', labelKey: 'onboarding.steps.passport.label', descriptionKey: 'onboarding.steps.passport.description', link: passportLink, done: passportViewed },
+    { id: 'credits', labelKey: 'onboarding.steps.credits.label', descriptionKey: 'onboarding.steps.credits.description', link: '/painel/creditos', done: (data?.purchaseCount ?? 0) > 0 },
   ];
 
   const allDone = steps.every((s) => s.done);

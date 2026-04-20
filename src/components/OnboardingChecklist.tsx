@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import confetti from 'canvas-confetti';
 import { ListChecks, X, CheckCircle2, Circle, ArrowRight } from 'lucide-react';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 
 export function OnboardingChecklist() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { steps, allDone, hidden, dismiss, markPassportViewed } = useOnboarding();
   const [open, setOpen] = useState(false);
@@ -23,8 +26,25 @@ export function OnboardingChecklist() {
   useEffect(() => {
     if (allDone && !forceHide) {
       setCelebrate(true);
-      const t = setTimeout(() => setForceHide(true), 3000);
-      return () => clearTimeout(t);
+      // Fire confetti bursts in sequence
+      const fire = (originX: number) => {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          startVelocity: 45,
+          origin: { x: originX, y: 0.7 },
+          colors: ['#C8F135', '#0D0D0D', '#F7F5F0', '#4ade80', '#F4B400'],
+        });
+      };
+      fire(0.25);
+      const t1 = setTimeout(() => fire(0.5), 200);
+      const t2 = setTimeout(() => fire(0.75), 400);
+      const t3 = setTimeout(() => setForceHide(true), 3000);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+      };
     }
   }, [allDone, forceHide]);
 
@@ -43,9 +63,9 @@ export function OnboardingChecklist() {
 
   if (celebrate) {
     return (
-      <div className="fixed bottom-6 right-6 z-40 bg-white border border-[var(--color-border)] rounded-lg shadow-lg p-4 w-[280px]" style={{ fontFamily: 'var(--font-sans)' }}>
-        <p className="text-sm font-medium text-[var(--color-text)]">Você está pronto! 🎉</p>
-        <p className="text-xs text-[var(--color-text-muted)] mt-1">Parabéns por completar todos os primeiros passos.</p>
+      <div className="fixed bottom-6 right-6 z-40 bg-white border border-[var(--color-border)] rounded-lg shadow-lg p-4 w-[280px] animate-scale-in" style={{ fontFamily: 'var(--font-sans)' }}>
+        <p className="text-sm font-medium text-[var(--color-text)]">{t('onboarding.checklist.celebrate')}</p>
+        <p className="text-xs text-[var(--color-text-muted)] mt-1">{t('onboarding.checklist.celebrateDesc')}</p>
       </div>
     );
   }
@@ -58,7 +78,7 @@ export function OnboardingChecklist() {
             <button
               onClick={() => setOpen(true)}
               className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[var(--color-text)] text-white shadow-lg hover:scale-105 transition-transform flex items-center justify-center"
-              aria-label="Primeiros passos"
+              aria-label={t('onboarding.checklist.tooltip')}
             >
               <ListChecks className="w-6 h-6" />
               {remaining > 0 && (
@@ -68,7 +88,7 @@ export function OnboardingChecklist() {
               )}
             </button>
           </TooltipTrigger>
-          <TooltipContent side="left">Primeiros passos</TooltipContent>
+          <TooltipContent side="left">{t('onboarding.checklist.tooltip')}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     );
@@ -78,15 +98,15 @@ export function OnboardingChecklist() {
     <div className="fixed bottom-6 right-6 z-40 w-[320px] bg-white border border-[var(--color-border)] rounded-lg shadow-xl" style={{ fontFamily: 'var(--font-sans)' }}>
       <div className="p-4 border-b border-[var(--color-border)]">
         <div className="flex items-start justify-between mb-1">
-          <h3 className="text-sm font-medium text-[var(--color-text)]">Primeiros passos</h3>
-          <button onClick={() => setOpen(false)} className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]" aria-label="Minimizar">
+          <h3 className="text-sm font-medium text-[var(--color-text)]">{t('onboarding.checklist.title')}</h3>
+          <button onClick={() => setOpen(false)} className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]" aria-label={t('onboarding.checklist.minimize')}>
             <X className="w-4 h-4" />
           </button>
         </div>
-        <p className="text-xs text-[var(--color-text-muted)] mb-2">{doneCount} de {steps.length} concluídos</p>
+        <p className="text-xs text-[var(--color-text-muted)] mb-2">{t('onboarding.checklist.progress', { done: doneCount, total: steps.length })}</p>
         <Progress value={progress} className="h-1.5" />
         <button onClick={dismiss} className="text-[11px] text-[var(--color-text-muted)] hover:underline mt-2">
-          Dispensar
+          {t('onboarding.checklist.dismiss')}
         </button>
       </div>
       <ul className="py-2 max-h-[360px] overflow-y-auto">
@@ -104,10 +124,10 @@ export function OnboardingChecklist() {
               )}
               <div className="flex-1 min-w-0">
                 <p className={`text-sm ${step.done ? 'line-through text-[var(--color-text-muted)]' : 'text-[var(--color-text)] font-medium'}`}>
-                  {step.label}
+                  {t(step.labelKey)}
                 </p>
                 {!step.done && (
-                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{step.description}</p>
+                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{t(step.descriptionKey)}</p>
                 )}
               </div>
               {!step.done && <ArrowRight className="w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0 mt-1" />}
