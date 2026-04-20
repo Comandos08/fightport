@@ -278,6 +278,11 @@ function FragmentRow({ practitioner: a, schoolName, isExpanded, isLast, onToggle
             <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-text)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11, flexShrink: 0 }}>{getInitials(a.first_name, a.last_name)}</div>
             <div className="flex flex-col" style={{ gap: 4, minWidth: 0 }}>
               <span style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{a.first_name} {a.last_name}</span>
+              {a.fp_id && (
+                <span className="sm:hidden" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 11, color: 'var(--color-text-muted)', letterSpacing: '0.04em' }}>
+                  {a.fp_id}
+                </span>
+              )}
               {a.current_belt && (
                 <div className="sm:hidden">
                   <BeltBadge belt={a.current_belt as any} size="sm" />
