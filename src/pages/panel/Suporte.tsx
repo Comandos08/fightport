@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Plus, Send, MessageSquare, ArrowLeft } from 'lucide-react';
@@ -14,21 +15,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { notifyAdmin } from '@/lib/notifications';
 
-const CATEGORIES = [
-  { value: 'bug', label: 'Bug' },
-  { value: 'duvida', label: 'Dúvida' },
-  { value: 'creditos', label: 'Créditos' },
-  { value: 'cadastro', label: 'Cadastro' },
-  { value: 'outro', label: 'Outro' },
-];
-
-const STATUS_LABEL: Record<string, string> = {
-  open: 'Aberto',
-  awaiting_admin: 'Aguardando suporte',
-  awaiting_school: 'Aguardando você',
-  resolved: 'Resolvido',
-  closed: 'Encerrado',
-};
+const CATEGORY_VALUES = ['bug', 'duvida', 'creditos', 'cadastro', 'outro'] as const;
+const STATUS_KEYS = ['open', 'awaiting_admin', 'awaiting_school', 'resolved', 'closed'] as const;
 
 const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
   open:            { bg: '#fde68a', fg: '#92400e' },
