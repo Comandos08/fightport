@@ -120,8 +120,8 @@ export default function DashSuporte() {
   const selected = useMemo(() => (tickets as any[]).find(t => t.id === selectedId), [tickets, selectedId]);
 
   return (
-    <div style={{ padding: '32px 40px', maxWidth: 1400, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
+    <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto' }}>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end" style={{ gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display, var(--font-sans))', fontSize: 28, fontWeight: 600, letterSpacing: '0.02em', margin: 0, color: 'var(--color-text)' }}>
             Suporte
@@ -130,7 +130,7 @@ export default function DashSuporte() {
             Tickets de todas as escolas. Selecione um para responder.
           </p>
         </div>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={ipt}>
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ ...ipt, width: '100%', maxWidth: 240 }}>
           <option value="open">Abertos</option>
           <option value="awaiting_school">Aguardando escola</option>
           <option value="resolved">Resolvidos</option>
@@ -138,15 +138,22 @@ export default function DashSuporte() {
         </select>
       </div>
 
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'minmax(300px, 380px) 1fr', gap: 16,
-        minHeight: 'calc(100vh - 200px)',
-      }}>
-        {/* Lista */}
-        <div style={{
-          background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', display: 'flex', flexDirection: 'column',
-        }}>
+      <div
+        className="grid"
+        style={{
+          gridTemplateColumns: '1fr',
+          gap: 16,
+          minHeight: 'calc(100vh - 200px)',
+        }}
+      >
+        {/* Lista — escondida em mobile quando ticket selecionado */}
+        <div
+          className={selectedId ? 'hidden lg:flex' : 'flex'}
+          style={{
+            background: 'var(--color-bg)', border: '1px solid var(--color-border)',
+            borderRadius: 'var(--radius-md, 8px)', overflow: 'hidden', flexDirection: 'column',
+          }}
+        >
           {isLoading && <div style={{ padding: 16, color: 'var(--color-text-muted)', fontSize: 13 }}>Carregando…</div>}
           {!isLoading && tickets.length === 0 && (
             <div style={{ padding: 24, color: 'var(--color-text-muted)', fontSize: 13, textAlign: 'center' }}>
