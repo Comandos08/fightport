@@ -368,7 +368,10 @@ export default function DashDashboard() {
 
           {/* Charts */}
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
-            <ChartCard title="Crescimento de escolas (12 meses)">
+            <ChartCard
+              title="Crescimento de escolas (12 meses)"
+              mobile={<CompactSeriesCards data={growth} valueKey="schools" formatValue={(v) => String(v)} />}
+            >
               <LineChart data={growth}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="month" stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
@@ -378,7 +381,10 @@ export default function DashDashboard() {
               </LineChart>
             </ChartCard>
 
-            <ChartCard title="Crescimento de atletas (12 meses)">
+            <ChartCard
+              title="Crescimento de atletas (12 meses)"
+              mobile={<CompactSeriesCards data={growth} valueKey="practitioners" formatValue={(v) => String(v)} />}
+            >
               <LineChart data={growth}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="month" stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
@@ -388,7 +394,10 @@ export default function DashDashboard() {
               </LineChart>
             </ChartCard>
 
-            <ChartCard title="Receita mensal (12 meses)">
+            <ChartCard
+              title="Receita mensal (12 meses)"
+              mobile={<CompactSeriesCards data={revenue} valueKey="revenue" formatValue={(v) => fmtBRL(v)} />}
+            >
               <BarChart data={revenue}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="month" stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
@@ -401,7 +410,10 @@ export default function DashDashboard() {
               </BarChart>
             </ChartCard>
 
-            <ChartCard title="Graduações por modalidade (período)">
+            <ChartCard
+              title="Graduações por modalidade (período)"
+              mobile={<CompactCategoryList data={byArt} labelKey="art" valueKey="total" />}
+            >
               <BarChart data={byArt}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="art" stroke="var(--color-text-muted)" style={{ fontSize: 11 }} />
