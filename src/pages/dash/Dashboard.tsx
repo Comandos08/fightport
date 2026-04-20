@@ -201,16 +201,26 @@ function CompactSeriesCards({
             <div style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', fontVariantNumeric: 'tabular-nums' }}>
               {formatValue(curr)}
             </div>
-            {delta !== null && (
-              <div
-                style={{
-                  fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500,
-                  color: positive ? 'var(--admin-chart-accent, #15803d)' : 'var(--color-text-muted)',
-                }}
-              >
-                {positive ? '↑' : '↓'} {Math.abs(delta).toFixed(0)}%
-              </div>
-            )}
+            {delta !== null && (() => {
+              const flat = Math.abs(delta) < 0.5;
+              const DeltaIcon = flat ? Minus : positive ? TrendingUp : TrendingDown;
+              const color = flat
+                ? 'var(--color-text-muted)'
+                : positive
+                  ? 'var(--admin-chart-accent, #15803d)'
+                  : 'var(--color-warning, #b45309)';
+              return (
+                <div
+                  style={{
+                    fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 500,
+                    color, display: 'inline-flex', alignItems: 'center', gap: 3,
+                  }}
+                >
+                  <DeltaIcon style={{ width: 10, height: 10 }} strokeWidth={2.5} aria-hidden />
+                  {Math.abs(delta).toFixed(0)}%
+                </div>
+              );
+            })()}
           </div>
         );
       })}
