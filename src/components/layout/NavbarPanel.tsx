@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import { formatBadgeCount } from '@/lib/badge';
+import { useSwipeToClose } from '@/hooks/useSwipeToClose';
 import logoFightport from '@/assets/logo-fightport.png';
 import { NotificationBell } from '@/components/NotificationBell';
 
