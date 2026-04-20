@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
+import { sendNotification } from '@/lib/notifications';
 
 const STATUS_LABEL: Record<string, string> = {
   open: 'Aberto',
@@ -83,6 +84,17 @@ export default function DashSuporte() {
       if (error) throw error;
     },
     onSuccess: () => {
+      // Notifica a escola dona do ticket (fire-and-forget)
+      const ticket = (tickets as any[]).find(t => t.id === selectedId);
+      if (ticket) {
+        sendNotification({
+          recipient_id: ticket.school_id,
+          type: 'ticket_reply',
+          title: 'Suporte respondeu',
+          body: `Sua solicitação "${ticket.subject}" recebeu uma resposta.`,
+          link: '/painel/suporte',
+        });
+      }
       setReply('');
       qc.invalidateQueries({ queryKey: ['admin-ticket-messages', selectedId] });
       qc.invalidateQueries({ queryKey: ['admin-tickets'] });

@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import logoFightport from '@/assets/logo-fightport.png';
+import { notifyAdmin } from '@/lib/notifications';
 
 // ── Input style helpers ──
 const inputStyle: React.CSSProperties = {
@@ -96,6 +97,15 @@ export default function CadastroPage() {
     if (coachError) console.error('Coach insert error:', coachError);
     const { error: creditsError } = await supabase.from('credits').insert({ school_id: userId, balance: 0 });
     if (creditsError) console.error('Credits insert error:', creditsError);
+    // Notifica admin (fire-and-forget) — RLS exige authenticated, então só dispara
+    // se o signUp já criou sessão. Em fluxos com confirmação de email obrigatória,
+    // a sessão pode não existir ainda; falhar silenciosamente é aceitável.
+    notifyAdmin({
+      type: 'new_school',
+      title: 'Nova escola cadastrada',
+      body: `A escola "${schoolName}" acabou de se cadastrar na plataforma.`,
+      link: '/dash/organizacoes',
+    });
     setLoading(false);
     setSuccess(true);
   };

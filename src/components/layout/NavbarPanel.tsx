@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import logoFightport from '@/assets/logo-fightport.png';
+import { NotificationBell } from '@/components/NotificationBell';
 
 export function NavbarPanel() {
   const { t } = useTranslation();
@@ -86,6 +87,7 @@ export function NavbarPanel() {
 
         {/* School name + logout */}
         <div className="flex items-center" style={{ gap: 12 }}>
+          <NotificationBell />
           <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 14, color: 'var(--color-text-muted)' }} className="hidden sm:block">
             {school?.name ?? '...'}
           </span>

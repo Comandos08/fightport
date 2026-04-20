@@ -166,6 +166,27 @@ Deno.serve(async (req) => {
 
     console.log(`Credits added: ${ref.credits} for school ${ref.school_id}`);
 
+    // Notifica o admin (fire-and-forget) — falha aqui não bloqueia a resposta de sucesso
+    try {
+      const { data: schoolRow } = await supabase
+        .from("schools")
+        .select("name")
+        .eq("id", ref.school_id)
+        .maybeSingle();
+      const { data: adminId } = await supabase.rpc("get_admin_recipient_id");
+      if (adminId) {
+        await supabase.from("notifications").insert({
+          recipient_id: adminId,
+          type: "payment_approved",
+          title: "Pagamento aprovado",
+          body: `A escola "${schoolRow?.name ?? "desconhecida"}" concluiu uma compra de créditos.`,
+          link: "/dash/financeiro",
+        });
+      }
+    } catch (notifErr) {
+      console.warn("[notifications] payment_approved failed:", notifErr);
+    }
+
     return new Response(JSON.stringify({ status: "ok", credits_added: ref.credits }), { status: 200 });
   } catch (error) {
     console.error("Webhook error:", error);
