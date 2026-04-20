@@ -455,11 +455,11 @@ export default function OrganizacaoDetalhe() {
 
 // ============= Histórico de ações da escola =============
 
-const ACTION_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  practitioner_created: { label: 'Praticante criado', color: '#15803d', bg: 'rgba(34,197,94,0.12)' },
-  practitioner_updated: { label: 'Praticante editado', color: '#1d4ed8', bg: 'rgba(59,130,246,0.12)' },
-  practitioner_deleted: { label: 'Praticante deletado', color: '#b91c1c', bg: 'rgba(239,68,68,0.12)' },
-  achievement_created: { label: 'Graduação registrada', color: '#7c3aed', bg: 'rgba(139,92,246,0.14)' },
+const ACTION_COLORS: Record<string, { color: string; bg: string }> = {
+  practitioner_created: { color: '#15803d', bg: 'rgba(34,197,94,0.12)' },
+  practitioner_updated: { color: '#1d4ed8', bg: 'rgba(59,130,246,0.12)' },
+  practitioner_deleted: { color: '#b91c1c', bg: 'rgba(239,68,68,0.12)' },
+  achievement_created: { color: '#7c3aed', bg: 'rgba(139,92,246,0.14)' },
 };
 
 function formatSchoolAuditDetails(action: string, metadata: any): string {
@@ -507,6 +507,11 @@ interface SchoolAuditSectionProps {
 }
 
 function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onFilterChange, pageSize }: SchoolAuditSectionProps) {
+  const { t } = useTranslation();
+  const actionLabel = (action: string) =>
+    ['practitioner_created','practitioner_updated','practitioner_deleted','achievement_created'].includes(action)
+      ? t(`dash.organizations.detail.schoolAudit.actions.${action}`)
+      : action;
   const filtered = filter ? items.filter((it) => it.action === filter) : items;
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const currentPage = Math.min(page, totalPages - 1);
@@ -514,13 +519,19 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
 
   const handleExport = () => {
     if (filtered.length === 0) {
-      toast.error('Nenhum registro para exportar.');
+      toast.error(t('dash.organizations.detail.schoolAudit.exportEmpty'));
       return;
     }
-    const headers = ['Data/Hora', 'Ação', 'Nome', 'Escola', 'Detalhes'];
+    const headers = [
+      t('dash.organizations.detail.schoolAudit.tableDate'),
+      t('dash.organizations.detail.schoolAudit.tableAction'),
+      t('dash.organizations.detail.schoolAudit.tableName'),
+      t('dash.organizations.detail.sections.athletes'),
+      t('dash.organizations.detail.schoolAudit.tableDetails'),
+    ];
     const rows = filtered.map((it) => [
       format(new Date(it.created_at), 'dd/MM/yyyy HH:mm'),
-      ACTION_LABELS[it.action]?.label ?? it.action,
+      actionLabel(it.action),
       it.entity_name ?? '',
       schoolName ?? '',
       it.metadata ? JSON.stringify(it.metadata) : '',
@@ -541,7 +552,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Activity style={{ width: 16, height: 16, color: 'var(--color-text-muted)' }} />
-        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>Histórico de ações da escola</h2>
+        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 14, fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{t('dash.organizations.detail.schoolAudit.title')}</h2>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         <select
@@ -553,11 +564,11 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
             border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', outline: 'none',
           }}
         >
-          <option value="">Todas as ações</option>
-          <option value="practitioner_created">Praticantes criados</option>
-          <option value="practitioner_updated">Praticantes editados</option>
-          <option value="practitioner_deleted">Praticantes deletados</option>
-          <option value="achievement_created">Graduações registradas</option>
+          <option value="">{t('dash.organizations.detail.schoolAudit.filterAll')}</option>
+          <option value="practitioner_created">{t('dash.organizations.detail.schoolAudit.filterCreated')}</option>
+          <option value="practitioner_updated">{t('dash.organizations.detail.schoolAudit.filterUpdated')}</option>
+          <option value="practitioner_deleted">{t('dash.organizations.detail.schoolAudit.filterDeleted')}</option>
+          <option value="achievement_created">{t('dash.organizations.detail.schoolAudit.filterAchievement')}</option>
         </select>
         <button
           onClick={handleExport}
@@ -568,7 +579,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
             border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: 'pointer',
           }}
         >
-          <Download style={{ width: 12, height: 12 }} /> Exportar CSV
+          <Download style={{ width: 12, height: 12 }} /> {t('dash.organizations.detail.schoolAudit.exportCsv')}
         </button>
       </div>
     </div>
@@ -581,7 +592,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
       {filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 16px' }}>
           <Activity style={{ width: 28, height: 28, color: 'var(--color-text-muted)', margin: '0 auto 8px', display: 'block', opacity: 0.5 }} />
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>Nenhuma ação registrada ainda.</p>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text-muted)', margin: 0 }}>{t('dash.organizations.detail.schoolAudit.noActions')}</p>
         </div>
       ) : (
         <>
@@ -589,15 +600,15 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Data/Hora</th>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Ação</th>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Nome</th>
-                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>Detalhes</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>{t('dash.organizations.detail.schoolAudit.tableDate')}</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>{t('dash.organizations.detail.schoolAudit.tableAction')}</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>{t('dash.organizations.detail.schoolAudit.tableName')}</th>
+                  <th style={{ textAlign: 'left', padding: '8px 12px', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg-soft)', whiteSpace: 'nowrap' }}>{t('dash.organizations.detail.schoolAudit.tableDetails')}</th>
                 </tr>
               </thead>
               <tbody>
                 {pageItems.map((it) => {
-                  const cfg = ACTION_LABELS[it.action] ?? { label: it.action, color: 'var(--color-text)', bg: 'var(--color-bg-soft)' };
+                  const cfg = ACTION_COLORS[it.action] ?? { color: 'var(--color-text)', bg: 'var(--color-bg-soft)' };
                   return (
                     <tr key={it.id}>
                       <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' }}>
@@ -605,7 +616,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
                       </td>
                       <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, borderBottom: '1px solid var(--color-border)', whiteSpace: 'nowrap' }}>
                         <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, color: cfg.color, background: cfg.bg }}>
-                          {cfg.label}
+                          {actionLabel(it.action)}
                         </span>
                       </td>
                       <td style={{ padding: '10px 12px', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--color-text)', borderBottom: '1px solid var(--color-border)' }}>
@@ -624,7 +635,7 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
           {totalPages > 1 && (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
               <span style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text-muted)' }}>
-                Página {currentPage + 1} de {totalPages} · {filtered.length} registros
+                {t('dash.organizations.detail.schoolAudit.pageInfo', { current: currentPage + 1, total: totalPages, count: filtered.length })}
               </span>
               <div style={{ display: 'flex', gap: 6 }}>
                 <button
@@ -632,14 +643,14 @@ function SchoolAuditSection({ items, schoolName, page, onPageChange, filter, onF
                   disabled={currentPage === 0}
                   style={{ height: 28, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: currentPage === 0 ? 'not-allowed' : 'pointer', opacity: currentPage === 0 ? 0.4 : 1 }}
                 >
-                  Anterior
+                  {t('dash.organizations.detail.schoolAudit.previous')}
                 </button>
                 <button
                   onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
                   disabled={currentPage >= totalPages - 1}
                   style={{ height: 28, padding: '0 10px', fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--color-text)', background: 'transparent', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm, 6px)', cursor: currentPage >= totalPages - 1 ? 'not-allowed' : 'pointer', opacity: currentPage >= totalPages - 1 ? 0.4 : 1 }}
                 >
-                  Próxima
+                  {t('dash.organizations.detail.schoolAudit.next')}
                 </button>
               </div>
             </div>
