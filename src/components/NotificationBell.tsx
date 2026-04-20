@@ -155,6 +155,21 @@ export function NotificationBell() {
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
+          {pulse && (
+            <span
+              aria-hidden
+              className="animate-ping"
+              style={{
+                position: 'absolute',
+                top: -2,
+                right: -2,
+                width: 8,
+                height: 8,
+                borderRadius: 999,
+                background: '#C8F135',
+              }}
+            />
+          )}
         </button>
       </PopoverTrigger>
       <PopoverContent
