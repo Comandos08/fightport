@@ -103,11 +103,12 @@ export default function Financeiro() {
     },
   });
 
-  // Sparkline: últimos 7 dias de receita e transações (independente do filtro de período)
+  // Sparkline: 14 dias (7 atuais + 7 anteriores) de receita e transações.
+  // Os 7 atuais alimentam o gráfico; comparamos totais current vs previous para o delta %.
   const { data: sparkline = [] } = useQuery({
-    queryKey: ['admin-finance-sparkline-7d'],
+    queryKey: ['admin-finance-sparkline-14d'],
     queryFn: async () => {
-      const start = startOfDay(subDays(new Date(), 6));
+      const start = startOfDay(subDays(new Date(), 13));
       const { data, error } = await supabase
         .from('credit_transactions')
         .select('created_at, price_brl')
@@ -116,11 +117,16 @@ export default function Financeiro() {
         .gte('created_at', start.toISOString());
       if (error) throw error;
 
-      // Inicializa 7 buckets diários (D-6 → hoje)
-      const buckets: { day: string; revenue: number; tx: number }[] = [];
-      for (let i = 6; i >= 0; i--) {
+      // Inicializa 14 buckets diários (D-13 → hoje); period 'previous' (i>=7) e 'current' (i<7)
+      const buckets: { day: string; revenue: number; tx: number; period: 'previous' | 'current' }[] = [];
+      for (let i = 13; i >= 0; i--) {
         const d = startOfDay(subDays(new Date(), i));
-        buckets.push({ day: format(d, 'yyyy-MM-dd'), revenue: 0, tx: 0 });
+        buckets.push({
+          day: format(d, 'yyyy-MM-dd'),
+          revenue: 0,
+          tx: 0,
+          period: i >= 7 ? 'previous' : 'current',
+        });
       }
       const idx = new Map(buckets.map((b, i) => [b.day, i]));
       for (const r of (data ?? []) as any[]) {
@@ -134,6 +140,22 @@ export default function Financeiro() {
       return buckets;
     },
   });
+
+  // Totais current (últimos 7 dias) vs previous (D-13 → D-7) para o badge de delta nos cards
+  const sparkTotals = useMemo(() => {
+    const acc = { current: { revenue: 0, tx: 0 }, previous: { revenue: 0, tx: 0 } };
+    for (const b of sparkline as any[]) {
+      acc[b.period as 'current' | 'previous'].revenue += b.revenue;
+      acc[b.period as 'current' | 'previous'].tx += b.tx;
+    }
+    return acc;
+  }, [sparkline]);
+
+  // Apenas os 7 dias atuais alimentam o gráfico (mantém o visual de 7 pontos)
+  const sparkCurrent = useMemo(
+    () => (sparkline as any[]).filter((b) => b.period === 'current'),
+    [sparkline],
+  );
 
   const breakdown: { package: string; count: number; revenue: number }[] = overview?.breakdown ?? [];
 
@@ -278,16 +300,27 @@ export default function Financeiro() {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 20 }}>
-        <Metric label="Receita do período" value={fmtBRL(overview?.revenue ?? 0)} sparkData={sparkline as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} />
-        <Metric label="Transações" value={String(overview?.tx_count ?? 0)} sparkData={sparkline as any[]} sparkKey="tx" sparkTooltip={(v) => `${v} tx`} />
-        <Metric label="Ticket médio" value={fmtBRL(overview?.avg_ticket ?? 0)} />
-        <Metric label="Escolas únicas" value={String(overview?.unique_schools ?? 0)} />
-        <Metric label="MRR (média 3 meses)" value={fmtBRL(overview?.mrr ?? 0)} sparkData={sparkline as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} />
-        <Metric label="LTV estimado" value={fmtBRL(overview?.ltv ?? 0)} />
-        <Metric label="Taxa de recompra" value={fmtPct(overview?.repurchase_rate ?? 0)} />
-        <Metric label="Compras / escola" value={Number(overview?.avg_purchases ?? 0).toFixed(2)} />
-      </div>
+      {(() => {
+        const calcDelta = (curr: number, prev: number): number | null => {
+          if (prev === 0 && curr === 0) return 0;
+          if (prev === 0) return null; // sem base de comparação
+          return ((curr - prev) / prev) * 100;
+        };
+        const revenueDelta = calcDelta(sparkTotals.current.revenue, sparkTotals.previous.revenue);
+        const txDelta = calcDelta(sparkTotals.current.tx, sparkTotals.previous.tx);
+        return (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: 12, marginBottom: 20 }}>
+            <Metric label="Receita do período" value={fmtBRL(overview?.revenue ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} delta={revenueDelta} />
+            <Metric label="Transações" value={String(overview?.tx_count ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="tx" sparkTooltip={(v) => `${v} tx`} delta={txDelta} />
+            <Metric label="Ticket médio" value={fmtBRL(overview?.avg_ticket ?? 0)} />
+            <Metric label="Escolas únicas" value={String(overview?.unique_schools ?? 0)} />
+            <Metric label="MRR (média 3 meses)" value={fmtBRL(overview?.mrr ?? 0)} sparkData={sparkCurrent as any[]} sparkKey="revenue" sparkTooltip={(v) => fmtBRL(Number(v))} delta={revenueDelta} />
+            <Metric label="LTV estimado" value={fmtBRL(overview?.ltv ?? 0)} />
+            <Metric label="Taxa de recompra" value={fmtPct(overview?.repurchase_rate ?? 0)} />
+            <Metric label="Compras / escola" value={Number(overview?.avg_purchases ?? 0).toFixed(2)} />
+          </div>
+        );
+      })()}
 
       {/* Breakdown por pacote (cards) */}
       <div style={{ ...card, marginBottom: 20 }}>
@@ -518,12 +551,15 @@ function Metric({
   sparkData,
   sparkKey,
   sparkTooltip,
+  delta,
 }: {
   label: string;
   value: string;
   sparkData?: { day: string; revenue: number; tx: number }[];
   sparkKey?: 'revenue' | 'tx';
   sparkTooltip?: (v: number) => string;
+  /** Variação percentual vs os 7 dias anteriores. null = sem base de comparação. */
+  delta?: number | null;
 }) {
   const hasSpark = !!sparkData && sparkData.length > 0 && !!sparkKey;
   const hasMovement = hasSpark && sparkData!.some((d) => Number((d as any)[sparkKey!]) > 0);
@@ -601,7 +637,34 @@ function Metric({
         </div>
       )}
       <div style={lbl}>{label}</div>
-      <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{value}</div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 600, color: 'var(--color-text)' }}>{value}</div>
+        {delta !== undefined && delta !== null && (() => {
+          const positive = delta >= 0;
+          const flat = Math.abs(delta) < 0.5;
+          const color = flat
+            ? 'var(--color-text-muted)'
+            : positive
+              ? 'var(--color-success, #15803d)'
+              : 'var(--color-warning, #b45309)';
+          const arrow = flat ? '→' : positive ? '↑' : '↓';
+          return (
+            <span
+              title={`Variação vs 7 dias anteriores: ${positive ? '+' : ''}${delta.toFixed(1)}%`}
+              style={{
+                fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600,
+                color, fontVariantNumeric: 'tabular-nums',
+                display: 'inline-flex', alignItems: 'center', gap: 2,
+                padding: '2px 6px',
+                borderRadius: 999,
+                background: 'var(--color-bg-soft)',
+              }}
+            >
+              {arrow} {Math.abs(delta).toFixed(0)}%
+            </span>
+          );
+        })()}
+      </div>
       {hasSpark && (
         <div
           style={{ fontFamily: 'var(--font-sans)', fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}
