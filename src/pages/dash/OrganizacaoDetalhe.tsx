@@ -186,8 +186,8 @@ export default function OrganizacaoDetalhe() {
     onError: (e: any) => toast.error(e.message ?? t('dash.organizations.detail.toasts.courtesyError')),
   });
 
-  if (isLoading) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>Carregando...</div>;
-  if (!detail?.school) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>Organização não encontrada</div>;
+  if (isLoading) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>{t('dash.organizations.detail.loading')}</div>;
+  if (!detail?.school) return <div className="p-4 sm:p-6 lg:p-10" style={{ maxWidth: 1400, margin: '0 auto', ...muted }}>{t('dash.organizations.detail.notFound')}</div>;
 
   const s = detail.school;
   const hc = detail.head_coach;
@@ -220,7 +220,7 @@ export default function OrganizacaoDetalhe() {
       {s.is_admin && <span style={{ display: 'inline-block', padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 4, background: 'var(--color-text)', color: 'var(--color-bg)' }}>Admin</span>}
       <span>{s.martial_art}</span>
       {(s.city || s.state) && <span>· {[s.city, s.state].filter(Boolean).join(' / ')}</span>}
-      {s.is_suspended && s.suspended_reason && <span>· Motivo: {s.suspended_reason}</span>}
+      {s.is_suspended && s.suspended_reason && <span>· {t('dash.organizations.detail.reasonLabel')}: {s.suspended_reason}</span>}
     </span>
   );
 
@@ -279,10 +279,16 @@ export default function OrganizacaoDetalhe() {
       {/* Atletas */}
       <DashSection title={`${t('dash.organizations.detail.sections.athletes')} (${practitioners.length})`} flush>
         <DashTable
-          headers={['FP-ID', 'Nome', 'Faixa', 'Modalidade', 'Cadastro']}
+          headers={[
+            t('dash.organizations.detail.athletesTable.fpId'),
+            t('dash.organizations.detail.athletesTable.name'),
+            t('dash.organizations.detail.athletesTable.belt'),
+            t('dash.organizations.detail.athletesTable.modality'),
+            t('dash.organizations.detail.athletesTable.createdAt'),
+          ]}
           isEmpty={practitioners.length === 0}
           emptyIcon={Users}
-          emptyTitle="Nenhum atleta cadastrado"
+          emptyTitle={t('dash.organizations.detail.athletesEmpty')}
           pagination={{
             page: pracPage,
             totalPages: Math.max(1, Math.ceil(practitioners.length / PAGE_SIZE)),
@@ -306,10 +312,16 @@ export default function OrganizacaoDetalhe() {
       {/* Graduações */}
       <DashSection title={`${t('dash.organizations.detail.sections.graduations')} (${achievements.length})`} flush>
         <DashTable
-          headers={['Data', 'Atleta', 'Faixa', 'Grau', 'Graduado por']}
+          headers={[
+            t('dash.organizations.detail.graduationsTable.date'),
+            t('dash.organizations.detail.graduationsTable.athlete'),
+            t('dash.organizations.detail.graduationsTable.belt'),
+            t('dash.organizations.detail.graduationsTable.degree'),
+            t('dash.organizations.detail.graduationsTable.graduatedBy'),
+          ]}
           isEmpty={achievements.length === 0}
           emptyIcon={Award}
-          emptyTitle="Nenhuma graduação emitida"
+          emptyTitle={t('dash.organizations.detail.graduationsEmpty')}
           pagination={{
             page: achPage,
             totalPages: Math.max(1, Math.ceil(achievements.length / PAGE_SIZE)),
@@ -334,17 +346,17 @@ export default function OrganizacaoDetalhe() {
       <DashSection title={t('dash.organizations.detail.sections.financialHistory')}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Tipo</th><th style={th}>Pacote</th><th style={th}>Quantidade</th><th style={th}>Valor</th><th style={th}>Status</th></tr></thead>
+            <thead><tr><th style={th}>{t('dash.organizations.detail.financialTable.date')}</th><th style={th}>{t('dash.organizations.detail.financialTable.type')}</th><th style={th}>{t('dash.organizations.detail.financialTable.package')}</th><th style={th}>{t('dash.organizations.detail.financialTable.amount')}</th><th style={th}>{t('dash.organizations.detail.financialTable.value')}</th><th style={th}>{t('dash.organizations.detail.financialTable.status')}</th></tr></thead>
             <tbody>
-              {txs.length === 0 && <tr><td colSpan={6} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma transação</td></tr>}
-              {txs.map((t: any) => (
-                <tr key={t.id}>
-                  <td style={td}>{format(new Date(t.created_at), 'dd/MM/yyyy HH:mm')}</td>
-                  <td style={td}>{t.type === 'purchase' ? 'Compra' : t.type === 'usage' ? 'Uso' : t.type === 'bonus' ? 'Cortesia' : t.type}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{t.package_name ?? '—'}</td>
-                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{t.amount > 0 ? '+' : ''}{t.amount}</td>
-                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{t.price_brl ? fmtBRL(t.price_brl) : '—'}</td>
-                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{t.status}</td>
+              {txs.length === 0 && <tr><td colSpan={6} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.noTransactions')}</td></tr>}
+              {txs.map((tx: any) => (
+                <tr key={tx.id}>
+                  <td style={td}>{format(new Date(tx.created_at), 'dd/MM/yyyy HH:mm')}</td>
+                  <td style={td}>{tx.type === 'purchase' ? t('dash.organizations.detail.txTypes.purchase') : tx.type === 'usage' ? t('dash.organizations.detail.txTypes.usage') : tx.type === 'bonus' ? t('dash.organizations.detail.txTypes.bonus') : tx.type}</td>
+                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{tx.package_name ?? '—'}</td>
+                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{tx.amount > 0 ? '+' : ''}{tx.amount}</td>
+                  <td style={{ ...td, fontVariantNumeric: 'tabular-nums' }}>{tx.price_brl ? fmtBRL(tx.price_brl) : '—'}</td>
+                  <td style={{ ...td, color: 'var(--color-text-muted)' }}>{tx.status}</td>
                 </tr>
               ))}
             </tbody>
@@ -354,13 +366,13 @@ export default function OrganizacaoDetalhe() {
 
       {/* Tickets */}
       <DashSection title={`${t('dash.organizations.detail.sections.supportTickets')} (${tickets.length})`}>
-        {tickets.length === 0 ? <p style={muted}>Nenhum ticket em aberto.</p> : (
+        {tickets.length === 0 ? <p style={muted}>{t('dash.organizations.detail.noTickets')}</p> : (
           <ul className="flex flex-col" style={{ gap: 10, listStyle: 'none', padding: 0, margin: 0 }}>
-            {tickets.map((t: any) => (
-              <li key={t.id} style={{ padding: 12, border: '1px solid var(--color-border)', borderRadius: 6 }}>
+            {tickets.map((tk: any) => (
+              <li key={tk.id} style={{ padding: 12, border: '1px solid var(--color-border)', borderRadius: 6 }}>
                 <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)' }}>{t.subject}</span>
-                  <span style={muted}>{format(new Date(t.created_at), 'dd/MM/yyyy')}</span>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500, color: 'var(--color-text)' }}>{tk.subject}</span>
+                  <span style={muted}>{format(new Date(tk.created_at), 'dd/MM/yyyy')}</span>
                 </div>
               </li>
             ))}
@@ -372,9 +384,9 @@ export default function OrganizacaoDetalhe() {
       <DashSection title={t('dash.organizations.detail.sections.adminActions')}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr><th style={th}>Data</th><th style={th}>Admin</th><th style={th}>Ação</th><th style={th}>Detalhes</th></tr></thead>
+            <thead><tr><th style={th}>{t('dash.organizations.detail.adminTable.date')}</th><th style={th}>{t('dash.organizations.detail.adminTable.admin')}</th><th style={th}>{t('dash.organizations.detail.adminTable.action')}</th><th style={th}>{t('dash.organizations.detail.adminTable.details')}</th></tr></thead>
             <tbody>
-              {audit.length === 0 && <tr><td colSpan={4} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>Nenhuma ação registrada</td></tr>}
+              {audit.length === 0 && <tr><td colSpan={4} style={{ ...td, textAlign: 'center', color: 'var(--color-text-muted)' }}>{t('dash.organizations.detail.noAdminActions')}</td></tr>}
               {audit.map((a: any) => (
                 <tr key={a.id}>
                   <td style={td}>{format(new Date(a.created_at), 'dd/MM/yyyy HH:mm')}</td>
