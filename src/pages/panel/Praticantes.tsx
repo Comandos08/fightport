@@ -22,7 +22,7 @@ const focusInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) =
 const blurInput = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.background = 'var(--color-bg-soft)'; };
 
 export default function PraticantesPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [beltFilter, setBeltFilter] = useState('');
@@ -30,6 +30,7 @@ export default function PraticantesPage() {
   const [importOpen, setImportOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
