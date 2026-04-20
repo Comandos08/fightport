@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { formatBadgeCount } from '@/lib/badge';
 
 interface NotificationRow {
   id: string;
@@ -152,7 +153,7 @@ export function NotificationBell() {
                 lineHeight: 1,
               }}
             >
-              {unreadCount > 9 ? '9+' : unreadCount}
+              {formatBadgeCount(unreadCount)}
             </span>
           )}
           {pulse && (

@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { formatBadgeCount } from '@/lib/badge';
 import logoFightport from '@/assets/logo-fightport.png';
 import { NotificationBell } from '@/components/NotificationBell';
 
@@ -75,7 +76,7 @@ export function NavbarPanel() {
     { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false, badge: 0 },
     { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true, badge: 0 },
     { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true, badge: 0 },
-    { to: '/painel/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, badge: unread, badgeLabel: unread > 9 ? '9+' : undefined },
+    { to: '/painel/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, badge: unread, badgeLabel: formatBadgeCount(unread) ?? undefined },
     { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true, badge: 0 },
   ];
 
