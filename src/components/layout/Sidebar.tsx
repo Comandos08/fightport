@@ -63,7 +63,7 @@ export function Sidebar() {
     { to: '/painel/praticantes', label: t('app.nav.practitioners'), icon: Users, exact: false, badge: 0 },
     { to: '/painel/conquistas/nova', label: t('app.nav.newAchievement'), icon: Award, exact: true, badge: 0 },
     { to: '/painel/creditos', label: t('app.nav.credits'), icon: Coins, exact: true, badge: 0 },
-    { to: '/painel/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, badge: unread },
+    { to: '/painel/suporte', label: 'Suporte', icon: LifeBuoy, exact: false, badge: unread, badgeLabel: unread > 9 ? '9+' : undefined },
     { to: '/painel/configuracoes', label: t('app.nav.settings'), icon: Settings, exact: true, badge: 0 },
   ];
 
@@ -92,7 +92,7 @@ export function Sidebar() {
         </Link>
       </div>
       <nav className="flex-1 flex flex-col gap-1" style={{ padding: '8px 0' }}>
-        {links.map(({ to, label, icon: Icon, exact, badge }) => {
+        {links.map(({ to, label, icon: Icon, exact, badge, badgeLabel }) => {
           const active = isActive(to, exact);
           return (
             <Link
@@ -132,7 +132,7 @@ export function Sidebar() {
                   padding: '1px 6px', borderRadius: 999,
                   background: '#0D0D0D', color: '#C8F135', minWidth: 18, textAlign: 'center',
                 }}>
-                  {badge}
+                  {badgeLabel ?? badge}
                 </span>
               )}
             </Link>
