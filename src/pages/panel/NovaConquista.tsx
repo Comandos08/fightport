@@ -42,6 +42,8 @@ export default function NovaConquistaPage() {
   const [loading, setLoading] = useState(false);
   // Mobile wizard step (1: Praticante, 2: Faixa/Data, 3: Confirmação)
   const [mobileStep, setMobileStep] = useState<1 | 2 | 3>(1);
+  // Touch swipe tracking
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const { data: credits } = useQuery({ queryKey: ['credits', user?.id], queryFn: async () => { const { data } = await supabase.from('credits').select('balance').eq('school_id', user!.id).single(); return data; }, enabled: !!user });
   const { data: school } = useQuery({ queryKey: ['school-full', user?.id], queryFn: async () => { const { data } = await supabase.from('schools').select('name').eq('id', user!.id).single(); return data; }, enabled: !!user });
