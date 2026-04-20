@@ -294,7 +294,7 @@ export default function DashDashboard() {
     : 0;
 
   return (
-    <div style={{ padding: 32, maxWidth: 1600, margin: '0 auto' }}>
+    <div className="p-4 sm:p-6 lg:p-8" style={{ maxWidth: 1600, margin: '0 auto' }}>
       <div className="flex items-center justify-between flex-wrap" style={{ gap: 16, marginBottom: 24 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-sans)', fontSize: 24, fontWeight: 600, color: 'var(--color-text)' }}>Dashboard</h1>
