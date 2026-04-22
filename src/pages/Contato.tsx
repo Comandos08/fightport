@@ -61,10 +61,14 @@ export default function Contato() {
     if (!isValid) return;
     setSending(true);
     try {
-      const { error } = await supabase.functions.invoke('send-contact-email', {
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
         body: { name, email, organization: org, subject, message },
       });
       if (error) throw error;
+      if (data && data.emailSent === false) {
+        toast.error('Não foi possível enviar sua mensagem agora. Tente novamente em instantes.');
+        return;
+      }
       setSubmitted(true);
     } catch (err) {
       console.error('Contact form error:', err);
