@@ -187,6 +187,47 @@ Deno.serve(async (req) => {
       console.warn("[notifications] payment_approved failed:", notifErr);
     }
 
+    // E-mail para a escola confirmando pagamento aprovado (fire-and-forget)
+    try {
+      const { data: authUser } = await supabase.auth.admin.getUserById(ref.school_id);
+      const schoolEmail = authUser?.user?.email;
+      if (schoolEmail) {
+        await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+          },
+          body: JSON.stringify({
+            to: schoolEmail,
+            subject: `[FightPort] Pagamento aprovado — ${ref.credits} créditos adicionados`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #0D0D0D;">
+                <h2 style="margin: 0 0 16px; font-size: 20px;">Pagamento confirmado ✓</h2>
+                <p style="font-size: 14px; line-height: 1.5;">
+                  Seu pagamento foi aprovado e <strong>${ref.credits} créditos</strong>
+                  foram adicionados à sua conta no plano <strong>${ref.package_name}</strong>.
+                </p>
+                <div style="background: #F7F5F0; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                  <h3 style="margin: 0 0 8px; font-size: 14px;">Resumo</h3>
+                  <p style="margin: 4px 0; font-size: 14px;">Créditos adicionados: <strong>${ref.credits}</strong></p>
+                  <p style="margin: 4px 0; font-size: 14px;">Valor pago: <strong>R$ ${ref.price_brl.toFixed(2)}</strong></p>
+                </div>
+                <p style="margin: 24px 0;">
+                  <a href="https://fightport.pro/painel" style="display: inline-block; background: #0D0D0D; color: #C8F135; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-weight: 600;">
+                    Acessar painel →
+                  </a>
+                </p>
+                <p style="font-size: 11px; color: #999; margin-top: 24px;">FightPort — sistema automático</p>
+              </div>
+            `,
+          }),
+        });
+      }
+    } catch (emailErr) {
+      console.warn("[send-email] payment confirmation failed:", emailErr);
+    }
+
     return new Response(JSON.stringify({ status: "ok", credits_added: ref.credits }), { status: 200 });
   } catch (error) {
     console.error("Webhook error:", error);
