@@ -13,7 +13,7 @@ const links = [
   { to: '/dash/graduacoes', i18nKey: 'dash.nav.graduations', icon: Award, exact: false, key: 'grad' },
   { to: '/dash/financeiro', i18nKey: 'dash.nav.financial', icon: DollarSign, exact: false, key: 'fin' },
   { to: '/dash/suporte', i18nKey: 'dash.nav.support', icon: LifeBuoy, exact: false, key: 'sup' },
-  { to: '/dash/contatos', i18nKey: 'dash.nav.contacts', icon: Mail, exact: false, key: 'con' },
+  { to: '/dash/contatos', i18nKey: 'dash.nav.contacts', icon: Mail, exact: false, key: 'con', fallback: 'Contatos' },
   { to: '/dash/auditoria', i18nKey: 'dash.nav.audit', icon: ScrollText, exact: false, key: 'aud' },
 ];
 
@@ -106,7 +106,7 @@ export function DashSidebar() {
               }}
             >
               <Icon style={{ width: 16, height: 16 }} />
-              <span style={{ flex: 1 }}>{t(i18nKey)}</span>
+              <span style={{ flex: 1 }}>{t(i18nKey, { defaultValue: (links.find(l => l.to === to) as { fallback?: string })?.fallback ?? i18nKey })}</span>
               {badge > 0 && (
                 <span style={{
                   fontFamily: 'var(--font-sans)', fontSize: 10, fontWeight: 600,
