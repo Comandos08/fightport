@@ -92,7 +92,7 @@ export default function PassportPage() {
   const pageDescription = practitioner
     ? `Passaporte verificado de ${fullName}. ${practitioner.martial_art} na ${schoolName}. Graduações autenticadas com hash SHA-256.`
     : 'Carregando passaporte do praticante...';
-  const pageUrl = practitioner ? `https://fightport.lovable.app/p/${practitioner.fp_id}` : '';
+  const pageUrl = practitioner ? `https://fightport.pro/p/${practitioner.fp_id}` : '';
 
   const jsonLd = practitioner ? {
     '@context': 'https://schema.org',
