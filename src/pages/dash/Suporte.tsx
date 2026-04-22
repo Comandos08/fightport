@@ -156,9 +156,9 @@ export default function DashSuporte() {
       </div>
 
       <div
-        className="grid lg:grid-cols-[minmax(300px,380px)_1fr]"
         style={{
-          gridTemplateColumns: '1fr',
+          display: 'grid',
+          gridTemplateColumns: 'minmax(300px, 380px) 1fr',
           gap: 16,
           minHeight: 'calc(100vh - 200px)',
         }}
