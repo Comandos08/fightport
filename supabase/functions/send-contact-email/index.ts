@@ -48,7 +48,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "fightport.pro <onboarding@resend.dev>",
+        from: "FightPort <noreply@fightport.pro>",
         to: ["contato@fightport.pro"],
         reply_to: email,
         subject: `[Contato] ${subject} — ${name}`,
