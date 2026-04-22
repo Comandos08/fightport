@@ -48,7 +48,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "fightport.pro <onboarding@resend.dev>",
+        from: "FightPort <noreply@fightport.pro>",
         to: ["contato@fightport.pro"],
         reply_to: email,
         subject: `[Contato] ${subject} — ${name}`,
@@ -77,8 +77,8 @@ serve(async (req) => {
       console.error("Resend error:", resendData);
       // Still return success since we saved to DB
       return new Response(
-        JSON.stringify({ success: true, emailSent: false, dbSaved: !dbError }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ success: false, emailSent: false, dbSaved: !dbError }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -88,8 +88,9 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error("Error:", error);
+    const msg = error instanceof Error ? error.message : String(error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: msg }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
