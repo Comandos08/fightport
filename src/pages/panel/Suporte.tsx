@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { notifyAdmin } from '@/lib/notifications';
+import { sendEmail } from '@/lib/sendEmail';
 
 const CATEGORY_VALUES = ['bug', 'duvida', 'creditos', 'cadastro', 'outro'] as const;
 
@@ -177,6 +178,28 @@ export default function PainelSuporte() {
             subject: ticket.subject,
           }),
           link: '/dash/suporte',
+        });
+
+        // Dispara e-mail para o admin (fire-and-forget)
+        sendEmail({
+          to: 'contato@fightport.pro',
+          subject: `[Novo Ticket] ${ticket.subject}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #0D0D0D;">
+              <h2 style="margin: 0 0 16px; font-size: 20px;">Novo ticket de suporte</h2>
+              <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 16px;">
+                <tr><td style="padding: 6px 0; color: #666;">Escola</td><td style="padding: 6px 0;"><strong>${schoolRow?.name ?? 'Desconhecida'}</strong></td></tr>
+                <tr><td style="padding: 6px 0; color: #666;">Assunto</td><td style="padding: 6px 0;"><strong>${ticket.subject}</strong></td></tr>
+                <tr><td style="padding: 6px 0; color: #666;">Categoria</td><td style="padding: 6px 0;"><strong>${newCategory}</strong></td></tr>
+              </table>
+              <div style="background: #F7F5F0; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                <h3 style="margin: 0 0 8px; font-size: 14px;">Mensagem</h3>
+                <p style="margin: 0; white-space: pre-wrap; font-size: 14px; line-height: 1.5;">${newMessage.trim()}</p>
+              </div>
+              <p style="font-size: 13px;"><a href="https://fightport.pro/dash/suporte" style="color: #0D0D0D;">Ver no painel admin →</a></p>
+              <p style="font-size: 11px; color: #999; margin-top: 24px;">FightPort — sistema automático</p>
+            </div>
+          `,
         });
       })();
       qc.invalidateQueries({ queryKey: ['school-tickets'] });

@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { sendNotification } from '@/lib/notifications';
+import { sendEmail } from '@/lib/sendEmail';
 import { TicketList } from '@/components/dash/support/TicketList';
 import { TicketThread } from '@/components/dash/support/TicketThread';
 import type { SupportMessage, SupportTicket } from '@/components/dash/support/types';
@@ -77,6 +78,37 @@ export default function DashSuporte() {
           link: '/painel/suporte',
         });
       }
+
+      // Busca e-mail da escola para notificar por e-mail também (fire-and-forget)
+      (async () => {
+        const tk = tickets.find(tk => tk.id === selectedId);
+        if (!tk) return;
+        const { data: schoolAuth } = await supabase
+          .from('schools')
+          .select('email')
+          .eq('id', tk.school_id)
+          .maybeSingle();
+        if (!schoolAuth?.email) return;
+        sendEmail({
+          to: schoolAuth.email,
+          subject: `[FightPort] Resposta ao seu ticket: ${tk.subject}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #0D0D0D;">
+              <h2 style="margin: 0 0 16px; font-size: 20px;">Sua solicitação recebeu uma resposta</h2>
+              <p style="font-size: 14px; line-height: 1.5;">
+                O assunto <strong>"${tk.subject}"</strong> foi respondido pela equipe FightPort.
+              </p>
+              <p style="margin: 24px 0;">
+                <a href="https://fightport.pro/painel/suporte" style="display: inline-block; background: #0D0D0D; color: #C8F135; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-weight: 600;">
+                  Ver resposta →
+                </a>
+              </p>
+              <p style="font-size: 11px; color: #999; margin-top: 24px;">FightPort — sistema automático</p>
+            </div>
+          `,
+        });
+      })();
+
       setReply('');
       qc.invalidateQueries({ queryKey: ['admin-ticket-messages', selectedId] });
       qc.invalidateQueries({ queryKey: ['admin-tickets'] });
