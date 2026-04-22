@@ -49,7 +49,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: "FightPort <noreply@fightport.pro>",
-        to: ["contato@fightport.pro"],
+        to: ["fightport.pro@gmail.com"],
         reply_to: email,
         subject: `[Contato] ${subject} — ${name}`,
         html: `
