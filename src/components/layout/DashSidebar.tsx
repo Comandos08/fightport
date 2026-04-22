@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, Award, DollarSign, LifeBuoy, ScrollText } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, Award, DollarSign, LifeBuoy, Mail, ScrollText } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,6 +13,7 @@ const links = [
   { to: '/dash/graduacoes', i18nKey: 'dash.nav.graduations', icon: Award, exact: false, key: 'grad' },
   { to: '/dash/financeiro', i18nKey: 'dash.nav.financial', icon: DollarSign, exact: false, key: 'fin' },
   { to: '/dash/suporte', i18nKey: 'dash.nav.support', icon: LifeBuoy, exact: false, key: 'sup' },
+  { to: '/dash/contatos', i18nKey: 'dash.nav.contacts', icon: Mail, exact: false, key: 'con' },
   { to: '/dash/auditoria', i18nKey: 'dash.nav.audit', icon: ScrollText, exact: false, key: 'aud' },
 ];
 
