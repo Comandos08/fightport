@@ -244,6 +244,36 @@ export type Database = {
           },
         ]
       }
+      email_send_log: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          resend_message_id: string | null
+          status: string
+          subject: string
+          to_address: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          resend_message_id?: string | null
+          status: string
+          subject: string
+          to_address: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          resend_message_id?: string | null
+          status?: string
+          subject?: string
+          to_address?: string
+        }
+        Relationships: []
+      }
       head_coaches: {
         Row: {
           created_at: string | null
