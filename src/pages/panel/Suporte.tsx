@@ -273,14 +273,14 @@ export default function PainelSuporte() {
               {t('support.empty', { state: t(`support.emptyState.${statusFilter}`) }).replace(/\s+\./, '.')}
             </div>
           )}
-          {(tickets as any[]).map(t => {
-            const active = selectedId === t.id;
-            const sc = STATUS_COLORS[t.status] ?? STATUS_COLORS.open;
-            const unread = unreadCounts[t.id] ?? 0;
+          {(tickets as any[]).map(tk => {
+            const active = selectedId === tk.id;
+            const sc = STATUS_COLORS[tk.status] ?? STATUS_COLORS.open;
+            const unread = unreadCounts[tk.id] ?? 0;
             return (
               <button
-                key={t.id}
-                onClick={() => setSelectedId(t.id)}
+                key={tk.id}
+                onClick={() => setSelectedId(tk.id)}
                 style={{
                   textAlign: 'left', padding: 12, border: 'none', borderBottom: '1px solid var(--color-border)',
                   background: active ? 'var(--color-bg-soft)' : 'transparent', cursor: 'pointer',
@@ -290,7 +290,7 @@ export default function PainelSuporte() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 }}>
                     <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: unread > 0 ? 700 : 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {t.subject}
+                      {tk.subject}
                     </span>
                     {unread > 0 && (
                       <span
@@ -311,11 +311,11 @@ export default function PainelSuporte() {
                     fontFamily: 'var(--font-sans)', fontSize: 10, padding: '2px 6px', borderRadius: 4,
                     background: sc.bg, color: sc.fg, whiteSpace: 'nowrap',
                   }}>
-                    {t(`support.status.${t.status}`, { defaultValue: t.status })}
+                    {t(`support.status.${tk.status}`, { defaultValue: tk.status })}
                   </span>
                 </div>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--color-text-muted)' }}>
-                  {format(new Date(t.last_message_at), 'dd/MM/yyyy HH:mm')} · {t.category}
+                  {format(new Date(tk.last_message_at), 'dd/MM/yyyy HH:mm')} · {tk.category}
                 </div>
               </button>
             );
