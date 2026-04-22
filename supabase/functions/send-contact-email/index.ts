@@ -77,8 +77,8 @@ serve(async (req) => {
       console.error("Resend error:", resendData);
       // Still return success since we saved to DB
       return new Response(
-        JSON.stringify({ success: true, emailSent: false, dbSaved: !dbError }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ success: false, emailSent: false, dbSaved: !dbError }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
