@@ -97,8 +97,8 @@ export default function PraticantesPage() {
 
   const handleExportCsv = () => {
     if (filtered.length === 0) { toast.error(t('practitioners.noneForExport')); return; }
-    const headers = [t('practitioners.table.name'), t('edit.lastName'), t('practitioners.table.martialArt'), t('practitioners.table.lastBelt'), 'FP ID', t('edit.dob'), t('edit.sex')];
-    const rows = filtered.map(a => [a.first_name, a.last_name, a.martial_art, a.current_belt ?? '', a.fp_id, a.birth_date ?? '', a.gender ?? '']);
+    const headers = [t('practitioners.table.name'), t('edit.lastName'), t('practitioners.table.martialArt'), t('practitioners.table.lastBelt'), 'FP ID', 'CPF', t('edit.dob'), t('edit.sex')];
+    const rows = filtered.map(a => [a.first_name, a.last_name, a.martial_art, a.current_belt ?? '', a.fp_id, a.cpf ?? '', a.birth_date ?? '', a.gender ?? '']);
     const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
     const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
