@@ -11,6 +11,8 @@ import { FileText, FileSpreadsheet, Building2, TrendingUp, TrendingDown, Minus }
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/integrations/supabase/client';
+import MPReplayCard from '@/components/dash/MPReplayCard';
+
 
 type Preset = 'today' | '7d' | '30d' | 'month' | 'year' | 'custom';
 
@@ -301,7 +303,10 @@ export default function Financeiro() {
         </div>
       </div>
 
+      <MPReplayCard />
+
       {/* Cards */}
+
       {(() => {
         const calcDelta = (curr: number, prev: number): number | null => {
           if (prev === 0 && curr === 0) return 0;

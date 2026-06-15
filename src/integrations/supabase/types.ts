@@ -316,6 +316,39 @@ export type Database = {
           },
         ]
       }
+      mp_webhook_events: {
+        Row: {
+          body: Json | null
+          created_at: string
+          error: string | null
+          headers: Json | null
+          id: string
+          payment_id: string | null
+          processed: boolean
+          signature_valid: boolean
+        }
+        Insert: {
+          body?: Json | null
+          created_at?: string
+          error?: string | null
+          headers?: Json | null
+          id?: string
+          payment_id?: string | null
+          processed?: boolean
+          signature_valid: boolean
+        }
+        Update: {
+          body?: Json | null
+          created_at?: string
+          error?: string | null
+          headers?: Json | null
+          id?: string
+          payment_id?: string | null
+          processed?: boolean
+          signature_valid?: boolean
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string
