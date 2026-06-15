@@ -1,33 +1,60 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-async function verifyMPSignature(req: Request, body: string): Promise<boolean> {
+function timingSafeEqualHex(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let r = 0;
+  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return r === 0;
+}
+
+async function verifyMPSignature(
+  req: Request,
+  body: string,
+): Promise<{ valid: boolean; dataId: string | null; reason?: string; source?: string }> {
   const xSignature = req.headers.get("x-signature");
   const xRequestId = req.headers.get("x-request-id");
   const secret = Deno.env.get("MERCADOPAGO_WEBHOOK_SECRET");
 
-  if (!xSignature || !xRequestId || !secret) return false;
+  if (!secret) return { valid: false, dataId: null, reason: "missing_secret" };
+  if (!xSignature) return { valid: false, dataId: null, reason: "missing_x_signature" };
+  if (!xRequestId) return { valid: false, dataId: null, reason: "missing_x_request_id" };
 
   // Parse ts and v1 from x-signature: "ts=...,v1=..."
   const parts: Record<string, string> = {};
   for (const part of xSignature.split(",")) {
     const [key, ...val] = part.split("=");
-    parts[key.trim()] = val.join("=").trim();
+    if (key) parts[key.trim()] = val.join("=").trim();
   }
 
   const ts = parts["ts"];
   const v1 = parts["v1"];
-  if (!ts || !v1) return false;
+  if (!ts || !v1) return { valid: false, dataId: null, reason: "missing_ts_or_v1" };
 
-  // Parse data.id from the body
-  let dataId: string | undefined;
+  // MercadoPago assina usando o data.id do query string da URL (preservando casing/formato).
+  // Fallback: corpo JSON. Algumas versões usam apenas "id".
+  let dataIdFromUrl: string | null = null;
   try {
-    const parsed = JSON.parse(body);
-    dataId = parsed.data?.id?.toString();
+    const url = new URL(req.url);
+    dataIdFromUrl = url.searchParams.get("data.id") ?? url.searchParams.get("id");
   } catch {
-    return false;
+    // ignore
   }
 
-  // Build the signed template
+  let dataIdFromBody: string | null = null;
+  try {
+    const parsed = JSON.parse(body);
+    const raw = parsed?.data?.id ?? parsed?.id;
+    if (raw !== undefined && raw !== null) dataIdFromBody = String(raw);
+  } catch {
+    // ignore
+  }
+
+  const dataId = dataIdFromUrl ?? dataIdFromBody;
+  if (!dataId) return { valid: false, dataId: null, reason: "missing_data_id" };
+
+  const source = dataIdFromUrl ? "url" : "body";
+
+  // Build the signed template per MercadoPago docs.
   const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
 
   const key = await crypto.subtle.importKey(
@@ -35,58 +62,154 @@ async function verifyMPSignature(req: Request, body: string): Promise<boolean> {
     new TextEncoder().encode(secret),
     { name: "HMAC", hash: "SHA-256" },
     false,
-    ["sign"]
+    ["sign"],
   );
   const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(manifest));
   const computed = Array.from(new Uint8Array(signature))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-  return computed === v1;
+  // Se a fonte primária falhar, tente a outra (URL <-> body) — protege contra
+  // casing/normalização entre os dois lugares.
+  if (timingSafeEqualHex(computed, v1.toLowerCase())) {
+    return { valid: true, dataId, source };
+  }
+
+  if (dataIdFromUrl && dataIdFromBody && dataIdFromUrl !== dataIdFromBody) {
+    const altManifest = `id:${dataIdFromBody};request-id:${xRequestId};ts:${ts};`;
+    const altSig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(altManifest));
+    const altComputed = Array.from(new Uint8Array(altSig))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    if (timingSafeEqualHex(altComputed, v1.toLowerCase())) {
+      return { valid: true, dataId: dataIdFromBody, source: "body_fallback" };
+    }
+  }
+
+  return { valid: false, dataId, reason: "hmac_mismatch", source };
+}
+
+async function logWebhookEvent(
+  supabase: ReturnType<typeof createClient>,
+  args: {
+    payment_id: string | null;
+    signature_valid: boolean;
+    processed: boolean;
+    error: string | null;
+    headers: Record<string, string>;
+    body: unknown;
+  },
+) {
+  try {
+    await supabase.from("mp_webhook_events").insert({
+      payment_id: args.payment_id,
+      signature_valid: args.signature_valid,
+      processed: args.processed,
+      error: args.error,
+      headers: args.headers,
+      body: args.body,
+    });
+  } catch (err) {
+    console.warn("[mp_webhook_events] insert failed:", err);
+  }
+}
+
+async function notifyAdminOfFailure(
+  supabase: ReturnType<typeof createClient>,
+  reason: string,
+  paymentId: string | null,
+) {
+  try {
+    const { data: adminId } = await supabase.rpc("get_admin_recipient_id");
+    if (adminId) {
+      await supabase.from("notifications").insert({
+        recipient_id: adminId,
+        type: "webhook_signature_invalid",
+        title: "Webhook MercadoPago rejeitado",
+        body: `Uma notificação foi recusada (motivo: ${reason}${paymentId ? `, payment_id: ${paymentId}` : ""}). Verifique /dash/financeiro.`,
+        link: "/dash/financeiro",
+      });
+    }
+  } catch (err) {
+    console.warn("[notifications] failure notify error:", err);
+  }
 }
 
 Deno.serve(async (req) => {
-  // Webhook doesn't need CORS since it's server-to-server
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200 });
   }
 
   const rawBody = await req.text();
 
+  const headersObj: Record<string, string> = {};
+  req.headers.forEach((v, k) => {
+    // Não loga cookies / authorization por segurança
+    if (k.toLowerCase() === "cookie" || k.toLowerCase() === "authorization") return;
+    headersObj[k] = v;
+  });
+
+  let parsedBody: unknown = null;
+  try { parsedBody = JSON.parse(rawBody); } catch { parsedBody = { raw: rawBody }; }
+
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+
   // Validate MercadoPago webhook signature
-  const isValid = await verifyMPSignature(req, rawBody);
-  if (!isValid) {
-    console.error("Invalid webhook signature — rejecting request");
-    return new Response(JSON.stringify({ error: "Invalid signature" }), { status: 401 });
+  const sig = await verifyMPSignature(req, rawBody);
+  if (!sig.valid) {
+    console.error("Invalid webhook signature:", sig.reason, "dataId:", sig.dataId, "source:", sig.source);
+    await logWebhookEvent(supabase, {
+      payment_id: sig.dataId,
+      signature_valid: false,
+      processed: false,
+      error: `signature_invalid:${sig.reason ?? "unknown"}`,
+      headers: headersObj,
+      body: parsedBody,
+    });
+    await notifyAdminOfFailure(supabase, sig.reason ?? "unknown", sig.dataId);
+    return new Response(JSON.stringify({ error: "Invalid signature", reason: sig.reason }), { status: 401 });
   }
 
   try {
     const MP_TOKEN = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN");
     if (!MP_TOKEN) throw new Error("MERCADOPAGO_ACCESS_TOKEN not configured");
 
-    let body: Record<string, unknown>;
-    try {
-      body = JSON.parse(rawBody);
-    } catch {
-      return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
-    }
+    const body = (parsedBody && typeof parsedBody === "object" ? parsedBody : {}) as Record<string, unknown>;
     console.log("Webhook received:", JSON.stringify(body));
 
-    // Validate required fields
     const eventType = body.type;
     const action = body.action;
-    const dataId = (body.data as Record<string, unknown> | undefined)?.id;
+    const dataId = (body.data as Record<string, unknown> | undefined)?.id ?? sig.dataId;
 
-    if (typeof eventType !== "string" || typeof action !== "string" || !dataId) {
+    if (typeof eventType !== "string" || !dataId) {
+      await logWebhookEvent(supabase, {
+        payment_id: sig.dataId,
+        signature_valid: true,
+        processed: false,
+        error: "missing_fields",
+        headers: headersObj,
+        body: parsedBody,
+      });
       return new Response(JSON.stringify({ status: "ignored", reason: "missing fields" }), { status: 200 });
     }
 
-    // Only process payment.updated events
-    if (eventType !== "payment" || action !== "payment.updated") {
+    // Aceitamos qualquer evento de payment — buscamos sempre o estado autoritativo na API do MP.
+    if (eventType !== "payment") {
+      await logWebhookEvent(supabase, {
+        payment_id: String(dataId),
+        signature_valid: true,
+        processed: false,
+        error: `ignored_event:${eventType}/${action ?? ""}`,
+        headers: headersObj,
+        body: parsedBody,
+      });
       return new Response(JSON.stringify({ status: "ignored", reason: `${eventType}/${action}` }), { status: 200 });
     }
 
-    const paymentId = dataId;
+    const paymentId = String(dataId);
 
     // Fetch payment details from MercadoPago
     const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
@@ -96,12 +219,28 @@ Deno.serve(async (req) => {
 
     if (!mpResponse.ok) {
       console.error("MP payment fetch error:", payment);
+      await logWebhookEvent(supabase, {
+        payment_id: paymentId,
+        signature_valid: true,
+        processed: false,
+        error: `mp_fetch_failed:${payment?.message ?? mpResponse.status}`,
+        headers: headersObj,
+        body: parsedBody,
+      });
       return new Response(JSON.stringify({ error: "Failed to fetch payment" }), { status: 500 });
     }
 
     console.log("Payment status:", payment.status, "external_reference:", payment.external_reference);
 
     if (payment.status !== "approved") {
+      await logWebhookEvent(supabase, {
+        payment_id: paymentId,
+        signature_valid: true,
+        processed: false,
+        error: `not_approved:${payment.status}`,
+        headers: headersObj,
+        body: parsedBody,
+      });
       return new Response(JSON.stringify({ status: "not approved", payment_status: payment.status }), { status: 200 });
     }
 
@@ -111,24 +250,34 @@ Deno.serve(async (req) => {
       ref = JSON.parse(payment.external_reference);
     } catch {
       console.error("Invalid external_reference:", payment.external_reference);
+      await logWebhookEvent(supabase, {
+        payment_id: paymentId,
+        signature_valid: true,
+        processed: false,
+        error: "invalid_external_reference",
+        headers: headersObj,
+        body: parsedBody,
+      });
       return new Response(JSON.stringify({ error: "Invalid reference" }), { status: 400 });
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-
     // Idempotency: check by payment_id
-    const mpPaymentId = String(paymentId);
     const { data: existing } = await supabase
       .from("credit_transactions")
       .select("id")
-      .eq("payment_id", mpPaymentId)
+      .eq("payment_id", paymentId)
       .limit(1);
 
     if (existing && existing.length > 0) {
-      console.log("Duplicate payment, skipping:", mpPaymentId);
+      console.log("Duplicate payment, skipping:", paymentId);
+      await logWebhookEvent(supabase, {
+        payment_id: paymentId,
+        signature_valid: true,
+        processed: true,
+        error: "duplicate",
+        headers: headersObj,
+        body: parsedBody,
+      });
       return new Response(JSON.stringify({ status: "duplicate" }), { status: 200 });
     }
 
@@ -140,16 +289,30 @@ Deno.serve(async (req) => {
       package_name: ref.package_name,
       price_brl: ref.price_brl,
       status: "completed",
-      payment_id: mpPaymentId,
+      payment_id: paymentId,
     });
 
     if (txError) {
-      // Unique constraint violation = duplicate, safe to ignore
-      if (txError.code === "23505") {
-        console.log("Duplicate payment (constraint), skipping:", mpPaymentId);
+      if ((txError as { code?: string }).code === "23505") {
+        await logWebhookEvent(supabase, {
+          payment_id: paymentId,
+          signature_valid: true,
+          processed: true,
+          error: "duplicate_constraint",
+          headers: headersObj,
+          body: parsedBody,
+        });
         return new Response(JSON.stringify({ status: "duplicate" }), { status: 200 });
       }
       console.error("Transaction insert error:", txError);
+      await logWebhookEvent(supabase, {
+        payment_id: paymentId,
+        signature_valid: true,
+        processed: false,
+        error: `tx_insert_failed:${(txError as { message?: string }).message ?? "unknown"}`,
+        headers: headersObj,
+        body: parsedBody,
+      });
       throw txError;
     }
 
@@ -161,12 +324,29 @@ Deno.serve(async (req) => {
 
     if (creditError) {
       console.error("Credit update error:", creditError);
+      await logWebhookEvent(supabase, {
+        payment_id: paymentId,
+        signature_valid: true,
+        processed: false,
+        error: `add_credits_failed:${(creditError as { message?: string }).message ?? "unknown"}`,
+        headers: headersObj,
+        body: parsedBody,
+      });
       throw creditError;
     }
 
     console.log(`Credits added: ${ref.credits} for school ${ref.school_id}`);
 
-    // Notifica o admin (fire-and-forget) — falha aqui não bloqueia a resposta de sucesso
+    await logWebhookEvent(supabase, {
+      payment_id: paymentId,
+      signature_valid: true,
+      processed: true,
+      error: null,
+      headers: headersObj,
+      body: parsedBody,
+    });
+
+    // Notifica o admin (fire-and-forget)
     try {
       const { data: schoolRow } = await supabase
         .from("schools")
@@ -187,7 +367,7 @@ Deno.serve(async (req) => {
       console.warn("[notifications] payment_approved failed:", notifErr);
     }
 
-    // E-mail para a escola confirmando pagamento aprovado (fire-and-forget)
+    // E-mail para a escola (fire-and-forget)
     try {
       const { data: authUser } = await supabase.auth.admin.getUserById(ref.school_id);
       const schoolEmail = authUser?.user?.email;
@@ -233,7 +413,7 @@ Deno.serve(async (req) => {
     console.error("Webhook error:", error);
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 });
