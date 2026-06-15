@@ -1,43 +1,89 @@
-# PRD Completo do FightPort — Documento Único (Markdown)
+## Diagnóstico confirmado
 
-## Objetivo
-Produzir um único arquivo `fightport-prd.md` em `/mnt/documents/` contendo toda a especificação necessária para replicar o sistema de forma idêntica, sem limite de páginas.
+A edge function `mercadopago-webhook` rejeitou **2 notificações hoje (15/06 às 13:40:32 e 13:40:48)** com `Invalid webhook signature — rejecting request` e nenhuma `credit_transactions` do tipo `purchase` foi gravada. O bônus de 10 créditos às 13:47 foi um contorno manual ("Cortesia administrativa").
 
-## Escopo do documento
-O PRD será extraído diretamente do código-fonte e do schema atual do banco, organizado nas seguintes seções:
+**Causa raiz:** `verifyMPSignature` lê `data.id` do **corpo JSON**, mas o MercadoPago assina usando o **`data.id` que vem no query string da URL** de notificação (preservando exatamente o casing/formato original). Quando o body normaliza esse valor (número virando string via `.toString()`), o HMAC nunca bate.
 
-1. **Visão geral do produto** — proposta, público (escolas de artes marciais), modelo de negócio (créditos por graduação, pacotes Starter/Equipe/Organização via MercadoPago).
-2. **Personas e papéis** — Escola, Administrador da plataforma, Praticante (público), Visitante.
-3. **Mapa de rotas** — todas as 25+ rotas (`/`, `/p/:id`, `/cadastro`, `/login`, `/painel/*`, `/dash/*`, páginas institucionais) com descrição funcional de cada uma.
-4. **Fluxos de usuário** — cadastro/login, recuperação de senha, cadastro de praticante, registro de conquista (consumo de crédito), compra de créditos, suporte, suspensão, administração.
-5. **Especificação por tela** — para cada página: propósito, componentes, estados, validações, mensagens, ações, regras de acesso.
-6. **Sistema de design** — tokens (cores, tipografia Syncopate, espaçamentos, raios), componentes shadcn customizados, padrões mobile-first.
-7. **Modelo de dados completo** — DDL de cada tabela (`schools`, `practitioners`, `achievements`, `credits`, `credit_transactions`, `head_coaches`, `notifications`, `support_tickets`, `support_messages`, `school_audit_log`, `admin_audit_log`, `contact_submissions`, `email_send_log`) com colunas, tipos, defaults, nullability.
-8. **RLS, GRANTs e políticas** — todas as policies por tabela.
-9. **Funções, triggers e RPCs** — `has_role`/`is_admin`, `mark_messages_read`, `admin_list_support_tickets`, `admin_resolve_ticket`, gatilhos de auditoria, geração de `fp_id`, hash de conquista, etc.
-10. **Lógicas e cálculos** — regra de consumo de créditos por graduação, geração de hash de verificação, geração de FP ID, regras de suspensão, contagem de não lidos, status de tickets, máscara de CPF.
-11. **Edge functions** — contrato completo de `mercadopago-checkout`, `mercadopago-webhook`, `send-contact-email`, `send-email`, `og-passport` (entradas, saídas, secrets, rate limits, retries, side-effects no DB).
-12. **Pacotes de crédito e preços** — Starter (10/R$97), Equipe (50/R$397), Organização (150/R$990).
-13. **Autenticação e segurança** — Supabase Auth, confirmação de e-mail, rotas protegidas, papel admin, política de senhas, RLS, secrets.
-14. **Notificações e e-mails** — tipos permitidos, templates, gatilhos, integração Resend.
-15. **Internacionalização** — pt-BR / en / es, chaves principais.
-16. **SEO e meta** — títulos, descrições, OG, sitemap, robots, página `/p/:id` pública.
-17. **Exportações e importações** — CSV de praticantes (com CPF), importação em massa.
-18. **Painel administrativo (/dash)** — todas as telas de organizacoes/atletas/graduações/financeiro/suporte/contatos/auditoria.
-19. **Infraestrutura** — stack (React 18, Vite, Tailwind, TS, Supabase/Lovable Cloud), variáveis de ambiente, deploy.
-20. **Regras de negócio e constraints** — qualidade, mobile-first, contraste, escola "Academia Teste" intencional.
-21. **Critérios de aceite por feature** — checklist replicável.
-22. **Apêndices** — DDL completo consolidado, exemplos de payloads, glossário.
+Referência do pagamento informada: **B32WM7KDQYWX4YPSF** (essa string é o "código de referência" exibido ao cliente — preciso convertê-la no `payment.id` numérico via API do MP, o que a função de replay faz automaticamente buscando pelo `external_reference` ou nos pagamentos recentes da conta).
 
-## Como será produzido
-- Leitura ampla do código (`src/pages/**`, `src/components/**`, `supabase/functions/**`, `src/i18n/locales/pt-BR.json`, `supabase/config.toml`).
-- Consulta ao schema atual via `supabase--read_query` (information_schema, pg_policies, pg_proc, pg_trigger) para extrair DDL, policies, funções e triggers exatos.
-- Escrita em um único arquivo Markdown longo em `/mnt/documents/fightport-prd.md`, sem limite de páginas, com sumário no topo e seções numeradas.
-- Entrega via `<presentation-artifact>` para download.
+## Plano de execução
 
-## Entregável
-- `fightport-prd.md` único, autocontido, suficiente para uma equipe nova reconstruir o FightPort idêntico ao atual.
+### Etapa 1 — Corrigir o webhook (`supabase/functions/mercadopago-webhook/index.ts`)
 
-## Fora do escopo
-- Nenhuma alteração de código ou de banco.
-- Sem múltiplos arquivos — apenas o `.md` único conforme solicitado.
+Reescrever `verifyMPSignature`:
+
+```ts
+const url = new URL(req.url);
+const dataIdFromUrl = url.searchParams.get("data.id") ?? url.searchParams.get("id");
+let dataIdFromBody: string | null = null;
+try { dataIdFromBody = JSON.parse(body)?.data?.id?.toString() ?? null; } catch {}
+const dataId = dataIdFromUrl ?? dataIdFromBody;
+const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
+```
+
+Comparação **timing-safe** (XOR char-a-char) substituindo `computed === v1`. Em falha, logar `xRequestId`, `dataId` e qual fonte foi usada (sem expor o secret).
+
+### Etapa 2 — Criar log persistente de webhooks (migração)
+
+Tabela `public.mp_webhook_events` para registrar **toda** notificação recebida (válida ou não), com `payment_id`, `signature_valid`, `processed`, `error`, headers e body. RLS: somente admin lê. Esse log elimina o ponto cego atual.
+
+### Etapa 3 — Edge function de replay (`supabase/functions/mp-replay-payment/index.ts`)
+
+Função admin-only que recebe um `payment_id` numérico **ou** uma `external_reference` **ou** uma referência tipo "B32WM7KDQYWX4YPSF" (busca via `GET /v1/payments/search?external_reference=...` na API do MP), e executa o mesmo fluxo do webhook (idempotente via `payment_id`). Usada para:
+- Reprocessar o pagamento perdido de hoje;
+- Resolver qualquer falha futura sem editar dados na mão.
+
+### Etapa 4 — Reprocessar o pagamento de hoje
+
+1. Chamar `mp-replay-payment` com a referência **B32WM7KDQYWX4YPSF**.
+2. Validar que a `credit_transactions` (`type=purchase, status=completed`) foi criada e o saldo da escola aumentou.
+3. Reverter o bônus manual: inserir `credit_transactions` (`type=bonus, amount=-10`, com `package_name='Estorno cortesia 15/06'`) e chamar `add_credits(school_id, -10)` para zerar o duplo crédito. Deixar o registro original visível no histórico para auditoria.
+
+### Etapa 5 — Botão "Reprocessar pagamento" no painel admin
+
+Em `/dash/financeiro`, adicionar um pequeno card "Reprocessar pagamento MercadoPago" com input para `payment_id` / `external_reference` / referência curta e botão que chama `mp-replay-payment`. Feedback de sucesso/erro via toast.
+
+### Etapa 6 — Alerta proativo
+
+No webhook, quando `signature_valid = false`, criar uma `notifications` para o admin (`type=webhook_signature_invalid`) e enviar e-mail via Resend. Assim, da próxima vez você descobre em segundos, não horas.
+
+### Etapa 7 — Teste automatizado
+
+`supabase/functions/mercadopago-webhook/index.test.ts` cobrindo: assinatura válida (com `data.id` da URL), assinatura inválida, payload duplicado (idempotência), pagamento não-aprovado.
+
+## Detalhes técnicos
+
+**DDL da tabela de log:**
+
+```sql
+CREATE TABLE public.mp_webhook_events (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  payment_id text,
+  signature_valid boolean NOT NULL,
+  processed boolean NOT NULL DEFAULT false,
+  error text,
+  headers jsonb,
+  body jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT SELECT ON public.mp_webhook_events TO authenticated;
+GRANT ALL ON public.mp_webhook_events TO service_role;
+ALTER TABLE public.mp_webhook_events ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "admin reads webhook log" ON public.mp_webhook_events
+  FOR SELECT TO authenticated USING (public.is_admin(auth.uid()));
+CREATE INDEX ON public.mp_webhook_events (created_at DESC);
+CREATE INDEX ON public.mp_webhook_events (payment_id);
+```
+
+**Por que reprocessar é seguro:** o webhook já verifica duplicidade por `payment_id` (`select` antes do insert + tratamento do erro `23505` da constraint única). Chamar `mp-replay-payment` 10 vezes resulta em **um único** crédito.
+
+**Por que a correção do `data.id` resolve definitivamente:** é o algoritmo oficial documentado pelo MercadoPago. A nossa leitura do body funcionava por acidente em testes com `id` numérico curto; em produção o MP varia o formato entre eventos.
+
+## Ordem de execução
+
+1. Etapas 1 + 2 + 3 + 7 em paralelo (código).
+2. Deploy das edge functions.
+3. Etapa 4 (reprocessar B32WM7KDQYWX4YPSF + reverter bônus).
+4. Etapas 5 + 6 (UI e alertas).
+
+Após sua aprovação eu sigo direto.
