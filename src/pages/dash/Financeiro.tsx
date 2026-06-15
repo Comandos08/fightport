@@ -11,6 +11,8 @@ import { FileText, FileSpreadsheet, Building2, TrendingUp, TrendingDown, Minus }
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/integrations/supabase/client';
+import MPReplayCard from '@/components/dash/MPReplayCard';
+
 
 type Preset = 'today' | '7d' | '30d' | 'month' | 'year' | 'custom';
 
