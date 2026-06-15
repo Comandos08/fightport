@@ -303,7 +303,10 @@ export default function Financeiro() {
         </div>
       </div>
 
+      <MPReplayCard />
+
       {/* Cards */}
+
       {(() => {
         const calcDelta = (curr: number, prev: number): number | null => {
           if (prev === 0 && curr === 0) return 0;
