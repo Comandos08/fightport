@@ -43,7 +43,12 @@ async function verifyMPSignature(
   let dataIdFromBody: string | null = null;
   try {
     const parsed = JSON.parse(body);
-    const raw = parsed?.data?.id ?? parsed?.id;
+    let raw = parsed?.data?.id ?? parsed?.id ?? parsed?.resource;
+    if (typeof raw === "string" && raw.startsWith("http")) {
+      // IPN antigo: resource é uma URL tipo .../v1/payments/123 — extrai o último segmento numérico.
+      const m = raw.match(/\/(\d+)(?:\?|$)/);
+      raw = m ? m[1] : raw;
+    }
     if (raw !== undefined && raw !== null) dataIdFromBody = String(raw);
   } catch {
     // ignore
@@ -180,9 +185,19 @@ Deno.serve(async (req) => {
     const body = (parsedBody && typeof parsedBody === "object" ? parsedBody : {}) as Record<string, unknown>;
     console.log("Webhook received:", JSON.stringify(body));
 
-    const eventType = body.type;
+    // Aceita formato Webhook v2 (`type`/`data.id`) e IPN antigo (`topic`/`resource`).
+    const eventType = (body.type ?? body.topic) as string | undefined;
     const action = body.action;
-    const dataId = (body.data as Record<string, unknown> | undefined)?.id ?? sig.dataId;
+    let dataId: string | number | undefined =
+      (body.data as Record<string, unknown> | undefined)?.id as string | number | undefined;
+    if (!dataId && body.resource) {
+      const r = body.resource;
+      if (typeof r === "string") {
+        const m = r.match(/\/(\d+)(?:\?|$)/);
+        dataId = m ? m[1] : r;
+      }
+    }
+    if (!dataId) dataId = sig.dataId ?? undefined;
 
     if (typeof eventType !== "string" || !dataId) {
       await logWebhookEvent(supabase, {
