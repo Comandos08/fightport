@@ -43,7 +43,12 @@ async function verifyMPSignature(
   let dataIdFromBody: string | null = null;
   try {
     const parsed = JSON.parse(body);
-    const raw = parsed?.data?.id ?? parsed?.id;
+    let raw = parsed?.data?.id ?? parsed?.id ?? parsed?.resource;
+    if (typeof raw === "string" && raw.startsWith("http")) {
+      // IPN antigo: resource é uma URL tipo .../v1/payments/123 — extrai o último segmento numérico.
+      const m = raw.match(/\/(\d+)(?:\?|$)/);
+      raw = m ? m[1] : raw;
+    }
     if (raw !== undefined && raw !== null) dataIdFromBody = String(raw);
   } catch {
     // ignore
